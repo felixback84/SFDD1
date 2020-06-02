@@ -6,14 +6,13 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-<<<<<<< HEAD
-=======
-import AddressFormToDevicePayment from './AddressFormToDevicePayment';
+// components
+import AddressShippingFormToDevicePayment from './AddressShippingFormToDevicePayment';
+import AddressBillingFormToDevicePayment from './AddressBillingFormToDevicePayment';
 import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
 import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
-import  SuccessToDevicePayment from './SuccessToDevicePayment';
+import SuccessToDevicePayment from './SuccessToDevicePayment';
 
->>>>>>> dad0378... hi again
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -29,55 +28,27 @@ const useStyles = makeStyles((theme) => ({
 
 // titles steps
 function getSteps() {
-    return ['Select master blaster campaign settings', 'Create an ad group', 'Create an ad'];
+    return ['Shipping Address', 'Billing Address', 'Payment Method', 'Order Resumen', 'Success buy Device'];
 }
 
 // switch case for forms
 function getStepContent(stepIndex) {
-<<<<<<< HEAD
-    // const {
-    //     user:{
-    //         names,
-    //         lastname,
-    //         email,
-    //         phone,
-    //         userId,
-    //         userHandle
-    //     },
-    //     device:{
-    //         ageRate,
-    //         badgeUrl,
-    //         coverUrl,
-    //         createdAt,
-    //         description,
-    //         nameOfDevice,
-    //         price
-    //     }
-    // } = props;
-
-    switch (stepIndex) {
-        case 0:
-            return 'Select campaign settings...';
-        case 1:
-            return 'What is an ad group anyways?';
-        case 2:
-            return 'This is the bit I really care about!';
-        default:
-            return 'Unknown stepIndex';
-=======
     
     switch (stepIndex) {
         case 0:
-            return <AddressFormToDevicePayment/>;
+            return <AddressShippingFormToDevicePayment/>;
         case 1:
-            return <CreditCardFormToDevicePayment/>;
+            return <AddressBillingFormToDevicePayment/>;    
         case 2:
-            return <ResumeFormToDevicePayment/>;
+            return <CreditCardFormToDevicePayment/>;
         case 3:
+            return <ResumeFormToDevicePayment/>;
+        case 4:
+            return <ResumeFormToDevicePayment/>;
+        case 5:
             return <SuccessToDevicePayment/>;
         default:
             return 'None';
->>>>>>> dad0378... hi again
     }
 }
 

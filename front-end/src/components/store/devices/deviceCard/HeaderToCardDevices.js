@@ -46,10 +46,6 @@ const HeaderToCardDevices = (props) => {
                 subheader={nameofdevice + ' device. For ages from: ' + agerate}
             />
         </div>
-<<<<<<< HEAD
     )
-=======
-    ) 
->>>>>>> dad0378... hi again
 }
 export default withStyles(styles)(HeaderToCardDevices);
