@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=\, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>SFD Easy Test</title>
+    </head>
+    <body>
+
+
+    </body>
+
+    <script>
+        const userData = {
+            personalInfo: {  
+                name: "Ana Camila",
+                lastname: "Arias Diaz",
+                birthdate: 1580219792080,
+                age: 17
+            },
+            profileInfo: {
+                _idUser: 123456789,
+                tokenPlatform: "eyJ0eXAiOiJKV1QiLCJhbsciOiJIUzI1NiJ9.eyJzdWIiOiIWeRtU2ZWMyYjUyNjgxNzE2YmXiNzAxMzIiLCJpYXQiOjE0Mj10MjA0OTEsImV4cCI6MTQy67YzMDA5MX0.IH7ek7Rp_WQJvXeOd8zrBIpeFi4W6kUi_6htmaxv7Ow",
+                username: "AnaCamila",
+                password: "eyJ0eXAiOiJKV1QiLCJhbsciOiJIUzI1NiJ9.eyJzdWIiOiIWeRtU2ZWMyYjUyNjgxNzE2YmXiNz",
+                email: "ana.camila.hi@gmail.com",
+                bio: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters,"
+            },
+            tutorsInfo:{
+                mom:{
+                    state: true,
+                    name: "Laura Valeria",
+                    lastname: "Garcia Amador",
+                    email: "laura.garcia.amador@yahoo.com",
+                    phone: 5713005256068
+                },
+                dad:{
+                    state: true,
+                    name: "Carlos Alberto",
+                    lastname: "Talero Jácome",
+                    email: "carlos.talero.jacome@gmail.com",
+                    phone: 5713005256024
+                },
+                other:{
+                    state: false,
+                    relationship: "",
+                    name: "",
+                    lastname: "",
+                    email: "",
+                    phone: null
+                },
+            },
+            deviceInfo: {
+                registerOfDevice: {
+                    _idDevice: 1234567890,
+                    tokenDevice: "YjUyNjgxNzE2YmXiNzAxMzIiLCJpYXQiOjE0Mj10MjA0OT",
+                    model: {
+                        reference: 1234,
+                        name: "Hilda"
+                    }
+                },
+                statesOfDevice: {
+                    battery:{
+                        batteryCurrentState:[
+                            100
+                        ],
+                        batteryCycles:[
+                            1580219792080, 15802197920
+                        ]
+                    },
+                    historyOfSessions:[
+                        1580219792080, 1580219792080
+                    ],
+                    historyOfhibernations:[
+                        1580219792080, 1580219792080
+                    ]
+                },
+                specificDataOfDevice:{
+                    dataSet: {
+                        medicalInfo: {   
+                            typeOfMeals:{
+                                veggies: true,
+                                meats: true
+                            },  
+                            typeOfActivities:{
+                                inSchool: true,
+                                inWork: false,
+                                onOpenAir: true,
+                                inDoor: true,
+                            },
+                            cycles: {
+                                cycle_1: {
+                                    pmsInfo: {
+                                        overviewDate: {
+                                            beginDate: 1580219792080,
+                                            endDate: 1580219792080,
+                                        },
+                                        symptoms: {
+                                            headPain:{
+                                                pain: true,
+                                                painLevel: 5,
+                                                datesOfPain:[
+                                                    1580219792080,
+                                                ]
+                                            },
+                                            neckPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },    
+                                            upperStomachPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },
+                                            lowerStomachpain: {
+                                                pain: true,
+                                                painLevel: 4,
+                                                datesOfPain:[
+                                                    1580219792080
+                                                ]
+                                            },
+                                            upperBackPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },
+                                            lowerBackPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },  
+                                            feetsPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            }    
+                                        }
+                                    },
+                                    msInfo: {
+                                        overviewDates: {
+                                            beginDate: 1580219792080,
+                                            endDate: 1580219792080,
+                                        },
+                                        symptoms: {
+                                            headPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },
+                                            neckPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },    
+                                            stomachPain:{
+                                                pain: true,
+                                                painLevel: 5,
+                                                datesOfPain:[
+                                                    1580219792080
+                                                ]
+                                            },
+                                            lowStomachpain: {
+                                                pain: true,
+                                                painLevel: 4,
+                                                datesOfPain:[
+                                                    1580219792080
+                                                ]
+                                            },
+                                            backPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },
+                                            lowbackPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            },  
+                                            feetsPain:{
+                                                pain: false,
+                                                painLevel: null,
+                                                datesOfPain:[]
+                                            }    
+                                        }
+                                    } 
+                                }     
+                            },        
+                        },
+                        therapiesSups: [
+                            "happy with less", 
+                            "Start always in good mood",
+                            "Kiss it all"
+                        ]
+                    }  
+                }
+            }
+        }
+    </script>
+</html>

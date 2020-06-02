@@ -1,0 +1,219 @@
+userData: {
+    "personalInfo": {  
+        "name": "String",
+        "lastname": "String",
+        "birthdate": date,
+        "age": int
+    },
+    "profileInfo": {
+        "_idUser": int,
+        "tokenPlatform": int,
+        "username": "String",
+        "password": "String",
+        "email": "String",
+        "bio":"String"
+    },
+    "tutorsInfo":{
+        "mom":{
+            "state": boolean,
+            "name": "String",
+            "lastname": "String",
+            "email": "String",
+            "phone": int
+        },
+        "dad":{
+            "state": boolean,
+            "name": "String",
+            "lastname": "String",
+            "email": "String",
+            "phone": int
+        },
+        "other":{
+            "state": boolean,
+            "relationship":"String",
+            "name": "String",
+            "lastname": "String",
+            "email": "String",
+            "phone": int
+        },
+    },
+    "deviceInfo": {
+        "registerOfDevice":{
+            "_idDevice": int,
+            "tokenDevice": int,
+            "model": {
+                "reference": int,
+                "name": "String"
+            }
+        },
+        "statesOfDevice": {
+            "battery":{
+                "batteryCurrentState":[
+                    int
+                ],
+                "batteryCycles":[
+                    date, date
+                ]
+            },
+            "historyOfSessions":[
+                date, date
+            ],
+            "historyOfhibernations":[
+                date, date
+            ]
+        },
+        "specificDataOfDevice":{
+            "dataSet": {
+                "medicalInfo": {   
+                    "typeOfMeals":{
+                        "veggies": boolean,
+                        "meats": boolean
+                    },  
+                    "typeOfActivities":{
+                        "inSchool": boolean,
+                        "inWork": boolean,
+                        "onOpenAir": boolean,
+                        "inDoor": boolean,
+                    },
+                    "cycles": {
+                        "cycle_1":{
+                            "pmsInfo": {
+                                "overviewDates": {
+                                    "beginDate": date,
+                                    "endDate": date,
+                                },
+                                "symptoms": {
+                                    "headPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "neckPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },    
+                                    "stomachPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "lowStomachpain": {
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "backPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "lowbackPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },  
+                                    "feetsPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    }    
+                                }
+                            },
+                            "msInfo": {
+                                "overviewDates": {
+                                    "beginDate": date,
+                                    "endDate": date,
+                                },
+                                "symptoms": {
+                                    "headPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "neckPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },    
+                                    "stomachPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "lowStomachpain": {
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "backPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },
+                                    "lowbackPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    },  
+                                    "feetsPain":{
+                                        "pain": boolean,
+                                        "painLevel": int,
+                                        "datesOfPain":[
+                                            date,
+                                            date
+                                        ]
+                                    }    
+                                }
+                            } 
+                        }     
+                    },        
+                },
+                "therapiesSups": [
+                    "String", 
+                    "String",
+                    "String"
+                ]
+            }  
+        }
+    }
+}
