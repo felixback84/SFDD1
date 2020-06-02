@@ -9,9 +9,6 @@ import {
 const initialState = {
     loading: false,
     checkouts:[],
-<<<<<<< HEAD
-    checkout:{}
-=======
     checkout:{},
     formsPayment:{
         paymentData:{
@@ -21,7 +18,6 @@ const initialState = {
         firebaseCheckout:{
         }
     }
->>>>>>> dad0378... hi again
 }
 
 // function to determine the type of action to set state

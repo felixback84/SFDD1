@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 
 // components
 import AddressShippingFormToDevicePayment from './AddressShippingFormToDevicePayment';
-import AddressBillingFormToDevicePayment from './AddressBillingFormToDevicePayment';
-import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
-import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
-import SuccessToDevicePayment from './SuccessToDevicePayment';
+// import AddressBillingFormToDevicePayment from './AddressBillingFormToDevicePayment';
+// import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
+// import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
+// import SuccessToDevicePayment from './SuccessToDevicePayment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,16 +37,16 @@ function getStepContent(stepIndex) {
     switch (stepIndex) {
         case 0:
             return <AddressShippingFormToDevicePayment/>;
-        case 1:
-            return <AddressBillingFormToDevicePayment/>;    
-        case 2:
-            return <CreditCardFormToDevicePayment/>;
-        case 3:
-            return <ResumeFormToDevicePayment/>;
-        case 4:
-            return <ResumeFormToDevicePayment/>;
-        case 5:
-            return <SuccessToDevicePayment/>;
+        // case 1:
+        //     return <AddressBillingFormToDevicePayment/>;    
+        // case 2:
+        //     return <CreditCardFormToDevicePayment/>;
+        // case 3:
+        //     return <ResumeFormToDevicePayment/>;
+        // case 4:
+        //     return <ResumeFormToDevicePayment/>;
+        // case 5:
+        //     return <SuccessToDevicePayment/>;
         default:
             return 'None';
     }
@@ -89,6 +89,7 @@ export default function StepperPayment() {
                 ) : (
                 <div>
                     <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                    {/* Buttons */}
                     <div>
                         <Button
                             disabled={activeStep === 0}
