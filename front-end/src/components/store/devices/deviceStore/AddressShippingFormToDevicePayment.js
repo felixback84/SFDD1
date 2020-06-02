@@ -10,7 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Redux stuff
 import { connect } from 'react-redux';
-//import { setAddressShipping } from '../../../../redux/actions/checkotusActions';
+import { setAddressShipping } from '../../../../redux/actions/checkoutsActions';
 
 // styles
 const styles = (theme) => ({
@@ -38,18 +38,20 @@ class AddressShippingFormToDevicePayment extends Component {
     }
 
     // event to save data
-    // handleClickConfirm = () => {
-    //     const userAdressData = {
-    //         street1: this.state.email,
-    //         street2: this.state.street2,
-    //         city: this.state.city,
-    //         state: this.state.state,
-    //         phone: this.state.phone
+    handleClickConfirm = (event) => {
+        const userAdressData = {
+            street1: this.state.email,
+            street2: this.state.street2,
+            city: this.state.city,
+            state: this.state.state,
+            phone: this.state.phone
             
-    //     };
-    //     this.props.setAddressShipping(userAdressData, this.props.history);
+        };
+        console.log('hi click')
+        // redux action to set data
+        this.props.setAddressShipping(userAdressData);
         
-    // };
+    };
 
     render() {
         const { classes, ui: { loading } } = this.props;
@@ -61,7 +63,7 @@ class AddressShippingFormToDevicePayment extends Component {
                     <Typography variant="h2" className={classes.pageTitle}>
                         Shipping Address 
                     </Typography>
-                    <p>Where you want receive the pacakage?</p>
+                    {/* <p>Where you want receive the pacakage?</p> */}
                     <form noValidate >
                         <TextField 
                             id="street1" 
@@ -131,7 +133,7 @@ class AddressShippingFormToDevicePayment extends Component {
                         <Button  
                             variant="contained" 
                             color="primary" 
-                            //onClick={handleClickConfirm}
+                            onClick={this.handleClickConfirm}
                             className={classes.button}
                             disabled={loading}>
                                 Confirm
@@ -139,7 +141,7 @@ class AddressShippingFormToDevicePayment extends Component {
                                     <CircularProgress size={30} className={classes.progress} />
                                 )}
                         </Button>
-                        <br />                        
+                       
                     </form>
                 </Grid> 
                 <Grid item xs={3} />   
@@ -154,7 +156,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = {
-    //setAddressShipping
+    setAddressShipping
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(AddressShippingFormToDevicePayment));

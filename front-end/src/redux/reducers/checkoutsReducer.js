@@ -1,4 +1,7 @@
 import {
+    SET_SHIPPING_ADDRESS_CHECKOUT,
+    SET_BILLING_ADDRESS_CHECKOUT,
+    SET_PAYMENT_METHOD_CHECKOUT,
     LOADING_CHECKOUTS,
     POST_CHECKOUT,
     GET_CHECKOUTS,
@@ -12,7 +15,8 @@ const initialState = {
     checkout:{},
     formsPayment:{
         paymentData:{
-            address:{},
+            shippingAddress:{},
+            billingAddress:{},
             cc:{}
         },
         firebaseCheckout:{
@@ -27,6 +31,23 @@ export default function(state = initialState, action){
             return{
                 ...state,
                 loading: true
+            }
+        case SET_SHIPPING_ADDRESS_CHECKOUT:
+            return{
+                ...state,
+                formsPayment:{
+                    paymentData:{
+                        shippingAddress: action.payload,
+                    }
+                }
+            }
+        case SET_BILLING_ADDRESS_CHECKOUT:
+            return{
+
+            }
+        case SET_PAYMENT_METHOD_CHECKOUT:
+            return{
+
             }
         case POST_CHECKOUT:
             return{
