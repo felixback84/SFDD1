@@ -52,8 +52,8 @@ class CreditCardFormToDevicePayment extends Component {
 
         return (
             <Grid container className={classes.form} spacing={1}>
-                <Grid item xs={3} />
-                <Grid item xs={6}>
+                <Grid item xs={2} />
+                <Grid item xs={8}>
                     <Typography variant="h2" className={classes.pageTitle}>
                         Credit Card Info 
                     </Typography>
@@ -113,7 +113,7 @@ class CreditCardFormToDevicePayment extends Component {
                         </Button>
                     </form>
                 </Grid> 
-                <Grid item xs={3} />   
+                <Grid item xs={2} />   
             </Grid>
         )
     }

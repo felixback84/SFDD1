@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import AddressShippingFormToDevicePayment from './AddressShippingFormToDevicePayment';
 import AddressBillingFormToDevicePayment from './AddressBillingFormToDevicePayment';
 import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
-// import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
+import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
 // import SuccessToDevicePayment from './SuccessToDevicePayment';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,13 @@ const useStyles = makeStyles((theme) => ({
 
 // titles steps
 function getSteps() {
-    return ['Shipping Address', 'Billing Address', 'Payment Method', 'Order Resumen', 'Success buy Device'];
+    return [
+        'Shipping Address', 
+        'Billing Address', 
+        'Payment Method', 
+        'Order Resumen', 
+        'Success buy Device'
+    ];
 }
 
 // switch case for forms
@@ -41,8 +47,8 @@ function getStepContent(stepIndex) {
             return <AddressBillingFormToDevicePayment/>;    
         case 2:
             return <CreditCardFormToDevicePayment/>;
-        // case 3:
-        //     return <ResumeFormToDevicePayment/>;
+        case 3:
+            return <ResumeFormToDevicePayment/>;
         // case 4:
         //     return <SuccessToDevicePayment/>;
         default:
