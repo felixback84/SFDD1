@@ -38,9 +38,16 @@ export default function(state = initialState, action){
                 paymentData:action.paymentData
             }
         case SET_BILLING_ADDRESS_CHECKOUT:
+            let shippingAddress = state.paymentData.shippingAddress;
+            state.paymentData.shippingAddress = shippingAddress;
             return{
-
+                ...state,
+                paymentData: {
+                    shippingAddress:shippingAddress,
+                    billingAddress:action.paymentData.billingAddress
+                }
             }
+            
         case SET_PAYMENT_METHOD_CHECKOUT:
             return{
 

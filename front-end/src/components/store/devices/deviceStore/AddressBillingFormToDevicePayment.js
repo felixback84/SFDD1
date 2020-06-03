@@ -10,14 +10,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { setAddressShipping } from '../../../../redux/actions/checkoutsActions';
+import { setAddressBilling } from '../../../../redux/actions/checkoutsActions';
 
 // styles
 const styles = (theme) => ({
     ...theme.notColor
 });
 
-class AddressShippingFormToDevicePayment extends Component {
+class AddressBillingFormToDevicePayment extends Component {
 
     constructor(){
         super();
@@ -39,7 +39,7 @@ class AddressShippingFormToDevicePayment extends Component {
 
     // event to save data
     handleClickConfirm = (event) => {
-        const userAdressShippingData = {
+        const userAdressBillingData = {
             street1: this.state.street1,
             street2: this.state.street2,
             city: this.state.city,
@@ -47,9 +47,9 @@ class AddressShippingFormToDevicePayment extends Component {
             phone: this.state.phone
             
         };
-        console.log('hi click shipping')
+        console.log('hi click billing')
         // redux action to set data
-        this.props.setAddressShipping(userAdressShippingData);
+        this.props.setAddressBilling(userAdressBillingData);
         
     };
 
@@ -61,7 +61,7 @@ class AddressShippingFormToDevicePayment extends Component {
                 <Grid item xs={3} />
                 <Grid item xs={6}>
                     <Typography variant="h2" className={classes.pageTitle}>
-                        Shipping Address 
+                        Billing Address 
                     </Typography>
                     {/* <p>Where you want receive the pacakage?</p> */}
                     <form noValidate >
@@ -156,7 +156,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = {
-    setAddressShipping
+    setAddressBilling
 };
 
-export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(AddressShippingFormToDevicePayment));
+export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(AddressBillingFormToDevicePayment));

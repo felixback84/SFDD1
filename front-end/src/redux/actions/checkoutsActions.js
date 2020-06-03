@@ -3,6 +3,7 @@ import {
     LOADING_UI,
     STOP_LOADING_UI,
     SET_SHIPPING_ADDRESS_CHECKOUT,
+    SET_BILLING_ADDRESS_CHECKOUT,
     LOADING_CHECKOUTS,
     POST_CHECKOUT,
     GET_CHECKOUTS,
@@ -13,13 +14,25 @@ import {
 import axios from 'axios';
 
 // redux action to set billing address in device store
-export const setAddressShipping = (userAdressData) => (dispatch) => {
+export const setAddressShipping = (userAdressShippingData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({
         type: SET_SHIPPING_ADDRESS_CHECKOUT,
         paymentData: {
-            shippingAddress:userAdressData
+            shippingAddress:userAdressShippingData
         }
     });
     dispatch({ type: STOP_LOADING_UI });
 }
+
+export const setAddressBilling = (userAdressBillingData) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    dispatch({
+        type: SET_BILLING_ADDRESS_CHECKOUT,
+        paymentData: {
+            billingAddress:userAdressBillingData
+        }
+    });
+    dispatch({ type: STOP_LOADING_UI });
+}
+
