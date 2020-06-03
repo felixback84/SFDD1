@@ -1,7 +1,7 @@
 import {
     SET_SHIPPING_ADDRESS_CHECKOUT,
     SET_BILLING_ADDRESS_CHECKOUT,
-    SET_PAYMENT_METHOD_CHECKOUT,
+    SET_CREDIT_CARD,
     LOADING_CHECKOUTS,
     POST_CHECKOUT,
     GET_CHECKOUTS,
@@ -18,10 +18,6 @@ const initialState = {
         billingAddress:{},
         cc:{}
     }
-    // firebaseCheckout:{
-        
-    // }
-    
 }
 
 // function to determine the type of action to set state
@@ -47,10 +43,20 @@ export default function(state = initialState, action){
                     billingAddress:action.paymentData.billingAddress
                 }
             }
-            
-        case SET_PAYMENT_METHOD_CHECKOUT:
-            return{
+        case SET_CREDIT_CARD:
+            let shippingAddress1 = state.paymentData.shippingAddress;
+            state.paymentData.shippingAddress = shippingAddress1;
 
+            let billingAddress = state.paymentData.billingAddress;
+            state.paymentData.billingAddress = billingAddress;
+
+            return{
+                ...state,
+                paymentData: {
+                    shippingAddress:shippingAddress1,
+                    billingAddress:billingAddress,
+                    cc:action.paymentData.cc
+                }
             }
         case POST_CHECKOUT:
             return{

@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 // components
 import AddressShippingFormToDevicePayment from './AddressShippingFormToDevicePayment';
 import AddressBillingFormToDevicePayment from './AddressBillingFormToDevicePayment';
-// import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
+import CreditCardFormToDevicePayment from './CreditCardFormToDevicePayment';
 // import ResumeFormToDevicePayment from './ResumeFormToDevicePayment';
 // import SuccessToDevicePayment from './SuccessToDevicePayment';
 
@@ -39,13 +39,11 @@ function getStepContent(stepIndex) {
             return <AddressShippingFormToDevicePayment/>;
         case 1:
             return <AddressBillingFormToDevicePayment/>;    
-        // case 2:
-        //     return <CreditCardFormToDevicePayment/>;
+        case 2:
+            return <CreditCardFormToDevicePayment/>;
         // case 3:
         //     return <ResumeFormToDevicePayment/>;
         // case 4:
-        //     return <ResumeFormToDevicePayment/>;
-        // case 5:
         //     return <SuccessToDevicePayment/>;
         default:
             return 'None';
