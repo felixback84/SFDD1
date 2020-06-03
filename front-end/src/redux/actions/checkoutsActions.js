@@ -17,7 +17,9 @@ export const setAddressShipping = (userAdressData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({
         type: SET_SHIPPING_ADDRESS_CHECKOUT,
-        paymentData: userAdressData
+        paymentData: {
+            shippingAddress:userAdressData
+        }
     });
     dispatch({ type: STOP_LOADING_UI });
 }

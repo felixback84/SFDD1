@@ -13,15 +13,15 @@ const initialState = {
     loading: false,
     checkouts:[],
     checkout:{},
-    formsPayment:{
-        paymentData:{
-            shippingAddress:{},
-            billingAddress:{},
-            cc:{}
-        },
-        firebaseCheckout:{
-        }
+    paymentData:{
+        shippingAddress:{},
+        billingAddress:{},
+        cc:{}
     }
+    // firebaseCheckout:{
+        
+    // }
+    
 }
 
 // function to determine the type of action to set state
@@ -35,11 +35,7 @@ export default function(state = initialState, action){
         case SET_SHIPPING_ADDRESS_CHECKOUT:
             return{
                 ...state,
-                formsPayment:{
-                    paymentData:{
-                        shippingAddress: action.payload,
-                    }
-                }
+                paymentData:action.paymentData
             }
         case SET_BILLING_ADDRESS_CHECKOUT:
             return{

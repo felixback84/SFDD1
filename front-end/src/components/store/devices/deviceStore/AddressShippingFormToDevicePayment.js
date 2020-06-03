@@ -40,7 +40,7 @@ class AddressShippingFormToDevicePayment extends Component {
     // event to save data
     handleClickConfirm = (event) => {
         const userAdressData = {
-            street1: this.state.email,
+            street1: this.state.street1,
             street2: this.state.street2,
             city: this.state.city,
             state: this.state.state,
