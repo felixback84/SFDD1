@@ -14,7 +14,8 @@ import StepperToDevicePayment from './StepperToDevicePayment';
 import TitleToDevicePayment from './TitleToDevicePayment';
 
 // Redux stuff
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
+import store from '../../../../redux/store';
 import { getDevice } from '../../../../redux/actions/devicesActions';
 
 // styles
@@ -47,7 +48,8 @@ class ProcessToDevicePayment extends Component {
     handleOpen = () => { 
         this.setState({ open: true });
         // redux actions
-        this.props.getDevice(this.props.deviceid);
+        store.dispatch(getDevice(this.props.deviceid));
+        //this.props.getDevice(this.props.deviceid);
     }
 
     handleClose = () => {
@@ -57,7 +59,7 @@ class ProcessToDevicePayment extends Component {
     render() {
 
         // props for show data components
-        const {classes, nameofdevice, agerate, price} = this.props;
+        const {classes, nameofdevice, agerate, price, deviceid} = this.props;
 
         return (
             <Fragment>
@@ -86,22 +88,23 @@ class ProcessToDevicePayment extends Component {
                         nameofdevice={nameofdevice} 
                         agerate={agerate}
                     />
-                    <StepperToDevicePayment />
+                    <StepperToDevicePayment deviceid={deviceid}/>
                 </Dialog>        
             </Fragment>   
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    device: state.devices1.device
-})
+// state not used
+// const mapStateToProps = (state) => ({
+//     device: state.devices1.device
+// })
 
-const mapActionsToProps = {
-    getDevice
-};
+// const mapActionsToProps = {
+//     getDevice
+// };
 
-export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(ProcessToDevicePayment));
+export default (withStyles(styles)(ProcessToDevicePayment));
 
 
 

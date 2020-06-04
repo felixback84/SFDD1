@@ -38,8 +38,7 @@ function getSteps() {
 }
 
 // switch case for forms
-function getStepContent(stepIndex) {
-    
+function getStepContent(stepIndex, deviceid) {
     switch (stepIndex) {
         case 0:
             return <AddressShippingFormToDevicePayment/>;
@@ -48,7 +47,7 @@ function getStepContent(stepIndex) {
         case 2:
             return <CreditCardFormToDevicePayment/>;
         case 3:
-            return <ResumeFormToDevicePayment/>;
+            return <ResumeFormToDevicePayment deviceid={deviceid}/>;
         // case 4:
         //     return <SuccessToDevicePayment/>;
         default:
@@ -56,7 +55,7 @@ function getStepContent(stepIndex) {
     }
 }
 
-export default function StepperPayment() {
+export default function StepperToDevicePayment(props) {
 
     const classes = useStyles();
 
@@ -92,7 +91,9 @@ export default function StepperPayment() {
                 </div>
                 ) : (
                 <div>
-                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                    <Typography className={classes.instructions}>
+                        {getStepContent(activeStep, props.deviceid)}
+                    </Typography>
                     {/* Buttons */}
                     <div>
                         <Button

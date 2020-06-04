@@ -48,3 +48,20 @@ export const setCreditCard = (userCreditCardData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });
 }
 
+export const postDataCheckOutDevice = (deviceid, userData) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post(`/user/checkout/device/${deviceid}`, userData)
+        .then((res) => {            
+            dispatch({ type: CLEAR_ERRORS });
+        
+        })
+        .catch(err => {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+    dispatch({ type: STOP_LOADING_UI });    
+}
+

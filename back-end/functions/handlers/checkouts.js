@@ -47,64 +47,74 @@ exports.getCheckout = (req, res) => {
 // post data for checkout to post in userDevices 
 exports.postDataCheckOutDevice = (req, res) => {
 
-    // global var
-    let dataCheckout = {};
-
-    // put addiotional info for checkout
-    let checkoutData = {
-        userHandle: req.user.userHandle,
-        createdAt: new Date().toISOString(),
-        type: 'device',
-        state:'pending'
-    }
-    dataCheckout = checkoutData;
-    
-    // address
-    const newUserAdressToDelivery = {
-        city: req.body.city,
-        addressToDelivery: req.body.addressToDelivery,
-        plastic: req.body.plastic
+    // data from body
+    const userData = {
+        ...req.body
     };
 
-    // add address to global var
-    dataCheckout.address = newUserAdressToDelivery;
-    // ask for user data
-    db
-        .doc(`/users/${req.user.userHandle}`)
-        .get()
-        .then((doc) => {
-            let userDataFilter = {
-                names: doc.data().names,
-                lastname: doc.data().lastname,
-                email: doc.data().email
-            }
-            dataCheckout.user = userDataFilter;
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
-    // ask for device info
-    db
-        .doc(`/devices/${req.params.deviceId}`)
-        .get()
-        .then((doc) => {
-            let deviceDataFilter = {
-                deviceId: req.params.deviceId,
-                nameOfDevice: doc.data().nameOfDevice,
-                price: doc.data().price
-            };
-                dataCheckout.device = deviceDataFilter;
-                console.log(dataCheckout);
-                // add final object in db
-                db.collection('checkouts').add(dataCheckout);
-                // send response from server
-                return res.json('done with the checkout');
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
+    console.log(userData);
+
+    if(userData){
+        // global var
+        let dataCheckout = {};
+
+        // put addiotional info for checkout
+        let checkoutData = {
+            userHandle: req.user.userHandle,
+            createdAt: new Date().toISOString(),
+            type: 'device',
+            state:'pending'
+        }
+        dataCheckout = checkoutData;
+        
+        // address
+        const newUserAdressToDelivery = {
+            city: req.body.paymentData.shippingAddress.city, 
+            addressToDelivery: req.body.paymentData.shippingAddress.address1
+        };
+
+        // add address to global var
+        dataCheckout.address = newUserAdressToDelivery;
+        // ask for user data
+        db
+            .doc(`/users/${req.user.userHandle}`)
+            .get()
+            .then((doc) => {
+                let userDataFilter = {
+                    names: doc.data().names,
+                    lastname: doc.data().lastname,
+                    email: doc.data().email
+                }
+                dataCheckout.user = userDataFilter;
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: err.code });
+            });
+        // ask for device info
+        db
+            .doc(`/devices/${req.params.deviceId}`)
+            .get()
+            .then((doc) => {
+                let deviceDataFilter = {
+                    deviceId: req.params.deviceId,
+                    nameOfDevice: doc.data().nameOfDevice,
+                    price: doc.data().price
+                };
+                    dataCheckout.device = deviceDataFilter;
+                    console.log(dataCheckout);
+                    // add final object in db
+                    db.collection('checkouts').add(dataCheckout);
+                    // send response from server
+                    return res.json('done with the checkout');
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: err.code });
+            });
+        } else {
+
+        }
 }
 
 // post data for checkout to post in userAdventures
