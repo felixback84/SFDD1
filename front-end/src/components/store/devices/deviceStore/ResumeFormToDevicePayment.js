@@ -11,10 +11,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { postDataCheckOutDevice } from '../../../../redux/actions/devicesActions';
+import { postDataCheckOutDevice } from '../../../../redux/actions/checkoutsActions';
 
 // styles
 const styles = (theme) => ({
@@ -23,20 +24,20 @@ const styles = (theme) => ({
 
 class ResumeFormToDevicePayment extends Component {
 
-    handleSubmit = () => {
+    handleSubmit = (event) => {
         event.preventDefault();
-        console.log('hi from finish');
-            const {
-                paymentData:{
-                    shippingAddress,
-                    billingAddress,
-                    cc:{
-                        name,
-                        expirationDate,
-                        number
-                    }
+        
+        const {
+            paymentData:{
+                shippingAddress,
+                billingAddress,
+                cc:{
+                    name,
+                    expirationDate,
+                    number
                 }
-            } = this.props;
+            }
+        } = this.props;
 
         const userData = {
             paymentData:{
@@ -49,12 +50,16 @@ class ResumeFormToDevicePayment extends Component {
                 }
             }
         } 
-        postDataCheckOutDevice(this.props.deviceid, userData);
+        this.props.postDataCheckOutDevice(this.props.deviceid, userData);
+
+        console.log(userData);
+        console.log('hi from finish');
     }
 
     render() {
         const { 
             classes, 
+            ui:{loading},
             user:{
                 credentials:{
                     email,
@@ -320,9 +325,9 @@ class ResumeFormToDevicePayment extends Component {
                     </Grid>
                     <Grid item xs={1}/>
                     <Button  
+                        type="submit" 
                         variant="contained" 
                         color="primary" 
-                        onClick={this.handleClickConfirm}
                         className={classes.button}
                         disabled={loading}>
                             Confirm
@@ -339,11 +344,12 @@ class ResumeFormToDevicePayment extends Component {
 const mapStateToProps = (state) => ({
     user: state.user,
     device: state.devices1.device,
-    paymentData: state.checkouts1.paymentData
+    paymentData: state.checkouts1.paymentData,
+    ui:state.ui
 })
 
 const mapActionsToProps = {
-    //postDataCheckOutDevice
+    postDataCheckOutDevice
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(withStyles(styles)(ResumeFormToDevicePayment));

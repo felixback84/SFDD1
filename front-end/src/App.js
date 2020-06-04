@@ -38,7 +38,9 @@ import { logoutUser, getUserData } from './redux/actions/userActions';
 // axios
 import axios from 'axios';
 import { createMuiTheme } from '@material-ui/core';
-axios.defaults.baseURL = 'https://us-central1-sfdd-d8a16.cloudfunctions.net/api';
+// axios.defaults.baseURL = 'https://us-central1-sfdd-d8a16.cloudfunctions.net/api';
+axios.defaults.baseURL = 'http://localhost:5000/sfdd-d8a16/us-central1/api';
+
 
 // theme
 const theme = createMuiTheme(themeObject);

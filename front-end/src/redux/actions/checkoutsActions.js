@@ -1,5 +1,7 @@
 // user actions
 import {
+    CLEAR_ERRORS,
+    SET_ERRORS,
     LOADING_UI,
     STOP_LOADING_UI,
     SET_SHIPPING_ADDRESS_CHECKOUT,
@@ -52,8 +54,11 @@ export const postDataCheckOutDevice = (deviceid, userData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
         .post(`/user/checkout/device/${deviceid}`, userData)
-        .then((res) => {            
-            dispatch({ type: CLEAR_ERRORS });
+        .then((res) => {   
+            console.log('hi action reducer');  
+            console.log(res.data); 
+
+            //dispatch({ type: CLEAR_ERRORS });
         
         })
         .catch(err => {
