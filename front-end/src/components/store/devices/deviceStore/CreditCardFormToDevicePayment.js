@@ -17,14 +17,35 @@ const styles = (theme) => ({
     ...theme.notColor
 });
 
-class CreditCardFormToDevicePayment extends Component {
+// payu deviceSessionId
+// md5
+const md5 = require('md5');
+// cookie device
+const cookie = cookie(document.cookie);
 
+
+// payu iframme
+const iframme = () => {
+    let date = new Date();
+    let milliSeconds = date.getMilliseconds();
+    const deviceSessionId = md5(`${cookie}${milliSeconds}`);
+    return(
+        <script type="text/javascript" 
+            src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
+        </script>
+        )
+}
+
+class CreditCardFormToDevicePayment extends Component {
     constructor(){
         super();
         this.state = {
             number: '',
             expirationDate: '',
-            name: ''
+            name: '',
+            paymentMethod: '',
+            securityCode: '',
+            cookie: ''
         }
     }
     
@@ -36,11 +57,15 @@ class CreditCardFormToDevicePayment extends Component {
     }
 
     // event to save data
-    handleClickConfirm = (event) => {
+    handleClickConfirm = () => {
         const userCreditCardData = {
             number: this.state.number,
             expirationDate: this.state.expirationDate,
+            securityCode: this.state.expirationDate,
             name: this.state.name,
+            deviceSessionId: iframme,
+            paymentMethod: this.state.paymentMethod,
+            cookie: cookie
         };
         console.log('hi click CC')
         // redux action to set data
@@ -92,6 +117,18 @@ class CreditCardFormToDevicePayment extends Component {
                             // helperText={errors.name}
                             // error={errors.name ? true : false}
                             value={this.state.name}
+                            onChange={this.handleChange}
+                            fullWidth>
+                        </TextField> 
+                        <TextField 
+                            id="paymentMethod" 
+                            name="paymentMethod" 
+                            type="paymentMethod" 
+                            label="paymentMethod" 
+                            className={classes.textField} 
+                            // helperText={errors.paymentMethod}
+                            // error={errors.paymentMethod ? true : false}
+                            value={this.state.paymentMethod}
                             onChange={this.handleChange}
                             fullWidth>
                         </TextField> 

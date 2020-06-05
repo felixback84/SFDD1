@@ -1,8 +1,10 @@
 // firebase
 const { db } = require('../utilities/admin');
-require('dotenv').config();
 const fetch = require('node-fetch');
 const md5 = require('md5');
+
+//.env
+require('dotenv').config();
 
 // get all checkouts
 exports.getAllCheckouts = (req, res) => {
@@ -53,16 +55,18 @@ exports.postDataCheckOutDevice = (req, res) => {
     // static global vars
     const language = "es";
     const command = "SUBMIT_TRANSACTION";
-    const apiKey = "4Vj8eK4rloUd272L48hsrarnUA"; // .env
-    const apiLogin = "pRRXKOl8ikMmt9u"; // .env
-    const accountId = "512321"; // .env
+    const apiKey = process.env.API_KEY;
+    const apiLogin = process.env.API_LOGIN;
+    const accountId = process.env.ACCOUNT_ID;
     const notifyUrl = "http://www.tes.com/confirmation";
     const country = "CO";
     const paymentCountry = "CO";
     const currency = "COP";
     const type = "AUTHORIZATION_AND_CAPTURE";
     const postalCode = "000000";
-    const clientIp;
+    const merchantPayerId = 1;
+    merchantPayerId++;
+    //const clientIp;
 
     // ip address of client
     const ipAddressOfClient = async () => {
@@ -73,25 +77,28 @@ exports.postDataCheckOutDevice = (req, res) => {
         const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
         const ipResponse = await fetch(ipUrl);
         const ipJsonData = await ipResponse.json(); 
-        clientIp = ipJsonData.geobytesremoteip
+        return ipJsonData.geobytesremoteip;
     };
 
     // userAgent detection
     const UA = navigator.userAgent;
 
     // signature generation
-    const signature = {
-        apiKey: apiKey,
-        merchantId: accountId,
-        referenceCode: `${checkoutData.device.nameOfDevice}:  ${checkoutData.device.deviceId} - ${checkoutData.user.userId} `,
-        tx_value: checkoutData.device.price,
-        currency: currency,
-    }; 
-
-    const signatureGen = (signature) =>{
-        const signatureString = `${signature.apiKey} ~ `;
-        md5(signatureString);
+    const signatureGen = () => {
+        const signature = {
+            apiKey: apiKey,
+            merchantId: accountId,
+            referenceCode: `${checkoutData.device.nameOfDevice}:  ${checkoutData.device.deviceId} - ${checkoutData.user.userId}`,
+            tx_value: checkoutData.device.price,
+            currency: currency,
+        }; 
+        const signatureString = `${signature.apiKey}~${signature.merchantId}~${signature.referenceCode}~${tx_value}~${currency}`;
+        const encoded = md5(signatureString);
+        return encoded;
     }
+
+    // deviceSessionId generation
+
 
     // data from client body
     const userData = {
@@ -116,8 +123,10 @@ exports.postDataCheckOutDevice = (req, res) => {
             expirationDate: req.body.cc.expirationDate, 
             name: req.body.cc.name,
             paymentMethod: req.body.cc.paymentMethod,
-            dniType: req.body.cc.dniType,
-            dniNumber: req.body.cc.dniNumber
+            deviceSessionId: req.body.cc.deviceSessionId,
+            cookie: req.body.cc.cookie
+            // dniType: req.body.cc.dniType,
+            // dniNumber: req.body.cc.dniNumber
         }
     };
 
@@ -216,12 +225,11 @@ exports.postDataCheckOutDevice = (req, res) => {
                 }
             },
             payer: {
-                merchantPayerId: "1",
+                merchantPayerId: merchantPayerId,
                 fullName: userData.cc.name, 
                 emailAddress: userData.billing.email,
                 contactPhone: userData.billing.phone,
-                dniType :userData.cc.dniType,
-                dniNumber: userData.cc.dniNumber,
+                dniNumber: "00000000",
                 billingAddress: {
                     street1: userData.billingAddress.street1, 
                     street2: userData.billingAddress.street2, 
@@ -244,16 +252,17 @@ exports.postDataCheckOutDevice = (req, res) => {
             type: type, 
             paymentMethod: userData.cc.paymentMethod, 
             paymentCountry: paymentCountry, 
-            deviceSessionId: "vghs6tvkcle931686k1900o6e1", 
-            ipAddress: clientIp, 
-            cookie: "pt1t38347bs6jc9ruv2ecpv7o2",
+            deviceSessionId: deviceSessionId, 
+            ipAddress: ipAddressOfClient, 
+            cookie: userData.cc.cookie,
             userAgent: UA
         },
         test: false
     }
 
-    // return res.json(userData);
-    // console.log(userData);
+    console.log(allDataToPostInPayU);
+    return res.json(allDataToPostInPayU);
+    
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
