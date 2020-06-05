@@ -1,5 +1,8 @@
 // firebase
 const { db } = require('../utilities/admin');
+require('dotenv').config();
+const fetch = require('node-fetch');
+const md5 = require('md5');
 
 // get all checkouts
 exports.getAllCheckouts = (req, res) => {
@@ -47,7 +50,7 @@ exports.getCheckout = (req, res) => {
 // post data for checkout to post in userDevices 
 exports.postDataCheckOutDevice = (req, res) => {
 
-    // global vars
+    // static global vars
     const language = "es";
     const command = "SUBMIT_TRANSACTION";
     const apiKey = "4Vj8eK4rloUd272L48hsrarnUA"; // .env
@@ -59,7 +62,36 @@ exports.postDataCheckOutDevice = (req, res) => {
     const currency = "COP";
     const type = "AUTHORIZATION_AND_CAPTURE";
     const postalCode = "000000";
-    const userAgent = "Mozilla/5.0 (Windows NT 5.1; rv:18.0) Gecko/20100101 Firefox/18.0";
+    const clientIp;
+
+    // ip address of client
+    const ipAddressOfClient = async () => {
+        // app.get('http://gd.geobytes.com/GetCityDetails')
+        // .then((res)=>{
+        //     res.data.geobytesremoteip
+        // }) 
+        const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
+        const ipResponse = await fetch(ipUrl);
+        const ipJsonData = await ipResponse.json(); 
+        clientIp = ipJsonData.geobytesremoteip
+    };
+
+    // userAgent detection
+    const UA = navigator.userAgent;
+
+    // signature generation
+    const signature = {
+        apiKey: apiKey,
+        merchantId: accountId,
+        referenceCode: `${checkoutData.device.nameOfDevice}:  ${checkoutData.device.deviceId} - ${checkoutData.user.userId} `,
+        tx_value: checkoutData.device.price,
+        currency: currency,
+    }; 
+
+    const signatureGen = (signature) =>{
+        const signatureString = `${signature.apiKey} ~ `;
+        md5(signatureString);
+    }
 
     // data from client body
     const userData = {
@@ -89,6 +121,7 @@ exports.postDataCheckOutDevice = (req, res) => {
         }
     };
 
+    // ask to Firebase
     const dataCheckout = {}
     // ask for userCredentials
     db
@@ -140,7 +173,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                 referenceCode: `${checkoutData.device.nameOfDevice}:  ${checkoutData.device.deviceId} - ${checkoutData.user.userId} `, 
                 description: `Buy of ${checkoutData.device.nameOfDevice} device for ${checkoutData.user.names} ${checkoutData.user.lastname} with ID: ${checkoutData.user.userId}`, 
                 language: language, 
-                signature: "7ee7cf808ce6a39b17481c54f2c57acc",
+                signature: signatureGen,
                 notifyUrl: notifyUrl, 
                 additionalValues: {
                         TX_VALUE: {
@@ -209,12 +242,12 @@ exports.postDataCheckOutDevice = (req, res) => {
                 INSTALLMENTS_NUMBER: 1 
             },
             type: type, 
-            paymentMethod: "VISA", 
+            paymentMethod: userData.cc.paymentMethod, 
             paymentCountry: paymentCountry, 
             deviceSessionId: "vghs6tvkcle931686k1900o6e1", 
-            ipAddress: "127.0.0.1", 
+            ipAddress: clientIp, 
             cookie: "pt1t38347bs6jc9ruv2ecpv7o2",
-            userAgent: userAgent
+            userAgent: UA
         },
         test: false
     }
