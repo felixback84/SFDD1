@@ -82,9 +82,49 @@ exports.postDataCheckOutDevice = (req, res) => {
             number: req.body.cc.number,
             securityCode: req.body.cc.securityCode, 
             expirationDate: req.body.cc.expirationDate, 
-            name: req.body.cc.name
+            name: req.body.cc.name,
+            paymentMethod: req.body.cc.paymentMethod,
+            dniType: req.body.cc.dniType,
+            dniNumber: req.body.cc.dniNumber
         }
     };
+
+    const dataCheckout = {}
+    // ask for userCredentials
+    db
+        .doc(`/users/${req.user.userHandle}`)
+        .get()
+        .then((doc) => {
+            let userDataFilter = {
+                names: doc.data().names,
+                lastname: doc.data().lastname,
+                email: doc.data().email,
+                phone:doc.data().phone,
+                userId: doc.data().userId
+            }
+            dataCheckout.user = userDataFilter;
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+    // ask for device info
+    db
+        .doc(`/devices/${req.params.deviceId}`)
+        .get()
+        .then((doc) => {
+            let deviceDataFilter = {
+                deviceId: req.params.deviceId,
+                nameOfDevice: doc.data().nameOfDevice,
+                price: doc.data().price
+            };
+                dataCheckout.device = deviceDataFilter;
+                console.log(dataCheckout);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
 
     // data for post in PAYU
     const allDataToPostInPayU = {
@@ -97,31 +137,31 @@ exports.postDataCheckOutDevice = (req, res) => {
         transaction: {
             order: {
                 accountId: accountId, 
-                referenceCode: "TestPayU", 
-                description: "payment test", 
+                referenceCode: `${checkoutData.device.nameOfDevice}:  ${checkoutData.device.deviceId} - ${checkoutData.user.userId} `, 
+                description: `Buy of ${checkoutData.device.nameOfDevice} device for ${checkoutData.user.names} ${checkoutData.user.lastname} with ID: ${checkoutData.user.userId}`, 
                 language: language, 
                 signature: "7ee7cf808ce6a39b17481c54f2c57acc",
                 notifyUrl: notifyUrl, 
                 additionalValues: {
                         TX_VALUE: {
-                        value: 20000, 
-                        currency: "COP" 
+                        value: checkoutData.device.price, 
+                        currency: currency 
                     },
                         TX_TAX: {
-                        value: 3193, 
+                        value: 0, 
                         currency: currency 
                     },
                         TX_TAX_RETURN_BASE: { 
-                        value: 16806,
-                        currency: "COP"
+                        value: 0,
+                        currency: currency
                     }
                 },
                 buyer: {
-                    merchantBuyerId: "1",
-                    fullName: "First name and second buyer name", 
-                    emailAddress: "buyer_test@test.com", 
-                    contactPhone: "7563126", 
-                    dniNumber: "5415668464654",
+                    merchantBuyerId: checkoutData.user.userId,
+                    fullName: `${checkoutData.user.names} ${checkoutData.user.lastname}`, 
+                    emailAddress: checkoutData.user.email, 
+                    contactPhone: checkoutData.user.phone, 
+                    dniNumber: checkoutData.user.userId,
                     shippingAddress: {
                         street1: userData.shippingAddress.street1, 
                         street2: userData.shippingAddress.street2, 
@@ -144,11 +184,11 @@ exports.postDataCheckOutDevice = (req, res) => {
             },
             payer: {
                 merchantPayerId: "1",
-                fullName: "First name and second payer name", 
-                emailAddress: "payer_test@test.com",
-                contactPhone: "7563126",
-                dniType: "CC",
-                dniNumber: "5415668464654",
+                fullName: userData.cc.name, 
+                emailAddress: userData.billing.email,
+                contactPhone: userData.billing.phone,
+                dniType :userData.cc.dniType,
+                dniNumber: userData.cc.dniNumber,
                 billingAddress: {
                     street1: userData.billingAddress.street1, 
                     street2: userData.billingAddress.street2, 
@@ -160,10 +200,10 @@ exports.postDataCheckOutDevice = (req, res) => {
                 }
             },
             creditCard: {
-                number: "4097440000000004", 
-                securityCode: "321", 
-                expirationDate: "2022/12", 
-                name: "REJECTED" 
+                number: userData.cc.number, 
+                securityCode: userData.cc.securityCode, 
+                expirationDate: userData.cc.expirationDate, 
+                name: userData.cc.name 
             },
             extraParameters: {
                 INSTALLMENTS_NUMBER: 1 
