@@ -84,250 +84,189 @@ exports.postDataCheckOutDevice = (req, res) => {
             };
                 dataCheckout.device = deviceDataFilter;
                 //console.log(dataCheckout);
-            console.log(dataCheckout);
+                console.log(dataCheckout);
+
+                /////////////////////
+
+                // static global vars
+                const language = "es";
+                const command = "SUBMIT_TRANSACTION";
+                const apiKey = process.env.API_KEY;
+                const apiLogin = process.env.API_LOGIN;
+                const accountId = process.env.ACCOUNT_ID;
+                const notifyUrl = "http://www.tes.com/confirmation";
+                const country = "CO";
+                const paymentCountry = "CO";
+                const currency = "COP";
+                const type = "AUTHORIZATION_AND_CAPTURE";
+                const postalCode = "000000";
+                let merchantPayerId = 1;
+                // merchantPayerId++;
+                //const clientIp;
+
+                //ip address of client
+                const ipAddressOfClient = async () => {
+                    // app.get('http://gd.geobytes.com/GetCityDetails')
+                    // .then((res)=>{
+                    //     res.data.geobytesremoteip
+                    // }) 
+                    const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
+                    const ipResponse = await fetch(ipUrl);
+                    const ipJsonData = await ipResponse.json(); 
+                    return ipJsonData.geobytesremoteip;
+                };
+                
+                // data from client body
+                const userData = {
+                    // ...req.body
+                    shippingAddress: {
+                        street1: req.body.paymentData.shippingAddress.street1,
+                        street2: req.body.paymentData.shippingAddress.street2,
+                        city: req.body.paymentData.shippingAddress.city,
+                        state: req.body.paymentData.shippingAddress.state,
+                        phone: req.body.paymentData.shippingAddress.phone
+                    },
+                    billingAddress: {
+                        street1: req.body.paymentData.billingAddress.street1,
+                        street2: req.body.paymentData.billingAddress.street2,
+                        city: req.body.paymentData.billingAddress.city,
+                        state: req.body.paymentData.billingAddress.state,
+                        phone: req.body.paymentData.billingAddress.phone
+                    },
+                    cc:{
+                        number: req.body.paymentData.cc.number,
+                        securityCode: req.body.paymentData.cc.securityCode, 
+                        expirationDate: req.body.paymentData.cc.expirationDate, 
+                        name: req.body.paymentData.cc.name,
+                        paymentMethod: req.body.paymentData.cc.paymentMethod,
+                        deviceSessionId: req.body.paymentData.cc.deviceSessionId,
+                        cookie: req.body.paymentData.cc.cookie,
+                        userAgent: req.body.paymentData.cc.userAgent
+                    }
+                };    
+
+                console.log(userData);
+
+                //signature generation
+                // const signatureGen = () => {
+                //     const signature = {
+                //         apiKey: apiKey,
+                //         merchantId: accountId,
+                //         referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`,
+                //         tx_value: dataCheckout.device.price,
+                //         currency: currency
+                //     }; 
+                //     const signatureString = `${signature.apiKey}~${signature.merchantId}~${signature.referenceCode}~${tx_value}~${currency}`;
+                //     const encoded = md5(signatureString);
+                //     return encoded;
+                // }
+
+                // data for post in PAYU
+                let allDataToPostInPayU = {
+                    language: language, 
+                    command: command, 
+                    merchant: {
+                        apiKey: apiKey, 
+                        apiLogin: apiLogin 
+                    },
+                    transaction: {
+                        order: {
+                            accountId: accountId, 
+                            referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`, 
+                            description: `Buy of ${dataCheckout.device.nameOfDevice} device for ${dataCheckout.user.names} ${dataCheckout.user.lastname} with ID: ${dataCheckout.user.userId}`, 
+                            language: language, 
+                            //signature: signatureGen,
+                            notifyUrl: notifyUrl, 
+                            additionalValues: {
+                                    TX_VALUE: {
+                                        value: dataCheckout.device.price, 
+                                        currency: currency 
+                                    },
+                                    TX_TAX: {
+                                        value: 0, 
+                                        currency: currency 
+                                    },
+                                    TX_TAX_RETURN_BASE: { 
+                                        value: 0,
+                                        currency: currency
+                                    }
+                            },
+                            buyer: {
+                                merchantBuyerId: dataCheckout.user.userId,
+                                fullName: `${dataCheckout.user.names} ${dataCheckout.user.lastname}`, 
+                                emailAddress: dataCheckout.user.email, 
+                                contactPhone: dataCheckout.user.phone, 
+                                dniNumber: dataCheckout.user.userId,
+                                shippingAddress: {
+                                    street1: userData.shippingAddress.street1, 
+                                    street2: userData.shippingAddress.street2, 
+                                    city: userData.shippingAddress.city, 
+                                    state: userData.shippingAddress.state, 
+                                    country: country, 
+                                    postalCode: postalCode, 
+                                    phone: userData.shippingAddress.phone 
+                                }
+                            },
+                            shippingAddress: {
+                                street1: userData.shippingAddress.street1, 
+                                street2: userData.shippingAddress.street2, 
+                                city: userData.shippingAddress.city, 
+                                state: userData.shippingAddress.state, 
+                                country: country, 
+                                postalCode: postalCode, 
+                                phone: userData.shippingAddress.phone 
+                            }
+                        },
+                        payer: {
+                            merchantPayerId: merchantPayerId,
+                            fullName: userData.cc.name, 
+                            emailAddress: dataCheckout.user.email,
+                            contactPhone: dataCheckout.user.phone,
+                            dniNumber: "00000000",
+                            billingAddress: {
+                                street1: userData.billingAddress.street1, 
+                                street2: userData.billingAddress.street2, 
+                                city: userData.billingAddress.city, 
+                                state: userData.billingAddress.state, 
+                                country: country, 
+                                postalCode: postalCode, 
+                                phone: userData.billingAddress.phone 
+                            }
+                        },
+                        creditCard: {
+                            number: userData.cc.number, 
+                            securityCode: userData.cc.securityCode, 
+                            expirationDate: userData.cc.expirationDate, 
+                            name: userData.cc.name 
+                        },
+                        extraParameters: {
+                            INSTALLMENTS_NUMBER: 1 
+                        },
+                        type: type, 
+                        paymentMethod: userData.cc.paymentMethod, 
+                        paymentCountry: paymentCountry, 
+                        deviceSessionId: userData.cc.deviceSessionId, 
+                        ipAddress: ipAddressOfClient, 
+                        cookie: userData.cc.cookie,
+                        userAgent: userData.cc.userAgent
+                    },
+                    test: false
+                }
+
+                //console.log(allDataToPostInPayU.transaction.order.additionalValues.TX_VALUE.value);
+                console.log(allDataToPostInPayU);
+                //return res.json(allDataToPostInPayU);
 
         })
         .catch((err) => {
             console.error(err);
             res.status(500).json({ error: err.code });
         });
-
-    // static global vars
-    const language = "es";
-    const command = "SUBMIT_TRANSACTION";
-    const apiKey = process.env.API_KEY;
-    const apiLogin = process.env.API_LOGIN;
-    const accountId = process.env.ACCOUNT_ID;
-    const notifyUrl = "http://www.tes.com/confirmation";
-    const country = "CO";
-    const paymentCountry = "CO";
-    const currency = "COP";
-    const type = "AUTHORIZATION_AND_CAPTURE";
-    const postalCode = "000000";
-    let merchantPayerId = 1;
-    // merchantPayerId++;
-    //const clientIp;
-
-    // ip address of client
-    // const ipAddressOfClient = async () => {
-    //     // app.get('http://gd.geobytes.com/GetCityDetails')
-    //     // .then((res)=>{
-    //     //     res.data.geobytesremoteip
-    //     // }) 
-    //     const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
-    //     const ipResponse = await fetch(ipUrl);
-    //     const ipJsonData = await ipResponse.json(); 
-    //     return ipJsonData.geobytesremoteip;
-    // };
+    }
     
     
 
-     // data from client body
-     const userData = {
-        ...req.body
-        // shippingAddress: {
-        //     street1: req.body.shippingAddress.street1,
-        //     street2: req.body.shippingAddress.street2,
-        //     city: req.body.shippingAddress.city,
-        //     state: req.body.shippingAddress.state,
-        //     phone: req.body.shippingAddress.phone
-        // },
-        // billingAddress: {
-        //     street1: req.body.billingAddress.street1,
-        //     street2: req.body.billingAddress.street2,
-        //     city: req.body.billingAddress.city,
-        //     state: req.body.billingAddress.state,
-        //     phone: req.body.billingAddress.phone
-        // },
-        // cc:{
-        //     number: req.body.cc.number,
-        //     securityCode: req.body.cc.securityCode, 
-        //     expirationDate: req.body.cc.expirationDate, 
-        //     name: req.body.cc.name,
-        //     paymentMethod: req.body.cc.paymentMethod,
-        //     deviceSessionId: req.body.cc.deviceSessionId,
-        //     cookie: req.body.cc.cookie
-            // dniType: req.body.cc.dniType,
-            // dniNumber: req.body.cc.dniNumber
-        //}
-    };    
-
-    console.log(userData);
-
-        // signature generation
-    // const signatureGen = () => {
-    //     const signature = {
-    //         apiKey: apiKey,
-    //         merchantId: accountId,
-    //         referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`,
-    //         tx_value: dataCheckout.device.price,
-    //         currency: currency,
-    //     }; 
-    //     const signatureString = `${signature.apiKey}~${signature.merchantId}~${signature.referenceCode}~${tx_value}~${currency}`;
-    //     const encoded = md5(signatureString);
-    //     return encoded;
-    // }
-
-    // // data for post in PAYU
-    // let allDataToPostInPayU = {
-    //     language: language, 
-    //     command: command, 
-    //     merchant: {
-    //         apiKey: apiKey, 
-    //         apiLogin: apiLogin 
-    //     },
-    //     transaction: {
-    //         order: {
-    //             accountId: accountId, 
-    //             referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId} `, 
-    //             description: `Buy of ${dataCheckout.device.nameOfDevice} device for ${dataCheckout.user.names} ${dataCheckout.user.lastname} with ID: ${checkoutData.user.userId}`, 
-    //             language: language, 
-    //             signature: signatureGen,
-    //             notifyUrl: notifyUrl, 
-    //             additionalValues: {
-    //                     TX_VALUE: {
-    //                     value: checkoutData.device.price, 
-    //                     currency: currency 
-    //                 },
-    //                     TX_TAX: {
-    //                     value: 0, 
-    //                     currency: currency 
-    //                 },
-    //                     TX_TAX_RETURN_BASE: { 
-    //                     value: 0,
-    //                     currency: currency
-    //                 }
-    //             },
-    //             buyer: {
-    //                 merchantBuyerId: checkoutData.user.userId,
-    //                 fullName: `${checkoutData.user.names} ${checkoutData.user.lastname}`, 
-    //                 emailAddress: checkoutData.user.email, 
-    //                 contactPhone: checkoutData.user.phone, 
-    //                 dniNumber: checkoutData.user.userId,
-    //                 shippingAddress: {
-    //                     street1: userData.shippingAddress.street1, 
-    //                     street2: userData.shippingAddress.street2, 
-    //                     city: userData.shippingAddress.city, 
-    //                     state: userData.shippingAddress.state, 
-    //                     country: country, 
-    //                     postalCode: postalCode, 
-    //                     phone: userData.shippingAddress.phone 
-    //                 }
-    //             },
-    //             shippingAddress: {
-    //                 street1: userData.shippingAddress.street1, 
-    //                 street2: userData.shippingAddress.street2, 
-    //                 city: userData.shippingAddress.city, 
-    //                 state: userData.shippingAddress.state, 
-    //                 country: country, 
-    //                 postalCode: postalCode, 
-    //                 phone: userData.shippingAddress.phone 
-    //             }
-    //         },
-    //         payer: {
-    //             merchantPayerId: merchantPayerId,
-    //             fullName: userData.cc.name, 
-    //             emailAddress: userData.billing.email,
-    //             contactPhone: userData.billing.phone,
-    //             dniNumber: "00000000",
-    //             billingAddress: {
-    //                 street1: userData.billingAddress.street1, 
-    //                 street2: userData.billingAddress.street2, 
-    //                 city: userData.billingAddress.city, 
-    //                 state: userData.billingAddress.state, 
-    //                 country: country, 
-    //                 postalCode: postalCode, 
-    //                 phone: userData.billingAddress.phone 
-    //             }
-    //         },
-    //         creditCard: {
-    //             number: userData.cc.number, 
-    //             securityCode: userData.cc.securityCode, 
-    //             expirationDate: userData.cc.expirationDate, 
-    //             name: userData.cc.name 
-    //         },
-    //         extraParameters: {
-    //             INSTALLMENTS_NUMBER: 1 
-    //         },
-    //         type: type, 
-    //         paymentMethod: userData.cc.paymentMethod, 
-    //         paymentCountry: paymentCountry, 
-    //         deviceSessionId: deviceSessionId, 
-    //         ipAddress: ipAddressOfClient, 
-    //         cookie: userData.cc.cookie,
-    //         userAgent: UA
-    //     },
-    //     test: false
-    // }
-
-    // console.log(allDataToPostInPayU);
-    // return res.json(allDataToPostInPayU);
     
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // if(userData){
-    //     // global var
-    //     let dataCheckout = {};
-
-    //     // put addiotional info for checkout
-    //     let checkoutData = {
-    //         userHandle: req.user.userHandle,
-    //         createdAt: new Date().toISOString(),
-    //         type: 'device',
-    //         state:'pending'
-    //     }
-    //     dataCheckout = checkoutData;
-        
-    //     // address
-    //     const newUserAdressToDelivery = {
-    //         city: req.body.paymentData.shippingAddress.city, 
-    //         addressToDelivery: req.body.paymentData.shippingAddress.address1
-    //     };
-
-    //     // add address to global var
-    //     dataCheckout.address = newUserAdressToDelivery;
-    //     // ask for user data
-    //     db
-    //         .doc(`/users/${req.user.userHandle}`)
-    //         .get()
-    //         .then((doc) => {
-    //             let userDataFilter = {
-    //                 names: doc.data().names,
-    //                 lastname: doc.data().lastname,
-    //                 email: doc.data().email
-    //             }
-    //             dataCheckout.user = userDataFilter;
-    //         })
-    //         .catch((err) => {
-    //             console.error(err);
-    //             res.status(500).json({ error: err.code });
-    //         });
-    //     // ask for device info
-    //     db
-    //         .doc(`/devices/${req.params.deviceId}`)
-    //         .get()
-    //         .then((doc) => {
-    //             let deviceDataFilter = {
-    //                 deviceId: req.params.deviceId,
-    //                 nameOfDevice: doc.data().nameOfDevice,
-    //                 price: doc.data().price
-    //             };
-    //                 dataCheckout.device = deviceDataFilter;
-    //                 console.log(dataCheckout);
-    //                 // add final object in db
-    //                 db.collection('checkouts').add(dataCheckout);
-    //                 // send response from server
-    //                 return res.json('done with the checkout');
-    //         })
-    //         .catch((err) => {
-    //             console.error(err);
-    //             res.status(500).json({ error: err.code });
-    //         });
-    //     } else {
-
-    //     }
-}
 
 // post data for checkout to post in userAdventures
 exports.postDataCheckOutAdventure = (req, res) => {
