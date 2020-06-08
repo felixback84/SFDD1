@@ -50,10 +50,10 @@ export const setCreditCard = (userCreditCardData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });
 }
 
-export const postDataCheckOutDevice = (deviceid, userData) => (dispatch) => {
+export const postDataCheckOutDevice = (deviceId, userData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/user/checkout/device/${deviceid}`, userData)
+        .post(`/user/checkout/device/${deviceId}`, userData)
         .then((res) => {   
             console.log('hi action reducer');  
             console.log(res.data); 

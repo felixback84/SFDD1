@@ -28,13 +28,19 @@ class ResumeFormToDevicePayment extends Component {
         event.preventDefault();
         
         const {
+            device:{deviceId},
             paymentData:{
                 shippingAddress,
                 billingAddress,
                 cc:{
                     name,
                     expirationDate,
-                    number
+                    number,
+                    paymentMethod,
+                    securityCode,
+                    cookie,
+                    userAgent,
+                    deviceSessionId
                 }
             }
         } = this.props;
@@ -46,11 +52,16 @@ class ResumeFormToDevicePayment extends Component {
                 cc:{
                     name,
                     expirationDate,
-                    number
+                    number,
+                    paymentMethod,
+                    securityCode,
+                    cookie,
+                    userAgent,
+                    deviceSessionId
                 }
             }
         } 
-        this.props.postDataCheckOutDevice(this.props.deviceid, userData);
+        this.props.postDataCheckOutDevice(deviceId, userData);
 
         console.log(userData);
         console.log('hi from finish');

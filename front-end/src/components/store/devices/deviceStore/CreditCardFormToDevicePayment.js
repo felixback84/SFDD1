@@ -17,25 +17,6 @@ const styles = (theme) => ({
     ...theme.notColor
 });
 
-// payu deviceSessionId
-// md5
-const md5 = require('md5');
-// cookie device
-const cookie = cookie(document.cookie);
-
-
-// payu iframme
-const iframme = () => {
-    let date = new Date();
-    let milliSeconds = date.getMilliseconds();
-    const deviceSessionId = md5(`${cookie}${milliSeconds}`);
-    return(
-        <script type="text/javascript" 
-            src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
-        </script>
-        )
-}
-
 class CreditCardFormToDevicePayment extends Component {
     constructor(){
         super();
@@ -44,8 +25,7 @@ class CreditCardFormToDevicePayment extends Component {
             expirationDate: '',
             name: '',
             paymentMethod: '',
-            securityCode: '',
-            cookie: ''
+            securityCode: ''
         }
     }
     
@@ -58,14 +38,42 @@ class CreditCardFormToDevicePayment extends Component {
 
     // event to save data
     handleClickConfirm = () => {
+        
+        // cookie device
+        document.cookie = "name=SFDD";
+        // userAgent
+        let userAgent = navigator.userAgent;
+        // payu deviceSessionId
+        let date = new Date();
+        let milliSeconds = date.getMilliseconds();
+        let deviceSessionId;
+        //md5
+        const md5 = require('md5');
+        deviceSessionId = md5(`${document.cookie}-${milliSeconds}`);
+
+        // let deviceSessionId; 
+        // // payu iframme
+        // // function iframme() {
+        // //     let date = new Date();
+        // //     let milliSeconds = date.getMilliseconds();
+        // //     deviceSessionId = md5(`${cookie}-${milliSeconds}`);
+        // //     console.log(deviceSessionId);
+        // //     return(
+        // //         <script type="text/javascript" 
+        // //             src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
+        // //         </script>
+        // //         )
+        // // }
+
         const userCreditCardData = {
             number: this.state.number,
             expirationDate: this.state.expirationDate,
-            securityCode: this.state.expirationDate,
+            securityCode: this.state.securityCode,
             name: this.state.name,
-            deviceSessionId: iframme,
             paymentMethod: this.state.paymentMethod,
-            cookie: cookie
+            deviceSessionId: deviceSessionId,
+            cookie: document.cookie,
+            userAgent: userAgent
         };
         console.log('hi click CC')
         // redux action to set data
@@ -74,11 +82,23 @@ class CreditCardFormToDevicePayment extends Component {
 
     render() {
         const { classes, ui: { loading } } = this.props;
+        // cookie device
+        document.cookie = "name=SFDD";
+        // session id
+        let deviceSessionId;
+        let date = new Date();
+        let milliSeconds = date.getMilliseconds();
+        // md5
+        const md5 = require('md5');
+        deviceSessionId = md5(`${document.cookie}-${milliSeconds}`);
 
         return (
             <Grid container className={classes.form} spacing={1}>
                 <Grid item xs={2} />
                 <Grid item xs={8}>
+                    <script type="text/javascript" 
+                        src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
+                    </script>
                     <Typography variant="h2" className={classes.pageTitle}>
                         Credit Card Info 
                     </Typography>
@@ -105,6 +125,18 @@ class CreditCardFormToDevicePayment extends Component {
                             // helperText={errors.expirationDate}
                             // error={errors.expirationDate ? true : false}
                             value={this.state.expirationDate}
+                            onChange={this.handleChange}
+                            fullWidth>
+                        </TextField> 
+                        <TextField 
+                            id="securityCode" 
+                            name="securityCode" 
+                            type="securityCode" 
+                            label="securityCode" 
+                            className={classes.textField} 
+                            // helperText={errors.securityCode}
+                            // error={errors.securityCode ? true : false}
+                            value={this.state.securityCode}
                             onChange={this.handleChange}
                             fullWidth>
                         </TextField> 
