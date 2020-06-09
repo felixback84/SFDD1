@@ -51,20 +51,18 @@ class CreditCardFormToDevicePayment extends Component {
         const md5 = require('md5');
         deviceSessionId = md5(`${document.cookie}-${milliSeconds}`);
 
-        // let deviceSessionId; 
-        // // payu iframme
-        // // function iframme() {
-        // //     let date = new Date();
-        // //     let milliSeconds = date.getMilliseconds();
-        // //     deviceSessionId = md5(`${cookie}-${milliSeconds}`);
-        // //     console.log(deviceSessionId);
-        // //     return(
-        // //         <script type="text/javascript" 
-        // //             src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
-        // //         </script>
-        // //         )
-        // // }
+        // ip var
+        let ipRes;
 
+        // ip Scan
+        const ip = async () => {
+            const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
+            const ipResponse = await fetch(ipUrl);
+            const ipJsonData = await ipResponse.json(); 
+            ipRes = ipJsonData.geobytesremoteip;
+        };
+
+        // object yo send to the server
         const userCreditCardData = {
             number: this.state.number,
             expirationDate: this.state.expirationDate,
@@ -73,7 +71,8 @@ class CreditCardFormToDevicePayment extends Component {
             paymentMethod: this.state.paymentMethod,
             deviceSessionId: deviceSessionId,
             cookie: document.cookie,
-            userAgent: userAgent
+            userAgent: userAgent,
+            ip: ipRes
         };
         console.log('hi click CC')
         // redux action to set data
@@ -81,6 +80,7 @@ class CreditCardFormToDevicePayment extends Component {
     };
 
     render() {
+        // redux state
         const { classes, ui: { loading } } = this.props;
         // cookie device
         document.cookie = "name=SFDD";
@@ -102,7 +102,6 @@ class CreditCardFormToDevicePayment extends Component {
                     <Typography variant="h2" className={classes.pageTitle}>
                         Credit Card Info 
                     </Typography>
-                    {/* <p>Where you want receive the pacakage?</p> */}
                     <form noValidate >
                         <TextField 
                             id="number" 

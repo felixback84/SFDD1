@@ -5,6 +5,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 // components
 import AddressShippingFormToDevicePayment from './AddressShippingFormToDevicePayment';
@@ -41,13 +42,13 @@ function getSteps() {
 function getStepContent(stepIndex, deviceid) {
     switch (stepIndex) {
         case 0:
-            return <AddressShippingFormToDevicePayment/>;
+            return (<AddressShippingFormToDevicePayment/>);
         case 1:
-            return <AddressBillingFormToDevicePayment/>;    
+            return (<AddressBillingFormToDevicePayment/>);    
         case 2:
-            return <CreditCardFormToDevicePayment/>;
+            return (<CreditCardFormToDevicePayment/>);
         case 3:
-            return <ResumeFormToDevicePayment deviceid={deviceid}/>;
+            return (<ResumeFormToDevicePayment deviceid={deviceid}/>);
         // case 4:
         //     return <SuccessToDevicePayment/>;
         default:
@@ -75,7 +76,9 @@ export default function StepperToDevicePayment(props) {
     };
 
     return (
-        <div className={classes.root}>
+        
+        <Grid container className={classes.root}>
+            {/* Steps icons */}
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                 <Step key={label}>
@@ -83,19 +86,18 @@ export default function StepperToDevicePayment(props) {
                 </Step>
                 ))}
             </Stepper>
-            <div>
+            <Grid>
                 {activeStep === steps.length ? (
-                <div>
+                <Grid>
                     <Typography className={classes.instructions}>All steps completed</Typography>
                     <Button onClick={handleReset}>Reset</Button>
-                </div>
+                </Grid>
                 ) : (
-                <div>
-                    <Typography className={classes.instructions}>
-                        {getStepContent(activeStep, props.deviceid)}
-                    </Typography>
+                <Grid>
+                    {/* Content */}
+                    {getStepContent(activeStep, props.deviceid)}
                     {/* Buttons */}
-                    <div>
+                    <Grid>
                         <Button
                             disabled={activeStep === 0}
                             onClick={handleBack}
@@ -106,10 +108,10 @@ export default function StepperToDevicePayment(props) {
                         <Button variant="contained" color="primary" onClick={handleNext}>
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button>
-                    </div>
-                </div>
+                    </Grid>
+                </Grid>
                 )}
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     );
 }

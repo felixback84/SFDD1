@@ -25,27 +25,27 @@ const HeaderToCardDevices = (props) => {
         deviceid
     } = props;
     return (
-        <div>
-            <CardHeader
-                avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                        {nameofdevice.charAt(0)}
-                    </Avatar>
-                }
-                // action={
-                //     <DeviceDialog 
-                //         labelToSwitch={nameofdevice} 
-                //         deviceid={deviceid}
-                //     />
-                // }
-                title={
-                    <Chip
-                        icon={<FaceIcon />}
-                        label={price + 'USD'}
-                    /> }
-                subheader={nameofdevice + ' device. For ages from: ' + agerate}
-            />
-        </div>
+        
+        <CardHeader
+            avatar={
+                <Avatar aria-label="recipe" className={classes.avatar}>
+                    {nameofdevice.charAt(0)}
+                </Avatar>
+            }
+            // action={
+            //     <DeviceDialog 
+            //         labelToSwitch={nameofdevice} 
+            //         deviceid={deviceid}
+            //     />
+            // }
+            title={
+                <Chip
+                    icon={<FaceIcon />}
+                    label={price + 'USD'}
+                /> }
+            subheader={nameofdevice + ' device. For ages from: ' + agerate}
+        />
+        
     )
 }
 export default withStyles(styles)(HeaderToCardDevices);

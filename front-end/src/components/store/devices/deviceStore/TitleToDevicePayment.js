@@ -31,12 +31,12 @@ const TitleToDevicePayment = (props) => {
     const { classes, price, nameofdevice, agerate, onClose } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} >
-            <Typography variant="body2" color="textSecondary" component="h1">
+            {/* <Typography variant="body2" color="textSecondary" component="h1">
                 {`Buy now ${nameofdevice} device just for ${price}`}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="h1">
                 {`Just for: ${price} USD`}
-            </Typography>
+            </Typography> */}
             {onClose ? (
             <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
                 <CloseIcon />

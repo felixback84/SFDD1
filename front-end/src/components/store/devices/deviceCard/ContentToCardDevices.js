@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 // mui stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,11 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
-import StorefrontIcon from '@material-ui/icons/Storefront';
 import Divider from '@material-ui/core/Divider';
 
 // components
-import MyButton from '../../../../utilities/MyButton';
 import DeviceDialog from '../deviceDialog/DeviceDialog';
 import ProcessToDevicePayment from '../deviceStore/ProcessToDevicePayment';
 
@@ -73,7 +70,7 @@ const ContentToCardUserAdventure = (props) => {
 
                 <Divider orientation="vertical" flexItem/>
                 
-                <Grid direction='column' justify='flex-start' alignItems='flex-start'>
+                <Grid >
                     <Grid item xs={6}>
                         <ListItem className={classes.ListItem}>
                             <ProcessToDevicePayment 

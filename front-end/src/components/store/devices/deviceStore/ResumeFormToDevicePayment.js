@@ -40,7 +40,8 @@ class ResumeFormToDevicePayment extends Component {
                     securityCode,
                     cookie,
                     userAgent,
-                    deviceSessionId
+                    deviceSessionId,
+                    ip
                 }
             }
         } = this.props;
@@ -57,7 +58,8 @@ class ResumeFormToDevicePayment extends Component {
                     securityCode,
                     cookie,
                     userAgent,
-                    deviceSessionId
+                    deviceSessionId,
+                    ip
                 }
             }
         } 

@@ -14,7 +14,6 @@ import StepperToDevicePayment from './StepperToDevicePayment';
 import TitleToDevicePayment from './TitleToDevicePayment';
 
 // Redux stuff
-//import { connect } from 'react-redux';
 import store from '../../../../redux/store';
 import { getDevice } from '../../../../redux/actions/devicesActions';
 
@@ -49,7 +48,6 @@ class ProcessToDevicePayment extends Component {
         this.setState({ open: true });
         // redux actions
         store.dispatch(getDevice(this.props.deviceid));
-        //this.props.getDevice(this.props.deviceid);
     }
 
     handleClose = () => {
@@ -94,15 +92,6 @@ class ProcessToDevicePayment extends Component {
         )
     }
 }
-
-// state not used
-// const mapStateToProps = (state) => ({
-//     device: state.devices1.device
-// })
-
-// const mapActionsToProps = {
-//     getDevice
-// };
 
 export default (withStyles(styles)(ProcessToDevicePayment));
 

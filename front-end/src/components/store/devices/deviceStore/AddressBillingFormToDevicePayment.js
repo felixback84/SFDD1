@@ -63,7 +63,7 @@ class AddressBillingFormToDevicePayment extends Component {
                     <Typography variant="h2" className={classes.pageTitle}>
                         Billing Address 
                     </Typography>
-                    {/* <p>Where you want receive the pacakage?</p> */}
+                    
                     <form noValidate >
                         <TextField 
                             id="street1" 
@@ -141,7 +141,6 @@ class AddressBillingFormToDevicePayment extends Component {
                                     <CircularProgress size={30} className={classes.progress} />
                                 )}
                         </Button>
-                       
                     </form>
                 </Grid> 
                 <Grid item xs={2} />   
@@ -152,7 +151,6 @@ class AddressBillingFormToDevicePayment extends Component {
 
 const mapStateToProps = (state) => ({
     ui:state.ui
-
 })
 
 const mapActionsToProps = {

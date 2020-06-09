@@ -83,10 +83,9 @@ exports.postDataCheckOutDevice = (req, res) => {
                 price: doc.data().price
             };
                 dataCheckout.device = deviceDataFilter;
-                //console.log(dataCheckout);
                 console.log(dataCheckout);
 
-                /////////////////////
+                ///////////////////// SIDE SERVER FOR BUY WITH PAYU ////////////////////////////////
 
                 // static global vars
                 const language = "es";
@@ -100,21 +99,19 @@ exports.postDataCheckOutDevice = (req, res) => {
                 const currency = "COP";
                 const type = "AUTHORIZATION_AND_CAPTURE";
                 const postalCode = "000000";
+                let signaturedEncoded;
                 let merchantPayerId = 1;
-                // merchantPayerId++;
-                //const clientIp;
+                merchantPayerId++;
+                let ipRes;
 
                 //ip address of client
-                const ipAddressOfClient = async () => {
-                    // app.get('http://gd.geobytes.com/GetCityDetails')
-                    // .then((res)=>{
-                    //     res.data.geobytesremoteip
-                    // }) 
-                    const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
-                    const ipResponse = await fetch(ipUrl);
-                    const ipJsonData = await ipResponse.json(); 
-                    return ipJsonData.geobytesremoteip;
-                };
+                // ip = async () => {
+                //     const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
+                //     const ipResponse = await fetch(ipUrl);
+                //     const ipJsonData = await ipResponse.json(); 
+                //     ipRes = await ipJsonData.geobytesremoteip;
+                //     console.log(ipRes);
+                // };
                 
                 // data from client body
                 const userData = {
@@ -141,27 +138,25 @@ exports.postDataCheckOutDevice = (req, res) => {
                         paymentMethod: req.body.paymentData.cc.paymentMethod,
                         deviceSessionId: req.body.paymentData.cc.deviceSessionId,
                         cookie: req.body.paymentData.cc.cookie,
-                        userAgent: req.body.paymentData.cc.userAgent
+                        userAgent: req.body.paymentData.cc.userAgent,
+                        ip: req.body.paymentData.cc.ip
                     }
                 };    
 
                 console.log(userData);
 
                 //signature generation
-                // const signatureGen = () => {
-                //     const signature = {
-                //         apiKey: apiKey,
-                //         merchantId: accountId,
-                //         referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`,
-                //         tx_value: dataCheckout.device.price,
-                //         currency: currency
-                //     }; 
-                //     const signatureString = `${signature.apiKey}~${signature.merchantId}~${signature.referenceCode}~${tx_value}~${currency}`;
-                //     const encoded = md5(signatureString);
-                //     return encoded;
-                // }
-
-                // data for post in PAYU
+                const signatureGen = {
+                    apiKey: apiKey,
+                    merchantId: accountId,
+                    referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`,
+                    tx_value: dataCheckout.device.price,
+                    currency: currency
+                }; 
+                const signatureString = `${signatureGen.apiKey}~${signatureGen.merchantId}~${signatureGen.referenceCode}~${signatureGen.tx_value}~${signatureGen.currency}`;
+                signaturedEncoded = md5(signatureString);
+                
+                // data object to post in PAYU
                 let allDataToPostInPayU = {
                     language: language, 
                     command: command, 
@@ -175,7 +170,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                             referenceCode: `${dataCheckout.device.nameOfDevice}:  ${dataCheckout.device.deviceId} - ${dataCheckout.user.userId}`, 
                             description: `Buy of ${dataCheckout.device.nameOfDevice} device for ${dataCheckout.user.names} ${dataCheckout.user.lastname} with ID: ${dataCheckout.user.userId}`, 
                             language: language, 
-                            //signature: signatureGen,
+                            signature: signaturedEncoded,
                             notifyUrl: notifyUrl, 
                             additionalValues: {
                                     TX_VALUE: {
@@ -246,7 +241,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                         paymentMethod: userData.cc.paymentMethod, 
                         paymentCountry: paymentCountry, 
                         deviceSessionId: userData.cc.deviceSessionId, 
-                        ipAddress: ipAddressOfClient, 
+                        ipAddress: ipRes, 
                         cookie: userData.cc.cookie,
                         userAgent: userData.cc.userAgent
                     },
@@ -264,10 +259,6 @@ exports.postDataCheckOutDevice = (req, res) => {
         });
     }
     
-    
-
-    
-
 // post data for checkout to post in userAdventures
 exports.postDataCheckOutAdventure = (req, res) => {
 

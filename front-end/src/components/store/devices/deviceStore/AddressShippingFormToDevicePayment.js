@@ -63,7 +63,7 @@ class AddressShippingFormToDevicePayment extends Component {
                     <Typography variant="h2" className={classes.pageTitle}>
                         Shipping Address 
                     </Typography>
-                    {/* <p>Where you want receive the pacakage?</p> */}
+                  
                     <form noValidate >
                         <TextField 
                             id="street1" 
@@ -141,7 +141,6 @@ class AddressShippingFormToDevicePayment extends Component {
                                     <CircularProgress size={30} className={classes.progress} />
                                 )}
                         </Button>
-                       
                     </form>
                 </Grid> 
                 <Grid item xs={2} />   
