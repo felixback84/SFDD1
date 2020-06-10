@@ -1,9 +1,12 @@
 // firebase
 const { db } = require('../utilities/admin');
-const md5 = require('md5');
-
+const functions = require('firebase-functions');
+// md5
+//const md5 = require('md5');
+// node fetch
+//const fetch = require('node-fetch');
 //.env
-require('dotenv').config();
+//require('dotenv').config();
 
 // get all checkouts
 exports.getAllCheckouts = (req, res) => {
@@ -85,13 +88,14 @@ exports.postDataCheckOutDevice = (req, res) => {
                 console.log(dataCheckout);
 
                 ///////////////////// SIDE SERVER FOR BUY WITH PAYU ////////////////////////////////
-
+                
+                
                 // static global vars
                 const language = "es";
                 const command = "SUBMIT_TRANSACTION";
-                const apiKey = process.env.API_KEY;
-                const apiLogin = process.env.API_LOGIN;
-                const accountId = process.env.ACCOUNT_ID;
+                const apiKey = functions.config().payu.apikey.key;
+                const apiLogin = functions.config().payu.apilogin.key;
+                const accountId = functions.config().payu.accountid.key;
                 const notifyUrl = "http://www.tes.com/confirmation";
                 const country = "CO";
                 const paymentCountry = "CO";
@@ -100,7 +104,6 @@ exports.postDataCheckOutDevice = (req, res) => {
                 const postalCode = "000000";
                 let signaturedEncoded;
                 let merchantPayerId = 1;
-                //merchantPayerId++;
                 
                 // data from client body
                 const userData = {
@@ -142,6 +145,8 @@ exports.postDataCheckOutDevice = (req, res) => {
                     tx_value: dataCheckout.device.price,
                     currency: currency
                 }; 
+                // md5
+                const md5 = require('md5');
                 const signatureString = `${signatureGen.apiKey}~${signatureGen.merchantId}~${signatureGen.referenceCode}~${signatureGen.tx_value}~${signatureGen.currency}`;
                 signaturedEncoded = md5(signatureString);
                 
@@ -238,8 +243,8 @@ exports.postDataCheckOutDevice = (req, res) => {
                 }
 
                 //console.log(allDataToPostInPayU.transaction.order.additionalValues.TX_VALUE.value);
-                console.log(allDataToPostInPayU);
-                //return res.json(allDataToPostInPayU);
+                //console.log(allDataToPostInPayU);
+                return res.json(allDataToPostInPayU);
 
         })
         .catch((err) => {
