@@ -1,6 +1,5 @@
 // firebase
 const { db } = require('../utilities/admin');
-const fetch = require('node-fetch');
 const md5 = require('md5');
 
 //.env
@@ -101,17 +100,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                 const postalCode = "000000";
                 let signaturedEncoded;
                 let merchantPayerId = 1;
-                merchantPayerId++;
-                let ipRes;
-
-                //ip address of client
-                // ip = async () => {
-                //     const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
-                //     const ipResponse = await fetch(ipUrl);
-                //     const ipJsonData = await ipResponse.json(); 
-                //     ipRes = await ipJsonData.geobytesremoteip;
-                //     console.log(ipRes);
-                // };
+                //merchantPayerId++;
                 
                 // data from client body
                 const userData = {
@@ -241,7 +230,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                         paymentMethod: userData.cc.paymentMethod, 
                         paymentCountry: paymentCountry, 
                         deviceSessionId: userData.cc.deviceSessionId, 
-                        ipAddress: ipRes, 
+                        ipAddress: userData.cc.ip, 
                         cookie: userData.cc.cookie,
                         userAgent: userData.cc.userAgent
                     },

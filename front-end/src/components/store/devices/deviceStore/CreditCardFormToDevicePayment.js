@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -16,6 +16,18 @@ import { setCreditCard } from '../../../../redux/actions/checkoutsActions';
 const styles = (theme) => ({
     ...theme.notColor
 });
+
+// ip Scan
+
+// const ip = async () => {
+//     const fetch = require('node-fetch');
+//     const ipUrl = 'https://ipapi.co/json/';
+//     const hi = fetch(ipUrl).then(response => response.json())
+//         .then((ip) => {
+//         console.log(ip.ip)
+//         return ip.ip
+//     })
+// };
 
 class CreditCardFormToDevicePayment extends Component {
     constructor(){
@@ -36,8 +48,9 @@ class CreditCardFormToDevicePayment extends Component {
         });
     }
 
+
     // event to save data
-    handleClickConfirm = () => {
+    handleClickConfirm = async () => {
         
         // cookie device
         document.cookie = "name=SFDD";
@@ -51,16 +64,11 @@ class CreditCardFormToDevicePayment extends Component {
         const md5 = require('md5');
         deviceSessionId = md5(`${document.cookie}-${milliSeconds}`);
 
-        // ip var
-        let ipRes;
-
-        // ip Scan
-        const ip = async () => {
-            const ipUrl = `http://gd.geobytes.com/GetCityDetails`;
-            const ipResponse = await fetch(ipUrl);
-            const ipJsonData = await ipResponse.json(); 
-            ipRes = ipJsonData.geobytesremoteip;
-        };
+        // ip client
+        const fetch = require('node-fetch');
+        let url = 'https://ipapi.co/json/';
+        let response = await fetch(url);
+        let ipRes = await response.json(); // read response body and parse as JSON
 
         // object yo send to the server
         const userCreditCardData = {
@@ -72,7 +80,7 @@ class CreditCardFormToDevicePayment extends Component {
             deviceSessionId: deviceSessionId,
             cookie: document.cookie,
             userAgent: userAgent,
-            ip: ipRes
+            ip: ipRes.ip
         };
         console.log('hi click CC')
         // redux action to set data
@@ -96,6 +104,7 @@ class CreditCardFormToDevicePayment extends Component {
             <Grid container className={classes.form} spacing={1}>
                 <Grid item xs={2} />
                 <Grid item xs={8}>
+                    {/* Script from payu */}
                     <script type="text/javascript" 
                         src={`https://maf.pagosonline.net/ws/fp/tags.js?id=${deviceSessionId}80200`}>
                     </script>
