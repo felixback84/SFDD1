@@ -35,7 +35,7 @@ const styles = (theme) => ({
     } 
 });
 
-const ContentToCardUserAdventure = (props) => {
+const ContentToCardDevice = (props) => {
     dayjs.extend(relativeTime);
 
     const {
@@ -96,4 +96,4 @@ const ContentToCardUserAdventure = (props) => {
         </CardContent>       
     )
 }
-export default withStyles(styles)(ContentToCardUserAdventure);
+export default withStyles(styles)(ContentToCardDevice);

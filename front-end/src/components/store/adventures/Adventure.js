@@ -4,10 +4,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // Componets
+import HeaderToCardAdventures from './adventureCard/HeaderToCardAdventures';
 import VideoPlayer from '../../util/VideoPlayer';
-import HeaderToCardAdventures from './deviceCard/HeaderToCardAdventures';
-import ContentToCardAdventures from './deviceCard/ContentToCardAdventures';
-import ActionsToCardAdventures from './deviceCard/ActionsToCardAdventures';
+import ContentToCardAdventures from './adventureCard/ContentToCardAdventures';
+// import ActionsToCardAdventures from './deviceCard/ActionsToCardAdventures';
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -32,6 +32,7 @@ export class Adventure extends Component {
         const {  
             classes,
             adventure:{
+                adventureId,
                 audioUrl,
                 commentsCount,
                 coverUrl,
@@ -55,26 +56,27 @@ export class Adventure extends Component {
         return (
             <Card className={classes.card}>
                 <HeaderToCardAdventures
-                    nameofdevice={nameOfDevice} 
-                    agerate={ageRate} 
-                    deviceid={deviceId}
+                    title={title} 
                     price={price}
                 />
                 <VideoPlayer url={videoUrl} widht={100} />
                 <ContentToCardAdventures
-                    deviceid={deviceId}
+                    adventureid={adventureId}
                     description={description}
                     nameofdevice={nameOfDevice}
-                    agerate={ageRate}
-                    price={price}
+                    tags={tags}
+                    duration={duration}
+                    language={language}
+                    title={title}
+                    createdat={createdAt}
                 />
                 <hr className={classes.visibleSeparator}/>
-                <ActionsToCardAdventures
+                {/*<ActionsToCardAdventures
                     likescount={likesCount} 
                     commentscount={commentsCount}  
                     price={price}
                     deviceid={deviceId}
-                />
+                /> */}
             </Card>     
         )
     } 

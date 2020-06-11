@@ -15,7 +15,7 @@ import { getAdventures } from '../../redux/actions/adventuresActions';
 class storeAdventures extends Component {
     
     componentDidMount() {
-        this.props.getDevices(); 
+        this.props.getAdventures(); 
     }
 
     render() {

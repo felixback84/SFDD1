@@ -16,10 +16,8 @@ const styles = (theme) => ({
 const HeaderToCardAdventures = (props) => {
     const {
         classes,
-        nameofdevice,
-        agerate,
-        price,
-        deviceid
+        title,
+        price
     } = props;
     return (
         <div>
@@ -29,14 +27,12 @@ const HeaderToCardAdventures = (props) => {
                         {title.charAt(0)}
                     </Avatar>
                 }
-                action={
-                    <SwitchButtonToUserAdventure 
-                        labelToSwitch={title} 
-                        useradventureid={useradventureid}
-                    />
-                }
-                title={'Name of device: ' + title}
-                subheader={tags.map(tag => <Chip className={classes.chip} label={tag}/>)}
+                title={
+                    <Chip
+                        icon={<FaceIcon />}
+                        label={price + ' USD'}
+                    /> }
+                subheader={`Buy: ${title}`}
             />
         </div>
     )
