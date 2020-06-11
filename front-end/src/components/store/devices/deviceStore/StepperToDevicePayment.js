@@ -97,7 +97,12 @@ export default function StepperToDevicePayment(props) {
                     {/* Content */}
                     {getStepContent(activeStep, props.deviceid)}
                     {/* Buttons */}
-                    <Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                    >
                         <Button
                             disabled={activeStep === 0}
                             onClick={handleBack}

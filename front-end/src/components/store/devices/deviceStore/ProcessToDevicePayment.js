@@ -78,7 +78,7 @@ class ProcessToDevicePayment extends Component {
                     onClose={this.handleClose} 
                     fullWidth maxWidth="sm" 
                     TransitionComponent={Transition}
-                    scroll="body"
+                    scroll="body" 
                 >    
                     <TitleToDevicePayment 
                         onClose={this.handleClose} 

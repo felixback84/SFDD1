@@ -1,12 +1,8 @@
 // firebase
 const { db } = require('../utilities/admin');
 const functions = require('firebase-functions');
-// md5
-//const md5 = require('md5');
 // node fetch
-//const fetch = require('node-fetch');
-//.env
-//require('dotenv').config();
+const fetch = require('node-fetch');
 
 // get all checkouts
 exports.getAllCheckouts = (req, res) => {
@@ -52,7 +48,7 @@ exports.getCheckout = (req, res) => {
 }
 
 // post data for checkout to post in userDevices 
-exports.postDataCheckOutDevice = (req, res) => {
+exports.postDataCheckOutDevice = async (req, res) => {
 
     // ask to Firebase
     const dataCheckout = {}
@@ -88,7 +84,6 @@ exports.postDataCheckOutDevice = (req, res) => {
                 console.log(dataCheckout);
 
                 ///////////////////// SIDE SERVER FOR BUY WITH PAYU ////////////////////////////////
-                
                 
                 // static global vars
                 const language = "es";
@@ -244,8 +239,20 @@ exports.postDataCheckOutDevice = (req, res) => {
 
                 //console.log(allDataToPostInPayU.transaction.order.additionalValues.TX_VALUE.value);
                 //console.log(allDataToPostInPayU);
-                return res.json(allDataToPostInPayU);
+                //return res.json(allDataToPostInPayU);
 
+                // post in payu
+                let url = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi';
+                let options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(allDataToPostInPayU)
+                }
+                let response = await fetch(url, options);
+                let succsses = await response.json(); // read response body and parse as JSON
+                //return res.json(sucsses);
         })
         .catch((err) => {
             console.error(err);

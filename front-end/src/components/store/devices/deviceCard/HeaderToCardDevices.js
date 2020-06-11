@@ -8,7 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
 
 // components
-import DeviceDialog from '../deviceDialog/DeviceDialog';
+//import DeviceDialog from '../deviceDialog/DeviceDialog';
 
 const styles = (theme) => ({
     avatar: {

@@ -291,7 +291,7 @@ class ResumeFormToDevicePayment extends Component {
                             <TableContainer component={Paper}>
                                 <Table className={classes.table} aria-label="simple table">
                                     <TableBody>
-                                        <TableRow >
+                                        <TableRow > 
                                             <TableCell component="th" scope="row">
                                                 Street1:
                                             </TableCell>
@@ -335,19 +335,19 @@ class ResumeFormToDevicePayment extends Component {
                                 </Table>
                             </TableContainer>
                         </Paper>
+                        <Button  
+                            type="submit" 
+                            variant="contained" 
+                            color="primary" 
+                            className={classes.button}
+                            disabled={loading}>
+                                Confirm
+                                {loading && (
+                                    <CircularProgress size={30} className={classes.progress} />
+                                )}
+                        </Button>
                     </Grid>
                     <Grid item xs={1}/>
-                    <Button  
-                        type="submit" 
-                        variant="contained" 
-                        color="primary" 
-                        className={classes.button}
-                        disabled={loading}>
-                            Confirm
-                            {loading && (
-                                <CircularProgress size={30} className={classes.progress} />
-                            )}
-                    </Button>
                 </Grid>
             </form>
         )

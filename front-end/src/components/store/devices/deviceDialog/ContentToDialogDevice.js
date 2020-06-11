@@ -12,11 +12,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import Divider from '@material-ui/core/Divider';
 
 // icons
-import StorefrontIcon from '@material-ui/icons/Storefront';
-import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
@@ -25,6 +22,7 @@ import { connect } from 'react-redux';
 
 // components
 import MyButton from '../../../../utilities/MyButton';
+import ProccessToDevicePayment from '../deviceStore/ProcessToDevicePayment';
 
 const styles = (theme) => ({
     root: {
@@ -58,7 +56,8 @@ const ContentToDialogDevice = (props) => {
             createdAt,
             price,
             howManyAdventures,
-            description
+            description,
+            deviceId
         }
     }= props;
 
@@ -97,12 +96,7 @@ const ContentToDialogDevice = (props) => {
                 
                 <Grid item sm={4} className={classes.gridItems}>
                     <ListItem className={classes.ListItem}>
-                        <MyButton 
-                        tip={`Buy ${nameOfDevice}`} 
-                        tipClassName={classes.buyButton}
-                        >
-                            <StorefrontIcon color="primary"/>
-                        </MyButton>
+                        <ProccessToDevicePayment deviceid={deviceId}/>
                         <Chip
                             label={`${price} USD`}
                             color="primary"
