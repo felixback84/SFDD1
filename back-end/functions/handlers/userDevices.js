@@ -1,5 +1,7 @@
 // firebase
 const { db } = require('../utilities/admin');
+// middleware for auth
+const createDeviceInIotCore = require('./utilities/createDeviceInIotCore');
 
 // get all userDevices
 exports.getAllUserDevices = (req, res) => {
@@ -49,6 +51,11 @@ exports.getUserDevice = (req, res) => {
 
 // get active userdevice
 exports.getActiveUserDevices = (req, res) => {
+
+    ///////////////////////////////////////////////////////////////////////////////////// iot core
+    createDeviceInIotCore(req.params.userDeviceId);
+    //////////////////////////////////////////////////////////////////////////
+    // firebase db
     const activeUserDeviceDocument = db
         .collection('activeUserDevices')
         .where('userHandle', '==', req.user.userHandle)
@@ -89,10 +96,7 @@ exports.getActiveUserDevices = (req, res) => {
                     .then(() => {
                         return userDeviceDocument.update({ active: true });
                     })
-                    // data in response to check in front if the likes exists
                     .then(() => {
-                        //console.log(res);
-                        //console.log(userDeviceData);
                         return res.json(userDeviceData);
                     });
             } else {

@@ -226,7 +226,7 @@ exports.postDataCheckOutDevice = async (req, res) => {
                         extraParameters: {
                             INSTALLMENTS_NUMBER: 1 
                         },
-                        type: type, 
+                        type: type,  
                         paymentMethod: userData.cc.paymentMethod, 
                         paymentCountry: paymentCountry, 
                         deviceSessionId: userData.cc.deviceSessionId, 
@@ -252,7 +252,7 @@ exports.postDataCheckOutDevice = async (req, res) => {
                 }
                 let response = await fetch(url, options);
                 let succsses = await response.json(); // read response body and parse as JSON
-                //return res.json(sucsses);
+                //return res.json(succsses);
         })
         .catch((err) => {
             console.error(err);

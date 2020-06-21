@@ -165,7 +165,8 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                 deviceId: snapShotDeviceId,
                 userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
-                active: false
+                active: false,
+                RSA_CERTICATE_PRIVATE_KEY:''
             };
 
             // object to hold all info, newUserDevice, deviceData
