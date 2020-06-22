@@ -1,7 +1,7 @@
 // firebase
 const { db } = require('../utilities/admin');
 // middleware for auth
-const createDeviceInIotCore = require('./utilities/createDeviceInIotCore');
+const createDeviceInIotCore = require('../utilities/iotCoreAndPubSub');
 
 // get all userDevices
 exports.getAllUserDevices = (req, res) => {
@@ -50,11 +50,12 @@ exports.getUserDevice = (req, res) => {
 }
 
 // get active userdevice
-exports.getActiveUserDevices = (req, res) => {
+exports.getActiveUserDevices = async (req, res) => {
 
     ///////////////////////////////////////////////////////////////////////////////////// iot core
     createDeviceInIotCore(req.params.userDeviceId);
     //////////////////////////////////////////////////////////////////////////
+    
     // firebase db
     const activeUserDeviceDocument = db
         .collection('activeUserDevices')

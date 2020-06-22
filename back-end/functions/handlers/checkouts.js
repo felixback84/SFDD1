@@ -48,7 +48,7 @@ exports.getCheckout = (req, res) => {
 }
 
 // post data for checkout to post in userDevices 
-exports.postDataCheckOutDevice = async (req, res) => {
+exports.postDataCheckOutDevice = (req, res) => {
 
     // ask to Firebase
     const dataCheckout = {}
@@ -234,7 +234,7 @@ exports.postDataCheckOutDevice = async (req, res) => {
                         cookie: userData.cc.cookie,
                         userAgent: userData.cc.userAgent
                     },
-                    test: false
+                    test: true
                 }
 
                 //console.log(allDataToPostInPayU.transaction.order.additionalValues.TX_VALUE.value);
@@ -242,17 +242,20 @@ exports.postDataCheckOutDevice = async (req, res) => {
                 //return res.json(allDataToPostInPayU);
 
                 // post in payu
-                let url = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi';
-                let options = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                    body: JSON.stringify(allDataToPostInPayU)
+                async function postToPayU (allDataToPostInPayU) {
+                    
+                    let url = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi';
+                    let options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(allDataToPostInPayU)
+                    }
+                    let response = await fetch(url, options);
+                    let succsses = await response.json(); // read response body and parse as JSON
+                    //return res.json(succsses);
                 }
-                let response = await fetch(url, options);
-                let succsses = await response.json(); // read response body and parse as JSON
-                //return res.json(succsses);
         })
         .catch((err) => {
             console.error(err);
