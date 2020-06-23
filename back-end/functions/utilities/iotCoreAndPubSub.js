@@ -13,8 +13,16 @@ async function createTopicsToDevice(deviceId) {
 
     // Creates a client; cache this for further use
     const pubSubClient = new PubSub();
-    await pubSubClient.createTopic(mqttTopics);
-    console.log(`Topic ${mqttTopics} created.`);
+
+    for (const topic in mqttTopics) {
+        await pubSubClient.createTopic(topic);
+        console.log(`Topic ${topic} created.`);
+    }
+
+    // Creates a client; cache this for further use
+    // const pubSubClient = new PubSub();
+    // await pubSubClient.createTopic(mqttTopics);
+    // console.log(`Topic ${mqttTopics} created.`);
     //createTopic();
 } 
 
@@ -31,6 +39,8 @@ exports.createDeviceInIotCore = async (userDeviceId) => {
             nameOfDevice = userDeviceData.device.nameOfDevice;
             RSA_CERTICATE_PRIVATE_KEY = userDeviceData.device.RSA_CERTICATE_PRIVATE_KEY;
         })
+
+        console.log(userHandle,nameOfDevice,RSA_CERTICATE_PRIVATE_KEY);
 
     switch(nameOfDevice){
 
@@ -85,7 +95,7 @@ exports.createDeviceInIotCore = async (userDeviceId) => {
                 } catch (err) {
                     console.error('Could not create device and everything else', err);
                 }
-            }
+            } 
 
             case 'Hilda':
                 async function hildaDeviceInit(){
@@ -133,7 +143,8 @@ exports.createDeviceInIotCore = async (userDeviceId) => {
         
                         //////////////////////////////////////////////////////////// create topics for Pub/sub
                         createTopicsToDevice(deviceId);
-        
+                        //////////////////////////////////////////////////////////
+                        
                     } catch (err) {
                         console.error('Could not create device and everything else', err);
                     }    

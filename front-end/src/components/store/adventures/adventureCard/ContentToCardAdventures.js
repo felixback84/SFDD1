@@ -14,8 +14,8 @@ import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 // components
-import AdventureDialog from '../deviceDialog/DeviceDialog';
-import ProcessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
+//import AdventureDialog from '../deviceDialog/DeviceDialog';
+//import ProcessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
 
 // dayjs
 import dayjs from 'dayjs';
@@ -129,8 +129,8 @@ const ContentToCardAdventures = (props) => {
                 </Grid>
                 {/* Modals for store and details */}
                 <Grid item xs={4}>
-                    <AdventureDialog/>
-                    <ProcessToAdventurePayment/>
+                    {/* <AdventureDialog/> */}
+                    {/* <ProcessToAdventurePayment/> */}
                 </Grid>
             </Grid>
         </CardContent>
