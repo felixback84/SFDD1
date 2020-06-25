@@ -271,145 +271,64 @@ exports.createUserPropertyAfterCheckout = functions.firestore
 
 exports.createDeviceInIotCore = functions.firestore
     .document('activeUserDevices/{activeUserDevicesId}')
-    .onCreate((snap) => {
-        // client libraries
-        const iot = require('@google-cloud/iot');
-        //const {PubSub} = require('@google-cloud/pubsub');
-
-        // Get an object representing the document
-        const newActiveUserDevice = snap.data();
-
-        // access a particular field as you would any JS property
-        const userDeviceId = newActiveUserDevice.userDeviceId;
-
-        // vars
-        let userHandle; 
-        let nameOfDevice; 
-        let RSA_CERTIFICATE_PRIVATE_KEY;
-        // ask for some data to userDevices collection
-        db
-            .doc(`/userDevices/${userDeviceId}`)
-            .get()
-            .then((doc) => {
-                let userDeviceData = doc.data();
-                userHandle = userDeviceData.userHandle;
-                nameOfDevice = userDeviceData.device.nameOfDevice;
-                RSA_CERTIFICATE_PRIVATE_KEY = userDeviceData.device.RSA_CERTIFICATE_PRIVATE_KEY;
-            
-                switch(nameOfDevice){
-
-                    case 'Halo':
-                        async function haloDeviceInit(){
-                            // global vars for iot core
-                            const cloudRegion = 'us-central1';
-                            //const deviceId = deviceId;
-                            const deviceId = `Halo - ${userHandle} - ${userDeviceId}`;
-                            const projectId = 'sfdd-d8a16';
-                            const registryId = 'Halo';
-                            const RSA_CERTIFICATE_PRIVATE_KEY = '';
-                            //const rsaCertificateFileUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}`;
-            
-                            // instanciate the client
-                            const iotClient = new iot.v1.DeviceManagerClient({
-                                // optional auth parameters.
-                            });
-                            
-                            // register iot core path
-                            const regPath = iotClient.registryPath(projectId, cloudRegion, registryId);
-            
-                            // specific device
-                            const device = {
-                                id: deviceId,
-                                credentials: [
-                                    {
-                                        publicKey: {
-                                            format: 'RSA_X509_PEM',
-                                            // key: fs.readFileSync(rsaCertificateFileUrl).toString(), // path to the file in readFileSync()
-                                            key: RSA_CERTIFICATE_PRIVATE_KEY
-                                        },
-                                    },
-                                ],
-                            };
-            
-                            // device creation request
-                            const request = {
-                                parent: regPath,
-                                device
-                            };
-                            
-                            try {
-                                const responses = await iotClient.createDevice(request);
-                                const response = responses[0];
-                                console.log('Created device', response);
-            
-                                //////////////////////////////////////////////////////////// create topics for Pub/sub
-                                //createTopicsToDevice(deviceId);
-                                ////////////////////////////////////////////////////////////////
-                                
-                            } catch (err) {
-                                console.error('Could not create device and everything else', err);
-                            }
-                        } 
-                        haloDeviceInit();
-                        case 'Hilda':
-                            async function hildaDeviceInit(){
-                                // global vars for iot core
-                                const cloudRegion = 'us-central1';
-                                //const deviceId = deviceId;
-                                const deviceId = `Hilda - ${userHandle} - ${userDeviceId}`;
-                                const projectId = 'sfdd-d8a16';
-                                const registryId = 'Hilda';
-                                const RSA_CERTIFICATE_PRIVATE_KEY = '';
-                                //const rsaCertificateFileUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}`;
+    .onCreate(() => {
+        const fetch = require('node-fetch');
+        let dataDevice = {
+            "id": 'halo device 01',
+            "name": 'halo thing',
+            "numId": '1234567890qwertyuiop',
+            "credentials": [
+                {
                     
-                                // instanciate the client
-                                const iotClient = new iot.v1.DeviceManagerClient({
-                                    // optional auth parameters.
-                                });
-                                
-                                // register iot core path
-                                const regPath = iotClient.registryPath(projectId, cloudRegion, registryId);
-                    
-                                // specific device
-                                const device = {
-                                    id: deviceId,
-                                    credentials: [
-                                        {
-                                            publicKey: {
-                                                format: 'RSA_X509_PEM',
-                                                // key: fs.readFileSync(rsaCertificateFileUrl).toString(), // path to the file in readFileSync()
-                                                key: RSA_CERTIFICATE_PRIVATE_KEY
-                                            },
-                                        },
-                                    ],
-                                };
-                                
-                                // device creation request
-                                const request = {
-                                    parent: regPath,
-                                    device
-                                };
-                                
-                                try {
-                                    const responses = await iotClient.createDevice(request);
-                                    const response = responses[0];
-                                    console.log('Created device', response);
-                    
-                                    //////////////////////////////////////////////////////////// create topics for Pub/sub
-                                    //createTopicsToDevice(deviceId);
-                                    //////////////////////////////////////////////////////////
-                                    
-                                } catch (err) {
-                                    console.error('Could not create device and everything else', err);
-                                }    
-                            }
-                        hildaDeviceInit();
-                        default:
-                            return null;    
                 }
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).json({ error: err.code });
-            });
+            ],
+            "lastHeartbeatTime": 'hi',
+            "lastEventTime": 'hi',
+            "lastStateTime": 'hi',
+            "lastConfigAckTime": 'hi',
+            "lastConfigSendTime": 'hi',
+            "blocked": true,
+            "lastErrorTime": 'hi',
+            "lastErrorStatus": {
+                
+            },
+            "config": {
+                
+            },
+            "state": {
+                
+            },
+            "logLevel": 1223,
+            "metadata": {
+                'hi': 'hi'
+            },
+            "gatewayConfig": {
+                
+            }
+        }
+        
+        async function createDeviceInIotCore(dataDevice){
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataDevice)
+            };
+        
+            // gcloud vars
+            let project = 'sfdd-d8a16';
+            let location = 'us-central1';
+            let registrie = 'Halo';
+        
+            // api url
+            const urlApi = `https://cloudiot.googleapis.com/v1/{parent=projects/${project}/locations/${location}/registries/${registrie}/devices`;
+            
+            //fetch
+            const db_response = await fetch(urlApi, options);
+            const db_json_data = await db_response;
+            console.log(db_json_data);
+        }
+        return createDeviceInIotCore(dataDevice);
 }) 
+
