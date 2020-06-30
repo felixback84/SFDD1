@@ -166,8 +166,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                 deviceId: snapShotDeviceId,
                 userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
-                active: false,
-                RSA_CERTICATE_PRIVATE_KEY:''
+                active: false
             };
 
             // object to hold all info, newUserDevice, deviceData
@@ -271,64 +270,50 @@ exports.createUserPropertyAfterCheckout = functions.firestore
 
 exports.createDeviceInIotCore = functions.firestore
     .document('activeUserDevices/{activeUserDevicesId}')
-    .onCreate(() => {
-        const fetch = require('node-fetch');
-        let dataDevice = {
-            "id": 'halo device 01',
-            "name": 'halo thing',
-            "numId": '1234567890qwertyuiop',
-            "credentials": [
-                {
+    .onCreate((snap) => {
+        (req, res) => {
+            // grab userDeviceId from firebase doc
+            const newActiveUserDevice = snap.data();
+            const userDeviceId = newActiveUserDevice.userDeviceId
+
+            // ask to firebase other data to create the id for the device
+            db
+                .doc(`/userDevices/${userDeviceId}`)
+                .get()
+                .then((doc) => {
+                    let userDeviceData = doc.data();
+                    let userHandle = userDeviceData.userHandle;
+                    let nameOfDevice = userDeviceData.device.nameOfDevice;
+        
+                    // client libraries
+                    const iot = require('@google-cloud/iot');
                     
-                }
-            ],
-            "lastHeartbeatTime": 'hi',
-            "lastEventTime": 'hi',
-            "lastStateTime": 'hi',
-            "lastConfigAckTime": 'hi',
-            "lastConfigSendTime": 'hi',
-            "blocked": true,
-            "lastErrorTime": 'hi',
-            "lastErrorStatus": {
-                
-            },
-            "config": {
-                
-            },
-            "state": {
-                
-            },
-            "logLevel": 1223,
-            "metadata": {
-                'hi': 'hi'
-            },
-            "gatewayConfig": {
-                
-            }
+                    // var with vars to pass through function
+                    const deviceId = `${userHandle} - ${nameOfDevice} - ${userDeviceId} - ${new Date().toISOString()}`
+
+                    // declarate a function to create device in iot core
+                    async function createDevice(DEVICE_ID) {
+                        // client
+                        const client = new iot.v1.DeviceManagerClient();
+                        // vars
+                        //const gcloudProjectId = `sfdd-d8a16`;
+                        const LOCATION = 'us-central1';
+                        const deviceRegistry = 'Halo';
+
+                        const projectId = await client.getProjectId();
+                        const parent = client.registryPath(projectId, LOCATION, deviceRegistry); // Your Location and registry name
+                        const device = {id:DEVICE_ID} // The device id, and in general the device information that you want to send
+                        const [response] = await client.createDevice({parent, device});
+                        console.log(`${response.name} created.`);
+                        res.send(response.name);
+                    }
+                    // run function to create device in iot core
+                    createDevice(deviceId).then((res)=>{
+                        console.log(res);
+                    })
+                }).catch((err) => console.error(err));
         }
-        
-        async function createDeviceInIotCore(dataDevice){
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataDevice)
-            };
-        
-            // gcloud vars
-            let project = 'sfdd-d8a16';
-            let location = 'us-central1';
-            let registrie = 'Halo';
-        
-            // api url
-            const urlApi = `https://cloudiot.googleapis.com/v1/{parent=projects/${project}/locations/${location}/registries/${registrie}/devices`;
-            
-            //fetch
-            const db_response = await fetch(urlApi, options);
-            const db_json_data = await db_response;
-            console.log(db_json_data);
-        }
-        return createDeviceInIotCore(dataDevice);
 }) 
+        
+
 
