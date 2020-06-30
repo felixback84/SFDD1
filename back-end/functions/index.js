@@ -69,6 +69,12 @@ const {
     postAdventureComment
 } = require('./handlers/adventures');
 
+// halo
+
+const {
+    createDeviceInIotCore
+} = require('./handlers/halo');
+
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
 // signup user
@@ -143,6 +149,10 @@ app.get('/adventure/:adventureId/like', FBAuth, likeAdventure);
 app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure); 
 // comment on an adventure
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
+
+////////////////////////////////////// halo //////////////
+app.post('/device/halo/create', FBAuth, createDeviceInIotCore);
+
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -266,54 +276,44 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         } else {
             console.log('error from inscription')
         }
-    });
+});
 
-exports.createDeviceInIotCore = functions.firestore
-    .document('activeUserDevices/{activeUserDevicesId}')
-    .onCreate((snap) => {
-        (req, res) => {
-            // grab userDeviceId from firebase doc
-            const newActiveUserDevice = snap.data();
-            const userDeviceId = newActiveUserDevice.userDeviceId
-
-            // ask to firebase other data to create the id for the device
-            db
-                .doc(`/userDevices/${userDeviceId}`)
-                .get()
-                .then((doc) => {
-                    let userDeviceData = doc.data();
-                    let userHandle = userDeviceData.userHandle;
-                    let nameOfDevice = userDeviceData.device.nameOfDevice;
-        
-                    // client libraries
-                    const iot = require('@google-cloud/iot');
-                    
-                    // var with vars to pass through function
-                    const deviceId = `${userHandle} - ${nameOfDevice} - ${userDeviceId} - ${new Date().toISOString()}`
-
-                    // declarate a function to create device in iot core
-                    async function createDevice(DEVICE_ID) {
-                        // client
-                        const client = new iot.v1.DeviceManagerClient();
-                        // vars
-                        //const gcloudProjectId = `sfdd-d8a16`;
-                        const LOCATION = 'us-central1';
-                        const deviceRegistry = 'Halo';
-
-                        const projectId = await client.getProjectId();
-                        const parent = client.registryPath(projectId, LOCATION, deviceRegistry); // Your Location and registry name
-                        const device = {id:DEVICE_ID} // The device id, and in general the device information that you want to send
-                        const [response] = await client.createDevice({parent, device});
-                        console.log(`${response.name} created.`);
-                        res.send(response.name);
-                    }
-                    // run function to create device in iot core
-                    createDevice(deviceId).then((res)=>{
-                        console.log(res);
-                    })
-                }).catch((err) => console.error(err));
-        }
-}) 
-        
-
+// async function createDevice(DEVICE_ID) {
+//     const iot = require('@google-cloud/iot');
+//     // client
+//     const client = new iot.v1.DeviceManagerClient();
+//     // vars
+//     const LOCATION = 'us-central1';
+//     const deviceRegistry = 'Halo';
+//     // get project id 
+//     const projectId = await client.getProjectId();
+//     const parent = client.registryPath(projectId, LOCATION, deviceRegistry); // Your Location and registry name
+//     const device = {id:DEVICE_ID} // The device id, and in general the device information that you want to send
+//     const [response] = await client.createDevice({parent, device});
+//     console.log(`${response.name} created.`);
+//     res.send(response.name);
+// }
+    
+// exports.createDeviceInIotCore = functions.firestore
+//     .document('activeUserDevices/{activeUserDevicesId}')
+//     .onCreate((snap) => {
+//         // grab userDeviceId from firebase doc
+//         const newActiveUserDevice = snap.data();
+//         const userDeviceId = newActiveUserDevice.userDeviceId
+//         // ask to firebase other data to create the id for the device
+//         db
+//         .doc(`/userDevices/${userDeviceId}`)
+//         .get()
+//         .then((doc) => {
+//             let userDeviceData = doc.data();
+//             let userHandle = userDeviceData.userHandle;
+//             let nameOfDevice = userDeviceData.device.nameOfDevice;
+//             // var with vars to pass through function
+//             const deviceId = `${userHandle} - ${nameOfDevice} - ${userDeviceId} - ${new Date().toISOString()}`
+//             // declarate a function to create device in iot core
+//             return createDevice(deviceId).then((res)=>{
+//                 console.log(res);
+//             }).catch((err) => console.error(err));
+//         })        
+//     })
 
