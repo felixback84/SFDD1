@@ -150,9 +150,8 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 // comment on an adventure
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
-////////////////////////////////////// halo //////////////
-app.post('/device/halo/create', FBAuth, createDeviceInIotCore);
-
+////////////////////////////////////// halo test routes for iot core ////////////////////////////////////////////////////
+app.post('/device/halo/:userDeviceId/create', FBAuth, createDeviceInIotCore);
 
 // export functions
 exports.api = functions.https.onRequest(app);
