@@ -70,19 +70,19 @@ exports.createDeviceInIotCore = (req, res) => {
                 
                 // object with topics
                 const mqttTopics = {   
-                    MQTT_TOPIC_TO_TELEMETRY: `/devices/${deviceId}/events`,
-                    MQTT_TOPIC_TO_CONFIG: `/devices/${deviceId}/config`,
-                    MQTT_TOPIC_TO_COMMANDS: `/devices/${deviceId}/commands/#`,
-                    MQTT_TOPIC_TO_STATE: `/devices/${deviceId}/state`
-                }
+                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                }   
 
                 // detect keys in object
-                const keys = Object.keys(mqttTopics);
+                const values = Object.values(mqttTopics);
 
                 // run loop
-                for (const key of keys) {
+                for (const value of values) {
                     try{
-                        createTopicsToHaloDevice(projectId, key);
+                        createTopicsToHaloDevice(projectId, value);
                     }catch (error){
                         console.error(error);
                     }
