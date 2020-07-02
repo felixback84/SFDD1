@@ -37,7 +37,7 @@ exports.createDeviceInIotCore = async (userDeviceId) => {
             let userDeviceData = doc.data();
             userHandle = userDeviceData.userHandle;
             nameOfDevice = userDeviceData.device.nameOfDevice;
-            RSA_CERTICATE_PRIVATE_KEY = userDeviceData.device.RSA_CERTICATE_PRIVATE_KEY;
+            //RSA_CERTICATE_PRIVATE_KEY = userDeviceData.device.RSA_CERTICATE_PRIVATE_KEY;
         })
 
         console.log(userHandle,nameOfDevice,RSA_CERTICATE_PRIVATE_KEY);

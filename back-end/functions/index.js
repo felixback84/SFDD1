@@ -151,7 +151,7 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 ////////////////////////////////////// halo test routes for iot core ////////////////////////////////////////////////////
-app.post('/device/halo/:userDeviceId/create', FBAuth, createDeviceInIotCore);
+app.post('/device/:userDeviceId/createInIotCore', FBAuth, createDeviceInIotCore);
 
 // export functions
 exports.api = functions.https.onRequest(app);
