@@ -1,4 +1,5 @@
-exports.createDeviceInIotCore = (req, res) => {
+// create decive & topics in iot core and pub/sub
+exports.createInIotCore = (req, res) => {
     // firebase part
     const { db } = require('../utilities/admin');
     // var to firebase consult
@@ -169,5 +170,62 @@ exports.createDeviceInIotCore = (req, res) => {
         }).catch((err) => console.error(err));
 }
 
+// delete decive & topics in iot core and pub/sub
+exports.deleteInIotCore = (req, res) => {
+    // firebase part
+    const { db } = require('../utilities/admin');
+    // var to firebase consult
+    const userDeviceId = req.params.userDeviceId
+    // var for hold id of device
+    let deviceId = "";
+    // var project id
+    const projectId = 'sfdd-d8a16';
 
+    // ask for firebase document
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .get()
+        .then((doc) => {
+            let userDeviceData = doc.data();
+            let userHandle = userDeviceData.userHandle;
+            let nameOfDevice = userDeviceData.device.nameOfDevice;
+            // var with vars to pass through function
+            //something like: 'CarlosTal84-halo-8n4ohAo247H1W5SsxY9s'
+            deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`
+            // determine wich type of device is
+            switch(nameOfDevice){
+                case 'Halo':
+                    //////////////////////////////////////////////////////////////////// DELETION OF HALO DEVICE
+                    async function deleteDeviceToHalo(projectId ,deviceId, hi) {
+                        // client library
+                        const iot = require('@google-cloud/iot');
+                        // instantiate client
+                        const client = new iot.v1.DeviceManagerClient();
+                        // vars
+                        const Location = 'us-central1';
+                        const nameOfRegistryToDevice = 'Halo';
+                        //const projectId = await client.getProjectId();
+                        // create the device
+                        const parent = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
+                        const device = {id: deviceId, hi:hi} // The device id, and in general the device information that you want to send
+                        // run the main method
+                        const [response] = await client.deleteDevice({parent, device});
+                        // console to check
+                        console.log(`${response.name} deleted.`);
+                        // res
+                        res.send(response.name);
+                    }
+                    // execute function and check response
+                    async function executeDeletionOfHaloDevice(){
+                        try{
+                            const deviceDeleted = await deleteDeviceToHalo(projectId, deviceId, req.body.hi);
+                        }catch (error){
+                            console.error(error);
+                        }
+                    }
+                    // // run it
+                    executeDeletionOfHaloDevice();
+            }
+        })    
+}
 

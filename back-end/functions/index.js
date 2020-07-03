@@ -72,7 +72,8 @@ const {
 // halo
 
 const {
-    createDeviceInIotCore
+    createInIotCore,
+    deleteInIotCore
 } = require('./handlers/halo');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
@@ -150,8 +151,10 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 // comment on an adventure
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
-////////////////////////////////////// halo test routes for iot core ////////////////////////////////////////////////////
-app.post('/device/:userDeviceId/createInIotCore',  createDeviceInIotCore);
+////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
+app.post('/device/:userDeviceId/createInIotCore',  createInIotCore);
+app.delete('/device/:userDeviceId/deleteInIotCore',  deleteInIotCore);
+
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -296,20 +299,30 @@ exports.createDeviceInIotCore = functions.firestore
                 }
             };
             //fetch
-            const db_response = await fetch(urlApi, options);
-            const db_json_data = await db_response.json();
-            console.log(db_json_data);
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(iotJsonData);
         }
 
         //check response
         async function exeInitIotCoreAndPubSub (userDeviceId){
             try{
-                const deviceCreated = await initIotCoreAndPubSub(userDeviceId);
+                const deviceCreatedAndTopics = await initIotCoreAndPubSub(userDeviceId);
+                const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
+                console.log(deviceCreatedAndTopicsResponse);
             }
             catch{
-                console.error(error);
+                console.error(err);
             }
         }
-        exeInitIotCoreAndPubSub(userDeviceId);
+        exeInitIotCoreAndPubSub(userDeviceId, );
     })
 
+// delete device & topics in iot core - pub/sub
+exports.createDeviceInIotCore = functions.firestore
+    .document('activeUserDevices/{activeUserDevicesId}')
+    .onDelete((snap) => {
+        // grab userDeviceId from firebase doc
+        const newActiveUserDevice = snap.data();
+        const userDeviceId = newActiveUserDevice.userDeviceId
+    })
