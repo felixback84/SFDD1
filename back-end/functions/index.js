@@ -152,9 +152,8 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 ////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
-app.post('/device/:userDeviceId/createInIotCore',  createInIotCore);
-app.delete('/device/:userDeviceId/deleteInIotCore',  deleteInIotCore);
-
+app.post('/device/:userDeviceId/createInIotCore', createInIotCore);
+app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -291,6 +290,7 @@ exports.createDeviceInIotCore = functions.firestore
         // declarate function to init iotCore & pub/sub
         async function initIotCoreAndPubSub(dataDevice){
             // api url
+            const fetch = require('node-fetch');
             const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createInIotCore`;
             const options = {
                 method: 'POST',
@@ -315,14 +315,41 @@ exports.createDeviceInIotCore = functions.firestore
                 console.error(err);
             }
         }
-        exeInitIotCoreAndPubSub(userDeviceId, );
+        exeInitIotCoreAndPubSub(userDeviceId);
     })
 
 // delete device & topics in iot core - pub/sub
-exports.createDeviceInIotCore = functions.firestore
+exports.deleteDeviceInIotCore = functions.firestore
     .document('activeUserDevices/{activeUserDevicesId}')
     .onDelete((snap) => {
         // grab userDeviceId from firebase doc
-        const newActiveUserDevice = snap.data();
-        const userDeviceId = newActiveUserDevice.userDeviceId
+        const inActiveUserDevice = snap.data();
+        const userDeviceId = inActiveUserDevice.userDeviceId
+        console.log(userDeviceId);
+        // declarate function to init iotCore & pub/sub
+        async function killIotCoreAndPubSub(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/deleteInIotCore`;
+            const options = {
+                method: 'DELETE'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(iotJsonData);
+        }
+
+        //check response
+        async function exeKillIotCoreAndPubSub (userDeviceId){
+            try{
+                const deviceCreatedAndTopics = await killIotCoreAndPubSub(userDeviceId);
+                const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
+                console.log(deviceCreatedAndTopicsResponse);
+            }
+            catch{
+                console.error(err);
+            }
+        }
+        exeKillIotCoreAndPubSub(userDeviceId);
     })

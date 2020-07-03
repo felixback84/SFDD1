@@ -55,7 +55,7 @@ exports.createInIotCore = (req, res) => {
                     // // run it
                     executeCreationOfHaloDevice();
 
-                    ////////////////////////////////////////////////////// TOPICS FOR HALO DEVICE
+                    ////////////////////////////////////////////////////// CREATION OF TOPICS FOR HALO DEVICE
                     // function to create the topics
                     async function createTopicsToHaloDevice(projectId, topicName) {
                         // Imports the Google Cloud client library
@@ -126,7 +126,7 @@ exports.createInIotCore = (req, res) => {
                     // // run it
                     executeCreationOfHildaDevice();
 
-                    ////////////////////////////////////////////////////// TOPICS FOR HILDA DEVICE
+                    ////////////////////////////////////////////////////// CREATION OF TOPICS FOR HILDA DEVICE
                     // function to create the topics
                     async function createTopicsToHildaDevice(projectId, topicName) {
                         // Imports the Google Cloud client library
@@ -196,7 +196,7 @@ exports.deleteInIotCore = (req, res) => {
             switch(nameOfDevice){
                 case 'Halo':
                     //////////////////////////////////////////////////////////////////// DELETION OF HALO DEVICE
-                    async function deleteDeviceToHalo(projectId ,deviceId, hi) {
+                    async function deleteDeviceToHalo(projectId ,deviceId) {
                         // client library
                         const iot = require('@google-cloud/iot');
                         // instantiate client
@@ -204,12 +204,10 @@ exports.deleteInIotCore = (req, res) => {
                         // vars
                         const Location = 'us-central1';
                         const nameOfRegistryToDevice = 'Halo';
-                        //const projectId = await client.getProjectId();
-                        // create the device
-                        const parent = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
-                        const device = {id: deviceId, hi:hi} // The device id, and in general the device information that you want to send
+                        // delete the device
+                        const parent = client.devicePath(projectId, Location, nameOfRegistryToDevice, deviceId); 
                         // run the main method
-                        const [response] = await client.deleteDevice({parent, device});
+                        const [response] = await client.deleteDevice({name: parent});
                         // console to check
                         console.log(`${response.name} deleted.`);
                         // res
@@ -218,13 +216,64 @@ exports.deleteInIotCore = (req, res) => {
                     // execute function and check response
                     async function executeDeletionOfHaloDevice(){
                         try{
-                            const deviceDeleted = await deleteDeviceToHalo(projectId, deviceId, req.body.hi);
+                            const deviceDeleted = await deleteDeviceToHalo(projectId, deviceId);
                         }catch (error){
                             console.error(error);
                         }
                     }
                     // // run it
                     executeDeletionOfHaloDevice();
+
+                    // execute function and check response
+                    async function executeDeletionOfHaloDevice(){
+                        try{
+                            const deviceDeleted = await deleteDeviceToHalo(projectId, deviceId);
+                        }catch (error){
+                            console.error(error);
+                        }
+                    }
+                    // // run it
+                    executeDeletionOfHaloDevice();
+                    
+                    ////////////////////////////////////////////////////// DELETE TOPICS FOR HALO DEVICE
+                    // Imports the Google Cloud client library
+                    const {PubSub} = require('@google-cloud/pubsub');
+                    
+                    // Creates a client; cache this for further use
+                    const pubSubClient = new PubSub();
+                    
+                    async function deleteTopic(topicName) {
+                        // const topicName = 'my-topic';
+                        // Deletes the topic
+                        await pubSubClient.topic(topicName).delete();
+                        console.log(`Topic ${topicName} deleted.`);
+                        
+                    }
+                    // topics to erase
+                    const mqttTopics = {   
+                        MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                        MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                        MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                        MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                    } 
+                    // detect keys in object
+                    const values = Object.values(mqttTopics);
+                    // run loop
+                    for (const value of values){
+                        try{
+                            deleteTopic(value);
+                        }
+                        catch{
+                            console.error(error);
+                        }
+                    }    
+                    break;
+                case 'Hilda':
+                    // aca va todo igual pero para hilda
+                
+                    break;
+                case 'default':
+                    null
             }
         })    
 }
