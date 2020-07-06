@@ -316,7 +316,7 @@ exports.createDeviceInIotCore = functions.firestore
             }
         }
         exeInitIotCoreAndPubSub(userDeviceId);
-    })
+    }) 
 
 // delete device & topics in iot core - pub/sub
 exports.deleteDeviceInIotCore = functions.firestore
@@ -334,7 +334,7 @@ exports.deleteDeviceInIotCore = functions.firestore
             const options = {
                 method: 'DELETE'
             };
-            //fetch
+            //fetch 
             const iotResponse = await fetch(urlApi, options);
             const iotJsonData = await iotResponse.json();
             console.log(iotJsonData);
