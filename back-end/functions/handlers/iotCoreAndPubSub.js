@@ -48,6 +48,7 @@ exports.createInIotCore = (req, res) => {
                     async function executeCreationOfHaloDevice(){
                         try{
                             const deviceCreated = await createDeviceToHalo(projectId, deviceId, req.body.hi);
+                            
                         }catch (error){
                             console.error(error);
                         }
@@ -57,7 +58,7 @@ exports.createInIotCore = (req, res) => {
 
                     ////////////////////////////////////////////////////// CREATION OF TOPICS FOR HALO DEVICE
                     // function to create the topics
-                    async function createTopicsToHaloDevice(projectId, topicName) {
+                    const createTopicsToHaloDevice = async function (projectId, topicName) {
                         // Imports the Google Cloud client library
                         const {PubSub} = require('@google-cloud/pubsub');
                         // Instantiates a client
@@ -65,6 +66,8 @@ exports.createInIotCore = (req, res) => {
                         // Creates the new topic
                         const [topic] = await pubsub.createTopic(topicName);
                         console.log(`Topic ${topic.name} created.`);
+                        // let counter = 0;
+                        // ++counter 
                     }
 
                     // execute function and check response
@@ -91,6 +94,43 @@ exports.createInIotCore = (req, res) => {
                     }
                     // run it
                     executeCreateTopicsToHaloDevice(deviceId);
+
+                    ////////////////////////////////////////////////////// CREATION OF SUBSCRIPTIONS TO TOPICS FOR HALO DEVICE
+                    // async function createSubscriptionToTopicsToHalo(topicName, subscriptionName) {
+                    //     // Imports the Google Cloud client library
+                    //     const {PubSub} = require('@google-cloud/pubsub');
+                    //     // Creates a client; cache this for further use
+                    //     const pubSubClient = new PubSub();
+                    //     // Creates a new subscription
+                    //     await pubSubClient.topic(topicName).createSubscription(subscriptionName);
+                    //     console.log(`Subscription ${subscriptionName} created.`);
+                    // }
+
+                    // // check the response
+                    // async function executeCreateSubscriptionToTopicsToHalo(deviceId, topics){
+                    //     // object with topics
+                    //     const mqttTopics = {   
+                    //         MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                    //         MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                    //         MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                    //         MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                    //     }   
+                        
+                    //     // detect keys in object
+                    //     const topicsNames = Object.values(mqttTopics);
+                    //     const topicsCounter = topics.counter;
+                    //     // run loop
+                    //     if(topicsCounter == 3){
+                    //         for (const topicName of topicsNames) {
+                    //             createSubscriptionToTopicsToHalo(topicName, topicName).catch(console.error);
+                    //         }
+                    //     } else {
+                    //         return;
+                    //     }
+                    // }
+                    // // run it
+                    // executeCreateSubscriptionToTopicsToHalo(deviceId, createTopicsToHaloDevice);
+                    
                     break;
                 case 'Hilda': 
                     //////////////////////////////////////////////////////////////////// CREATION OF HILDA DEVICE
@@ -331,3 +371,52 @@ exports.deleteInIotCore = (req, res) => {
         })    
 }
 
+// create subscriptions in pub/sub (test)
+exports.createSubscriptions = (req,res) => {
+    const userDeviceId = req.params.userDeviceId;
+    // ask for firebase document
+    // firebase part
+    const { db } = require('../utilities/admin');
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .get()
+        .then((doc) => {
+            let userDeviceData = doc.data();
+            let userHandle = userDeviceData.userHandle;
+            let nameOfDevice = userDeviceData.device.nameOfDevice;
+            // var with vars to pass through function
+            //something like: 'CarlosTal84-halo-8n4ohAo247H1W5SsxY9s'
+            deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`;
+
+            async function createSubscriptionToTopicsToHalo(topicName, subscriptionName) {
+                // Imports the Google Cloud client library
+                const {PubSub} = require('@google-cloud/pubsub');
+                // Creates a client; cache this for further use
+                const pubSubClient = new PubSub();
+                // Creates a new subscription
+                await pubSubClient.topic(topicName).createSubscription(subscriptionName);
+                console.log(`Subscription ${subscriptionName} created.`);
+                res.send(response.name);
+            }
+
+            // check the response
+            async function executeCreateSubscriptionToTopicsToHalo(deviceId){
+                // object with topics
+                const mqttTopics = {   
+                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                }   
+                
+                // detect keys in object
+                const topicsNames = Object.values(mqttTopics);
+                // run loop
+                for (const topicName of topicsNames) {
+                    createSubscriptionToTopicsToHalo(topicName, topicName).catch(console.error);
+                }
+            }
+            // run it
+            executeCreateSubscriptionToTopicsToHalo(deviceId);
+        })    
+}

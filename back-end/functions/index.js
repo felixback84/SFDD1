@@ -69,12 +69,12 @@ const {
     postAdventureComment
 } = require('./handlers/adventures');
 
-// halo
-
+// iot core & pub/sub
 const {
     createInIotCore,
-    deleteInIotCore
-} = require('./handlers/halo');
+    deleteInIotCore,
+    createSubscriptions
+} = require('./handlers/iotCoreAndPubSub');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -152,8 +152,12 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 ////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
+// creation of device and topics in iot core and pub/sub respectivily
 app.post('/device/:userDeviceId/createInIotCore', createInIotCore);
+// deletion of device and topics in iot core and pub/sub respectivily
 app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
+//
+app.get('/device/:userDeviceId/createSubscriptions', createSubscriptions);
 
 // export functions
 exports.api = functions.https.onRequest(app);
