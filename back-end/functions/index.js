@@ -309,6 +309,11 @@ exports.createDeviceInIotCore = functions.firestore
             };
             //fetch
             const iotResponse = await fetch(urlApi, options);
+            // counter
+            if(iotResponse.ok){
+                counter = 1;
+                ++counter;
+            }
             const iotJsonData = await iotResponse.json();
             console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
         }
