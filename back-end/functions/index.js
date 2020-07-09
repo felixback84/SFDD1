@@ -71,9 +71,11 @@ const {
 
 // iot core & pub/sub
 const {
-    createInIotCore,
-    deleteInIotCore,
-    createSubscriptions
+    createDeviceInIotCore,
+    createTopicsInPubSub,
+    createSubscriptionsInPubSub,
+
+    deleteInIotCore
 } = require('./handlers/iotCoreAndPubSub');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
@@ -152,12 +154,17 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 ////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
-// creation of device and topics in iot core and pub/sub respectivily
-app.post('/device/:userDeviceId/createInIotCore', createInIotCore);
+// creation of device in iot core
+app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
+// creation of topics in pub/sub 
+app.get('/device/:userDeviceId/createTopicsInPubSub', createTopicsInPubSub);
+// creation of subscriptions in pub/sub
+app.get('/device/:userDeviceId/createSubscriptionsInPubSub', createSubscriptionsInPubSub);
+
+
+
 // deletion of device and topics in iot core and pub/sub respectivily
 app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
-//
-app.get('/device/:userDeviceId/createSubscriptions', createSubscriptions);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -291,16 +298,78 @@ exports.createDeviceInIotCore = functions.firestore
         const newActiveUserDevice = snap.data();
         const userDeviceId = newActiveUserDevice.userDeviceId
 
-        // declarate function to init iotCore & pub/sub
-        async function initIotCoreAndPubSub(dataDevice){
+        /////////////////////////////////////////////////////////////////////////////////////////////// IoT Core Part
+        // declarate function to create devices in iot core
+        async function initDevicesIotCore(dataDevice){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
             const options = {
-                method: 'POST',
-                body: {
-                    "hi":"hi"
-                }
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse;// aca
+            console.log(iotJsonData);
+        }
+
+        //check response
+        async function exeInitDevicesIotCore (userDeviceId){
+            try{
+                const deviceCreatedAndTopics = await initDevicesIotCore(userDeviceId);
+                const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
+                console.log(deviceCreatedAndTopicsResponse);
+            }
+            catch{
+                console.error(err);
+            }
+        }
+        exeInitDevicesIotCore(userDeviceId);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Topics Part
+        // global counter
+        let counter = 0;
+        // declarate function to create topics in pub/sub
+        async function initTopicsPubSub(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createTopicsInPubSub`;
+            const options = {
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            // counter
+            if(iotResponse.ok){
+                counter = 1;
+                ++counter;
+            }
+            const iotJsonData = await iotResponse.json();
+            console.log(iotJsonData);
+        }
+
+        //check response
+        const exeInitTopicsPubSub =  async function exeInitTopicsPubSub (userDeviceId){
+            
+            try{
+                const deviceCreatedAndTopics = await initTopicsPubSub(userDeviceId);
+                const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
+                console.log(deviceCreatedAndTopicsResponse);
+            }
+            catch{
+                console.error(err);
+            }
+        }
+        exeInitTopicsPubSub(userDeviceId);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Subscriptions Part
+        // declarate function to create subscriptions in pub/sub
+        async function initSubscriptionsPubSub(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createSubscriptionsInPubSub`;
+            const options = {
+                method: 'GET'
             };
             //fetch
             const iotResponse = await fetch(urlApi, options);
@@ -309,9 +378,10 @@ exports.createDeviceInIotCore = functions.firestore
         }
 
         //check response
-        async function exeInitIotCoreAndPubSub (userDeviceId){
+        async function exeInitSubscriptionsPubSub (userDeviceId){
+            console.log('hi from exe');
             try{
-                const deviceCreatedAndTopics = await initIotCoreAndPubSub(userDeviceId);
+                const deviceCreatedAndTopics = await initSubscriptionsPubSub(userDeviceId);
                 const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
                 console.log(deviceCreatedAndTopicsResponse);
             }
@@ -319,8 +389,27 @@ exports.createDeviceInIotCore = functions.firestore
                 console.error(err);
             }
         }
-        exeInitIotCoreAndPubSub(userDeviceId);
+
+        // wait for the creation on topics
+        if(counter === 4){
+            exeInitSubscriptionsPubSub(userDeviceId);  
+        }
     }) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // delete device & topics in iot core - pub/sub
 exports.deleteDeviceInIotCore = functions.firestore
