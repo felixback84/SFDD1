@@ -309,31 +309,13 @@ exports.createDeviceInIotCore = functions.firestore
             };
             //fetch
             const iotResponse = await fetch(urlApi, options);
-            // counter
-            if(iotResponse.ok){
-                counter = 1;
-                ++counter;
-            }
             const iotJsonData = await iotResponse.json();
             console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
         }
-
-        //check response
-        async function exeInitDevicesIotCore (userDeviceId){
-            try{
-                const deviceCreated = await initDevicesIotCore(userDeviceId);
-                const deviceCreatedResponse = await deviceCreated.iotJsonData;
-                console.log(`Response for exeInitDevicesIotCore: ${deviceCreatedResponse}`);
-            }
-            catch{
-                console.error(err);
-            }
-        }
-        exeInitDevicesIotCore(userDeviceId);
+        // run it
+        initDevicesIotCore(userDeviceId).catch(console.error);  
 
         /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Topics Part
-        // global counter
-        let counter = 0;
         // declarate function to create topics in pub/sub
         async function initTopicsPubSub(dataDevice){
             // api url
@@ -344,77 +326,29 @@ exports.createDeviceInIotCore = functions.firestore
             };
             //fetch
             const iotResponse = await fetch(urlApi, options);
-            // counter
-            if(iotResponse.ok){
-                counter = 1;
-                ++counter;
-            }
             const iotJsonData = await iotResponse.json();
-            console.log(`Counter: ${counter}`);
             console.log(`Response for initTopicsPubSub: ${iotJsonData}`);
         }
-
-        //check response
-        const exeInitTopicsPubSub =  async function exeInitTopicsPubSub (userDeviceId){
-            try{
-                const topicsCreated = await initTopicsPubSub(userDeviceId);
-                const topicsCreatedResponse = await topicsCreated.iotJsonData;
-                console.log(`Response for exeInitTopicsPubSub: ${topicsCreatedResponse}`);
-            }
-            catch{
-                console.error(err);
-            }
-        }
-        exeInitTopicsPubSub(userDeviceId);
+        // run it
+        initTopicsPubSub(userDeviceId).catch(console.error);  
 
         /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Subscriptions Part
         // declarate function to create subscriptions in pub/sub
-        // async function initSubscriptionsPubSub(dataDevice){
-        //     // api url
-        //     const fetch = require('node-fetch');
-        //     const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createSubscriptionsInPubSub`;
-        //     const options = {
-        //         method: 'GET'
-        //     };
-        //     //fetch
-        //     const iotResponse = await fetch(urlApi, options);
-        //     const iotJsonData = await iotResponse.json();
-        //     console.log(iotJsonData);
-        // }
-
-        // //check response
-        // async function exeInitSubscriptionsPubSub (userDeviceId){
-        //     console.log('hi from exe');
-        //     try{
-        //         const deviceCreatedAndTopics = await initSubscriptionsPubSub(userDeviceId);
-        //         const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
-        //         console.log(deviceCreatedAndTopicsResponse);
-        //     }
-        //     catch{
-        //         console.error(err);
-        //     }
-        // }
-
-        // // wait for the creation on topics
-        // if(counter === 4){
-        //     exeInitSubscriptionsPubSub(userDeviceId);  
-        // }
+        async function initSubscriptionsPubSub(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createSubscriptionsInPubSub`;
+            const options = {
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(`Response for initSubscriptionsPubSub: ${iotJsonData}`);
+        }
+        // run it
+        setTimeout(initSubscriptionsPubSub(userDeviceId).catch(console.error), 3000);
     }) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // delete device & topics in iot core - pub/sub
 exports.deleteDeviceInIotCore = functions.firestore

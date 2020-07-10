@@ -138,7 +138,7 @@ exports.createTopicsInPubSub = (req,res) => {
                 console.log(topics);
             }
             // run it
-            createTopicsToDevice(projectId, deviceId).catch(console.error);;  
+            createTopicsToDevice(projectId, deviceId).catch(console.error);  
         }).catch(console.error);
 }    
     
@@ -192,13 +192,6 @@ exports.createSubscriptionsInPubSub = (req,res) => {
             createSubscriptionToTopics(deviceId).catch(console.error);  
         }).catch(console.error); 
 }
-
-
-
-
-
-
-
 
 
 // delete decive & topics in iot core and pub/sub
