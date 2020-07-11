@@ -19,23 +19,24 @@ class ChekerContentToDialogUserAdventure extends Component {
             adventures
         } = this.props;
 
+        // ofer adventures
         let adventuresMarkup = adventures.map(adventure => 
             <CardOfAdventuresForDevice key={adventure.adventureId} adventure={adventure}/>)
 
-        return(
-            loading ? (
-                <CircularProgress size={20}/>
-                ) : (
-                    <Grid container spacing={1} 
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                    >   
-                        <CarrouselOfImagesDevice />
-                        <ContentToDialogDevice />
-                        {adventuresMarkup}
-                    </Grid>
-                )
+            return(
+                loading ? (
+                    <CircularProgress size={20}/>
+                    ) : (
+                        <Grid container spacing={1} 
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                        >   
+                            <CarrouselOfImagesDevice />
+                            <ContentToDialogDevice />
+                            {adventuresMarkup}
+                        </Grid>
+                    )
         )
     }
 }

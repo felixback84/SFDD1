@@ -48,6 +48,8 @@ exports.createDeviceInIotCore = (req, res) => {
                         console.log(`Response for createDeviceToHalo: ${device.name} created.`);
                         // var to hold device name
                         const haloDeviceName = device.name;
+                        //res
+                        res.json(haloDeviceName);
                         // show all
                         console.log(haloDeviceName);
                     }
@@ -80,6 +82,8 @@ exports.createDeviceInIotCore = (req, res) => {
                         console.log(`Response for createDeviceToHalo: ${device.name} created.`);
                         // var to hold device name
                         const hildaDeviceName = device.name;
+                        //res
+                        res.json(haloDeviceName);
                         // show all
                         console.log(hildaDeviceName);
                     }
@@ -111,34 +115,74 @@ exports.createTopicsInPubSub = (req,res) => {
             // var with vars to pass through function
             deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`;
             ////////////////////////////////////////////////////// CREATION OF TOPICS FOR DEVICE
-            // function to create the topics to device
-            const createTopicsToDevice = async function (projectId, deviceId) {
-                // Imports the Google Cloud client library
-                const {PubSub} = require('@google-cloud/pubsub');
-                // Instantiates a client
-                const pubsub = new PubSub({projectId});
-                const mqttTopics = {   
-                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
-                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
-                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
-                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
-                }   
-                // var to save all topics names
-                const topics = [];
-                // detect keys in object
-                const values = Object.values(mqttTopics);
-                // run loop
-                for (const value of values) {
-                    // Creates the new topic
-                    const [topic] = await pubsub.createTopic(value);
-                    console.log(`Response for createTopicsToDevice: ${topic.name} created.`);
-                    topics.push(topic.name);
-                }
-                // show all
-                console.log(topics);
+            // determine wich type of device is
+            switch(nameOfDevice){
+                case 'Halo':
+                    // function to create the topics to device
+                    const createTopicsToHaloDevice = async function (projectId, deviceId) {
+                        // Imports the Google Cloud client library
+                        const {PubSub} = require('@google-cloud/pubsub');
+                        // Instantiates a client
+                        const pubsub = new PubSub({projectId});
+                        const mqttTopics = {   
+                            MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                            MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                            MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                            MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                        }   
+                        // var to save all topics names
+                        const topics = [];
+                        // detect keys in object
+                        const values = Object.values(mqttTopics);
+                        // run loop
+                        for (const value of values) {
+                            // Creates the new topic
+                            const [topic] = await pubsub.createTopic(value);
+                            console.log(`Response for createTopicsToDevice: ${topic.name} created.`);
+                            topics.push(topic.name);
+                        }
+                        //res
+                        res.json(topics);
+                        // show all
+                        console.log(topics);
+                    }
+                    createTopicsToHaloDevice(projectId, deviceId).catch(console.error);
+                    break;
+                case 'Hilda': 
+                    // function to create the topics to device 
+                    const createTopicsToHildaDevice = async function (projectId, deviceId) {
+                        // Imports the Google Cloud client library
+                        const {PubSub} = require('@google-cloud/pubsub');
+                        // Instantiates a client
+                        const pubsub = new PubSub({projectId});
+                        const mqttTopics = {   
+                            MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                            MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                            MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                            MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                        }   
+                        // var to save all topics names
+                        const topics = [];
+                        // detect keys in object
+                        const values = Object.values(mqttTopics);
+                        // run loop
+                        for (const value of values) {
+                            // Creates the new topic
+                            const [topic] = await pubsub.createTopic(value);
+                            console.log(`Response for createTopicsToDevice: ${topic.name} created.`);
+                            topics.push(topic.name);
+                        }
+                        //res
+                        res.json(topics);
+                        // show all
+                        console.log(topics);
+                    }
+                    // run it
+                    createTopicsToHildaDevice(projectId, deviceId).catch(console.error);  
+                    break; 
+                case 'default':
+                    null    
             }
-            // run it
-            createTopicsToDevice(projectId, deviceId).catch(console.error);  
         }).catch(console.error);
 }    
     
@@ -161,37 +205,84 @@ exports.createSubscriptionsInPubSub = (req,res) => {
             // var with vars to pass through function
             deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`;
             ////////////////////////////////////////////////////// CREATION OF SUBSCRIPTIONS FOR TOPICS
-            // declaration of function to create subscriptions
-            async function createSubscriptionToTopics(deviceId) {
-                // Imports the Google Cloud client library
-                const {PubSub} = require('@google-cloud/pubsub');
-                // var to save all topics subscriptions
-                const subscriptions = [];
-                // Creates a client; cache this for further use
-                const pubSubClient = new PubSub();
-                // object with topics
-                const mqttTopicsSubscriptions = {   
-                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
-                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
-                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
-                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
-                }  
-                // detect keys in object
-                const topicsNames = Object.values(mqttTopicsSubscriptions);
-                // run loop
-                for (const topicName of topicsNames) {
-                    // Creates a new subscription
-                    const [subscription] = await pubSubClient.topic(topicName).createSubscription(topicName);
-                    console.log(`Response for createSubscriptionsInPubSub: ${subscription.name}created.`);
-                    subscriptions.push(subscription.name);
-                }
-                // show all
-                console.log(subscriptions);
+            // determine wich type of device is
+            switch(nameOfDevice){
+                case 'Halo':
+                    // declaration of function to create subscriptions
+                    async function createSubscriptionToTopicsToHalo(deviceId) {
+                        // Imports the Google Cloud client library
+                        const {PubSub} = require('@google-cloud/pubsub');
+                        // var to save all topics subscriptions
+                        const subscriptions = [];
+                        // Creates a client; cache this for further use
+                        const pubSubClient = new PubSub();
+                        // object with topics
+                        const mqttTopicsSubscriptions = {   
+                            MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                            MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                            MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                            MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                        }  
+                        // detect keys in object
+                        const topicsNames = Object.values(mqttTopicsSubscriptions);
+                        // run loop
+                        for (const topicName of topicsNames) {
+                            // Creates a new subscription
+                            const [subscription] = await pubSubClient.topic(topicName).createSubscription(topicName);
+                            console.log(`Response for createSubscriptionsInPubSub: ${subscription.name}created.`);
+                            subscriptions.push(subscription.name);
+                        }
+                        //res
+                        res.json(subscriptions);
+                        // show all
+                        console.log(subscriptions);
+                    } 
+                    // run it 
+                    createSubscriptionToTopicsToHalo(deviceId).catch(console.error); 
+                    break;
+                case 'Hilda': 
+                     // declaration of function to create subscriptions
+                    async function createSubscriptionToTopicsToHilda(deviceId) {
+                        // Imports the Google Cloud client library
+                        const {PubSub} = require('@google-cloud/pubsub');
+                        // var to save all topics subscriptions
+                        const subscriptions = [];
+                        // Creates a client; cache this for further use
+                        const pubSubClient = new PubSub();
+                        // object with topics
+                        const mqttTopicsSubscriptions = {   
+                            MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                            MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                            MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                            MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                        }  
+                        // detect keys in object
+                        const topicsNames = Object.values(mqttTopicsSubscriptions);
+                        // run loop
+                        for (const topicName of topicsNames) {
+                            // Creates a new subscription
+                            const [subscription] = await pubSubClient.topic(topicName).createSubscription(topicName);
+                            console.log(`Response for createSubscriptionsInPubSub: ${subscription.name}created.`);
+                            subscriptions.push(subscription.name);
+                        }
+                        //res
+                        res.json(subscriptions);
+                        // show all
+                        console.log(subscriptions);
+                    } 
+                    // run it 
+                    createSubscriptionToTopicsToHilda(deviceId).catch(console.error);   
+                    break;
+                case 'default':
+                    null     
+        
             } 
-            // run it 
-            createSubscriptionToTopics(deviceId).catch(console.error);  
         }).catch(console.error); 
+
 }
+
+
+
 
 
 // delete decive & topics in iot core and pub/sub

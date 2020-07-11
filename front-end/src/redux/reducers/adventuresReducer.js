@@ -9,9 +9,9 @@
 } from '../types';
 
 // initial state
-const initialState = {
+const initialState = { 
     adventures: [],
-    adventure: {},
+    adventure: {device:{},imgUrl:[], comments:[], tags:[]},
     loading: false
 };
 
@@ -36,12 +36,14 @@ export default function(state = initialState, action){
             }       
         case GET_LIKE_ADVENTURES:
         case GET_UNLIKE_ADVENTURES:
+            let commentsStill = state.adventure.comments;
             let index = state.adventures.findIndex(
                 (adventure) => adventure.adventureId === action.payload.adventureId
             );
             state.adventures[index] = action.payload;
             if (state.adventure.adventureId === action.payload.adventureId) {
                 state.adventure = action.payload;
+                state.device.comments = commentsStill;
             }
             return {
                 ...state

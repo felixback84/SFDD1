@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import HeaderToCardAdventures from './adventureCard/HeaderToCardAdventures';
 import VideoPlayer from '../../util/VideoPlayer';
 import ContentToCardAdventures from './adventureCard/ContentToCardAdventures';
-// import ActionsToCardAdventures from './deviceCard/ActionsToCardAdventures';
+import ActionsToCardAdventures from './adventureCard/ActionsToCardAdventures';
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -58,6 +58,7 @@ export class Adventure extends Component {
                 <HeaderToCardAdventures
                     title={title} 
                     price={price}
+                    tags={tags}
                 />
                 <VideoPlayer url={videoUrl} widht={100} />
                 <ContentToCardAdventures
@@ -71,12 +72,12 @@ export class Adventure extends Component {
                     createdat={createdAt}
                 />
                 <hr className={classes.visibleSeparator}/>
-                {/*<ActionsToCardAdventures
+                <ActionsToCardAdventures
                     likescount={likesCount} 
                     commentscount={commentsCount}  
                     price={price}
-                    deviceid={deviceId}
-                /> */}
+                    adventureid={adventureId}
+                />
             </Card>     
         )
     } 

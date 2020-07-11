@@ -70,7 +70,7 @@ export const unlikeDevice = (deviceid) => (dispatch) => {
             })
         })
         .catch(err => console.log(err));
-}
+} 
 
 // submit comment
 export const postCommentDevice = (deviceid, commentData) => (dispatch) => {

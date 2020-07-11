@@ -17,7 +17,8 @@ const HeaderToCardAdventures = (props) => {
     const {
         classes,
         title,
-        price
+        price,
+        tags
     } = props;
     return (
         <div>

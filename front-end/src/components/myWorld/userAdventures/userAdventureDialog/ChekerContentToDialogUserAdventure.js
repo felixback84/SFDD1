@@ -36,7 +36,7 @@ class ChekerContentToDialogUserAdventure extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    userAdventure: state.userAdventures1.loading
+    loading: state.userAdventures1.loading
     
 })
 

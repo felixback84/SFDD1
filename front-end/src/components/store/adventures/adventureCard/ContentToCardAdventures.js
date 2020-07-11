@@ -7,6 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import Divider from '@material-ui/core/Divider';
 
 // icons
 import ImageIcon from '@material-ui/icons/Image';
@@ -14,7 +16,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 // components
-//import AdventureDialog from '../deviceDialog/DeviceDialog';
+import AdventureDialog from '../adventureDialog/AdventureDialog';
 //import ProcessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
 
 // dayjs
@@ -114,7 +116,15 @@ const ContentToCardAdventures = (props) => {
             </Grid>
             <hr className={classes.visibleSeparator}/>
             <Grid container spacing={1} direction="row" justify='center' alignItems='center'>
-                <Grid item xs={8}>
+                <Grid item xs={12}>
+                    <ListItemText>
+                        Tags: {tags.map(tag => <Chip className={classes.chip} label={tag}/>)}
+                    </ListItemText>
+                </Grid>
+            </Grid>
+            <hr className={classes.visibleSeparator}/>
+            <Grid container spacing={1} direction="row" justify='center' alignItems='center'>
+                <Grid item xs={10}>
                     <ListItem className={classes.ListItem}>
                         <ListItemAvatar >
                             <Avatar>
@@ -127,11 +137,33 @@ const ContentToCardAdventures = (props) => {
                         />
                     </ListItem>
                 </Grid>
+                
                 {/* Modals for store and details */}
-                <Grid item xs={4}>
-                    {/* <AdventureDialog/> */}
-                    {/* <ProcessToAdventurePayment/> */}
+                
+                <Divider orientation="vertical" flexItem/>
+                
+                <Grid >
+                    <Grid item xs={6}>
+                        <ListItem className={classes.ListItem}>
+                            {/* <ProcessToAdventurePayment 
+                                deviceid={deviceid} 
+                                nameofdevice={nameofdevice}
+                                agerate={agerate}
+                                price={price}
+                            /> */}
+                        </ListItem>
+                    </Grid>
+                    
+                    <Grid item xs={6}>
+                        <ListItem className={classes.ListItem}>
+                            <AdventureDialog 
+                                adventureid={adventureid} 
+                                title={title}
+                            /> 
+                        </ListItem>
+                    </Grid>
                 </Grid>
+
             </Grid>
         </CardContent>
     )
