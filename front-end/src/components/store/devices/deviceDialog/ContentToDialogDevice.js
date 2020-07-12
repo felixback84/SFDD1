@@ -119,7 +119,6 @@ const ContentToDialogDevice = (props) => {
                         </ListItem>
                     </Grid>
                 </Grid>
-
             </Grid>
         </DialogContent>
     )

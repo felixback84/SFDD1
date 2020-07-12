@@ -37,7 +37,7 @@ class ChekerContentToDialogAdventure extends Component {
                         <CarrouselOfImagesAdventure />
                         {devicesMarkup}
                     </Grid> 
-                )
+                ) 
         )
     }
 }

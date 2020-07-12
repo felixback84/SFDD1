@@ -15,6 +15,11 @@ import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
+
+// components
+import ProccessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
+
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -56,7 +61,7 @@ const ContentToDialogAdventure = (props) => {
             title
         }
         
-    }= props;
+    } = props;
 
     return(
         <DialogContent dividers>
@@ -85,7 +90,7 @@ const ContentToDialogAdventure = (props) => {
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText 
-                            primary="Mine Since:" 
+                            primary="Avalaible Since:" 
                             secondary={dayjs(createdAt).format('h:mm a, MMMM DD YYYY')} 
                         />
                     </ListItem>
@@ -99,8 +104,8 @@ const ContentToDialogAdventure = (props) => {
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText 
-                            primary={`Title of Adventure:`} 
-                            secondary={title} 
+                            primary={`For:`} 
+                            secondary={nameOfDevice} 
                         />
                     </ListItem>
                 </Grid>
@@ -113,35 +118,57 @@ const ContentToDialogAdventure = (props) => {
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText 
-                            primary="Mine Since:" 
-                            secondary={dayjs(createdAt).format('h:mm a, MMMM DD YYYY')} 
+                            primary="Duration:" 
+                            secondary={`${duration} min.`} 
                         />
                     </ListItem>
                 </Grid>
             </Grid>
 
+            <hr className={classes.visibleSeparator}/>
+
             <Grid container spacing={1} direction="row" justify='center' alignItems='center'>
-                <Grid item sm={12} className={classes.gridItems}>
+                <Grid item sm={3} className={classes.gridItems}>
+                    <img src={badgeUrl}/>
+                </Grid>
+                <Grid item sm={9} className={classes.gridItems}>
                     <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <WorkIcon />
-                            </Avatar>
-                        </ListItemAvatar>
                         <ListItemText 
-                            primary={`Why ${title} is an awesome adventure?:`}
+                            primary={`Description: `}
                             secondary={description}
                         />
                     </ListItem>
                 </Grid>
             </Grid>
+
+            <hr className={classes.visibleSeparator}/>
+
+            <Grid container spacing={1} direction="row" justify='center' alignItems='center'>
+                <Grid item xs={9}>
+                    <ListItemText>
+                        Tags: {tags.map(tag => <Chip className={classes.chip} label={tag}/>)}
+                    </ListItemText>
+                </Grid>
+                <Grid item sm={3} className={classes.gridItems}>
+                    <ListItem className={classes.ListItem}>
+                        <ProccessToAdventurePayment adventureid={adventureId}/>
+                        <Chip
+                            label={`${price} USD`}
+                            color="primary"
+                        />
+                    </ListItem>
+                </Grid>
+            </Grid>
+
+            <hr className={classes.visibleSeparator}/>
+
+
         </DialogContent>
     )
 }
 
 const mapStateToProps = (state) => ({
     adventure: state.adventures1.adventure
-    
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(ContentToDialogAdventure));

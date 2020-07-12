@@ -70,3 +70,23 @@ export const postDataCheckOutDevice = (deviceId, userData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });    
 }
 
+export const postDataCheckOutAdventure = (adventureId, userData) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post(`/user/checkout/device/${adventureId}`, userData)
+        .then((res) => {   
+            console.log('hi action reducer');  
+            console.log(res.data); 
+
+            //dispatch({ type: CLEAR_ERRORS });
+        
+        })
+        .catch(err => {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+    dispatch({ type: STOP_LOADING_UI });    
+}
+

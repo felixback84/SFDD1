@@ -43,7 +43,7 @@ export default function(state = initialState, action){
             state.adventures[index] = action.payload;
             if (state.adventure.adventureId === action.payload.adventureId) {
                 state.adventure = action.payload;
-                state.device.comments = commentsStill;
+                state.adventure.comments = commentsStill;
             }
             return {
                 ...state
@@ -52,7 +52,7 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 adventure: {
-                    ...state.adventure,
+                    ...state.adventure, 
                     comments: [
                         action.payload, 
                         ...state.adventure.comments
