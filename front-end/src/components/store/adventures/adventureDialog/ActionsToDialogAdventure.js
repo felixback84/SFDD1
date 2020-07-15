@@ -6,10 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 
 // icons
 import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+//import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // components
-import FavButtonDevice from '../FavButtonDevice';
+import FavButtonAdventure from '../FavButtonDevice';
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -32,7 +32,7 @@ const ActionsToDialogAdventure = (props) => {
 
     return(
         <DialogActions>
-            <FavButtonDevice adventureid={adventureid} />
+            <FavButtonAdventure adventureid={adventureid} />
             <span>{likesCount} likes</span>
             <IconButton aria-label="share">
                 <ShareIcon />

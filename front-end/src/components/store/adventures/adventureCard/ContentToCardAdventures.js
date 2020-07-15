@@ -17,7 +17,7 @@ import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 // components
 import AdventureDialog from '../adventureDialog/AdventureDialog';
-//import ProcessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
+import ProcessToAdventurePayment from '../adventureStore/ProcessToAdventurePayment';
 
 // dayjs
 import dayjs from 'dayjs';
@@ -145,12 +145,9 @@ const ContentToCardAdventures = (props) => {
                 <Grid >
                     <Grid item xs={6}>
                         <ListItem className={classes.ListItem}>
-                            {/* <ProcessToAdventurePayment 
-                                deviceid={deviceid} 
-                                nameofdevice={nameofdevice}
-                                agerate={agerate}
-                                price={price}
-                            /> */}
+                            <ProcessToAdventurePayment 
+                                adventureid={adventureid} 
+                            />
                         </ListItem>
                     </Grid>
                     
@@ -158,7 +155,6 @@ const ContentToCardAdventures = (props) => {
                         <ListItem className={classes.ListItem}>
                             <AdventureDialog 
                                 adventureid={adventureid} 
-                                title={title}
                             /> 
                         </ListItem>
                     </Grid>

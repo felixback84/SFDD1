@@ -34,7 +34,7 @@ function getSteps() {
         'Billing Address', 
         'Payment Method', 
         'Order Resumen', 
-        'Success buy Adventure'
+        'Adventure success buy'
     ];
 }
 
@@ -54,7 +54,7 @@ function getStepContent(stepIndex, adventureid) {
         default:
             return 'None';
     }
-}
+} 
 
 export default function StepperToAdventurePayment(props) {
 

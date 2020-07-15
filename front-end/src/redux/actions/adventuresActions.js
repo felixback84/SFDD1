@@ -74,7 +74,7 @@ export const unlikeAdventure = (adventureid) => (dispatch) => {
 
 // submit comment
 export const postCommentAdventure = (adventureid, commentData) => (dispatch) => {
-    axios.post(`/device/${adventureid}/comment`, commentData)
+    axios.post(`/adventure/${adventureid}/comment`, commentData)
         .then(res => {
             dispatch({
                 type: POST_ADVENTURE_COMMENT,

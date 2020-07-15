@@ -49,7 +49,7 @@ class ProcessToAdventurePayment extends Component {
         // redux actions
         store.dispatch(getAdventure(this.props.adventureid));
     }
-
+ 
     handleClose = () => {
         this.setState({ open: false });
     } 
@@ -65,7 +65,8 @@ class ProcessToAdventurePayment extends Component {
                 badgeUrl
             }, 
             price, 
-            adventureid} = this.props;
+            adventureid
+        } = this.props;
 
         return (
             <Fragment>

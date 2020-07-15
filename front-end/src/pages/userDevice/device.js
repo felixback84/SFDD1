@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 // components
-import DataSetHilda from './DataSetHilda';
-import DataSetHalo from './DataSetHalo';
+import HildaUI from './HildaUI';
+import HaloUI from './HaloUI';
 import UserDeviceSkeleton from '../../../../utilities/UserDeviceSkeleton';
 
 // Redux stuff
@@ -10,61 +10,55 @@ import { connect } from 'react-redux';
 
 // switch case
 class Device extends Component {
-    
-    render(){
-        // devices ids
-        const HALO = 'MZInC971tJYurv3OYzjR';
-        const HILDA = 'gE2ySDQaMymbZe0r6KEH';
 
+    // if the device is active
+    findActiveDevice= () => {
         const {
             userDevices
         } = this.props;
 
-        
-        const mapResult = userDevices.map(userDevice => {
-            let idsAndActive = [];
-            let id = userDevice.userDeviceId;
-            let active = userDevice.active;
-            idsAndActive.push({
-                id,
-                active
-            })
-            idsAndActive = idsAndActive.filter(
-                active => active !== false 
-            )
-                
-            switch(mapResult.idsAndActive){
-                case HILDA:
-                    // specific component
-                    let UIHildaMarkup = !loading ? (
-                        <HildaUI/>
-                        ) : (
-                            <UserDeviceSkeleton/>
-                        );
-                    return(UIHildaMarkup);       
+        // find the active one
+        const anyActive = userDevices.active.find(
+            (userDevice) => userDevice.active === true
+        )
+        // devices ids
+        const HALO = 'MZInC971tJYurv3OYzjR';
+        const HILDA = 'gE2ySDQaMymbZe0r6KEH';
+
+        // check if ther anyone active
+        if(anyActive){
+            switch(anyActive.deviceId){
                 case HALO:
-                    // specific component
-                    let UIHaloMarkup = !loading ? (
-                        <HaloUI/>
-                        ) : (
-                            <UserDeviceSkeleton/>
-                        );
-                    return(UIHaloMarkup);
+                        // specific component
+                        let UIHildaMarkup = !loading ? (
+                            <HildaUI/>
+                            ) : (
+                                <UserDeviceSkeleton/>
+                            );
+                        return(UIHildaMarkup);
+                case HILDA:
+                        // specific component
+                        let UIHaloMarkup = !loading ? (
+                            <HaloUI/>
+                            ) : (
+                                <UserDeviceSkeleton/>
+                            );
+                        return(UIHaloMarkup);
                 default:
-                    return null; 
+                    return null;
             }
-        })
-    }  
-    return(
-        {mapResult}
-    ) 
-    
+        }
+    };
+
+    render(){
+        {this.findActiveDevice}
+    }    
+
 }
 
 const mapStateToProps = (state) => ({
-    adventure: state.userAdventures1.userAdventure.adventure
+    userDevices: state.userDevices1.userDevices
     
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(Device));
-

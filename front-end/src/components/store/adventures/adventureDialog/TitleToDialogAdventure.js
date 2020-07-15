@@ -26,7 +26,7 @@ const styles = (theme) => ({
     }
 });
 
-const TitleToDialogDevice = (props) => {
+const TitleToDialogAdventure = (props) => {
     dayjs.extend(relativeTime);
     const { classes, title, nameofdevice, onClose } = props;
     return (
@@ -46,4 +46,4 @@ const TitleToDialogDevice = (props) => {
     );
 };
 
-export default (withStyles(styles)(TitleToDialogDevice));
+export default (withStyles(styles)(TitleToDialogAdventure));

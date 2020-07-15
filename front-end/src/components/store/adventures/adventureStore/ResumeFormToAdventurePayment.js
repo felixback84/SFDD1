@@ -65,7 +65,7 @@ class ResumeFormToAdventurePayment extends Component {
                 }
             }
         } 
-        this.props.postDataCheckOutAdventure(adventureId, userData);
+        this.props.postDataCheckOutAdventure(this.props.adventureId, userData);
 
         console.log(userData);
         console.log('hi from finish');

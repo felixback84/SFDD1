@@ -161,8 +161,7 @@ const ContentToDialogAdventure = (props) => {
             </Grid>
 
             <hr className={classes.visibleSeparator}/>
-
-
+            
         </DialogContent>
     )
 }

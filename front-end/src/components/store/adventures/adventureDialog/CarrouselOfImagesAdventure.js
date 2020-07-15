@@ -71,7 +71,7 @@ const CarrouselOfImagesAdventure = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    adventure: state.devices1.adventure
+    adventure: state.adventures1.adventure
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(CarrouselOfImagesAdventure));

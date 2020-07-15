@@ -34,7 +34,7 @@ function getSteps() {
         'Billing Address', 
         'Payment Method', 
         'Order Resumen', 
-        'Success buy Device'
+        'Device success buy'
     ];
 }
 
