@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 // Components
 import MyButton from '../../../../utilities/MyButton';
 import TitleToDialogAdventure from './TitleToDialogAdventure';
-import ChekerContentToDialogDevice from './ChekerContentToDialogDevice';
-import ActionsToDialogDevice from './ActionsToDialogDevice';
-import CommentsToDialogDevice from './CommentsToDialogDevice';
-import CommentFormToDialogDevice from './CommentFormToDialogDevice';
+import ChekerContentToDialogAdventure from './ChekerContentToDialogAdventure';
+import ActionsToDialogAdventure from './ActionsToDialogAdventure';
+import CommentsToDialogAdventure from './CommentsToDialogAdventure';
+import CommentFormToDialogAdventure from './CommentFormToDialogAdventure';
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -78,7 +78,8 @@ class AdventureDialog extends Component {
                 likesCount,
                 price,
                 tags,
-                title
+                title,
+                description
             }
         } = this.props;
 

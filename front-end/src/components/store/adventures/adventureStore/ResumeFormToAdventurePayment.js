@@ -88,7 +88,10 @@ class ResumeFormToAdventurePayment extends Component {
                 coverUrl,
                 description,
                 title,
-                price
+                price,
+                device:{
+                    nameOfDevice
+                }
             },
             paymentData:{
                 shippingAddress,
@@ -144,7 +147,7 @@ class ResumeFormToAdventurePayment extends Component {
                     </Grid>
                     <Grid item xs={1}/>
 
-                    {/* Device Info */}
+                    {/* Adventure Info */}
                     <Grid item xs={1} />
                     <Grid item xs={10}>
                         <Paper elevation={2}> 
@@ -154,18 +157,18 @@ class ResumeFormToAdventurePayment extends Component {
                                     <TableBody>
                                         <TableRow >
                                             <TableCell component="th" scope="row">
-                                                Device:
+                                                Adventure:
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {nameOfDevice}
+                                                {title}
                                             </TableCell>
                                         </TableRow>
                                         <TableRow >
                                             <TableCell component="th" scope="row">
-                                                For ager from:
+                                                For:
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {ageRate}
+                                                {nameOfDevice}
                                             </TableCell>
                                         </TableRow>
                                         <TableRow >

@@ -15,7 +15,7 @@ import TitleToAdventurePayment from './TitleToAdventurePayment';
 
 // Redux stuff
 import store from '../../../../redux/store';
-import { getAdventure } from '../../../../redux/actions/adventureActions';
+import { getAdventure } from '../../../../redux/actions/adventuresActions';
 
 // styles
 const styles = (theme) => ({
@@ -60,12 +60,9 @@ class ProcessToAdventurePayment extends Component {
         const {
             classes, 
             title, 
-            device:{
-                nameofdevice,
-                badgeUrl
-            }, 
+            nameofdevice,
             price, 
-            adventureid
+            adventureid,
         } = this.props;
 
         return (
@@ -102,7 +99,7 @@ class ProcessToAdventurePayment extends Component {
     }
 }
 
-export default (withStyles(styles)(ProcessToAdventurePayment));
 
+export default (withStyles(styles)(ProcessToAdventurePayment));
 
 

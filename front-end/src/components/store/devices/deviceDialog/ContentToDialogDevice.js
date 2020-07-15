@@ -98,7 +98,7 @@ const ContentToDialogDevice = (props) => {
                     <ListItem className={classes.ListItem}>
                         <ProccessToDevicePayment deviceid={deviceId}/>
                         <Chip
-                            label={`${price} USD`}
+                            label={`${price} USD`} 
                             color="primary"
                         />
                     </ListItem>

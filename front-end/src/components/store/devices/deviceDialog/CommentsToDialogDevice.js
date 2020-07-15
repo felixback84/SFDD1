@@ -21,7 +21,7 @@ const styles = (theme) => ({
         marginLeft: 20
     }
 });
-
+ 
 class CommentsToDialogDevice extends Component {
     render() {
         const { device:{comments}, classes } = this.props;

@@ -83,7 +83,6 @@ exports.postDataCheckOutDevice = (req, res) => {
                 console.log(dataCheckout);
 
                 ///////////////////// SIDE SERVER FOR BUY WITH PAYU ////////////////////////////////
-                
                 // static global vars
                 const language = "es";
                 const command = "SUBMIT_TRANSACTION";
@@ -330,7 +329,6 @@ exports.postDataCheckOutAdventure = (req, res) => {
                 console.log(dataCheckout);
 
                 ///////////////////// SIDE SERVER FOR BUY WITH PAYU ////////////////////////////////
-                
                 // static global vars
                 const language = "es";
                 const command = "SUBMIT_TRANSACTION";

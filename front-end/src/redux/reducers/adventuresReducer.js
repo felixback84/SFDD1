@@ -11,7 +11,7 @@
 // initial state
 const initialState = { 
     adventures: [],
-    adventure: {device:{},imgUrl:[], comments:[], tags:[]},
+    adventure: {device:{}, imgUrl:[], comments:[], tags:[]},
     loading: false
 };
 

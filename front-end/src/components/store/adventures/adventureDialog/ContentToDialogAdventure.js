@@ -58,7 +58,8 @@ const ContentToDialogAdventure = (props) => {
             likesCount,
             price,
             tags,
-            title
+            title,
+            description
         }
         
     } = props;

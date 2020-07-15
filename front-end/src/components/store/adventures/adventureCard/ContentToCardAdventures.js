@@ -52,7 +52,8 @@ const ContentToCardAdventures = (props) => {
         nameofdevice,
         tags,
         duration,
-        language
+        language,
+        price
     } = props;
 
     return (
@@ -146,7 +147,10 @@ const ContentToCardAdventures = (props) => {
                     <Grid item xs={6}>
                         <ListItem className={classes.ListItem}>
                             <ProcessToAdventurePayment 
-                                adventureid={adventureid} 
+                                adventureid={adventureid}  
+                                title={title}
+                                nameofdevice={nameofdevice}
+                                price={price}
                             />
                         </ListItem>
                     </Grid>

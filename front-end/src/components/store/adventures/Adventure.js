@@ -70,6 +70,7 @@ export class Adventure extends Component {
                     language={language}
                     title={title}
                     createdat={createdAt}
+                    price={price}
                 />
                 <hr className={classes.visibleSeparator}/>
                 <ActionsToCardAdventures

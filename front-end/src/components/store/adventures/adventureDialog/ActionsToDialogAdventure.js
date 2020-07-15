@@ -9,7 +9,7 @@ import ShareIcon from '@material-ui/icons/Share';
 //import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // components
-import FavButtonAdventure from '../FavButtonDevice';
+import FavButtonAdventure from '../FavButtonAdventure';
 
 // Redux stuff
 import { connect } from 'react-redux';

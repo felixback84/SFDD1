@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // components
 import HildaUI from './HildaUI';
 import HaloUI from './HaloUI';
-import UserDeviceSkeleton from '../../../../utilities/UserDeviceSkeleton';
+import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -14,7 +14,8 @@ class Device extends Component {
     // if the device is active
     findActiveDevice= () => {
         const {
-            userDevices
+            userDevices,
+            loading
         } = this.props;
 
         // find the active one
@@ -51,7 +52,7 @@ class Device extends Component {
     };
 
     render(){
-        {this.findActiveDevice}
+        {return this.findActiveDevice}
     }    
 
 }
@@ -61,4 +62,4 @@ const mapStateToProps = (state) => ({
     
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(Device));
+export default connect(mapStateToProps)(Device);
