@@ -71,12 +71,17 @@ const {
 
 // iot core & pub/sub
 const {
+    createDeviceRegistryInIotCore,
     createDeviceInIotCore,
     createTopicsInPubSub,
     createSubscriptionsInPubSub,
-
     deleteInIotCore
-} = require('./handlers/iotCoreAndPubSub');
+} = require('./handlers/newCycleIotGcloud');
+
+// iot core & pub/sub
+const {
+    getOnOffFromHaloDevice
+} = require('./handlers/haloDevice');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -154,6 +159,8 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 ////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
+// create device registry in iot core
+app.get('/device/:userDeviceId/createDeviceRegistryInIotCore', createDeviceRegistryInIotCore);
 // creation of device in iot core
 app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 // creation of topics in pub/sub 
@@ -161,10 +168,13 @@ app.get('/device/:userDeviceId/createTopicsInPubSub', createTopicsInPubSub);
 // creation of subscriptions in pub/sub
 app.get('/device/:userDeviceId/createSubscriptionsInPubSub', createSubscriptionsInPubSub);
 
-
-
 // deletion of device and topics in iot core and pub/sub respectivily
 app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
+
+////////////////////////////////// halo device routes /////////////////////////////////////////////////
+// Routes device halo
+app.get('/userDevices/iotCore/:userDeviceId/on-off', getOnOffFromHaloDevice);
+//app.get('/userDevices/iotCore/:userDeviceId/off', getOffFromHaloDevice);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -298,25 +308,26 @@ exports.createDeviceInIotCore = functions.firestore
         const newActiveUserDevice = snap.data();
         const userDeviceId = newActiveUserDevice.userDeviceId
 
-        /////////////////////////////////////////////////////////////////////////////////////////////// IoT Core Part
-        // declarate function to create devices in iot core
-        async function initDevicesIotCore(dataDevice){
+        /////////////////////////////////////////////////////////////////////////////////////////////// Registry devices Part
+        // declarate function to create subscriptions in pub/sub
+        async function initCreateDeviceRegistryWithTopics(dataDevice){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDeviceRegistryInIotCore`;
             const options = {
                 method: 'GET'
             };
             //fetch
             const iotResponse = await fetch(urlApi, options);
             const iotJsonData = await iotResponse.json();
-            console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
+            console.log(`Response for initSubscriptionsPubSub: ${iotJsonData}`);
         }
         // run it
-        initDevicesIotCore(userDeviceId).catch(console.error);  
-
-        /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Topics Part
-        // declarate function to create topics in pub/sub
+        //setTimeout(initCreateDeviceRegistryWithTopics(userDeviceId), 2000);
+        initCreateDeviceRegistryWithTopics(userDeviceId);
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Topics Part
+        //declarate function to create topics in pub/sub
         async function initTopicsPubSub(dataDevice){
             // api url
             const fetch = require('node-fetch');
@@ -330,7 +341,7 @@ exports.createDeviceInIotCore = functions.firestore
             console.log(`Response for initTopicsPubSub: ${iotJsonData}`);
         }
         // run it
-        initTopicsPubSub(userDeviceId).catch(console.error);  
+        initTopicsPubSub(userDeviceId);
 
         /////////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Subscriptions Part
         // declarate function to create subscriptions in pub/sub
@@ -347,7 +358,26 @@ exports.createDeviceInIotCore = functions.firestore
             console.log(`Response for initSubscriptionsPubSub: ${iotJsonData}`);
         }
         // run it
-        setTimeout(initSubscriptionsPubSub(userDeviceId).catch(console.error), 3000);
+        setTimeout(initSubscriptionsPubSub(userDeviceId), 2000);
+        //initSubscriptionsPubSub(userDeviceId);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////// IoT device creation part
+        // declarate function to create devices in iot core
+        async function initDevicesIotCore(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
+            const options = {
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
+        }
+        // run it
+        //setTimeout(initDevicesIotCore(userDeviceId), 2000);
+        initDevicesIotCore(userDeviceId);
     }) 
 
 // delete device & topics in iot core - pub/sub

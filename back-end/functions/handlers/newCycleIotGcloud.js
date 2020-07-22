@@ -1,3 +1,100 @@
+// update registry of devices
+exports.createDeviceRegistryInIotCore = (req, res) => {
+    // firebase part
+    const { db } = require('../utilities/admin');
+    // var to firebase consult
+    const userDeviceId = req.params.userDeviceId
+    // var for hold id of device
+    let deviceId = "";
+    // var project id
+    const projectId = 'sfdd-d8a16';
+
+    // ask for firebase document
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .get()
+        .then((doc) => {
+            let userDeviceData = doc.data();
+            let userHandle = userDeviceData.userHandle;
+            let nameOfDevice = userDeviceData.device.nameOfDevice;
+            // var with vars to pass through function
+            //something like: 'CarlosTal84-halo-8n4ohAo247H1W5SsxY9s'
+            deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`
+            // determine wich type of device is
+
+            // declaration of function to update subscriptions with the new topics of the devices
+            async function createDeviceRegistryWithTopicsToHalo(deviceId){
+                const iot = require('@google-cloud/iot');
+                // cloud region
+                const Location = 'us-central1';
+                // registry name
+                const registryId= 'Halo';
+                // topics for halo device
+                const mqttTopicsSubscriptions = {   
+                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
+                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
+                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
+                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
+                } 
+
+                // Lookup the pubsub topics
+                const topicPaths = [
+                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_TELEMETRY}`,
+                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_CONFIG}`,
+                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_COMMANDS}`,
+                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_STATE}`
+                ]
+
+                // client
+                const iotClient = new iot.v1.DeviceManagerClient({
+                // optional auth parameters.
+                });
+
+                // path for registry
+                const newParent = iotClient.locationPath(projectId, Location);
+                // params device registry
+                const deviceRegistry = {
+                        eventNotificationConfigs: [
+                            {   subfolderMatches: "config-mqtt",
+                                pubsubTopicName: topicPaths[1],
+                            },
+                            {
+                                subfolderMatches: "commands-on-off-mqtt",
+                                pubsubTopicName: topicPaths[2],
+                            },
+                            {   
+                                subfolderMatches: "telemetry-mqtt",
+                                pubsubTopicName: topicPaths[0],
+                            },
+                        ],
+                        stateNotificationConfig: {
+                            pubsubTopicName: topicPaths[3]
+                        },
+                        id: registryId
+                    };
+
+                const request = {
+                    parent: newParent,
+                    deviceRegistry: deviceRegistry
+                };
+
+                try {
+                        const responses = await iotClient.createDeviceRegistry(request);
+                        const response = responses[0];
+                        const registryTopics = response.name;
+                        //res
+                        res.json(registryTopics);
+                        console.log('Successfully created registry');
+                        console.log(response.name);
+                    } catch (err) {
+                        console.error('Could not create registry', err);
+                    }
+            }
+            // run it
+            createDeviceRegistryWithTopicsToHalo(deviceId);
+        })    
+}
+
 // create decive & topics in iot core and pub/sub
 exports.createDeviceInIotCore = (req, res) => {
     // firebase part
@@ -53,7 +150,7 @@ exports.createDeviceInIotCore = (req, res) => {
                         // show all
                         console.log(haloDeviceName);
                     }
-                    createDeviceToHalo(projectId ,deviceId).catch(console.error);
+                    createDeviceToHalo(projectId ,deviceId);
                     break;
                 case 'Hilda': 
                     //////////////////////////////////////////////////////////////////// CREATION OF HILDA DEVICE
@@ -184,8 +281,8 @@ exports.createTopicsInPubSub = (req,res) => {
                     null    
             }
         }).catch(console.error);
-}    
-    
+} 
+
 // create subscriptions in pub/sub
 exports.createSubscriptionsInPubSub = (req,res) => {
     // firebase part
@@ -275,97 +372,10 @@ exports.createSubscriptionsInPubSub = (req,res) => {
                     break;
                 case 'default':
                     null     
-        
             } 
         }).catch(console.error); 
-
 }
 
-// update registry of devices
-exports.createDeviceRegistryInIotCore = (req, res) => {
-    // firebase part
-    const { db } = require('../utilities/admin');
-    // var to firebase consult
-    const userDeviceId = req.params.userDeviceId
-    // var for hold id of device
-    let deviceId = "";
-    // var project id
-    const projectId = 'sfdd-d8a16';
-
-    // ask for firebase document
-    db
-        .doc(`/userDevices/${userDeviceId}`)
-        .get()
-        .then((doc) => {
-            let userDeviceData = doc.data();
-            let userHandle = userDeviceData.userHandle;
-            let nameOfDevice = userDeviceData.device.nameOfDevice;
-            // var with vars to pass through function
-            //something like: 'CarlosTal84-halo-8n4ohAo247H1W5SsxY9s'
-            deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`
-            // determine wich type of device is
-
-            // declaration of function to update subscriptions with the new topics of the devices
-            async function updateDeviceRegistryWithTopicsToHalo(deviceId){
-                const iot = require('@google-cloud/iot');
-                // cloud region
-                const Location = 'us-central1';
-                // registry name
-                const registry= 'Halo';
-                // topics for halo device
-                const mqttTopicsSubscriptions = {   
-                    MQTT_TOPIC_TO_TELEMETRY: `events~${deviceId}`,
-                    MQTT_TOPIC_TO_CONFIG: `config~${deviceId}`,
-                    MQTT_TOPIC_TO_COMMANDS: `commands~${deviceId}~on-off`,
-                    MQTT_TOPIC_TO_STATE: `state~${deviceId}`
-                } 
-
-                // Lookup the pubsub topics
-                const topicPaths = [
-                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_TELEMETRY}`,
-                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_CONFIG}`,
-                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_COMMANDS}`,
-                    `projects/${projectId}/topics/${mqttTopicsSubscriptions.MQTT_TOPIC_TO_STATE}`
-                ]
-
-                // client
-                const iotClient = new iot.v1.DeviceManagerClient({
-                // optional auth parameters.
-                });
-
-                // path for registry
-                const newParent = iotClient.locationPath(projectId, Location);
-                // params device registry
-                const deviceRegistry = {
-                        eventNotificationConfigs: [
-                            {
-                                pubsubTopicName: topicPaths,
-                            },
-                        ],
-                        name: `projects/${projectId}/locations/${Location}/registries/${registry}`
-                    };
-
-                const request = {
-                    parent: newParent,
-                    deviceRegistry: deviceRegistry
-                };
-
-                try {
-                        const responses = await iotClient.updateDeviceRegistry(request);
-                        const response = responses[0];
-                        const registryTopics = response.name;
-                        //res
-                        res.json(registryTopics);
-                        console.log('Successfully update registry');
-                        console.log(response.name);
-                    } catch (err) {
-                        console.error('Could not update registry', err);
-                    }
-            }
-            // run it
-            updateDeviceRegistryWithTopicsToHalo(deviceId);
-        })    
-}
 
 
 // delete decive & topics in iot core and pub/sub
