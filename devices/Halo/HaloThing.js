@@ -48,20 +48,27 @@ const publishAsync = (
 };
 
 // --------------------------------------------------------------------------- SUBSCRIBING
+// The MQTT topic that this device will publish data to. The MQTT topic name is
+// required to be in the format below. The topic name must end in 'state' to
+// publish state and 'events' to publish telemetry. Note that this is not the
+// same as the device registry's Cloud Pub/Sub topic.
 
 // Topics to all devices
-const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
-const MQTT_TOPIC_TO_CONFIG = `projects/sfdd-d8a16/topics/commands~C${deviceId}~on-off`;
-const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
+// const MQTT_TOPIC_TO_TELEMETRY = `projects/${projectId}/topics/events~${deviceId}`;
+// const MQTT_TOPIC_TO_CONFIG = `projects/${projectId}/topics/config~${deviceId}`;
+// const MQTT_TOPIC_TO_COMMANDS = `projects/${projectId}/topics/commands~${deviceId}~on-off`;
+// const MQTT_TOPIC_TO_STATE = `projects/${projectId}/topics/state~${deviceId}`;
 
-'projects/sfdd-d8a16/topics/commands~CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s~on-off'
-
-const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
+// Topics to all devices
+const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events~${deviceId}`;
+const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config~${deviceId}`;
+const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands~${deviceId}~on-off`;
+const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state~${deviceId}`;
 
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
 const deviceId = haloThingId;
-const registryId = `Halo`;
+const registryId = `Halo`; 
 const region = `us-central1`;
 const algorithm = `RS256`;
 const privateKeyFile = `./rsa_private.pem`;
@@ -103,11 +110,8 @@ client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 // The topic name must end in 'state' to publish state
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 
-// The MQTT topic that this device will publish data to. The MQTT topic name is
-// required to be in the format below. The topic name must end in 'state' to
-// publish state and 'events' to publish telemetry. Note that this is not the
-// same as the device registry's Cloud Pub/Sub topic.
-// const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
+// The topic name must end in 'events' to publish state
+client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
 
 // Handle the connection event
 client.on('connect', success => {
@@ -115,7 +119,7 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } else {
-        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        publishAsync(MQTT_TOPIC_TO_COMMANDS, client);
     }
 });
 
@@ -132,9 +136,9 @@ client.on('error', err => {
 // Handle the message event 
 client.on('message', (topic, message) => {
     let messageStr = 'Message received: ';
-    if (topic === `/devices/${deviceId}/config`) {
+    if (topic === MQTT_TOPIC_TO_CONFIG) {
         messageStr = 'Config message received: ';
-    } else if (topic.startsWith(`/devices/${deviceId}/commands`)) {
+    } else if (topic.startsWith(MQTT_TOPIC_TO_COMMANDS)) {
         messageStr = 'Command message received: ';
     }
     messageStr += Buffer.from(message, 'base64').toString('ascii');

@@ -103,7 +103,7 @@ class UserDeviceDialog extends Component {
                         onClose={this.handleClose} 
                         nameofdevice={nameOfDevice} 
                         agerate={ageRate} 
-                    /> 
+                    />  
                     {/* Images */}
                     <CarrouselOfImagesUserDevice imgurl={imgUrl}/>
                     {/* dataSets*/}

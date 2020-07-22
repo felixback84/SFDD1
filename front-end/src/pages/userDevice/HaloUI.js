@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(1),
         },
     },
-}));
+})); 
 
 export default function HaloUI() {
     const classes = useStyles();
@@ -27,3 +27,4 @@ export default function HaloUI() {
         </div>
     );
 }
+ 

@@ -18,7 +18,7 @@ class DeviceIds extends Component {
             datasets,
             loading 
         } = this.props;
-        
+         
         switch(deviceid){
             case HILDA:
                 // specific component

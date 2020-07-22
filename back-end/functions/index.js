@@ -81,7 +81,7 @@ const {
 // iot core & pub/sub
 const {
     getOnOffFromHaloDevice
-} = require('./handlers/haloDevice');
+} = require('./handlers/forHaloDevice');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -325,6 +325,24 @@ exports.createDeviceInIotCore = functions.firestore
         // run it
         //setTimeout(initCreateDeviceRegistryWithTopics(userDeviceId), 2000);
         initCreateDeviceRegistryWithTopics(userDeviceId);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////// IoT device creation part
+        // declarate function to create devices in iot core
+        async function initDevicesIotCore(dataDevice){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
+            const options = {
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
+        }
+        // run it
+        //setTimeout(initDevicesIotCore(userDeviceId), 2000);
+        initDevicesIotCore(userDeviceId);
         
         ///////////////////////////////////////////////////////////////////////////////////////////// Pub/Sub Topics Part
         //declarate function to create topics in pub/sub
@@ -360,25 +378,7 @@ exports.createDeviceInIotCore = functions.firestore
         // run it
         setTimeout(initSubscriptionsPubSub(userDeviceId), 2000);
         //initSubscriptionsPubSub(userDeviceId);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////// IoT device creation part
-        // declarate function to create devices in iot core
-        async function initDevicesIotCore(dataDevice){
-            // api url
-            const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
-            const options = {
-                method: 'GET'
-            };
-            //fetch
-            const iotResponse = await fetch(urlApi, options);
-            const iotJsonData = await iotResponse.json();
-            console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
-        }
-        // run it
-        //setTimeout(initDevicesIotCore(userDeviceId), 2000);
-        initDevicesIotCore(userDeviceId);
-    }) 
+    }).catch((err) => console.error(err));
 
 // delete device & topics in iot core - pub/sub
 exports.deleteDeviceInIotCore = functions.firestore

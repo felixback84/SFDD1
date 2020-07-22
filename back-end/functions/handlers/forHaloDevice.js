@@ -34,9 +34,13 @@ exports.getOnOffFromHaloDevice = (req, res) => {
                     let payload = JSON.parse(message.data);
                     // "Ack" (acknowledge receipt of) the message
                     message.ack();
+                    // res to ui
+                    res.send(payload);
                 }   
                 // Listen for new messages until timeout is hit
                 subscriptionToOnTopic.on('message', messageHandler1);
+
+            
             };
         
             listenForOnMessageFromHaloDevice(deviceId);
