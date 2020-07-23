@@ -11,17 +11,17 @@ import {
 // axios
 import axios from 'axios';
 
-export const getAllDataSetsUserDevice = (userdeviceid) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
-    dispatch({ type: LOADING_DATASETS });
-    axios
-        .get(`/user/device/${userdeviceid}/datasets`)
-        .then((res) => { 
-            dispatch({
-                type: GET_DATASETS,
-                payload: res.data
-            });
-            dispatch({ type: STOP_LOADING_UI });
-        })
-        .catch((err) => console.log(err));
-}
+// export const getAllDataSetsUserDevice = (userdeviceid) => (dispatch) => {
+//     dispatch({ type: LOADING_UI });
+//     dispatch({ type: LOADING_DATASETS });
+//     axios
+//         .get(`/user/device/${userdeviceid}/datasets`)
+//         .then((res) => { 
+//             dispatch({
+//                 type: GET_DATASETS,
+//                 payload: res.data
+//             });
+//             dispatch({ type: STOP_LOADING_UI });
+//         })
+//         .catch((err) => console.log(err));
+// }

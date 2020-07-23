@@ -6,7 +6,6 @@ import HaloUI from './HaloUI';
 import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
 
 // Redux stuff
-//import store from '../../redux/store';
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
 
@@ -29,16 +28,18 @@ class Device extends Component {
         const HILDA = 'gE2ySDQaMymbZe0r6KEH';
         // pick active one
         const approved = userDevices.filter(userDevice => userDevice.active === true);
-        // pick his deviceId
-        let result = approved.map(({ deviceId }) => deviceId)
+        // pick his deviceId and userDeviceId
+        let resultDeviceId = approved.map(({deviceId}) => deviceId);
+        let resultUserDeviceId = approved.map(({userDeviceId}) => userDeviceId);
         // show data
-        console.log(result);
+        console.log(resultDeviceId);
+        console.log(resultUserDeviceId);
         // pick UI
-        switch(result[0]){
+        switch(resultDeviceId[0]){
             case HALO:
                 // specific component
                 let UIHildaMarkup = !loading ? (
-                    <HaloUI/>
+                    <HaloUI userdeviceid={resultUserDeviceId[0]}/>
                     ) : (
                         <UserDeviceSkeleton/>
                     );

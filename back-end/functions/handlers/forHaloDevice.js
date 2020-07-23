@@ -40,10 +40,7 @@ exports.getOnOffFromHaloDevice = (req, res) => {
                 // Listen for new messages until timeout is hit
                 subscriptionToOnTopic.on('message', messageHandler1);
 
-            
             };
-        
             listenForOnMessageFromHaloDevice(deviceId);
-        
         })
 }
