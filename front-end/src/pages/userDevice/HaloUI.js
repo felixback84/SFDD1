@@ -24,6 +24,7 @@ class HaloUI extends Component {
     //redux action
     componentWillMount(){
         this.props.getUserDevice(this.props.userdeviceid);
+        this.props.getOnOffFromHaloDevice(this.props.userdeviceid);
     }
 
     render(){

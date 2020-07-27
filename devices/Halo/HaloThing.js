@@ -39,8 +39,8 @@ const publishAsync = (
             on: true
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
-        console.log('Publishing message:', JSON.stringify(payload));
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
+        console.log('Publishing message:', JSON.stringify(payload));
 
         // Recursive function to simulate the periodically sent of values
         publishAsync(mqttTopic, client);
@@ -53,18 +53,6 @@ const publishAsync = (
 // publish state and 'events' to publish telemetry. Note that this is not the
 // same as the device registry's Cloud Pub/Sub topic.
 
-// Topics to all devices
-// const MQTT_TOPIC_TO_TELEMETRY = `projects/${projectId}/topics/events~${deviceId}`;
-// const MQTT_TOPIC_TO_CONFIG = `projects/${projectId}/topics/config~${deviceId}`;
-// const MQTT_TOPIC_TO_COMMANDS = `projects/${projectId}/topics/commands~${deviceId}~on-off`;
-// const MQTT_TOPIC_TO_STATE = `projects/${projectId}/topics/state~${deviceId}`;
-
-// Topics to all devices
-const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events~${deviceId}`;
-const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config~${deviceId}`;
-const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands~${deviceId}~on-off`;
-const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state~${deviceId}`;
-
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
 const deviceId = haloThingId;
@@ -74,7 +62,12 @@ const algorithm = `RS256`;
 const privateKeyFile = `./rsa_private.pem`;
 const mqttBridgeHostname = `mqtt.googleapis.com`;
 const mqttBridgePort = 8883;
-//const messageType = `events`;
+
+// Topics to all devices
+const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
+const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
+const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
+const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
 
 // The mqttClientId is a unique string that identifies this device. For Google
 // Cloud IoT Core, it must be in the format below.
@@ -119,7 +112,7 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } else {
-        publishAsync(MQTT_TOPIC_TO_COMMANDS, client);
+        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }
 });
 
@@ -140,7 +133,14 @@ client.on('message', (topic, message) => {
         messageStr = 'Config message received: ';
     } else if (topic.startsWith(MQTT_TOPIC_TO_COMMANDS)) {
         messageStr = 'Command message received: ';
+    } else if (topic.startsWith(MQTT_TOPIC_TO_EVENTS)) {
+        messageStr = 'Events message received: ';
+    } else if (topic.startsWith(MQTT_TOPIC_TO_STATE)) {
+        messageStr = 'State message received: ';
+    } else if (topic.startsWith(MQTT_TOPIC_TO_TELEMETRY)) {
+        messageStr = 'Telemetry message received: ';
     }
     messageStr += Buffer.from(message, 'base64').toString('ascii');
     console.log(messageStr);
+    
 });

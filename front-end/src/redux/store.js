@@ -11,6 +11,7 @@ import dataSetsReducer from './reducers/dataSetsReducer';
 import checkoutsReducer from './reducers/checkoutsReducer';
 import devicesReducer from './reducers/devicesReducer';
 import adventuresReducer from './reducers/adventuresReducer';
+import haloThingReducer from './reducers/haloThingReducer';
 
 // empty initial state
 const initialState = {};
@@ -27,7 +28,8 @@ const reducers = combineReducers({
     dataSets1: dataSetsReducer,
     checkouts1: checkoutsReducer,
     devices1: devicesReducer,
-    adventures1: adventuresReducer
+    adventures1: adventuresReducer,
+    haloThing1: haloThingReducer
 });
 
 // creation of store and dev redux tools
