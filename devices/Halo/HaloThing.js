@@ -63,6 +63,7 @@ const privateKeyFile = `./rsa_private.pem`;
 const mqttBridgeHostname = `mqtt.googleapis.com`;
 const mqttBridgePort = 8883;
 
+
 // Topics to all devices
 const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
 const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
