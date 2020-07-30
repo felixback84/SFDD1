@@ -15,7 +15,7 @@ export const getOnOffFromHaloDevice = (userdeviceid) => (dispatch) => {
         .get(`/userDevices/iotCore/${userdeviceid}/on-off`)
         .then((res) => { 
             dispatch({
-                type: GET_ON_OFF_FROM_HALO_THING,
+                type: GET_ON_OFF_FROM_HALO_THING, 
                 payload: res.data
             });
             dispatch({ type: STOP_LOADING_UI });

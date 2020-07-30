@@ -1,5 +1,5 @@
- // user actions
- import {
+// user actions
+import {
     LOADING_GET_ON_OFF_FROM_HALO_THING,
     GET_ON_OFF_FROM_HALO_THING
 } from '../types';

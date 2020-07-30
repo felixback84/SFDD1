@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevice } from '../../redux/actions/userDevicesActions';
+import { getOnOffFromHaloDevice } from '../../redux/actions/haloUIActions';
 
 // style
 const styles = (theme) => ({
@@ -25,9 +26,9 @@ class HaloUI extends Component {
     componentWillMount(){
         this.props.getUserDevice(this.props.userdeviceid);
         this.props.getOnOffFromHaloDevice(this.props.userdeviceid);
-    }
+    } 
 
-    render(){
+    render(){ 
         // props
         const {classes, userDevice} = this.props;
 
@@ -49,4 +50,4 @@ const mapStateToProps = (state) => ({
     userDevice: state.userDevices1.userDevice
 })
 //export default Device;
-export default connect(mapStateToProps,{getUserDevice})(withStyles(styles)(HaloUI));
+export default connect(mapStateToProps,{getUserDevice, getOnOffFromHaloDevice})(withStyles(styles)(HaloUI));

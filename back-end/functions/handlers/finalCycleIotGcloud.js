@@ -83,7 +83,7 @@ exports.createDeviceInIotCore = (req, res) => {
                         // var to hold device name
                         const hildaDeviceName = device.name;
                         //res
-                        res.json(haloDeviceName);
+                        res.json(hildaDeviceName);
                         // show all
                         console.log(hildaDeviceName);
                     }

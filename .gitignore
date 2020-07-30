@@ -1,5 +1,6 @@
 back-end/functions/node_modules
 front-end/node_modules
 devices/Halo/node_modules
+devices/Hilda/node_modules
 devices/Halo/rsa_cert.pem
 devices/Halo/rsa_private.pem

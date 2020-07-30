@@ -32,8 +32,8 @@ class Device extends Component {
         let resultDeviceId = approved.map(({deviceId}) => deviceId);
         let resultUserDeviceId = approved.map(({userDeviceId}) => userDeviceId);
         // show data
-        console.log(resultDeviceId);
-        console.log(resultUserDeviceId);
+        // console.log(resultDeviceId);
+        // console.log(resultUserDeviceId);
         // pick UI
         switch(resultDeviceId[0]){
             case HALO:

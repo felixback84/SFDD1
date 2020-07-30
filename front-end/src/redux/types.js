@@ -18,6 +18,7 @@ export const LOADING_USER_DEVICES = 'LOADING_USER_DEVICES';
 export const GET_USER_DEVICES = 'GET_USER_DEVICES';
 export const GET_USER_DEVICE = 'GET_USER_DEVICE';
 // halo thing reducers types
+export const LOADING_GET_ON_OFF_FROM_HALO_THING = 'LOADING_GET_ON_OFF_FROM_HALO_THING';
 export const GET_ON_OFF_FROM_HALO_THING = 'GET_ON_OFF_FROM_HALO_THING';
 // userAdventures reducers types
 export const LOADING_USER_ADVENTURES = 'LOADING_USERADVENTURES';

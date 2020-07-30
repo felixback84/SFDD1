@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const mqtt = require('mqtt');
 
 // device id
-const haloThingId = 'CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s';
+const hildaThingId = 'CarlosTal84-Hilda-ZnprmseGEnSeewZiPjYF';
 // say hi to my little friend
-console.log(`HALO_THING: ${haloThingId} ---> ACTIVATED`);
+console.log(`HILDA_THING: ${hildaThingId} ---> ACTIVATED`);
 
 // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
 // Create a Cloud IoT Core JWT for the given project id, signed with the given
@@ -25,52 +25,33 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
     return jwt.sign(token, privateKey, {algorithm: algorithm});
 };
 
-// ----------------------------------------------------------------------------- GET VALUES FROM ISS FUNCTION
-// global var for iss req
-let latitude, longitude;
-// ask to iss
-setTimeout(async function iss(){
-    const fetch = require('node-fetch');
-    const urlApi = `https://api.wheretheiss.at/v1/satellites/25544`;
-    const options = {
-        method: 'GET'
-    };
-    //fetch
-    const iotResponse = await fetch(urlApi, options);
-    const iotJsonData = await iotResponse.json();
-    // print response
-    //console.log(`Response for iss: ${JSON.stringify(iotJsonData)}`);
-    // lat & long from iss
-    latitude = iotJsonData.latitude;
-    longitude = iotJsonData.longitude;
-    // recursive run
-    iss();
-}, 2000)
-
 // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
-// Function to publish messages on any change
-const publishAsync = (mqttTopic, client) => {
-    setTimeout(()=>{
+
+// Function to publish messages asynchronously and periodically (every 5 seconds)
+const publishAsync = (
+    mqttTopic,
+    client
+    ) => {
+    setTimeout(() => {
         // Function to generate random values to send to the cloud platform
         const payload = {
-            deviceId: haloThingId,
-            date: new Date().toISOString(),
-            latitude: latitude,
-            longitude: longitude
+            deviceId: hildaThingId,
+            on: true
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
         console.log('Publishing message:', JSON.stringify(payload));
-        // recursive run
+
+        // Recursive function to simulate the periodically sent of values
         publishAsync(mqttTopic, client);
-    }, 1000);
-}
+    }, 5000);
+};
 
 // --------------------------------------------------------------------------- SUBSCRIBING
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
-const deviceId = haloThingId;
-const registryId = `Halo`; 
+const deviceId = hildaThingId;
+const registryId = `Hilda`; 
 const region = `us-central1`;
 const algorithm = `RS256`;
 const privateKeyFile = `./rsa_private.pem`;
@@ -121,7 +102,7 @@ client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 // The topic name must end in 'state' to publish state
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 
-// The topic name must end in 'events' to publish state
+// The topic name must end in 'events' to publish state????????????????
 client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
 
 // Handle the connection event
