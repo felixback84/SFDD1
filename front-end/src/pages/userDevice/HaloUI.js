@@ -8,6 +8,9 @@ import { connect } from 'react-redux';
 import { getUserDevice } from '../../redux/actions/userDevicesActions';
 import { getOnOffFromHaloDevice } from '../../redux/actions/haloUIActions';
 
+// socket
+import { subscribeToTimer } from '../../socket.io/socketClientConnectionForHalo';
+
 // style
 const styles = (theme) => ({
     root: {
@@ -22,10 +25,22 @@ const styles = (theme) => ({
 
 class HaloUI extends Component {
 
+    // constructor(props) {
+    //     super(props);
+    //     subscribeToTimer((err, timestamp) => this.setState({ 
+    //         timestamp 
+    //     }));
+    // }
+
+    // state = {
+    //     timestamp: 'no timestamp yet'
+    // };
+
     //redux action
     componentWillMount(){
         this.props.getUserDevice(this.props.userdeviceid);
-        this.props.getOnOffFromHaloDevice(this.props.userdeviceid);
+        //this.props.getOnOffFromHaloDevice();
+        subscribeToTimer();
     } 
 
     render(){ 
@@ -40,6 +55,9 @@ class HaloUI extends Component {
                     <Button>Three</Button>
                     {console.log(userDevice.device.dataSets)}
                 </ButtonGroup>
+                {/* <p className="App-intro">
+                    This is the timer value: {this.state.timestamp}
+                </p> */}
             </div>
         );
     }

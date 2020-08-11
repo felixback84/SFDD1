@@ -25,27 +25,46 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
     return jwt.sign(token, privateKey, {algorithm: algorithm});
 };
 
-// ----------------------------------------------------------------------------- PUBLISHING FUNCTION
+// ----------------------------------------------------------------------------- GET VALUES FROM ISS FUNCTION
+// global var for iss req
+let latitude, longitude;
+// ask to iss
+setTimeout(async function iss(){
+    const fetch = require('node-fetch');
+    const urlApi = `https://api.wheretheiss.at/v1/satellites/25544`;
+    const options = {
+        method: 'GET'
+    };
+    //fetch
+    const iotResponse = await fetch(urlApi, options);
+    const iotJsonData = await iotResponse.json();
+    // print response
+    //console.log(`Response for iss: ${JSON.stringify(iotJsonData)}`);
+    // lat & long from iss
+    latitude = iotJsonData.latitude;
+    longitude = iotJsonData.longitude;
+    // recursive run
+    iss();
+}, 2000)
 
-// Function to publish messages asynchronously and periodically (every 5 seconds)
-const publishAsync = (
-    mqttTopic,
-    client
-    ) => {
-    setTimeout(() => {
+// ----------------------------------------------------------------------------- PUBLISHING FUNCTION
+// Function to publish messages on any change
+const publishAsync = (mqttTopic, client) => {
+    setTimeout(()=>{
         // Function to generate random values to send to the cloud platform
         const payload = {
-            deviceId: hildaThingId,
-            on: true
+            thingId: hildaThingId,
+            createdAt: new Date().toISOString(),
+            lat: latitude,
+            lon: longitude
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
         console.log('Publishing message:', JSON.stringify(payload));
-
-        // Recursive function to simulate the periodically sent of values
+        // recursive run
         publishAsync(mqttTopic, client);
-    }, 5000);
-};
+    }, 1000);
+}
 
 // --------------------------------------------------------------------------- SUBSCRIBING
 // Arguments of the google cloud platform
@@ -63,6 +82,7 @@ const mqttBridgePort = 8883;
 // publish state and 'events' to publish telemetry. Note that this is not the
 // same as the device registry's Cloud Pub/Sub topic.
 // Topics to all devices
+//const OTHER = 
 const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
 const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
 const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
@@ -102,7 +122,7 @@ client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 // The topic name must end in 'state' to publish state
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 
-// The topic name must end in 'events' to publish state????????????????
+// The topic name must end in 'events' to publish state
 client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
 
 // Handle the connection event
@@ -111,7 +131,7 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } else {
-        publishAsync(MQTT_TOPIC_TO_STATE, client);
+        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }
 });
 

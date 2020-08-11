@@ -22,3 +22,4 @@ export const getOnOffFromHaloDevice = (userdeviceid) => (dispatch) => {
         })
         .catch((err) => console.log(err));
 }
+

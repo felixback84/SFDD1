@@ -76,9 +76,9 @@ const {
 } = require('./handlers/finalCycleIotGcloud');
 
 // iot core & pub/sub
-const {
-    getOnOffFromHaloDevice
-} = require('./handlers/forHaloDevice');
+// const {
+//     getOnOffFromHaloDevice
+// } = require('./handlers/forHaloDeviceWithSubs');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -164,7 +164,7 @@ app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
 
 ////////////////////////////////// halo device routes /////////////////////////////////////////////////
 // Routes device halo
-app.get('/userDevices/iotCore/:userDeviceId/on-off', getOnOffFromHaloDevice);
+//app.get('/userDevices/iotCore/:userDeviceId/on-off', getOnOffFromHaloDevice);
 //app.get('/userDevices/iotCore/:userDeviceId/off', getOffFromHaloDevice);
 
 // export functions
@@ -317,7 +317,7 @@ exports.createDeviceInIotCore = functions.firestore
         
     });
 
-// delete device & topics in iot core - pub/sub
+// delete device & topics in iot core - pub/sub ------------------ to check
 exports.deleteDeviceInIotCore = functions.firestore
     .document('activeUserDevices/{activeUserDevicesId}')
     .onDelete((snap) => {
@@ -352,3 +352,34 @@ exports.deleteDeviceInIotCore = functions.firestore
         }
         exeKillIotCoreAndPubSub(userDeviceId);
     })
+
+// detect traffic in topic events and db sync
+exports.detectTelemetryEvents = functions.pubsub.topic('events').onPublish(
+    (message, context) => {
+        //console.log(`message: ${message}`);
+        console.log(`deviceId: ${message.attributes.deviceId}`);
+        console.log(`data: ${message.data}`);
+        let data = message.data;        
+        // Base64 Encoding
+        // create a buffer
+        const buff = Buffer.from(data, 'base64');
+        // decode buffer as UTF-8
+        const str = buff.toString('utf-8');
+        // print normal string
+        console.log(str);
+        // db
+        //const dataSet = db.doc(`/devices/${req.params.deviceId}`);
+        //const dataSet = db.doc(`/dataSets/VOMnMkhVQGjNycL3SnK1`)
+        //return admin.database().ref(`dataSets/`).update({
+        return db
+            .collection('userDevices')
+            .doc(`8n4ohAo247H1W5SsxY9s`)
+            .collection('dataSets')
+            ,doc('VOMnMkhVQGjNycL3SnK1')
+            .update({
+                thingId: str.thingId,
+                createdAt: str.createdAt,
+                lat: str.lat,
+                lon: str.lon
+        });
+})

@@ -1,7 +1,7 @@
 // Include needed modules
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const mqtt = require('mqtt');
+const mqtt = require('mqtt'); 
 
 // device id
 const haloThingId = 'CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s';
@@ -53,10 +53,10 @@ const publishAsync = (mqttTopic, client) => {
     setTimeout(()=>{
         // Function to generate random values to send to the cloud platform
         const payload = {
-            deviceId: haloThingId,
-            date: new Date().toISOString(),
-            latitude: latitude,
-            longitude: longitude
+            thingId: haloThingId,
+            createdAt: new Date().toISOString(),
+            lat: latitude,
+            lon: longitude
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
@@ -130,7 +130,7 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } else {
-        publishAsync(MQTT_TOPIC_TO_STATE, client);
+        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }
 });
 
