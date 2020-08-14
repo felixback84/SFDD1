@@ -1,6 +1,6 @@
 // firebase
 const functions = require('firebase-functions');
-const { db } = require('./utilities/admin');
+const { admin, db, realDB } = require('./utilities/admin');
 // express    
 const app = require('express')();
 // middleware for auth
@@ -74,11 +74,6 @@ const {
     createDeviceInIotCore,
     deleteInIotCore
 } = require('./handlers/finalCycleIotGcloud');
-
-// iot core & pub/sub
-// const {
-//     getOnOffFromHaloDevice
-// } = require('./handlers/forHaloDeviceWithSubs');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -164,18 +159,16 @@ app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
 
 ////////////////////////////////// halo device routes /////////////////////////////////////////////////
 // Routes device halo
-//app.get('/userDevices/iotCore/:userDeviceId/on-off', getOnOffFromHaloDevice);
-//app.get('/userDevices/iotCore/:userDeviceId/off', getOffFromHaloDevice);
+
 
 // export functions
 exports.api = functions.https.onRequest(app);
 
 ///////////////////////////////// SOME ACTIONS IN DB WITHOUT HTTP REQUEST ///////////////////////////////////////////////
-// after creation of checkout 
+// after creation of checkout means userDevice property
 exports.createUserPropertyAfterCheckout = functions.firestore
     .document('checkouts/{checkoutsId}')
     .onCreate((snap) => {
-        
         // Get an object representing the document
         const newCheckout = snap.data();
         // access a particular field as you would any JS property
@@ -225,8 +218,8 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                             allUserDeviceData.device = selectInfoDevice;
                             // write in global object
                             return db
-                            .collection('userDevices')
-                            .add(allUserDeviceData) 
+                                    .collection('userDevices')
+                                    .add(allUserDeviceData) 
                         })
                 }
             })
@@ -290,6 +283,28 @@ exports.createUserPropertyAfterCheckout = functions.firestore
             console.log('error from inscription')
         }
 });
+
+// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check
+exports.createDocumentInLiveDataCollection = functions.firestore
+    .document('userDevcies/{userDevicesId}')
+    .onCreate((snap) => {
+        // grab data from firebase snapshot
+        const newUserDevice = snap.data();
+        const userDeviceId = newUserDevice.userDeviceId;
+        const userHandle = newUserDevice.userHandle;
+        const dataSetModel = newUserDevice.device.dataSets;
+        const nameOfDevice = newUserDevice.device.nameOfDevice;
+
+        // create liveData doc
+        return db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('liveDataSets')
+                .doc(`/liveDataSets/${userHandle}-${nameOfDevice}-${userDeviceId}`)
+                .add(dataSetModel)
+                .catch((err) => {
+                    console.error(err);
+                });
+    })
 
 // create device & topics in iot core - pub/sub
 exports.createDeviceInIotCore = functions.firestore
@@ -356,30 +371,33 @@ exports.deleteDeviceInIotCore = functions.firestore
 // detect traffic in topic events and db sync
 exports.detectTelemetryEvents = functions.pubsub.topic('events').onPublish(
     (message, context) => {
-        //console.log(`message: ${message}`);
-        console.log(`deviceId: ${message.attributes.deviceId}`);
-        console.log(`data: ${message.data}`);
+        // all data
         let data = message.data;        
-        // Base64 Encoding
-        // create a buffer
+        // create a buffer decoding with base64
         const buff = Buffer.from(data, 'base64');
         // decode buffer as UTF-8
         const str = buff.toString('utf-8');
         // print normal string
-        console.log(str);
-        // db
-        //const dataSet = db.doc(`/devices/${req.params.deviceId}`);
-        //const dataSet = db.doc(`/dataSets/VOMnMkhVQGjNycL3SnK1`)
-        //return admin.database().ref(`dataSets/`).update({
-        return db
-            .collection('userDevices')
-            .doc(`8n4ohAo247H1W5SsxY9s`)
-            .collection('dataSets')
-            ,doc('VOMnMkhVQGjNycL3SnK1')
+        console.log(`str: ${str}`);
+        // str to obj
+        let obj = JSON.parse(str);
+        // pick userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
+        const thingId = obj.thingId;
+        // print object
+        console.log(`obj: ${obj.createdAt} - ${thingId} - ${obj.lat} - ${obj.lon}`);
+        // userDeviceId 
+        const userDeviceId = thingId.split("-").slice(2);
+        console.log(`userDeviceId: ${userDeviceId}`);
+        // db part
+        db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('liveDataSets')
+            .doc(thingId)
             .update({
-                thingId: str.thingId,
-                createdAt: str.createdAt,
-                lat: str.lat,
-                lon: str.lon
-        });
-})
+                createdAt: obj.createdAt,
+                thingId: obj.thingId,
+                lat: obj.lat,
+                lon: obj.lon
+            })
+    }
+)
