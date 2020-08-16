@@ -5,11 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { getUserDevice } from '../../redux/actions/userDevicesActions';
-import { getOnOffFromHaloDevice } from '../../redux/actions/haloUIActions';
-
-// socket
-import { subscribeToTimer } from '../../socket.io/socketClientConnectionForHalo';
+import { haloThingSyncDataWithDB } from '../../redux/actions/haloUIActions';
 
 // style
 const styles = (theme) => ({
@@ -24,40 +20,23 @@ const styles = (theme) => ({
 })
 
 class HaloUI extends Component {
-
-    // constructor(props) {
-    //     super(props);
-    //     subscribeToTimer((err, timestamp) => this.setState({ 
-    //         timestamp 
-    //     }));
-    // }
-
-    // state = {
-    //     timestamp: 'no timestamp yet'
-    // };
-
     //redux action
     componentWillMount(){
-        this.props.getUserDevice(this.props.userdeviceid);
-        //this.props.getOnOffFromHaloDevice();
-        subscribeToTimer();
+        this.props.haloThingSyncDataWithDB('CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s');
     } 
 
     render(){ 
         // props
-        const {classes, userDevice} = this.props;
-
+        const {classes, data} = this.props;
+        //  print
+        console.log(`data from db for halo: ${data}`);
         return (
             <div className={classes.root}>
                 <ButtonGroup color="primary" aria-label="outlined primary button group">
                     <Button>One</Button>
                     <Button>Two</Button>
                     <Button>Three</Button>
-                    {console.log(userDevice.device.dataSets)}
                 </ButtonGroup>
-                {/* <p className="App-intro">
-                    This is the timer value: {this.state.timestamp}
-                </p> */}
             </div>
         );
     }
@@ -65,7 +44,7 @@ class HaloUI extends Component {
 
 // redux state
 const mapStateToProps = (state) => ({
-    userDevice: state.userDevices1.userDevice
+    data: state.haloThing1.data
 })
 //export default Device;
-export default connect(mapStateToProps,{getUserDevice, getOnOffFromHaloDevice})(withStyles(styles)(HaloUI));
+export default connect(mapStateToProps,{haloThingSyncDataWithDB})(withStyles(styles)(HaloUI));

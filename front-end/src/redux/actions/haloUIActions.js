@@ -2,24 +2,33 @@
 import {
     LOADING_UI,
     STOP_LOADING_UI,
-    GET_ON_OFF_FROM_HALO_THING
+    GET_EVENTS_FROM_HALO_THING,
+    LOADING_GET_EVENTS_FROM_HALO_THING
 } from '../types';
 
-// axios
-import axios from 'axios';
+// firebase client libs
+//const { db } = require('../../fb/utilities/firebase');
+import firebase from '../../fb/utilities/firebase'; 
 
-export const getOnOffFromHaloDevice = (userdeviceid) => (dispatch) => {
+// declarate a function to get data from db
+export const haloThingSyncDataWithDB = (thingId) => (dispatch) => {
     dispatch({ type: LOADING_UI });
-    //dispatch({ type: LOADING_ON_OFF_FROM_HALO_DEVICE });
-    axios
-        .get(`/userDevices/iotCore/${userdeviceid}/on-off`)
-        .then((res) => { 
-            dispatch({
-                type: GET_ON_OFF_FROM_HALO_THING, 
-                payload: res.data
-            });
-            dispatch({ type: STOP_LOADING_UI });
-        })
-        .catch((err) => console.log(err));
+    //.collection('liveDataSets').doc(thingId);
+    // snapshot
+    const doc = firebase
+        .firestore().doc(`/userDevices/8n4ohAo247H1W5SsxY9s`)
+        .collection('liveDataSets').doc(thingId)
+    const observer = doc.onSnapshot(docSnapshot => {
+        const resultDB = docSnapshot.data().lat;
+        console.log(`Received doc snapshot: ${resultDB}}`);
+        // dispatch
+        dispatch({ 
+            type: GET_EVENTS_FROM_HALO_THING,
+            payload: docSnapshot
+        });
+        dispatch({ type: STOP_LOADING_UI });
+    }, err => {
+        console.log(`Encountered error: ${err}`);
+    });
 }
 

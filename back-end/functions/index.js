@@ -299,7 +299,7 @@ exports.createDocumentInLiveDataCollection = functions.firestore
         return db
                 .doc(`/userDevices/${userDeviceId}`)
                 .collection('liveDataSets')
-                .doc(`/liveDataSets/${userHandle}-${nameOfDevice}-${userDeviceId}`)
+                .doc(`${userHandle}-${nameOfDevice}-${userDeviceId}`)
                 .add(dataSetModel)
                 .catch((err) => {
                     console.error(err);
