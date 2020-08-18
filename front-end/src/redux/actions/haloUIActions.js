@@ -7,7 +7,6 @@ import {
 } from '../types';
 
 // firebase client libs
-//const { db } = require('../../fb/utilities/firebase');
 import firebase from '../../fb/utilities/firebase'; 
 
 // declarate a function to get data from db
@@ -19,12 +18,12 @@ export const haloThingSyncDataWithDB = (thingId) => (dispatch) => {
         .firestore().doc(`/userDevices/8n4ohAo247H1W5SsxY9s`)
         .collection('liveDataSets').doc(thingId)
     const observer = doc.onSnapshot(docSnapshot => {
-        const resultDB = docSnapshot.data().lat;
+        const resultDB = docSnapshot.data();
         console.log(`Received doc snapshot: ${resultDB}}`);
         // dispatch
         dispatch({ 
             type: GET_EVENTS_FROM_HALO_THING,
-            payload: docSnapshot
+            payload: resultDB
         });
         dispatch({ type: STOP_LOADING_UI });
     }, err => {

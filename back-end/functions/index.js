@@ -154,7 +154,7 @@ app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 // creation of device in iot core
 app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 
-// deletion of device and topics in iot core and pub/sub respectivily
+// deletion of device and topics in iot core and pub/sub respectivily --------- to check
 app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
 
 ////////////////////////////////// halo device routes /////////////////////////////////////////////////
@@ -175,14 +175,19 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         const type = newCheckout.type;
         // perform desired operations ...
         if(type == 'device'){
+            // pick data from checkout process
             let snapShotDeviceId = newCheckout.device.deviceId;
             let snapShotUserHandle =  newCheckout.userHandle;
+            let snapShotnameOfDevice = newCheckout.device.nameOfDevice;
+            let userDeviceId = newCheckout.device.userDeviceId;
 
+            //obj to inicial data in property
             const newUserDevice = {
                 deviceId: snapShotDeviceId,
                 userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
-                active: false
+                active: false,
+                thingId: ``
             };
 
             // object to hold all info, newUserDevice, deviceData
@@ -221,6 +226,15 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                                     .collection('userDevices')
                                     .add(allUserDeviceData) 
                         })
+                        // add thingId to the userDevice property ----------------------------------------- to check
+                        .then((doc)=>{
+                            let userDeviceId = doc.data().userDeviceId;
+                            return db
+                                    .collection('userDevices')
+                                    .where('userHandle', '==', snapShotUserHandle)
+                                    .where('deviceId', '==', snapShotDeviceId)
+                                    .update({thingId:`${snapShotUserHandle}-${snapShotnameOfDevice}-${userDeviceId}`})
+                        }).catch((err) => console.error(err));
                 }
             })
             .catch((err) => console.error(err));
@@ -387,17 +401,39 @@ exports.detectTelemetryEvents = functions.pubsub.topic('events').onPublish(
         console.log(`obj: ${obj.createdAt} - ${thingId} - ${obj.lat} - ${obj.lon}`);
         // userDeviceId 
         const userDeviceId = thingId.split("-").slice(2);
+        // nameOfDevice
+        const nameOfDevice = thingId.split("-").slice(1);
+        // print 
         console.log(`userDeviceId: ${userDeviceId}`);
-        // db part
-        db
-            .doc(`/userDevices/${userDeviceId}`)
-            .collection('liveDataSets')
-            .doc(thingId)
-            .update({
-                createdAt: obj.createdAt,
-                thingId: obj.thingId,
-                lat: obj.lat,
-                lon: obj.lon
-            })
+        // pick the right object for db
+        switch(nameOfDevice){
+            case 'Halo':
+                // db part
+                db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('liveDataSets')
+                .doc(thingId)
+                .update({
+                    createdAt: obj.createdAt,
+                    thingId: obj.thingId,
+                    lat: obj.lat,
+                    lon: obj.lon
+                }) 
+            break;
+            case 'Hilda':
+                // db part
+                db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('liveDataSets')
+                .doc(thingId)
+                .update({
+                    createdAt: obj.createdAt,
+                    thingId: obj.thingId,
+                
+                }) 
+            break;
+            default:
+                null;
+        }
     }
 )
