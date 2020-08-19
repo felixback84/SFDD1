@@ -9,7 +9,7 @@ exports.createDeviceInIotCore = (req, res) => {
     // var project id
     const projectId = 'sfdd-d8a16';
 
-    // ask for firebase document
+    // ask for firebase document 
     db
         .doc(`/userDevices/${userDeviceId}`)
         .get()
@@ -17,6 +17,7 @@ exports.createDeviceInIotCore = (req, res) => {
             let userDeviceData = doc.data();
             let userHandle = userDeviceData.userHandle;
             let nameOfDevice = userDeviceData.device.nameOfDevice;
+            let publicKeyString = userDeviceData.publicKeyString;
             // var with vars to pass through function
             deviceId = `${userHandle}-${nameOfDevice}-${userDeviceId}`
             // determine wich type of device is
@@ -35,7 +36,15 @@ exports.createDeviceInIotCore = (req, res) => {
                         const regPath = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
                         // The device id, and in general the device information that you want to send
                         const haloDevice = {
-                            id: deviceId
+                            id: deviceId,
+                            credentials: [
+                                {
+                                    publicKey: {
+                                        format: 'RSA_X509_PEM',
+                                        key: publicKeyString,
+                                    },
+                                },
+                            ]
                         } 
                         // all the info for the creation of the device
                         const haloRequest = {
@@ -69,7 +78,15 @@ exports.createDeviceInIotCore = (req, res) => {
                         const regPath = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
                         // The device id, and in general the device information that you want to send
                         const hildaDevice = {
-                            id: deviceId
+                            id: deviceId,
+                            credentials: [
+                                {
+                                    publicKey: {
+                                        format: 'RSA_X509_PEM',
+                                        key: publicKeyString,
+                                    },
+                                },
+                            ]
                         } 
                         // all the info for the creation of the device
                         const hildaRequest = {

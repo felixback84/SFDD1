@@ -179,7 +179,6 @@ exports.createUserPropertyAfterCheckout = functions.firestore
             let snapShotDeviceId = newCheckout.device.deviceId;
             let snapShotUserHandle =  newCheckout.userHandle;
             let snapShotnameOfDevice = newCheckout.device.nameOfDevice;
-            let userDeviceId = newCheckout.device.userDeviceId;
 
             //obj to inicial data in property
             const newUserDevice = {
@@ -187,7 +186,8 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                 userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
                 active: false,
-                thingId: ``
+                thingId: '',
+                publicKeyString: ''
             };
 
             // object to hold all info, newUserDevice, deviceData
@@ -328,10 +328,10 @@ exports.createDeviceInIotCore = functions.firestore
         const newActiveUserDevice = snap.data();
         const userDeviceId = newActiveUserDevice.userDeviceId
 
-        async function initDevicesIotCore(dataDevice){
+        async function initDevicesIotCore(valueUserDeviceId){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/createDevicesInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/createDevicesInIotCore`;
             const options = {
                 method: 'GET'
             };
@@ -354,10 +354,10 @@ exports.deleteDeviceInIotCore = functions.firestore
         const userDeviceId = inActiveUserDevice.userDeviceId
         console.log(userDeviceId);
         // declarate function to init iotCore & pub/sub
-        async function killIotCoreAndPubSub(dataDevice){
+        async function killIotCoreAndPubSub(valueUserDeviceId){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${dataDevice}/deleteInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/deleteInIotCore`;
             const options = {
                 method: 'DELETE'
             };
@@ -366,19 +366,9 @@ exports.deleteDeviceInIotCore = functions.firestore
             const iotJsonData = await iotResponse.json();
             console.log(iotJsonData);
         }
-
-        //check response
-        async function exeKillIotCoreAndPubSub (userDeviceId){
-            try{
-                const deviceCreatedAndTopics = await killIotCoreAndPubSub(userDeviceId);
-                const deviceCreatedAndTopicsResponse = await deviceCreatedAndTopics.json();
-                console.log(deviceCreatedAndTopicsResponse);
-            }
-            catch{
-                console.error(err);
-            }
-        }
-        exeKillIotCoreAndPubSub(userDeviceId);
+        // run it
+        killIotCoreAndPubSub(userDeviceId);
+        
     })
 
 // detect traffic in topic events and db sync

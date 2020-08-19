@@ -29,8 +29,6 @@ class HaloUI extends Component {
     render(){  
         // props
         const {classes, data} = this.props;
-        //  print
-        console.log(`data from db for halo: ${data}`);
         return (
             <div className={classes.root}>
                 <ButtonGroup color="primary" aria-label="outlined primary button group">

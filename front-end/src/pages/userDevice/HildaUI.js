@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 // Redux stuff
 import { connect } from 'react-redux';
 import { hildaThingSyncDataWithLiveDB } from '../../redux/actions/hildaUIActions';
-import { getUserDevice } from '../../redux/actions/userDevicesActions';
 
 // style
 const styles = (theme) => ({
@@ -23,7 +22,6 @@ const styles = (theme) => ({
 class HildaUI extends Component {
     //redux action
     componentWillMount(){
-        this.props.getUserDevice(this.props.userdeviceid);
         this.props.hildaThingSyncDataWithLiveDB(this.props.userdeviceid);
     } 
 
@@ -49,4 +47,4 @@ const mapStateToProps = (state) => ({
     data: state.hildaThing1.data
 })
 //export default Device;
-export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB, getUserDevice})(withStyles(styles)(HildaUI));
+export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB})(withStyles(styles)(HildaUI));

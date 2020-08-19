@@ -22,8 +22,7 @@ export const haloThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
         .firestore().doc(`/userDevices/${userDeviceId}`) 
         .collection('liveDataSets').doc(thingId)
     const observer = doc.onSnapshot(docSnapshot => {
-        const resultDB = docSnapshot.data();
-        console.log(`Received doc snapshot: ${resultDB}`);
+        const resultDB = docSnapshot.data();    
         // dispatch
         dispatch({ 
             type: GET_EVENTS_FROM_HALO_THING,
