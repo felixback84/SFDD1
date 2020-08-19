@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { haloThingSyncDataWithDB } from '../../redux/actions/haloUIActions';
+import { haloThingSyncDataWithLiveDB } from '../../redux/actions/haloUIActions';
 
 // style
 const styles = (theme) => ({
@@ -22,10 +22,11 @@ const styles = (theme) => ({
 class HaloUI extends Component {
     //redux action
     componentWillMount(){
-        this.props.haloThingSyncDataWithDB('CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s');
+        const thingId = this.props.thingid;
+        this.props.haloThingSyncDataWithLiveDB(thingId);
     } 
-
-    render(){ 
+ 
+    render(){  
         // props
         const {classes, data} = this.props;
         //  print
@@ -47,4 +48,4 @@ const mapStateToProps = (state) => ({
     data: state.haloThing1.data
 })
 //export default Device;
-export default connect(mapStateToProps,{haloThingSyncDataWithDB})(withStyles(styles)(HaloUI));
+export default connect(mapStateToProps,{haloThingSyncDataWithLiveDB})(withStyles(styles)(HaloUI));

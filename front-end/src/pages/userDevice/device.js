@@ -27,19 +27,17 @@ class Device extends Component {
         const HALO = 'MZInC971tJYurv3OYzjR';
         const HILDA = 'gE2ySDQaMymbZe0r6KEH';
         // pick active one
-        const approved = userDevices.filter(userDevice => userDevice.active === true);
+        const activeOne = userDevices.filter(userDevice => userDevice.active === true);
         // pick his deviceId and userDeviceId
-        let resultDeviceId = approved.map(({deviceId}) => deviceId);
-        let resultUserDeviceId = approved.map(({userDeviceId}) => userDeviceId);
-        // show data
-        // console.log(resultDeviceId);
-        // console.log(resultUserDeviceId);
+        let resultDeviceId = activeOne.map(({deviceId}) => deviceId);
+        //let resultUserDeviceId = activeOne.map(({userDeviceId}) => userDeviceId);
+        let resultThingId = activeOne.map(({thingId}) => thingId);
         // pick UI
         switch(resultDeviceId[0]){
             case HALO:
                 // specific component
                 let UIHildaMarkup = !loading ? (
-                    <HaloUI userdeviceid={resultUserDeviceId[0]}/>
+                    <HaloUI thingid={resultThingId[0]}/>
                     ) : (
                         <UserDeviceSkeleton/>
                     );
@@ -47,7 +45,7 @@ class Device extends Component {
             case HILDA:
                 // specific component
                 let UIHaloMarkup = !loading ? (
-                    <HildaUI/>
+                    <HildaUI thingid={resultThingId[0]}/>
                     ) : (
                         <UserDeviceSkeleton/>
                     );

@@ -7,7 +7,7 @@ const mqtt = require('mqtt');
 const hildaThingId = 'CarlosTal84-Hilda-ZnprmseGEnSeewZiPjYF';
 // say hi to my little friend
 console.log(`HILDA_THING: ${hildaThingId} ---> ACTIVATED`);
-
+ 
 // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
 // Create a Cloud IoT Core JWT for the given project id, signed with the given
 // private key.
@@ -27,7 +27,7 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
 
 // ----------------------------------------------------------------------------- GET VALUES FROM ISS FUNCTION
 // global var for iss req
-let latitude, longitude;
+let altitude, velocity;
 // ask to iss
 setTimeout(async function iss(){
     const fetch = require('node-fetch');
@@ -41,8 +41,8 @@ setTimeout(async function iss(){
     // print response
     //console.log(`Response for iss: ${JSON.stringify(iotJsonData)}`);
     // lat & long from iss
-    latitude = iotJsonData.latitude;
-    longitude = iotJsonData.longitude;
+    altitude = iotJsonData.altitude;
+    velocity = iotJsonData.velocity;
     // recursive run
     iss();
 }, 2000)
@@ -55,8 +55,8 @@ const publishAsync = (mqttTopic, client) => {
         const payload = {
             thingId: hildaThingId,
             createdAt: new Date().toISOString(),
-            lat: latitude,
-            lon: longitude
+            alt: altitude,
+            vel: velocity
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});

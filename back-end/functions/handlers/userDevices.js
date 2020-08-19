@@ -19,7 +19,8 @@ exports.getAllUserDevices = (req, res) => {
                     active: doc.data().active,
                     createdAt: doc.data().createdAt,
                     device: doc.data().device,
-                    deviceId: doc.data().deviceId
+                    deviceId: doc.data().deviceId,
+                    thingId: doc.data().thingId
                 });
             });
             return res.json(userDevices);

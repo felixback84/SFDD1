@@ -341,7 +341,6 @@ exports.createDeviceInIotCore = functions.firestore
             console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
         }
         // run it
-        //setTimeout(initDevicesIotCore(userDeviceId), 2000);
         initDevicesIotCore(userDeviceId);
         
     });
@@ -429,6 +428,8 @@ exports.detectTelemetryEvents = functions.pubsub.topic('events').onPublish(
                 .update({
                     createdAt: obj.createdAt,
                     thingId: obj.thingId,
+                    altitude: obj.alt,
+                    velocity: obj.vel
                 
                 }) 
             break;
