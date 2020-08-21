@@ -69,10 +69,14 @@ const {
     postAdventureComment
 } = require('./handlers/adventures');
 
+// just to test
+const {
+    postInUserDevices
+} = require('./handlers/postInUserDevices');
+
 // iot core & pub/sub
 const {
-    createDeviceInIotCore,
-    deleteInIotCore
+    createDeviceInIotCore
 } = require('./handlers/finalCycleIotGcloud');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
@@ -97,6 +101,9 @@ app.get('/userdevices/:userDeviceId', FBAuth, getUserDevice);
 app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userAdventures
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
+
+// just to test
+app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
 
 ////////////////////////////////////////////////// USERADVENTURES /////////////////////////////////////////////////////
 // get userDevice 
@@ -154,9 +161,6 @@ app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 // creation of device in iot core
 app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 
-// deletion of device and topics in iot core and pub/sub respectivily --------- to check
-app.delete('/device/:userDeviceId/deleteInIotCore', deleteInIotCore);
-
 ////////////////////////////////// halo device routes /////////////////////////////////////////////////
 // Routes device halo
 
@@ -186,8 +190,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                 userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
                 active: false,
-                thingId: '',
-                publicKeyString: ''
+                thingId: ''
             };
 
             // object to hold all info, newUserDevice, deviceData
@@ -226,15 +229,6 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                                     .collection('userDevices')
                                     .add(allUserDeviceData) 
                         })
-                        // add thingId to the userDevice property ----------------------------------------- to check
-                        .then((doc)=>{
-                            let userDeviceId = doc.data().userDeviceId;
-                            return db
-                                    .collection('userDevices')
-                                    .where('userHandle', '==', snapShotUserHandle)
-                                    .where('deviceId', '==', snapShotDeviceId)
-                                    .update({thingId:`${snapShotUserHandle}-${snapShotnameOfDevice}-${userDeviceId}`})
-                        }).catch((err) => console.error(err));
                 }
             })
             .catch((err) => console.error(err));
@@ -298,36 +292,29 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         }
 });
 
-// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check
-exports.createDocumentInLiveDataCollection = functions.firestore
-    .document('userDevcies/{userDevicesId}')
+// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check all
+exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
+    .document('userDevices/{userDevicesId}')
     .onCreate((snap) => {
         // grab data from firebase snapshot
         const newUserDevice = snap.data();
-        const userDeviceId = newUserDevice.userDeviceId;
+        // doc id
+        const userDeviceId = snap.id;
+        // other data
         const userHandle = newUserDevice.userHandle;
         const dataSetModel = newUserDevice.device.dataSets;
         const nameOfDevice = newUserDevice.device.nameOfDevice;
-
-        // create liveData doc
-        return db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(`${userHandle}-${nameOfDevice}-${userDeviceId}`)
-                .add(dataSetModel)
-                .catch((err) => {
-                    console.error(err);
-                });
-    })
-
-// create device & topics in iot core - pub/sub
-exports.createDeviceInIotCore = functions.firestore
-    .document('activeUserDevices/{activeUserDevicesId}')
-    .onCreate((snap) => {
-        // grab userDeviceId from firebase doc
-        const newActiveUserDevice = snap.data();
-        const userDeviceId = newActiveUserDevice.userDeviceId
-
+        // thingId
+        const thingId = `${userHandle}-${nameOfDevice}-${userDeviceId}`;
+        //////////////////////////////////////////////////////////////////// add thingId to userDevice property
+        db
+            .doc(`/userDevices/${userDeviceId}`)
+            .update({thingId: thingId})
+            .catch((err) => {
+                console.error(err);
+            });
+        
+        ////////////////////////////////////////////////////////////////////// create device in iot core
         async function initDevicesIotCore(valueUserDeviceId){
             // api url
             const fetch = require('node-fetch');
@@ -341,38 +328,21 @@ exports.createDeviceInIotCore = functions.firestore
             console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
         }
         // run it
-        initDevicesIotCore(userDeviceId);
+        initDevicesIotCore(userDeviceId);   
         
-    });
-
-// delete device & topics in iot core - pub/sub ------------------ to check
-exports.deleteDeviceInIotCore = functions.firestore
-    .document('activeUserDevices/{activeUserDevicesId}')
-    .onDelete((snap) => {
-        // grab userDeviceId from firebase doc
-        const inActiveUserDevice = snap.data();
-        const userDeviceId = inActiveUserDevice.userDeviceId
-        console.log(userDeviceId);
-        // declarate function to init iotCore & pub/sub
-        async function killIotCoreAndPubSub(valueUserDeviceId){
-            // api url
-            const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/deleteInIotCore`;
-            const options = {
-                method: 'DELETE'
-            };
-            //fetch 
-            const iotResponse = await fetch(urlApi, options);
-            const iotJsonData = await iotResponse.json();
-            console.log(iotJsonData);
-        }
-        // run it
-        killIotCoreAndPubSub(userDeviceId);
-        
+        ////////////////////////////////////////////////////////////////////// create liveData doc in collection 
+        db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('liveDataSets')
+            .doc(thingId)
+            .set(dataSetModel)
+            .catch((err) => {
+                console.error(err);
+            });
     })
 
 // detect traffic in topic events and db sync
-exports.detectTelemetryEvents = functions.pubsub.topic('events').onPublish(
+exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').onPublish(
     (message, context) => {
         // all data
         let data = message.data;        

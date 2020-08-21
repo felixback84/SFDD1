@@ -1,6 +1,5 @@
 // firebase
 const { db } = require('../utilities/admin');
-const iot = require('@google-cloud/iot');
 //const fs = require('fs');
 const {PubSub} = require('@google-cloud/pubsub');
 
