@@ -1,10 +1,10 @@
 // Include needed modules
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); 
 const mqtt = require('mqtt'); 
 
 // device id
-const haloThingId = 'CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s';
+const haloThingId = 'CarlosTal84-Halo-A19wR4vEspr62JF19iON';
 // say hi to my little friend
 console.log(`HALO_THING: ${haloThingId} ---> ACTIVATED`);
 

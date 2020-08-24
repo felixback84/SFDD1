@@ -361,40 +361,19 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // userDeviceId 
         const userDeviceId = thingId.split("-").slice(2);
         // nameOfDevice
-        const nameOfDevice = thingId.split("-").slice(1);
+        const nameOfDevice = thingId.split("-").slice(1,2);
         // print 
+        console.log(`nameOfDevice: ${nameOfDevice}`)
         console.log(`userDeviceId: ${userDeviceId}`);
-        // pick the right object for db
-        switch(nameOfDevice){
-            case 'Halo':
-                // db part
-                db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(thingId)
-                .update({
-                    createdAt: obj.createdAt,
-                    thingId: obj.thingId,
-                    lat: obj.lat,
-                    lon: obj.lon
-                }) 
-            break;
-            case 'Hilda':
-                // db part
-                db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(thingId)
-                .update({
-                    createdAt: obj.createdAt,
-                    thingId: obj.thingId,
-                    altitude: obj.alt,
-                    velocity: obj.vel
-                
-                }) 
-            break;
-            default:
-                null;
-        }
+
+        //db part
+        db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(thingId)
+        .update({
+            ...obj
+        }) 
+
     }
 )

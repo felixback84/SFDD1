@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const mqtt = require('mqtt');
 
 // device id
-const hildaThingId = 'CarlosTal84-Hilda-ZnprmseGEnSeewZiPjYF';
+const hildaThingId = 'CarlosTal84-Hilda-mggbCoK1pihIqDJzJf3T';
 // say hi to my little friend
 console.log(`HILDA_THING: ${hildaThingId} ---> ACTIVATED`);
  
