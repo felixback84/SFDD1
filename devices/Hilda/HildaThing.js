@@ -63,7 +63,7 @@ const publishAsync = (mqttTopic, client) => {
         console.log('Publishing message:', JSON.stringify(payload));
         // recursive run
         publishAsync(mqttTopic, client);
-    }, 1000);
+    }, 10000000);
 }
 
 // --------------------------------------------------------------------------- SUBSCRIBING
@@ -85,7 +85,7 @@ const mqttBridgePort = 8883;
 //const OTHER = 
 const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
 const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
-const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
+const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands/#`;
 const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
 
 // The mqttClientId is a unique string that identifies this device. For Google

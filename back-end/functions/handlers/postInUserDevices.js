@@ -35,6 +35,7 @@ exports.postInUserDevices = (req, res) => {
                             nameOfDevice: doc.data().nameOfDevice,
                             description: doc.data().description,
                             imgUrl: doc.data().imgUrl,
+                            coverUrl: doc.data().coverUrl,
                             videoUrl: doc.data().videoUrl,
                             badgeUrl: doc.data().badgeUrl,
                             createdAt: doc.data().createdAt,

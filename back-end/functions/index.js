@@ -66,7 +66,7 @@ const {
     getAdventure,
     likeAdventure,
     unlikeAdventure,
-    postAdventureComment
+    postAdventureComment    
 } = require('./handlers/adventures');
 
 // just to test
@@ -78,6 +78,11 @@ const {
 const {
     createDeviceInIotCore
 } = require('./handlers/finalCycleIotGcloud');
+
+// hilda devices
+const {
+    hildaPostColorCommand
+} = require('./handlers/forHildaThings');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -164,12 +169,15 @@ app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 ////////////////////////////////// halo device routes /////////////////////////////////////////////////
 // Routes device halo
 
+////////////////////////////////// halo device routes /////////////////////////////////////////////////
+// Routes device hilda
+app.post('/device/hilda/:thingId/color',FBAuth, hildaPostColorCommand);
 
 // export functions
 exports.api = functions.https.onRequest(app);
 
 ///////////////////////////////// SOME ACTIONS IN DB WITHOUT HTTP REQUEST ///////////////////////////////////////////////
-// after creation of checkout means userDevice property
+// after creation of checkout means userDevice/Adventure property
 exports.createUserPropertyAfterCheckout = functions.firestore
     .document('checkouts/{checkoutsId}')
     .onCreate((snap) => {
@@ -216,6 +224,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                                 nameOfDevice: doc.data().nameOfDevice,
                                 description: doc.data().description,
                                 imgUrl: doc.data().imgUrl,
+                                coverUrl: doc.data().coverUrl,
                                 videoUrl: doc.data().videoUrl,
                                 badgeUrl: doc.data().badgeUrl,
                                 createdAt: doc.data().createdAt,
@@ -292,7 +301,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         }
 });
 
-// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check all
+// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check response
 exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('userDevices/{userDevicesId}')
     .onCreate((snap) => {
@@ -368,12 +377,11 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
 
         //db part
         db
-        .doc(`/userDevices/${userDeviceId}`)
-        .collection('liveDataSets')
-        .doc(thingId)
-        .update({
-            ...obj
-        }) 
-
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('liveDataSets')
+            .doc(thingId)
+            .update({
+                ...obj
+            }) 
     }
 )

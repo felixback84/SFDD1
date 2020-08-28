@@ -33,19 +33,19 @@ class SwitchButtonToUserDevice extends Component {
   // if the userDevice is already actived
   activedUserDevice = () => {
     if(
-        this.props.user.activeUserDevices && 
-        this.props.user.activeUserDevices.find(
-              (activeUserDevice) => activeUserDevice.userDeviceId === this.props.userdeviceid
-          ) 
+      this.props.user.activeUserDevices && 
+      this.props.user.activeUserDevices.find(
+            (activeUserDevice) => activeUserDevice.userDeviceId === this.props.userdeviceid
+        ) 
     )
         return true;
     else return false;
   };
 
   handleChange = (event) => {
-        this.setState({[event.target.name]: event.target.value});
-        // this.changeBtn();
-    };
+    this.setState({[event.target.name]: event.target.value});
+    // this.changeBtn();
+  };
 
   // action to active device
   activeUserDevice = () => {
@@ -54,13 +54,12 @@ class SwitchButtonToUserDevice extends Component {
 
   // action to inactive device
   inactiveUserDevice = () => {
-      this.props.inactiveUserDevice(this.props.userdeviceid);
+    this.props.inactiveUserDevice(this.props.userdeviceid);
   };  
 
   render(){ 
-
+    // conditional component
     const switchButtonActiveUserDevice = (!this.activedUserDevice() ? (
-
       <FormControlLabel
         control={
           <PurpleSwitch 

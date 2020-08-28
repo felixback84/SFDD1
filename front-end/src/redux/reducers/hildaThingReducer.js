@@ -5,9 +5,9 @@ import {
 } from '../types';
 
 // initial state
-const initialState = {
+const initialState = { 
     loading: false,
-    data:{}
+    thingData:{}
 };
 
 // function to determine the type of action to set state
@@ -21,7 +21,7 @@ export default function(state = initialState, action){
         case GET_EVENTS_FROM_HILDA_THING:
             return{
                 ...state,
-                data: action.payload,
+                thingData: action.payload,
             };
         default:
             return state;

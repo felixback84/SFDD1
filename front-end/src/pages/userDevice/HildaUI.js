@@ -1,50 +1,37 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { withStyles } from '@material-ui/core/styles';
-
+// componets
+import CardForHildaUI from './CardForHildaUI';
 // Redux stuff
 import { connect } from 'react-redux';
 import { hildaThingSyncDataWithLiveDB } from '../../redux/actions/hildaUIActions';
 
-// style
-const styles = (theme) => ({
-    root: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            '& > *': {
-                margin: theme.spacing(1),
-            },
-        },
-})
-
+// Hilda UI 
 class HildaUI extends Component {
-    //redux action
+    
+    //redux action to liveDataSets
     componentWillMount(){
-        this.props.hildaThingSyncDataWithLiveDB(this.props.userdeviceid);
+        // var with thingId
+        const thingId = this.props.thingid;
+        // liveDataSets Sync
+        this.props.hildaThingSyncDataWithLiveDB(thingId);
     } 
 
-    render(){ 
+    render(){   
         // props
-        const {classes, data} = this.props;
-        //  print
-        console.log(`data from db for halo: ${data}`);
+        const {data} = this.props;
+        // print data from db liveDataSets
+        console.log(`data from db for hilda: ${data}`);
         return (
-            <div className={classes.root}>
-                <ButtonGroup color="primary" aria-label="outlined primary button group">
-                    <Button>Four</Button>
-                    <Button>Five</Button>
-                    <Button>Six</Button>
-                </ButtonGroup>
-            </div>
+            // card
+            <CardForHildaUI userdeviceid={this.props.userdeviceid}/>
         );
     }
 }
 
 // redux state
 const mapStateToProps = (state) => ({
-    data: state.hildaThing1.data
+    data: state.hildaThing1.data, 
 })
+
 //export default Device;
-export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB})(withStyles(styles)(HildaUI));
+export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB})(HildaUI);

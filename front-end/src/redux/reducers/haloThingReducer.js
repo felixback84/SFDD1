@@ -7,7 +7,7 @@ import {
 // initial state
 const initialState = {
     loading: false,
-    data:{}
+    thingData:{}
 };
 
 // function to determine the type of action to set state
@@ -21,7 +21,7 @@ export default function(state = initialState, action){
         case GET_EVENTS_FROM_HALO_THING:
             return{
                 ...state,
-                data: action.payload,
+                thingData: action.payload,
             };
         default:
             return state;
