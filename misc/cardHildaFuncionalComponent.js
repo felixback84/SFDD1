@@ -1,7 +1,8 @@
 // react
-import React, { Component } from 'react';
+import React from 'react';
+
 // mui stuff
-import withStyles from '@material-ui/core/styles/withStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -23,11 +24,15 @@ import SliderForMotorHildaUI from './SliderForMotorHildaUI';
 import ColorPickerForHildaUI from './ColorPickerForHildaUI'
 
 // redux stuff
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
+import store from '../../../redux/store';
 import { getUserDevice } from '../../../redux/actions/userDevicesActions';
 
-//styles
-const styles = (theme) => ({
+// styles
+const useStyles = makeStyles((theme) => ({
+    root: {
+        maxWidth: 345,
+    },
     media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
@@ -45,50 +50,39 @@ const styles = (theme) => ({
     avatar: {
         backgroundColor: red[500],
     },
-    paper: {
-        padding: 10,
-        margin: 10
-    }
-});
+}));
 
-class CardForHildaUI extends Component {
-    
-    state={
-        expanded: false
-    }
+// functional component
+const CardForHildaUI = (props) => {
 
-    componentWillMount(){
-        this.props.getUserDevice(this.props.userdeviceid);
-    }
-
-    handleExpandClick = () => {
-        this.setState({expanded: true});
+    // use styles
+    const classes = useStyles();
+    // hook state
+    const [expanded, setExpanded] = React.useState(false);
+    // handle click to expand 
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
     };
-
-    handleCollapseClick = () => {
-        this.setState({expanded: false});
-    };
-
-    render() {
-        // redux state
-        const {
-            classes,
-            userDevice:{
-                thingId,
-                device:{
-                    nameOfDevice,
-                    description,
-                    coverUrl
-                }
+    // trigger redux action
+    store.dispatch(getUserDevice(props.userdeviceid));
+    // redux state
+    const {
+        userDevice:{
+            thingId,
+            device:{
+                nameOfDevice,
+                description,
+                coverUrl
             }
-        } = this.props;
+        }
+    } = props;
 
-        return (
-            <Card className={classes.root}>
-                <CardHeader
+    return (
+        <Card className={classes.root}>
+            <CardHeader
                 avatar={
                     <Avatar aria-label="recipe" className={classes.avatar}>
-                        {nameOfDevice}
+                        {nameOfDevice.charAt(0)}
                     </Avatar>
                 }
                 action={
@@ -112,45 +106,47 @@ class CardForHildaUI extends Component {
             <CardActions disableSpacing >
                 <IconButton
                     className={clsx(classes.expand, {
-                        [classes.expandOpen]: this.state.expanded,
+                        [classes.expandOpen]: expanded,
                     })}
-                    onClick={this.handleExpandClick}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
                     aria-label="show more"
                 >
                     <ExpandMoreIcon />  
                 </IconButton>
             </CardActions>
             {/* open card */}
-            <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     {/* active thing command */}
-                    <Paper variant="outlined" square className={classes.paper}>
-                        {/* <Typography paragraph>Active: {nameOfDevice}</Typography> */}
+                    <Paper variant="outlined" square >
+                        <Typography paragraph>Active: {nameOfDevice}</Typography>
                         <SwitchForActiveCommandHildaUI 
                             thingid={thingId} 
+                            labelToSwitch="Active device"
                         />
                     </Paper> 
-                    {/* colors thing command */}
-                    <Paper variant="outlined" square className={classes.paper}>
-                        {/* <Typography paragraph>Pick the color for: {nameOfDevice}</Typography> */}
-                        <ColorPickerForHildaUI thingid={thingId}/>
-                    </Paper> 
                     {/* motor thing command */}
-                    <Paper variant="outlined" square className={classes.paper}>
-                        {/* <Typography paragraph>Vibration speed of: {nameOfDevice}</Typography> */}
+                    <Paper variant="outlined" square >
+                        <Typography paragraph>Vibration speed of: {nameOfDevice}</Typography>
                         <SliderForMotorHildaUI thingid={thingId}/>
                     </Paper>   
-                    
+                    {/* colors thing command */}
+                    <Paper variant="outlined" square >
+                        <Typography paragraph>Pick the color for: {nameOfDevice}</Typography>
+                        <ColorPickerForHildaUI thingid={thingId}/>
+                    </Paper> 
                 </CardContent>
             </Collapse>
         </Card>
-        )
-    }
+    );
 }
 
-const mapStateToProps = (state) => ({
-    userDevice: state.userDevices1.userDevice
+// const mapStateToProps = (state) => ({
+//     userDevice: state.userDevices1.userDevice
     
-})
+// })
 
-export default connect(mapStateToProps,{getUserDevice})(withStyles(styles)(CardForHildaUI));
+//export default connect(mapStateToProps)(CardForHildaUI);
+export default CardForHildaUI;
+

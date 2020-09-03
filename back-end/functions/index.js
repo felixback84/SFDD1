@@ -81,6 +81,9 @@ const {
 
 // hilda devices
 const {
+    hildaPostActiveCommand,
+    hildaPostInactiveCommand,
+    hildaPostMotorSpeedCommand,
     hildaPostColorCommand
 } = require('./handlers/forHildaThings');
 
@@ -166,12 +169,18 @@ app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 // creation of device in iot core
 app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 
-////////////////////////////////// halo device routes /////////////////////////////////////////////////
-// Routes device halo
+////////////////////////////////// halo thing routes /////////////////////////////////////////////////
 
-////////////////////////////////// halo device routes /////////////////////////////////////////////////
-// Routes device hilda
-app.post('/device/hilda/:thingId/color',FBAuth, hildaPostColorCommand);
+
+////////////////////////////////// hilda thing routes /////////////////////////////////////////////////
+// post active command in hilda things
+app.post('/device/hilda/:thingId/active',FBAuth, hildaPostActiveCommand);
+// post inactive command in hilda things
+app.post('/device/hilda/:thingId/inactive',FBAuth, hildaPostInactiveCommand);
+// post motor speed command in hilda things
+app.post('/device/hilda/:thingId/motorSpeed',FBAuth, hildaPostMotorSpeedCommand);
+// post color command in hilda things
+app.post('/device/hilda/:thingId/color',FBAuth, hildaPostInactiveCommand);
 
 // export functions
 exports.api = functions.https.onRequest(app);

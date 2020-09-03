@@ -35,46 +35,62 @@ export const hildaThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
     });
 }
 
-// function to send active command to things
-export const hildaPostActiveCommand = (thingId) => (dispatch) => {
+// function to post active command to things
+export const hildaPostActiveCommand = (thingId, activeValue) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/device/hilda/${thingId}/active`)
+        .post(`/device/hilda/${thingId}/active`, activeValue)
         .then((res) => {            
             
         })
-        .catch(err => {
-            dispatch({ 
-                type: SET_ERRORS,
-                payload: err.response.data
-            })
-        });
+        // .catch(err => {
+        //     dispatch({ 
+        //         type: SET_ERRORS,
+        //         payload: err.response.data
+        //     })
+        // });
 }    
 
-// function to send inactive command to things
-export const hildaPostInactiveCommand = (thingId) => (dispatch) => {
+// function to post inactive command to things
+export const hildaPostInactiveCommand = (thingId, inactiveValue) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/device/hilda/${thingId}/inactive`)
+        .post(`/device/hilda/${thingId}/inactive`, inactiveValue)
         .then((res) => {            
             
         })
-        .catch(err => {
-            dispatch({ 
-                type: SET_ERRORS,
-                payload: err.response.data
-            })
-        });
+        // .catch(err => {
+        //     dispatch({ 
+        //         type: SET_ERRORS,
+        //         payload: err.response.data
+        //     })
+        // });
 } 
 
-// function to send color command with the data to device
-export const hildaPostColorCommand = (thingId, colorValues) => (dispatch) => {
+// function to post motor speed command to things
+export const hildaPostMotorSpeedCommand = (thingId, speedValue) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/device/hilda/${thingId}/color`, colorValues)
-        // .then((res) => {            
+        .post(`/device/hilda/${thingId}/motorSpeed`, speedValue)
+        .then((res) => {            
             
-        // })
+        })
+        // .catch(err => {
+        //     dispatch({ 
+        //         type: SET_ERRORS,
+        //         payload: err.response.data
+        //     })
+        // });
+} 
+
+// function to post color command with the data to device
+export const hildaPostColorCommand = (thingId, colorValue) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post(`/device/hilda/${thingId}/color`, colorValue)
+        .then((res) => {            
+            
+        })
         // .catch(err => {
         //     dispatch({ 
         //         type: SET_ERRORS,

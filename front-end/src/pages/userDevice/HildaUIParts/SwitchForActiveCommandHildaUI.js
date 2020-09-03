@@ -27,9 +27,9 @@ const PurpleSwitch = withStyles({
 // class component
 class SwitchForActiveCommandHildaUI extends Component { 
     // state
-    state = {
-        checkedForThing: false
-    }
+    // state = {
+    //     checkedForThing: false
+    // }
     // if the thing is already actived
     activedThing = () => {
         // props
@@ -46,11 +46,13 @@ class SwitchForActiveCommandHildaUI extends Component {
     };
     // action to active thing
     activeThing = () => {
-        this.props.hildaPostActiveCommand(this.props.thingid);
+        const active = true;
+        this.props.hildaPostActiveCommand(this.props.thingid, active);
     };
     // action to inactive thing
     inactiveThing = () => {
-        this.props.hildaPostInactiveCommand(this.props.thingid);
+        const inactive = false;
+        this.props.hildaPostInactiveCommand(this.props.thingid, inactive);
     };  
 
     render(){ 
