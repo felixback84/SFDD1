@@ -1,13 +1,13 @@
 // Include needed modules
 const fs = require('fs');
-const jwt = require('jsonwebtoken'); 
-const mqtt = require('mqtt'); 
+const jwt = require('jsonwebtoken');
+const mqtt = require('mqtt');
 
 // device id
-const haloThingId = 'CarlosTal84-Halo-A19wR4vEspr62JF19iON';
+const hildaThingId = 'CarlosTal84-Hilda-mggbCoK1pihIqDJzJf3T';
 // say hi to my little friend
-console.log(`HALO_THING: ${haloThingId} ---> ACTIVATED`);
-
+console.log(`HILDA_THING: ${hildaThingId} ---> ACTIVATED`);
+ 
 // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
 // Create a Cloud IoT Core JWT for the given project id, signed with the given
 // private key.
@@ -25,9 +25,9 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
     return jwt.sign(token, privateKey, {algorithm: algorithm});
 };
 
-// ----------------------------------------------------------------------------- GET VALUES FROM ISS FUNCTION
+// ----------------------------------------------------------------------------- GET VALUES FROM ISS API
 // global var for iss req
-let latitude, longitude;
+let altitude, velocity;
 // ask to iss
 setTimeout(async function iss(){
     const fetch = require('node-fetch');
@@ -41,22 +41,22 @@ setTimeout(async function iss(){
     // print response
     //console.log(`Response for iss: ${JSON.stringify(iotJsonData)}`);
     // lat & long from iss
-    latitude = iotJsonData.latitude;
-    longitude = iotJsonData.longitude;
+    altitude = iotJsonData.altitude;
+    velocity = iotJsonData.velocity;
     // recursive run
     iss();
 }, 2000)
 
-// ----------------------------------------------------------------------------- PUBLISHING FUNCTION
+// ----------------------------------------------------------------------------- PUBLISHING MESSAGES
 // Function to publish messages on any change
 const publishAsync = (mqttTopic, client) => {
     setTimeout(()=>{
         // Function to generate random values to send to the cloud platform
         const payload = {
-            thingId: haloThingId,
+            thingId: hildaThingId,
             createdAt: new Date().toISOString(),
-            lat: latitude,
-            lon: longitude
+            alt: altitude,
+            vel: velocity
         }
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
         client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
@@ -66,11 +66,11 @@ const publishAsync = (mqttTopic, client) => {
     }, 10000000);
 }
 
-// --------------------------------------------------------------------------- SUBSCRIBING
+// --------------------------------------------------------------------------- SUBSCRIBING TO TOPICS
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
-const deviceId = haloThingId;
-const registryId = `Halo`; 
+const deviceId = hildaThingId;
+const registryId = `Hilda`; 
 const region = `us-central1`;
 const algorithm = `RS256`;
 const privateKeyFile = `./rsa_private.pem`;
@@ -81,10 +81,12 @@ const mqttBridgePort = 8883;
 // required to be in the format below. The topic name must end in 'state' to
 // publish state and 'events' to publish telemetry. Note that this is not the
 // same as the device registry's Cloud Pub/Sub topic.
+
 // Topics to all devices
+//const MQTT_TOPIC_TO_EVENTS = `/devices/${deviceId}/events`;
 const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
 const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
-const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
+const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands/#`;
 const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
 
 // The mqttClientId is a unique string that identifies this device. For Google
@@ -103,7 +105,7 @@ const connectionArgs = {
     password: createJwt(projectId, privateKeyFile, algorithm),
     protocol: 'mqtts',
     secureProtocol: 'TLSv1_2_method',
-};
+}; 
 
 // Create a client, and connect to the Google MQTT bridge.
 const client = mqtt.connect(connectionArgs);
@@ -121,15 +123,16 @@ client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 // The topic name must end in 'state' to publish state
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 
-// The topic name must end in 'events' to publish state
+// The topic name must end in 'events' to publish telemetry
 client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
 
-// Handle the connection event
+// Handle the connection event with iot core
 client.on('connect', success => {
     console.log('connect');
     if (!success) {
         console.log('Client not connected...');
     } else {
+        // here the message from this device are send to iot core
         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }
 });
@@ -144,19 +147,12 @@ client.on('error', err => {
     console.log('error', err);
 });
 
-// Handle the message event 
+// --------------------------------------------------------------------------- RECEIVING MESSAGES
+// Handle the message incoming event from iot core to this device 
 client.on('message', (topic, message) => {
-    let messageStr = 'Message received: ';
-    if (topic === MQTT_TOPIC_TO_CONFIG) {
-        messageStr = 'Config message received: ';
-    } else if (topic.startsWith(MQTT_TOPIC_TO_COMMANDS)) {
-        messageStr = 'Command message received: ';
-    } else if (topic.startsWith(MQTT_TOPIC_TO_STATE)) {
-        messageStr = 'State message received: ';
-    } else if (topic.startsWith(MQTT_TOPIC_TO_TELEMETRY)) {
-        messageStr = 'Telemetry message received: ';
-    }
-    messageStr += Buffer.from(message, 'base64').toString('ascii');
-    console.log(messageStr);
+    // add and decode the message itself 
+    let messageStr = Buffer.from(message, 'base64').toString('ascii');
+    // print message in console
+    console.log(`Message from client WebApp for ${hildaThingId} thing ====> ${messageStr}`);
     
 });
