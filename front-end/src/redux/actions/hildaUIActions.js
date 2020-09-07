@@ -23,9 +23,9 @@ export const hildaThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
         .collection('liveDataSets').doc(thingId)
     const observer = doc.onSnapshot(docSnapshot => {
         const resultDB = docSnapshot.data();
-        console.log(`Received doc snapshot: ${resultDB}}`);
+        //console.log(`Received doc snapshot: ${resultDB}}`);
         // dispatch
-        dispatch({ 
+        dispatch({  
             type: GET_EVENTS_FROM_HILDA_THING,
             payload: resultDB
         });

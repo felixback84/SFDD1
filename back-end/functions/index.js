@@ -112,7 +112,7 @@ app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 
 // just to test
 app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
-
+ 
 ////////////////////////////////////////////////// USERADVENTURES /////////////////////////////////////////////////////
 // get userDevice 
 app.get('/useradventures', FBAuth, getAllUserAdventures);
@@ -122,7 +122,7 @@ app.get('/useradventures/:userAdventureId', FBAuth, getUserAdventure);
 app.get('/useradventures/:userAdventureId/active', FBAuth, getActiveUserAdventures);
 // get inactive userAdventures
 app.get('/useradventures/:userAdventureId/inactive', FBAuth, getInactiveUserAdventures);
-
+ 
 ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
 // post dataSets in user device 
 app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice);
@@ -371,7 +371,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // print normal string
         console.log(`str: ${str}`);
         // str to obj
-        let obj = JSON.parse(str);
+        let obj = JSON.parse(str); 
         // pick userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
         const thingId = obj.thingId;
         // print object

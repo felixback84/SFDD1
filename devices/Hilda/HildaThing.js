@@ -106,10 +106,6 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } 
-    // else {
-    //     // here the message from this device are send to iot core
-    //     //publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
-    // }
 });
 
 // Handle the closing connection event

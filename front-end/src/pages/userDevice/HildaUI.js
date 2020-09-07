@@ -5,7 +5,7 @@ import CardForHildaUI from './HildaUIParts/CardForHildaUI';
 import { connect } from 'react-redux';
 import { hildaThingSyncDataWithLiveDB } from '../../redux/actions/hildaUIActions';
 
-// Hilda UI 
+// Hilda UI  
 class HildaUI extends Component {
     //redux action to liveDataSets
     componentWillMount(){
@@ -17,9 +17,9 @@ class HildaUI extends Component {
 
     render(){   
         // props
-        const {data} = this.props;
+        const {thingData} = this.props;
         // print data from db liveDataSets
-        console.log(`data from db for hilda: ${data}`);
+        console.log(`data from db for hilda: ${thingData}`);
         return (
             // card
             <CardForHildaUI userdeviceid={this.props.userdeviceid}/>
@@ -29,8 +29,8 @@ class HildaUI extends Component {
 
 // redux state
 const mapStateToProps = (state) => ({
-    data: state.hildaThing1.data, 
+    thingData : state.hildaThing1.thingData, 
 })
-
+ 
 //export default Device;
 export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB})(HildaUI);
