@@ -11,8 +11,8 @@ import storeDevices from './pages/store/storeDevices';
 import singleStoreDevice from './pages/store/singleStoreDevice';
 import storeAdventures from './pages/store/storeAdventures';
 import singleStoreAdventure from './pages/store/singleStoreAdventure';
-import device from './pages/userDevice/device';
-import deviceDataSets from './pages/userDevice/deviceDataSets';
+import userDevice from './pages/userDevice/userDevice';
+import userDeviceDataSets from './pages/userDevice/userDeviceDataSets';
 import notificationsDevices from './pages/notifications/notificationsDevices';
 import notificationsAdventures from './pages/notifications/notificationsAdventures';
 import profile from './pages/profile/profile';
@@ -82,8 +82,8 @@ class App extends Component {
                   <Route exact path="/store/devices/:deviceId" component={singleStoreDevice} />
                   <Route exact path="/store/adventures" component={storeAdventures} />
                   <Route exact path="/store/adventures/:adventureId" component={singleStoreAdventure} />
-                  <Route exact path="/device" component={device}/>
-                  <Route exact path="/device/datasets" component={deviceDataSets} />
+                  <Route exact path="/userdevice" component={userDevice}/>
+                  <Route exact path="/userdevice/datasets" component={userDeviceDataSets} />
                   <Route exact path="/notifications/devices" component={notificationsDevices} />
                   <Route exact path="/notifications/adventures" component={notificationsAdventures} />
                   <Route exact path="/profile" component={profile} />

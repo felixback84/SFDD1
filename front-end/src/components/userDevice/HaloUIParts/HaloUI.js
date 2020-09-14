@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { haloThingSyncDataWithLiveDB } from '../../redux/actions/haloUIActions';
+import { haloThingSyncDataWithLiveDB } from '../../../redux/actions/haloUIActions';
 
 // style
 const styles = (theme) => ({

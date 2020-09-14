@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 // components
-import HildaUI from './HildaUI';
-import HaloUI from './HaloUI';
+import HildaUI from '../../components/userDevice/HildaUIParts/HildaUI';
+import HaloUI from '../../components/userDevice/HaloUIParts/HaloUI';
 import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
 
 // Redux stuff

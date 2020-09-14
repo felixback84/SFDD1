@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // components
-import DataSetsReqWithChartsForHilda from './DataSetsUIParts/DataSetsReqWithChartsForHilda'
+import DataSetsReqWithChartsForHilda from '../../components/userDevice/DataSetsUIParts/DataSetsReqWithChartsForHilda'
 // redux stuff
 import { connect } from 'react-redux';
 import { getAllDataSetsUserDevice } from '../../redux/actions/dataSetsActions';

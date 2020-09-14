@@ -15,7 +15,7 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 // components-buttons
 import MyButtonMyWorld from './buttons/MyButtonMyWorld';
 import MyButtonStore from './buttons/MyButtonStore';
-import MyButtonDevice from './buttons/MyButtonDevice';
+import MyButtonUserDevice from './buttons/MyButtonUserDevice';
 import MyButtonNotifications from './buttons/MyButtonNotifications';
 import MyButtonProfile from './buttons/MyButtonProfile';
 import MyButton from './buttons/MyButtonProfile';
@@ -61,7 +61,7 @@ class Navbar extends Component {
                     <div className={classes.grow} />
                     <MyButtonStore/>
                     <div className={classes.grow} />
-                    <MyButtonDevice className={classes.fabButton}/>
+                    <MyButtonUserDevice className={classes.fabButton}/>
                     <div className={classes.grow} />
                     <MyButtonNotifications/>
                     <div className={classes.grow} />

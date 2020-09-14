@@ -76,13 +76,13 @@ export default function MyButtonDevice() {
                 onClose={handleClose}
             >
                 {/* sub-menu-items */}
-                <StyledMenuItem component={Link} to="/device">
+                <StyledMenuItem component={Link} to="/userdevice">
                     <ListItemIcon>
                         <DevicesOtherIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Device" />
                 </StyledMenuItem>
-                <StyledMenuItem component={Link} to="/device/datasets">
+                <StyledMenuItem component={Link} to="/userdevice/datasets">
                     <ListItemIcon>
                         <StorageIcon fontSize="small" />
                     </ListItemIcon>

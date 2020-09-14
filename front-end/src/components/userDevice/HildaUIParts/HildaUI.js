@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 // componets
-import CardForHildaUI from './HildaUIParts/CardForHildaUI';
+import CardForHildaUI from './CardForHildaUI';
 // Redux stuff
 import { connect } from 'react-redux';
-import { hildaThingSyncDataWithLiveDB } from '../../redux/actions/hildaUIActions';
+import { hildaThingSyncDataWithLiveDB } from '../../../redux/actions/hildaUIActions';
 
 // Hilda UI  
 class HildaUI extends Component {
