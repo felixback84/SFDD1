@@ -122,7 +122,7 @@ app.get('/useradventures/:userAdventureId', FBAuth, getUserAdventure);
 app.get('/useradventures/:userAdventureId/active', FBAuth, getActiveUserAdventures);
 // get inactive userAdventures
 app.get('/useradventures/:userAdventureId/inactive', FBAuth, getInactiveUserAdventures);
- 
+
 ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
 // post dataSets in user device 
 app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice);
@@ -130,7 +130,7 @@ app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice)
 app.get('/user/device/:userDeviceId/datasets', FBAuth, getAllDataSetsUserDevice);
 // get one dataSets in user device 
 app.get('/user/device/:userDeviceId/dataset/:dataSetId', FBAuth, getDataSetUserDevice);
-
+ 
 ////////////////////////////////////////////////// CHECKOUTS ////////////////////////////////////////////////////////
 // post data for checkout device
 app.post('/user/checkout/device/:deviceId', FBAuth, postDataCheckOutDevice);

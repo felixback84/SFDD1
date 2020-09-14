@@ -9,12 +9,12 @@ import {
 } from '../types';
 
 // axios
-import axios from 'axios';
+import axios from 'axios'; 
 
 // get all data set for a property userDevice
 export const getAllDataSetsUserDevice = (userdeviceid) => (dispatch) => {
     dispatch({ type: LOADING_UI });
-    dispatch({ type: LOADING_DATASETS });
+    //dispatch({ type: LOADING_DATASETS });
     axios
         .get(`/user/device/${userdeviceid}/datasets`)
         .then((res) => { 

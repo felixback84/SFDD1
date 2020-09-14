@@ -170,7 +170,7 @@ class CardForHildaUI extends Component {
                         {/* button to save data */}
                         <Paper variant="outlined" square className={classes.paper}>
                             <SaveDataSetToHilda userdeviceid={userDeviceId}/>
-                        </Paper>
+                        </Paper> 
                     </CardContent>
                 </Collapse>
             </Card>

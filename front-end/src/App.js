@@ -35,12 +35,13 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
 import { logoutUser, getUserData } from './redux/actions/userActions';
+import { getUserDevices } from './redux/actions/userDevicesActions';
+
 // axios
 import axios from 'axios';
 import { createMuiTheme } from '@material-ui/core';
 axios.defaults.baseURL = 'https://us-central1-sfdd-d8a16.cloudfunctions.net/api';
 //axios.defaults.baseURL = 'http://localhost:5000/sfdd-d8a16/us-central1/api';
-
 
 // theme
 const theme = createMuiTheme(themeObject);
@@ -55,7 +56,10 @@ if (token) {
     } else {
         store.dispatch({ type: SET_AUTHENTICATED });
         axios.defaults.headers.common['Authorization'] = token;
+        // for user data
         store.dispatch(getUserData());
+        // for userDevices
+        store.dispatch(getUserDevices());
     }
 }
 
@@ -78,7 +82,7 @@ class App extends Component {
                   <Route exact path="/store/devices/:deviceId" component={singleStoreDevice} />
                   <Route exact path="/store/adventures" component={storeAdventures} />
                   <Route exact path="/store/adventures/:adventureId" component={singleStoreAdventure} />
-                  <Route exact path="/device" component={device} />
+                  <Route exact path="/device" component={device}/>
                   <Route exact path="/device/datasets" component={deviceDataSets} />
                   <Route exact path="/notifications/devices" component={notificationsDevices} />
                   <Route exact path="/notifications/adventures" component={notificationsAdventures} />
