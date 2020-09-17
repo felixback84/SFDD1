@@ -9,7 +9,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 // icons
 import PhonelinkRingIcon from '@material-ui/icons/PhonelinkRing';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
-import StorageIcon from '@material-ui/icons/Storage';
 
 const StyledMenu = withStyles( 
         {
@@ -81,12 +80,6 @@ export default function MyButtonDevice() {
                         <DevicesOtherIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Device" />
-                </StyledMenuItem>
-                <StyledMenuItem component={Link} to="/userdevice/datasets">
-                    <ListItemIcon>
-                        <StorageIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="DataSets" />
                 </StyledMenuItem>
             </StyledMenu>
         </div>

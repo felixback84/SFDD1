@@ -35,9 +35,9 @@ class SwitchForActiveCommandHildaUI extends Component {
         // props
         const { active } = this.props
         // check if the thing is active
-        if( active === true ) 
+        if( active === "true" ) 
             return true;
-        else 
+        else if ( active === "false" )
             return false;
     };
     // handle change
@@ -46,12 +46,12 @@ class SwitchForActiveCommandHildaUI extends Component {
     };
     // action to active thing
     activeThing = () => {
-        const active = true;
+        const active = {active:'true'};
         this.props.hildaPostActiveCommand(this.props.thingid, active);
     };
     // action to inactive thing
     inactiveThing = () => {
-        const inactive = false;
+        const inactive = {active:'false'};
         this.props.hildaPostInactiveCommand(this.props.thingid, inactive);
     };  
 

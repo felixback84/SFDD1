@@ -79,7 +79,7 @@ class UserDeviceDialog extends Component {
             },
             dataSets,
             ui: { loading }
-        } = this.props;
+        } = this.props; 
 
         return(
             <Fragment>

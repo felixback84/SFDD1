@@ -8,28 +8,40 @@ import { hildaPostColorCommand } from '../../../redux/actions/hildaUIActions';
 class ColorPickerForHildaUI extends Component {
     // state
     state = {
-        background: '#fff',
+        colorValue:{
+            r: 0,
+            g: 0,
+            b: 0
+        }
     };
 
     //handle change
-    handleChange = (color, event) => {
-        //this.setState({ [event.target.name]: event.target.value });
-        this.setState({ background: color.hex });
+    handleChange = (color) => {
+        this.setState({ colorValue: color.rgb })
     };
 
     // handle change
     handleChangeComplete = (color, event) => {
-        //this.setState({ background: color.hex });
         // trigger redux action
-        this.props.hildaPostColorCommand(this.props.thingid, {background:this.state.background});
+        this.props.hildaPostColorCommand(
+            this.props.thingid, {
+                colorValue:{
+                    r: this.state.colorValue.r,
+                    g: this.state.colorValue.g,
+                    b: this.state.colorValue.b,
+                }
+            }
+        );
     };
 
     render() {
-        return <SliderPicker 
-                    color={ this.state.background }
-                    onChangeComplete={this.handleChangeComplete}
-                    onChange={this.handleChange}
-                />;
+        return (
+            <SliderPicker 
+                color={ this.state.colorValue }
+                onChangeComplete={this.handleChangeComplete}
+                onChange={this.handleChange}
+            />
+        );
     }
 }
 

@@ -14,11 +14,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 
 // components
+import DataSetsDialogToCharts from '../userDeviceDataSets/DataSetsDialogToCharts';
 import SwitchForActiveCommandHildaUI from './SwitchForActiveCommandHildaUI';
 import SliderForMotorHildaUI from './SliderForMotorHildaUI';
 import ColorPickerForHildaUI from './ColorPickerForHildaUI';
@@ -107,11 +107,8 @@ class CardForHildaUI extends Component {
                             {nameOfDevice}
                         </Avatar>
                         }
-                    action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
-                        }
+                    // DataSetsDialog to charts
+                    action={<DataSetsDialogToCharts userdeviceid={userDeviceId}/>}
                     title={nameOfDevice}
                     subheader={`Your device thing is: ${thingId}`}
                 />
@@ -136,13 +133,13 @@ class CardForHildaUI extends Component {
                     </IconButton>
                 </CardActions>
                 {/* open card */}
-                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+                {/* <Collapse in={this.state.expanded} timeout="auto" unmountOnExit> */}
                     <CardContent>
                         {/* active thing command */}
                         <Paper variant="outlined" square className={classes.paper}>
                             <Typography paragraph>{nameOfDevice} is:</Typography>
                             <Chip
-                                label={active ? ("ON"):("OFF")}
+                                label={active === "true" ? ("ON"):("OFF")}
                                 className={classes.chip}
                             />
                             <SwitchForActiveCommandHildaUI 
@@ -153,7 +150,7 @@ class CardForHildaUI extends Component {
                         <Paper variant="outlined" square className={classes.paper}>
                             <Typography paragraph>Pick the color for {nameOfDevice}, now is: </Typography>
                             <Chip
-                                label={colorValue}
+                                label={`${colorValue.r}, ${colorValue.g}, ${colorValue.b}`}
                                 className={classes.chip}
                             />
                             <ColorPickerForHildaUI thingid={thingId}/>
@@ -172,7 +169,7 @@ class CardForHildaUI extends Component {
                             <SaveDataSetToHilda userdeviceid={userDeviceId}/>
                         </Paper> 
                     </CardContent>
-                </Collapse>
+                {/* </Collapse> */}
             </Card>
         )
     }

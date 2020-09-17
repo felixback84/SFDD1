@@ -7,7 +7,7 @@ import {
 // initial state
 const initialState = { 
     loading: false,
-    thingData:{}
+    thingData:{colorValue:{}}
 };
 
 // function to determine the type of action to set state

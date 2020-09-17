@@ -14,59 +14,40 @@ class DataSetsReqWithChartsForHilda extends Component {
 
     render(){
 
-        // redux state for dataSets
+        // state from props for dataSets
         const { 
             datasets
         } = this.props;
 
         // vars to extract data
         let activeTimesRecord = [];
-        let colorValuesRecord = [];
-        let motorSpeedRecord = []; 
+        let dates = [];
 
         // mapping and pick data from dataSets in userDevice
         datasets.map(dataset => {
                 activeTimesRecord = [dataset.active];
-                colorValuesRecord = [dataset.colorValue];
-                motorSpeedRecord = [dataset.motorSpeed];
+                dates = [dataset.createdAt]
             }
         );
         // print arrays
-        console.log(`Result from map: ${activeTimesRecord} - ${colorValuesRecord} - ${motorSpeedRecord}`);
+        console.log(`Result from map: ${activeTimesRecord} - ${dates}`);
         
         // funtion to create the object to char.js
-        const dataToGraphics = (activeTimes, colorValues, motorSpeed) => {
+        const dataDateToGraphics = (activeTimes) => {
             let data = {
-                labels:[
-                    "hi"
-                ],
+                labels: dates, 
                 datasets:[
                     {
                         label: "Active",
                         data: activeTimes
                     },
-                    {
-                        label: "colorValue",
-                        data: colorValues
-                    },
-                    {
-                        label: "motorSpeed",
-                        data: motorSpeed
-                    }
                 ]
             }
             // return object
             return data;
         }
         return (
-            <Line data={
-                dataToGraphics(
-                    activeTimesRecord,
-                    colorValuesRecord,
-                    motorSpeedRecord
-                    )
-                }>
-            </Line>
+            <Line data={dataDateToGraphics(activeTimesRecord)}/>
         )
     }
 }

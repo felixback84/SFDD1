@@ -31,6 +31,6 @@ class HildaUI extends Component {
 const mapStateToProps = (state) => ({
     thingData : state.hildaThing1.thingData, 
 })
- 
+
 //export default Device;
 export default connect(mapStateToProps,{hildaThingSyncDataWithLiveDB})(HildaUI);

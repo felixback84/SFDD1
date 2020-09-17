@@ -12,7 +12,6 @@ import singleStoreDevice from './pages/store/singleStoreDevice';
 import storeAdventures from './pages/store/storeAdventures';
 import singleStoreAdventure from './pages/store/singleStoreAdventure';
 import userDevice from './pages/userDevice/userDevice';
-import userDeviceDataSets from './pages/userDevice/userDeviceDataSets';
 import notificationsDevices from './pages/notifications/notificationsDevices';
 import notificationsAdventures from './pages/notifications/notificationsAdventures';
 import profile from './pages/profile/profile';
@@ -35,7 +34,6 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
 import { logoutUser, getUserData } from './redux/actions/userActions';
-import { getUserDevices } from './redux/actions/userDevicesActions';
 
 // axios
 import axios from 'axios';
@@ -58,8 +56,6 @@ if (token) {
         axios.defaults.headers.common['Authorization'] = token;
         // for user data
         store.dispatch(getUserData());
-        // for userDevices
-        store.dispatch(getUserDevices());
     }
 }
 
@@ -83,7 +79,6 @@ class App extends Component {
                   <Route exact path="/store/adventures" component={storeAdventures} />
                   <Route exact path="/store/adventures/:adventureId" component={singleStoreAdventure} />
                   <Route exact path="/userdevice" component={userDevice}/>
-                  <Route exact path="/userdevice/datasets" component={userDeviceDataSets} />
                   <Route exact path="/notifications/devices" component={notificationsDevices} />
                   <Route exact path="/notifications/adventures" component={notificationsAdventures} />
                   <Route exact path="/profile" component={profile} />

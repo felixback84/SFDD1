@@ -20,9 +20,9 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
 };
 
 // vars for message income from client UI
-let active = false;
+let active = {};
 let motorSpeed = {};
-let colorValue = {};
+let colorValue = {colorValue:{}};
 
 // ----------------------------------------------------------------------------- PUBLISHING MESSAGES
 // Function to publish messages on any change
@@ -94,7 +94,7 @@ client.on('message', (topic, message) => {
         // extract data from message incoming of client UI
         active = messageToObj.active;
         motorSpeed = messageToObj.motorSpeed;
-        colorValue = messageToObj.background;
+        colorValue = messageToObj.colorValue;
         // publish messages
         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }

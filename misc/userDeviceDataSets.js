@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import DataSetsReqWithChartsForHilda from '../../components/userDevice/DataSetsUIParts/DataSetsReqWithChartsForHilda'
 // redux stuff
 import { connect } from 'react-redux';
-import { getAllDataSetsUserDevice } from '../../redux/actions/dataSetsActions';
+import { getAllDataSetsUserDevice } from '../front-end/src/redux/actions/dataSetsActions';
 
 class deviceDataSets extends Component {
     // find the userDevice active
