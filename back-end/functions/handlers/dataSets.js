@@ -41,6 +41,7 @@ exports.getAllDataSetsUserDevice = (req, res) => {
     db
         .doc(`/userDevices/${req.params.userDeviceId}`)
         .collection('dataSets')
+        .orderBy('createdAt', 'desc')
         .get()
         .then((data) => {
             let dataSets = [];

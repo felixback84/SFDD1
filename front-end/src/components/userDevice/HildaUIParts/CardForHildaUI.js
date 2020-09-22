@@ -8,7 +8,6 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -120,56 +119,40 @@ class CardForHildaUI extends Component {
                     <Typography variant="body2" color="textSecondary" component="p">
                         {description}
                     </Typography>
+                    {/* active thing command */}
+                    <Paper variant="outlined" square className={classes.paper}>
+                        <Typography paragraph>{nameOfDevice} is:</Typography>
+                        <Chip
+                            label={active === "true" ? ("ON"):("OFF")}
+                            className={classes.chip}
+                        />
+                        <SwitchForActiveCommandHildaUI 
+                            thingid={thingId} 
+                        />
+                    </Paper> 
+                    {/* colors thing command */}
+                    <Paper variant="outlined" square className={classes.paper}>
+                        <Typography paragraph>Pick the color for {nameOfDevice}, now is: </Typography>
+                        <Chip
+                            label={`${colorValue.r}, ${colorValue.g}, ${colorValue.b}`}
+                            className={classes.chip}
+                        />
+                        <ColorPickerForHildaUI thingid={thingId}/>
+                    </Paper> 
+                    {/* motor thing command */}
+                    <Paper variant="outlined" square className={classes.paper}>
+                        <Typography paragraph>Pick the vibration speed of {nameOfDevice}, now is: </Typography>
+                        <Chip
+                            label={motorSpeed}
+                            className={classes.chip}
+                        />
+                        <SliderForMotorHildaUI thingid={thingId}/>
+                    </Paper> 
+                    {/* button to save data */}
+                    <Paper variant="outlined" square className={classes.paper}>
+                        <SaveDataSetToHilda userdeviceid={userDeviceId}/>
+                    </Paper> 
                 </CardContent>
-                <CardActions disableSpacing >
-                    <IconButton
-                        className={clsx(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={this.handleExpandClick}
-                        aria-label="show more"
-                    >
-                        <ExpandMoreIcon />  
-                    </IconButton>
-                </CardActions>
-                {/* open card */}
-                {/* <Collapse in={this.state.expanded} timeout="auto" unmountOnExit> */}
-                    <CardContent>
-                        {/* active thing command */}
-                        <Paper variant="outlined" square className={classes.paper}>
-                            <Typography paragraph>{nameOfDevice} is:</Typography>
-                            <Chip
-                                label={active === "true" ? ("ON"):("OFF")}
-                                className={classes.chip}
-                            />
-                            <SwitchForActiveCommandHildaUI 
-                                thingid={thingId} 
-                            />
-                        </Paper> 
-                        {/* colors thing command */}
-                        <Paper variant="outlined" square className={classes.paper}>
-                            <Typography paragraph>Pick the color for {nameOfDevice}, now is: </Typography>
-                            <Chip
-                                label={`${colorValue.r}, ${colorValue.g}, ${colorValue.b}`}
-                                className={classes.chip}
-                            />
-                            <ColorPickerForHildaUI thingid={thingId}/>
-                        </Paper> 
-                        {/* motor thing command */}
-                        <Paper variant="outlined" square className={classes.paper}>
-                            <Typography paragraph>Pick the vibration speed of {nameOfDevice}, now is: </Typography>
-                            <Chip
-                                label={motorSpeed}
-                                className={classes.chip}
-                            />
-                            <SliderForMotorHildaUI thingid={thingId}/>
-                        </Paper> 
-                        {/* button to save data */}
-                        <Paper variant="outlined" square className={classes.paper}>
-                            <SaveDataSetToHilda userdeviceid={userDeviceId}/>
-                        </Paper> 
-                    </CardContent>
-                {/* </Collapse> */}
             </Card>
         )
     }

@@ -1,18 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-
 // Components
-//import TitleToDialogUserDevice from './TitleToDialogUserDevice';
-
+import TitleToDataSetsDialogToCharts from './TitleToDataSetsDialogToCharts';
+import ChartOfThingTimesActive from './ChartOfThingTimesActive';
+import ChartOfThingTimesActiveEachDay from './ChartOfThingTimesActiveEachDay';
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import IconButton from '@material-ui/core/IconButton';
-
 // Icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
 // Redux stuff
 import { connect } from 'react-redux';
 import { getAllDataSetsUserDevice } from '../../../redux/actions/dataSetsActions';
@@ -59,6 +57,11 @@ class DataSetsDialogToCharts extends Component {
         // component props and redux props
         const {
             classes,
+            userDevice:{
+                device:{
+                    nameOfDevice
+                }
+            },
             dataSets,
             ui: { loading }
         } = this.props; 
@@ -68,7 +71,6 @@ class DataSetsDialogToCharts extends Component {
                 {/* Open button */}
                 <IconButton onClick={this.handleOpen} 
                     tip="Expand scream" 
-                    tipClassName={classes.expandButton}
                 >
                     <MoreVertIcon />
                 </IconButton>
@@ -81,11 +83,15 @@ class DataSetsDialogToCharts extends Component {
                     TransitionComponent={Transition}
                     scroll="body"
                 >    
-                    {/* <TitleToDialogUserDevice 
-                        onClose={this.handleClose} 
-                        nameofdevice={nameOfDevice} 
-                        agerate={ageRate} 
-                    />   */}
+                    {/* title of dialog */}
+                    <TitleToDataSetsDialogToCharts 
+                        onClose={this.handleClose} s
+                        nameofdevice={nameOfDevice}
+                    />  
+                    {/* charts of times active */}
+                    <ChartOfThingTimesActive datasets={dataSets}/>
+                    {/* charts of times active each month */}
+                    <ChartOfThingTimesActiveEachDay datasets={dataSets}/>
                 </Dialog>        
             </Fragment>   
         )
@@ -94,6 +100,7 @@ class DataSetsDialogToCharts extends Component {
 
 const mapStateToProps = (state) => ({
     ui: state.ui,
+    userDevice: state.userDevices1.userDevice,
     dataSets: state.dataSets1.dataSets
 })
 

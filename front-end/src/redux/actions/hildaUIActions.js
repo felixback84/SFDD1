@@ -6,6 +6,10 @@ import {
     LOADING_GET_EVENTS_FROM_HILDA_THING
 } from '../types';
 
+ // dayjs
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
 // axios
 import axios from 'axios';
 
@@ -97,5 +101,55 @@ export const hildaPostColorCommand = (thingId, colorValue) => (dispatch) => {
         //         payload: err.response.data
         //     })
         // });
+}
+
+// declarate a function to get data from db liveDataSets
+export const chartCounterOffActiveTimes = async (userDeviceId) => {
+    //dispatch({ type: LOADING_UI });
+    // query filter
+    const doc = await firebase
+        .firestore()
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('dataSets')
+        .orderBy('createdAt', 'desc')
+        .where('active', '==', 'true')
+        .get()
+    // var to hold equal values
+    let equalValues = [];
+    // counter
+    let counter = 0;
+    // for each of the result of the query
+    doc.forEach(doc => {
+        let dayJs = dayjs(doc.data().createdAt).fromNow();
+        // print
+        console.log(`Result of dayjs: ${dayJs}`);
+        // push data to array
+        equalValues.push(
+            dayJs
+        )
+        counter ++;
+    });  
+    // print
+    console.log(`Result of equalValues: ${equalValues}`);
+
+    //function to find repeat values
+    let findDuplicates = (arr) => arr.filter((item, index) => arr.indexOf(item) != index);
+    // run it
+    let newUniques = findDuplicates(equalValues);
+
+    // loop
+    // let counter;
+    // for(let item  of newUniques){
+    //     counter = 0;
+    //     counter ++;
+    // }
+    // print
+    console.log(`result of function with firebase: ${counter} - ${newUniques}`);
+
+    // dispatch
+    // dispatch({  
+    //     type: GET_EVENTS_FROM_HILDA_THING,
+    //     payload: resultDB
+    // });
 }
 
