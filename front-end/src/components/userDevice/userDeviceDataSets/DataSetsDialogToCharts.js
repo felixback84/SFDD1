@@ -58,6 +58,7 @@ class DataSetsDialogToCharts extends Component {
         const {
             classes,
             userDevice:{
+                userDeviceId,
                 device:{
                     nameOfDevice
                 }
@@ -91,7 +92,10 @@ class DataSetsDialogToCharts extends Component {
                     {/* charts of times active */}
                     <ChartOfThingTimesActive datasets={dataSets}/>
                     {/* charts of times active each month */}
-                    <ChartOfThingTimesActiveEachDay datasets={dataSets}/>
+                    <ChartOfThingTimesActiveEachDay 
+                        datasets={dataSets} 
+                        userdeviceid={userDeviceId}
+                    />
                 </Dialog>        
             </Fragment>   
         )

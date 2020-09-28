@@ -29,7 +29,7 @@ class HildaUI extends Component {
 
 // redux state
 const mapStateToProps = (state) => ({
-    thingData : state.hildaThing1.thingData, 
+    thingLiveDataSets : state.hildaThing1.thingLiveDataSets, 
 })
 
 //export default Device;

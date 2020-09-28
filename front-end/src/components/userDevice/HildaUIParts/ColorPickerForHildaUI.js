@@ -27,7 +27,7 @@ class ColorPickerForHildaUI extends Component {
             this.props.thingid, {
                 colorValue:{
                     r: this.state.colorValue.r,
-                    g: this.state.colorValue.g,
+                    g: this.state.colorValue.g, 
                     b: this.state.colorValue.b,
                 }
             }
@@ -46,7 +46,7 @@ class ColorPickerForHildaUI extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    colorValue: state.hildaThing1.thingData.colorValue,
+    colorValue: state.hildaThing1.thingLiveDataSets.colorValue,
 })
 
 export default connect(mapStateToProps, {hildaPostColorCommand})(ColorPickerForHildaUI);

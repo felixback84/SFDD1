@@ -75,7 +75,7 @@ class SliderForMotorHildaUI extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    motorSpeed: state.hildaThing1.thingData.motorSpeed
+    motorSpeed: state.hildaThing1.thingLiveDataSets.motorSpeed
 })
 
 //export default Device;

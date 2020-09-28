@@ -5,7 +5,7 @@ import { Line } from 'react-chartjs-2';
 import withStyles from '@material-ui/core/styles/withStyles';
 // redux
 import { connect } from 'react-redux';
-import { chartCounterOffActiveTimes } from '../../../redux/actions/hildaUIActions';
+import { chartCounterOfActiveTimes } from '../../../redux/actions/hildaUIActions';
 
 
 //styles
@@ -14,42 +14,44 @@ const styles = (theme) => ({
 });
 
 // function to get data from dataSets
-class ChartOfThingTimesActive extends Component {
+class ChartOfThingTimesActiveEachDay extends Component {
 
     componentWillMount(){
-        chartCounterOffActiveTimes('mggbCoK1pihIqDJzJf3T');
+        chartCounterOfActiveTimes(this.props.userdeviceid);
     }
 
     render(){
-        // funtion to create the object to char.js
-        // const dataDateToGraphics = () => {
-        //     let data = {
-        //         labels: uniques, 
-        //         datasets:[
-        //             {
-        //                 label: "Active",
-        //                 data: counter
-        //             },
-        //         ]
-        //     }
-        //     // return object
-        //     return data;
-        // }
+        // props for graphics
+        const {
+            chart:{
+                counter, 
+                newUniques
+                }
+        } = this.props;
+        //funtion to create the object to char.js
+        const dataDateToGraphics = () => {
+            let data = {
+                labels: newUniques, 
+                datasets:[
+                    {
+                        label: "Active",
+                        data: counter
+                    },
+                ]
+            }
+            // return object
+            return data;
+        }
         return (
-            // <Line data={dataDateToGraphics}></Line>
-            <div>
-                hi
-            </div>
+            <Line data={dataDateToGraphics}></Line>
         )
-
-        
     }
 }
 
 const mapStateToProps = (state) => ({
     ui: state.ui,
-    
+    charts: state.hildaThing1.charts
+
 })
 
-//export default (withStyles(styles)(ChartOfThingTimesActive));
-export default connect(mapStateToProps,{chartCounterOffActiveTimes})(ChartOfThingTimesActive);
+export default connect(mapStateToProps,{chartCounterOfActiveTimes})(ChartOfThingTimesActiveEachDay);

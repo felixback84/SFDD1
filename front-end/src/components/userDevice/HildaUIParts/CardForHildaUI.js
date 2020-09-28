@@ -161,7 +161,7 @@ class CardForHildaUI extends Component {
 // redux state
 const mapStateToProps = (state) => ({
     userDevice: state.userDevices1.userDevice,
-    thingData: state.hildaThing1.thingData
+    thingLiveDataSets: state.hildaThing1.thingLiveDataSets
 })
 
 export default connect(mapStateToProps,{getUserDevice})(withStyles(styles)(CardForHildaUI));

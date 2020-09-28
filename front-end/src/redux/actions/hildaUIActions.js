@@ -2,8 +2,14 @@
 import {
     LOADING_UI,
     STOP_LOADING_UI,
+    LOADING_GET_EVENTS_FROM_HILDA_THING,
+    SET_ERRORS,
     GET_EVENTS_FROM_HILDA_THING,
-    LOADING_GET_EVENTS_FROM_HILDA_THING
+    POST_ACTIVE_COMMAND_HILDA_THING,
+    POST_INACTIVE_COMMAND_HILDA_THING,
+    POST_COLOR_COMMAND_HILDA_THING,
+    POST_MOTOR_SPEED_COMMAND_HILDA_THING,
+    GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY
 } from '../types';
 
  // dayjs
@@ -45,14 +51,17 @@ export const hildaPostActiveCommand = (thingId, activeValue) => (dispatch) => {
     axios
         .post(`/device/hilda/${thingId}/active`, activeValue)
         .then((res) => {            
-            
+            dispatch({ 
+                type: POST_ACTIVE_COMMAND_HILDA_THING,
+                payload: res.data
+            })
         })
-        // .catch(err => {
-        //     dispatch({ 
-        //         type: SET_ERRORS,
-        //         payload: err.response.data
-        //     })
-        // });
+        .catch(err => {
+            dispatch({ 
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
 }    
 
 // function to post inactive command to things
@@ -61,15 +70,36 @@ export const hildaPostInactiveCommand = (thingId, inactiveValue) => (dispatch) =
     axios
         .post(`/device/hilda/${thingId}/inactive`, inactiveValue)
         .then((res) => {            
-            
+            dispatch({ 
+                type: POST_INACTIVE_COMMAND_HILDA_THING,
+                payload: res.data
+            })
         })
-        // .catch(err => {
-        //     dispatch({ 
-        //         type: SET_ERRORS,
-        //         payload: err.response.data
-        //     })
-        // });
+        .catch(err => {
+            dispatch({ 
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
 } 
+// function to post color command with the data to device
+export const hildaPostColorCommand = (thingId, colorValue) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post(`/device/hilda/${thingId}/color`, colorValue)
+        .then((res) => {            
+            dispatch({ 
+                type: POST_COLOR_COMMAND_HILDA_THING,
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            dispatch({ 
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+}
 
 // function to post motor speed command to things
 export const hildaPostMotorSpeedCommand = (thingId, speedValue) => (dispatch) => {
@@ -77,35 +107,22 @@ export const hildaPostMotorSpeedCommand = (thingId, speedValue) => (dispatch) =>
     axios
         .post(`/device/hilda/${thingId}/motorSpeed`, speedValue)
         .then((res) => {            
-            
+            dispatch({ 
+                type: POST_MOTOR_SPEED_COMMAND_HILDA_THING,
+                payload: res.data
+            })
         })
-        // .catch(err => {
-        //     dispatch({ 
-        //         type: SET_ERRORS,
-        //         payload: err.response.data
-        //     })
-        // });
+        .catch(err => {
+            dispatch({ 
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
 } 
 
-// function to post color command with the data to device
-export const hildaPostColorCommand = (thingId, colorValue) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
-    axios
-        .post(`/device/hilda/${thingId}/color`, colorValue)
-        .then((res) => {            
-            
-        })
-        // .catch(err => {
-        //     dispatch({ 
-        //         type: SET_ERRORS,
-        //         payload: err.response.data
-        //     })
-        // });
-}
-
 // declarate a function to get data from db liveDataSets
-export const chartCounterOffActiveTimes = async (userDeviceId) => {
-    //dispatch({ type: LOADING_UI });
+export const chartCounterOfActiveTimes = async (userDeviceId, dispatch) =>  {
+    dispatch({ type: LOADING_UI });
     // query filter
     const doc = await firebase
         .firestore()
@@ -116,8 +133,6 @@ export const chartCounterOffActiveTimes = async (userDeviceId) => {
         .get()
     // var to hold equal values
     let equalValues = [];
-    // counter
-    let counter = 0;
     // for each of the result of the query
     doc.forEach(doc => {
         let dayJs = dayjs(doc.data().createdAt).fromNow();
@@ -127,29 +142,24 @@ export const chartCounterOffActiveTimes = async (userDeviceId) => {
         equalValues.push(
             dayJs
         )
-        counter ++;
     });  
     // print
     console.log(`Result of equalValues: ${equalValues}`);
-
     //function to find repeat values
     let findDuplicates = (arr) => arr.filter((item, index) => arr.indexOf(item) != index);
     // run it
     let newUniques = findDuplicates(equalValues);
-
-    // loop
-    // let counter;
-    // for(let item  of newUniques){
-    //     counter = 0;
-    //     counter ++;
-    // }
+    // counter
+    let counter = newUniques.length;
     // print
     console.log(`result of function with firebase: ${counter} - ${newUniques}`);
-
     // dispatch
-    // dispatch({  
-    //     type: GET_EVENTS_FROM_HILDA_THING,
-    //     payload: resultDB
-    // });
+    dispatch({  
+        type: GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY,
+        payload: {
+            counter, 
+            newUniques
+        }
+    });
 }
 

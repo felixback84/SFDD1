@@ -87,7 +87,7 @@ class SwitchForActiveCommandHildaUI extends Component {
 }
 // state in redux
 const mapStateToProps = (state) => ({
-    active: state.hildaThing1.thingData.active
+    active: state.hildaThing1.thingLiveDataSets.active
 })
 // redux actions to props
 const mapActionsToProps = {
