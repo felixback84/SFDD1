@@ -90,7 +90,7 @@ const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
 // The mqttClientId is a unique string that identifies this device. For Google
 // Cloud IoT Core, it must be in the format below.
 const mqttClientId = `projects/${projectId}/locations/${region}/registries/${registryId}/devices/${deviceId}`;
-
+ 
 // With Google Cloud IoT Core, the username field is ignored, however it must be
 // non-empty. The password field is used to transmit a JWT to authorize the
 // device. The "mqtts" protocol causes the library to connect using SSL, which

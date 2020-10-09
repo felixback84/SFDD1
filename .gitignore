@@ -4,3 +4,8 @@ devices/Halo/node_modules
 devices/Hilda/node_modules
 devices/Halo/rsa_cert.pem
 devices/Halo/rsa_private.pem
+misc/py/venv
+devices/Esp-32/venv
+devices/Esp-32/utils/rsa_public.pem
+devices/Esp-32/utils/rsa_private.pem
+
