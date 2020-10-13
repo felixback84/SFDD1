@@ -14,11 +14,12 @@ import ntptime
 import ujson
 import config
 
+# network init
 sta_if = network.WLAN(network.STA_IF)
 led_pin = machine.Pin(config.device_config['led_pin'], Pin.OUT) #built-in LED pin
-led_pin.value(1)
+led_pin.value(2)
 
-# function to handle the receive  message, always show something about config topic
+# function to handle the receive message, always show something about config topic
 def on_message(topic, message):
     print((topic,message))
 
@@ -40,7 +41,7 @@ def set_time():
     machine.RTC().datetime(tm)
     print('current time: {}'.format(utime.localtime()))
 
-# 
+# encoder for the messages 
 def b42_urlsafe_encode(payload):
     return string.translate(b2a_base64(payload)[:-1].decode('utf-8'),{ ord('+'):'-', ord('/'):'_' })
 
@@ -60,7 +61,7 @@ def create_jwt(project_id, private_key, algorithm, token_ttl):
         # The audience field should always be set to the GCP project id.
         'aud': project_id
     }
-    #This only supports RS256 at this time.
+    # This only supports RS256 at this time.
     header = { "alg": algorithm, "typ": "JWT" }
     content = b42_urlsafe_encode(ujson.dumps(header).encode('utf-8'))
     content = content + '.' + b42_urlsafe_encode(ujson.dumps(claims).encode('utf-8'))
@@ -85,6 +86,7 @@ connect()
 # Need to be connected to the internet before setting the local RTC.
 set_time()
 
+# var to hold the jwt to pass it to the client
 jwt = create_jwt(config.google_cloud_config['project_id'], config.jwt_config['private_key'], config.jwt_config['algorithm'], config.jwt_config['token_ttl'])
 client = get_mqtt_client(config.google_cloud_config['project_id'], config.google_cloud_config['cloud_region'], config.google_cloud_config['registry_id'], config.google_cloud_config['device_id'], jwt)
 
@@ -94,11 +96,16 @@ while True:
         "device_id": config.google_cloud_config['device_id'],
         "temp": esp32.raw_temperature()
     }
+    # print message to publish
     print("Publishing message "+str(ujson.dumps(message)))
+    # built-in pin
     led_pin.value(2)
+    # topic to publish
     mqtt_topic = '/devices/{}/{}'.format(config.google_cloud_config['device_id'], 'events')
+    # publish to client
     client.publish(mqtt_topic.encode('utf-8'), ujson.dumps(message).encode('utf-8'))
-    led_pin.value(0)
+    # built-in pin
+    led_pin.value(2)
 
     client.check_msg() # Check for new messages on subscription
     utime.sleep(10)  # Delay for 10 seconds.

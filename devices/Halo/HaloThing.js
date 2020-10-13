@@ -65,7 +65,7 @@ const publishAsync = (mqttTopic, client) => {
         publishAsync(mqttTopic, client);
     }, 10000000);
 }
-
+ 
 // --------------------------------------------------------------------------- SUBSCRIBING
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
