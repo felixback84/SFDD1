@@ -5,14 +5,15 @@ device_config = {
 
 wifi_config = {
     'ssid':'Arquitectos L y L',
-    'password':'Lu2Ma1La1'
+    # 'password':'dejenderobarelwifi5656'
+    'password': 'Lu2Ma1La1'
 }
 
 google_cloud_config = {
     'project_id':'sfdd-d8a16',
     'cloud_region':'us-central1',
     'registry_id':'Hilda',
-    'device_id':'esp-32-test',
+    'device_id':'CarlosTal84-Hilda-mggbCoK1pihIqDJzJf3T',
     'mqtt_bridge_hostname':'mqtt.googleapis.com',
     'mqtt_bridge_port':8883
 }

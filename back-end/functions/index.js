@@ -375,7 +375,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // pick userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
         const thingId = obj.thingId;
         // print object
-        console.log(`obj: ${obj.createdAt} - ${thingId} - ${obj.lat} - ${obj.lon}`);
+        console.log(`obj: ${obj.createdAt} - ${thingId}`);
         // userDeviceId 
         const userDeviceId = thingId.split("-").slice(2);
         // nameOfDevice

@@ -3,14 +3,16 @@ exports.hildaPostActiveCommand = async (req, res) => {
     // req data
     const thingId = req.params.thingId;
     const activeValue = {...req.body};
+    //const activeValue = req.body.active;
     // print
     console.log(activeValue)
-    // to string
+    // to string 
     const string = JSON.stringify(activeValue);
     // global vars
     const cloudRegion = 'us-central1';
     const deviceId = thingId;
     const commandMessage = string;
+    // const commandMessage = activeValue;
     const projectId = 'sfdd-d8a16';
     const registryId = 'Hilda';
     // lib iot core

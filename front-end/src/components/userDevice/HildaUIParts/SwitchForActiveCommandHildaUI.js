@@ -42,11 +42,12 @@ class SwitchForActiveCommandHildaUI extends Component {
     };
     // handle change
     handleChange = (event) => {
-        this.setState({[event.target.name]: event.target.value});
+        this.setState({[event.target.name]: event.target.value}); 
     };
     // action to active thing
     activeThing = () => {
         const active = {active:'true'};
+        //const active = 'true';
         this.props.hildaPostActiveCommand(this.props.thingid, active);
     };
     // action to inactive thing

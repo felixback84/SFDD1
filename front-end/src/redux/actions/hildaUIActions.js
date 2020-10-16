@@ -41,7 +41,7 @@ export const hildaThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
         });
         dispatch({ type: STOP_LOADING_UI });
     }, err => {
-        console.log(`Encountered error: ${err}`);
+        console.log(`Encountered error: ${err}`); 
     });
 }
 

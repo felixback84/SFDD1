@@ -12,3 +12,4 @@ devices/Esp-32/README.md
 devices/Esp-32-GCloud-Mode/venv
 devices/Esp-32-GCloud-Mode/utils/rsa_public.pem
 devices/Esp-32-GCloud-Mode/utils/rsa_private.pem
+devices/Esp-32-GCloud-Mode/libs/jwt

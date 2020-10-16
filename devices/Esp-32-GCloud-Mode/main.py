@@ -1,12 +1,13 @@
 # [START iot_mqtt_includes]
-import argparse
-import datetime
-import logging
-import os
-import random
+# import argparse
+# import datetime
+# import logging
+# import os
+# import random
 import ssl
-import time
-import jwt
+# import time
+# import jwt
+from third_party import rsa
 import paho.mqtt.client as mqtt
 import config
 import network
@@ -39,26 +40,32 @@ def connect():
 connect() 
 # [END network init]    
 
-# [START iot_mqtt_jwt]
-def create_jwt(project_id, private_key_file, algorithm):
-    # token time
-    token = {
+# encoder for the messages 
+def b42_urlsafe_encode(payload):
+    return string.translate(b2a_base64(payload)[:-1].decode('utf-8'),{ ord('+'):'-', ord('/'):'_' })
+
+# creation of the jwt
+def create_jwt(project_id, private_key, algorithm, token_ttl):
+    print("Creating JWT...")
+    # the actual token
+    private_key = rsa.PrivateKey(*private_key)
+    # Epoch_offset is needed because micropython epoch is 2000-1-1 and unix is 1970-1-1. Adding 946684800 (30 years)
+    epoch_offset = 946684800
+    # duration
+    claims = {
         # The time that the token was issued at
-        'iat': datetime.datetime.utcnow(),
+        'iat': utime.time() + epoch_offset,
         # The time the token expires.
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20),
+        'exp': utime.time() + epoch_offset + token_ttl,
         # The audience field should always be set to the GCP project id.
         'aud': project_id
     }
-    # Read the private key file.
-    with open(private_key_file, 'r') as f:
-        private_key = f.read()
-    # print
-    print('Creating JWT using {} from private key file {}'.format(
-            algorithm, private_key_file))
-    # the actual token
-    return jwt.encode(token, private_key, algorithm=algorithm)
-# [END iot_mqtt_jwt]
+    # This only supports RS256 at this time.
+    header = { "alg": algorithm, "typ": "JWT" }
+    content = b42_urlsafe_encode(ujson.dumps(header).encode('utf-8'))
+    content = content + '.' + b42_urlsafe_encode(ujson.dumps(claims).encode('utf-8'))
+    signature = b42_urlsafe_encode(rsa.sign(content,private_key,'SHA-256'))
+    return content+ '.' + signature #signed JWT
 
 # [START iot_mqtt_config]
 # on error function
@@ -114,7 +121,8 @@ def get_client(
     mqtt_bridge_hostname = config.google_cloud_config['mqtt_bridge_hostname']
     mqtt_bridge_port = config.google_cloud_config['mqtt_bridge_port']
     algoritm = config.jwt_config['algorithm']
-    private_key_file = './utils/rsa_public.pem'
+    private_key_file = config.jwt_config['private_key']
+    token_ttl = config.jwt_config['token_ttl']
 
     # url client_id
     client_id = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
@@ -130,7 +138,7 @@ def get_client(
     client.username_pw_set(
             username='unused',
             password=create_jwt(
-                    project_id, private_key_file, algorithm))
+                    project_id, private_key_file, algorithm, token_ttl))
             
     # Enable SSL/TLS support.
     client.tls_set(ca_certs=ca_certs, tls_version=ssl.PROTOCOL_TLSv1_2)

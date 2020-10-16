@@ -81,7 +81,7 @@ class CardForHildaUI extends Component {
         // redux state
         const {
             classes,
-            thingData:{
+            thingLiveDataSets:{
                 active,
                 createdAt,
                 colorValue,
