@@ -4,9 +4,10 @@ device_config = {
 }
 
 wifi_config = {
-    'ssid':'Arquitectos L y L',
-    # 'password':'dejenderobarelwifi5656'
-    'password': 'Lu2Ma1La1'
+    #'ssid':'Arquitectos L y L',
+    'ssid':'cb40',
+    'password':'dejenderobarelwifi5656'
+    #'password': 'Lu2Ma1La1'
 }
 
 google_cloud_config = {

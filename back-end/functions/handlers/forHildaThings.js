@@ -1,3 +1,6 @@
+// firebase
+const { db } = require('../utilities/admin');
+
 // post active command in hild things
 exports.hildaPostActiveCommand = async (req, res) => {
     // req data
@@ -90,6 +93,27 @@ exports.hildaPostInactiveCommand = async (req, res) => {
         console.error('Could not send command:', err);
         res.json(err)
     }
+
+    // reset some values on liveDataSets to initial states 
+    db
+        .doc(`/liveDataSets/${deviceId}`)
+        .get()
+        .then((doc) => {
+            return doc.ref.update(
+                { 
+                    colorValues:{
+                        r:0,
+                        g:0,
+                        b:0
+                    },
+                    motorSpeed: 0
+                }
+            )
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
 }
 
 // post motor speed command in hilda device

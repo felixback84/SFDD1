@@ -394,3 +394,6 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             }) 
     }
 )
+
+
+
