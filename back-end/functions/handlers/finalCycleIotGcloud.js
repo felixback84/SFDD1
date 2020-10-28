@@ -5,7 +5,7 @@ exports.createDeviceInIotCore = (req, res) => {
     // var to firebase consult
     const userDeviceId = req.params.userDeviceId
     // var for hold id of device
-    let deviceId = "";
+    let deviceId = ""; 
     // var project id
     const projectId = 'sfdd-d8a16';
 
@@ -89,6 +89,40 @@ exports.createDeviceInIotCore = (req, res) => {
                     }
                     createDeviceToHilda(projectId ,deviceId).catch(console.error);;
                     break;
+                case 'Heartbeat': 
+                    //////////////////////////////////////////////////////////////////// CREATION OF HILDA DEVICE
+                    async function createDeviceToHeartbeat(projectId ,deviceId) {
+                        // client library
+                        const iot = require('@google-cloud/iot');
+                        // instantiate client
+                        const client = new iot.v1.DeviceManagerClient();
+                        // gcloud vars
+                        const Location = 'us-central1';
+                        const nameOfRegistryToDevice = 'Heartbeat';
+                        // create the device in the path
+                        const regPath = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
+                        // The device id, and in general the device information that you want to send
+                        const heartbeatDevice = {
+                            id: deviceId,
+                        } 
+                        // all the info for the creation of the device
+                        const heartbeatRequest = {
+                            parent: regPath,
+                            device: heartbeatDevice
+                        };
+                        // run the main method
+                        const [device] = await client.createDevice(heartbeatRequest);
+                        // console to check
+                        console.log(`Response for createDeviceToHeartbeat: ${device.name} created.`);
+                        // var to hold device name
+                        const heartbeatDeviceName = device.name;
+                        //res
+                        res.json(heartbeatDeviceName);
+                        // show all
+                        console.log(heartbeatDeviceName);
+                    }
+                    createDeviceToHeartbeat(projectId ,deviceId).catch(console.error);;
+                    break;    
                 case 'default':
                     null
                 }               

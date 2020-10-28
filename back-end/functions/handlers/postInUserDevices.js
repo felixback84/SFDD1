@@ -8,7 +8,7 @@ exports.postInUserDevices = (req, res) => {
         userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
         active: false,
-        thingId: ''
+        thingId: '' 
     };
 
     // object to hold all info, newUserDevice, deviceData
