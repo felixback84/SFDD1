@@ -408,7 +408,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         thingId: doc.data().thingId,
                         coords:{
                             lat: doc.data().coords.lat,
-                            lon: doc.data().coords.lon
+                            lon: doc.data().coords.lon,
                         }
                     }
                     // print
