@@ -5,13 +5,13 @@ const mqtt = require('mqtt');
 const csvParser = require('csv-parser');
 
 // device id
-const heartbeatThingId = 'CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ';
+const heartbeatThingId = 'catjPuj-Heartbeat-IoVMbxEtp7iSsfOwzk4l';
 // say hi to my little friend
 console.log(`HEARTBEAT_THING: ${heartbeatThingId} ---> ACTIVATED`);
 
 // ----------------------------------------------------------------------------- read coords from file part 
 // filepath
-const filepath = './coordsH1.csv'
+const filepath = './coordsH2.csv'
 
 // global vars to pass data to publish func
 let obj = [];
@@ -155,96 +155,7 @@ fs
         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     })
 
-// // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
-// const createJwt = (projectId, privateKeyFile, algorithm) => {
-//     // Create a JWT to authenticate this device
-//     const token = {
-//         iat: parseInt(Date.now() / 1000),
-//         exp: parseInt(Date.now() / 1000) + 20 * 60, // 20 minutes
-//         aud: projectId
-//     };
-//     const privateKey = fs.readFileSync(privateKeyFile);
-//     return jwt.sign(token, privateKey, {algorithm: algorithm});
-// };    
 
-// // ------------------------------------------------------------------------------ SUBSCRIBING
-// // Arguments of the google cloud platform
-// const projectId = `sfdd-d8a16`;
-// const deviceId = heartbeatThingId;
-// const registryId = `Heartbeat`; 
-// const region = `us-central1`;
-// const algorithm = `RS256`;
-// const privateKeyFile = `./rsa_private.pem`;
-// const mqttBridgeHostname = `mqtt.googleapis.com`;
-// const mqttBridgePort = 8883;
-
-// // The MQTT topic that this device will publish data to
-// const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
-// const MQTT_TOPIC_TO_CONFIG = `/devices/${deviceId}/config`;
-// const MQTT_TOPIC_TO_COMMANDS = `/devices/${deviceId}/commands`;
-// const MQTT_TOPIC_TO_STATE = `/devices/${deviceId}/state`;
-
-// // The mqttClientId 
-// const mqttClientId = `projects/${projectId}/locations/${region}/registries/${registryId}/devices/${deviceId}`;
-
-// // Args to talk with Google Cloud IoT Core
-// const connectionArgs = {
-//     host: mqttBridgeHostname, 
-//     port: mqttBridgePort,
-//     clientId: mqttClientId,
-//     username: 'unused',
-//     password: createJwt(projectId, privateKeyFile, algorithm),
-//     protocol: 'mqtts',
-//     secureProtocol: 'TLSv1_2_method',
-// };
-
-// // Create a client, and connect to the Google MQTT bridge.
-// const client = mqtt.connect(connectionArgs);
-// // Subscribe to the /devices/{device-id}/config topic to receive config updates.
-// client.subscribe(MQTT_TOPIC_TO_CONFIG, {qos: 1});
-// // Subscribe to the /devices/{device-id}/commands/# topic to receive all commands
-// client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
-// // The topic name must end in 'state' to publish state
-// client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
-// // The topic name must end in 'events' to publish state
-// client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
-
-// // Handle the connection event
-// client.on('connect', success => {
-//     console.log('connect');
-//     if (!success) {
-//         console.log('Client not connected...');
-//     } else {
-//         //publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
-//     }
-// });
-
-// // Handle the closing connection event
-// client.on('close', () => {
-//     console.log('close');
-// });
-
-// // Handle the error event
-// client.on('error', err => {
-//     console.log('error', err);
-// });
-
-// // Handle the message event 
-// client.on('message', (topic, message) => {
-//     let messageStr = 'Message received: ';
-//     if (topic === MQTT_TOPIC_TO_CONFIG) {
-//         messageStr = 'Config message received: ';
-//     } else if (topic.startsWith(MQTT_TOPIC_TO_COMMANDS)) {
-//         messageStr = 'Command message received: ';
-//     } else if (topic.startsWith(MQTT_TOPIC_TO_STATE)) {
-//         messageStr = 'State message received: ';
-//     } else if (topic.startsWith(MQTT_TOPIC_TO_TELEMETRY)) {
-//         messageStr = 'Telemetry message received: ';
-//     }
-//     messageStr += Buffer.from(message, 'base64').toString('ascii');
-//     // print
-//     console.log(messageStr);
-// });
 
 
 

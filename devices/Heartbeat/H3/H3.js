@@ -5,13 +5,13 @@ const mqtt = require('mqtt');
 const csvParser = require('csv-parser');
 
 // device id
-const heartbeatThingId = 'CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ';
+const heartbeatThingId = 'Capeto85-Heartbeat-Zhiu9bjYV4WvUl2GjKVE';
 // say hi to my little friend
 console.log(`HEARTBEAT_THING: ${heartbeatThingId} ---> ACTIVATED`);
 
 // ----------------------------------------------------------------------------- read coords from file part 
 // filepath
-const filepath = './coordsH1.csv'
+const filepath = './coordsH3.csv'
 
 // global vars to pass data to publish func
 let obj = [];
