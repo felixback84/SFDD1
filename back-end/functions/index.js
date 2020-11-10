@@ -88,9 +88,9 @@ const {
 } = require('./handlers/forHildaThings');
 
 // gps
-// const {
-//     detectGPSCoordsProximityRange
-// } = require('./handlers/forHeartBeat');
+const {
+    detectGPSCoordsProximityRange
+} = require('./handlers/forHeartBeat');
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
 // signup user
@@ -387,150 +387,30 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // print 
         console.log(`nameOfDevice: ${nameOfDevice}`);
         console.log(`userDeviceId: ${userDeviceId}`);
-
         //db part
         let dbDataFromLiveDataSets = db
             .doc(`/userDevices/${userDeviceId}`)
             .collection('liveDataSets')
             .doc(thingId)
-        
+        // update specific db doc
         dbDataFromLiveDataSets
             .update({
                 ...obj
             }) 
-            //*************** */ until here the message bus part to specific db doc
-            return dbDataFromLiveDataSets
-                .get()
-                .then((doc)=>{ 
-                    ////////////////////////////////////////// extract asap the data from the coords in the message from the user in line
-                    // coords
-                    let dataInDBDoc = {
-                        thingId: doc.data().thingId,
-                        coords:{
-                            lat: doc.data().coords.lat,
-                            lon: doc.data().coords.lon,
-                        }
-                    }
-                    // print
-                    console.log(`coords.lat: ${dataInDBDoc.coords.lat}, coords.thingId: ${dataInDBDoc.thingId}`); 
-                    //////////////////////////////////////////////////////////////// to the rest of users
-                    // var to hold coors object in an array
-                    let coordsInLiveDataSets = []
-                    // list top 5
-                    let top5Coord = []
-                    // observer group collection part
-                    db
-                        .collectionGroup('liveDataSets')
-                        .where('thingId', '!=', thingId)
-                        //.where('active', '==', "false")
-                        .get()
-                        .then((querySnapshot) => {
-                            // Do something with these reviews!
-                            querySnapshot.forEach((doc) => {
-                                coordsInLiveDataSets.push({
-                                    coords: doc.data().coords,
-                                    thingId: doc.data().thingId
-                                })
-                            })
-                            // print
-                            console.log(`coordsInLiveDataSets: ${coordsInLiveDataSets.length}`); // [object Object]
-                            console.log(JSON.stringify(coordsInLiveDataSets)); // [object Object]
-                            
-                        })
-                        ///////////////////////////////////////////////////////////////////////////////////// measure part
-                        // .then(()=>{
-                        //     // loop the results on the array
-                        //     for(let i = 0; i < coordsInLiveDataSets.length; i++){
-                        //         // measure distance GPS func
-                        //         const checkDistance = (args) => {
-                        //             let R = 6371; // Radius of the earth in km
-                        //             let dLat = (args.coords.lat2-args.coords.lat1).toRad();  // Javascript functions in radians
-                        //             let dLon = (args.coords.lon2-args.coords.lon1).toRad(); 
-                        //             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                        //                     Math.cos(args.coords.lat1.toRad()) * Math.cos(args.coords.lat2.toRad()) * 
-                        //                     Math.sin(dLon/2) * Math.sin(dLon/2); 
-                        //             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                        //             let d = R * c; // Distance in km
-                        //             let distanceInMeters = d * 100; // Distance in mts
-                                    
-                        //             // make the array with the must close coords
-                        //             if(distanceInMeters <= 5) {
-                        //                 top5Coord.push({
-                        //                     thingId: args.thingId, 
-                        //                     coords: args.coords,
-                        //                     meters: d
-                        //                 })
-                        //             } else if(distanceInMeters <= 10) {
-                        //                 top5Coord.push({
-                        //                     thingId: args.thingId, 
-                        //                     coords: args.coords,
-                        //                     meters: d
-                        //                 })
-                        //             }else if(distanceInMeters <= 15) {
-                        //                 top5Coord.push({
-                        //                     thingId: args.thingId, 
-                        //                     coords: args.coords,
-                        //                     meters: d
-                        //                 })
-                        //             }else if(distanceInMeters <= 20) {
-                        //                 top5Coord.push({
-                        //                     thingId: args.thingId, 
-                        //                     coords: args.coords,
-                        //                     meters: d
-                        //                 })
-                        //             }else if(distanceInMeters <= 25) {
-                        //                 top5Coord.push({
-                        //                     thingId: args.thingId, 
-                        //                     coords: args.coords,
-                        //                     meters: d
-                        //                 })
-                        //             }
-                        //             // print
-                        //             console.log(`top5Coord: ${top5Coord}`);
-                        //         }
-            
-                        //         /** Converts numeric degrees to radians */
-                        //         if (typeof(Number.prototype.toRad) === "undefined") {
-                        //                 Number.prototype.toRad = function() {
-                        //                 return this * Math.PI / 180;
-                        //             }
-                        //         }
-            
-                        //         // user whait for answer
-                        //         let latUserInLine = coords.lat;
-                        //         let lonUserInLine = coords.lon;
-            
-                        //         // user whait for answer
-                        //         let latArrayCoordsInDB = coordsInLiveDataSets[i].coords.lat;
-                        //         let lonArrayCoordsInDB = coordsInLiveDataSets[i].coords.lon;
-            
-                        //         // data to pass
-                        //         let args = {
-                        //             coords:{
-                        //                 lon1:lonUserInLine, 
-                        //                 lat1:latUserInLine, 
-                        //                 lon2:lonArrayCoordsInDB, 
-                        //                 lat2:latArrayCoordsInDB
-                        //             },
-                        //             thingId:thingId
-                        //         }
-            
-                        //         // print
-                        //         console.log(
-                        //             'hi distance:' + checkDistance(args)
-                        //         );
-                        //     }
-                        // // send feedback to waiting response user
-                        
-                        // })
-                        // .catch((err) => {
-                        //     console.error(err);
-                        // });
-                        
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+        
+        // init process to make the meassures of the gps coords in heartbeat things
+        return dbDataFromLiveDataSets
+        .get()    
+        .then((doc)=>{
+            let dataDB = doc.data()
+            // run it
+            detectGPSCoordsProximityRange(dataDB);  
+        })
+        .catch((err) => {
+            console.error(err);
+        });
     })
+
+    
 
 
