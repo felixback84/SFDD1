@@ -44,16 +44,17 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
         .then(()=>{
             // meassure gps coords of all the users involve
             // loop the results on the array
+            // vars to hold 
+            let counterGreen5Mts = 0, counterYellow10Mts = 0, counterRed15Mts = 0, counterFucsia20Mts = 0, counterBlue25Mts = 0
+
             for(let i = 0; i < coordsInLiveDataSets.length; i++){
                 function checkDistance(args){
                     // print
                     console.log(`args.coords: ${args.coords}`)
-                    console.log(`args: ${JSON.stringify(args)}`) ///////////--------------> hasta aca
+                    console.log(`args: ${JSON.stringify(args)}`) 
 
                     // logic to make the meassure part
                     let R = 6371; // Radius of the earth in km
-                    // let dLat = (args.coords.lat2 - args.coords.lat1).toRad();  // Javascript functions in radians
-                    // let dLon = (args.coords.lon2 - args.coords.lon1).toRad(); 
                     let dLat = (args.coords.lat2 - args.coords.lat1) * Math.PI / 180;  // Javascript functions in radians
                     let dLon = (args.coords.lon2 - args.coords.lon1) * Math.PI / 180; 
                     let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -67,58 +68,49 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     console.log(`distanceInMeters: ${distanceInMeters}`)
 
                     // make the array with the must close coords
-                    if(distanceInMeters <= 5) {
+                    if(distanceInMeters <= 25) {
                         top5Coord.push({
                             thingId: args.thingId, 
                             coords: args.coords,
                             meters: distanceInMeters
-                        })
-                        
-                    } else if(distanceInMeters <= 10) {
-                        top5Coord.push({
-                            thingId: args.thingId, 
-                            coords: args.coords,
-                            meters: distanceInMeters
-                        })
-                        
-                    } else if(distanceInMeters <= 15) {
-                        top5Coord.push({
-                            thingId: args.thingId, 
-                            coords: args.coords,
-                            meters: distanceInMeters
-                        })
-                        
-                    } else if(distanceInMeters <= 20) {
-                        top5Coord.push({
-                            thingId: args.thingId, 
-                            coords: args.coords,
-                            meters: distanceInMeters
-                        })
-                    
-                    } else if(distanceInMeters <= 25) {
-                        top5Coord.push({
-                            thingId: args.thingId, 
-                            coords: args.coords,
-                            meters: distanceInMeters
-                        })
-                        
+                        }) 
                     }
+                    // // vars to hold 
+                    // let counterGreen5Mts, counterGreen10Mts, counterGreen15Mts, counterGreen20Mts, counterGreen25Mts
+                    
+                    // function to count user in the range
+                    function metersRangeCounter(meters){
+                        if(meters >= 0 && meters <= 5){
+                            //counterGreen5Mts = 0
+                            counterGreen5Mts++
+                            console.log(`counterGreen5Mts: ${counterGreen5Mts}`)
+                        } else if (meters >= 5.1 && meters <= 10){
+                            // counterGreen10Mts = 0
+                            counterYellow10Mts++
+                            console.log(`counterYellow10Mts: ${counterYellow10Mts}`)
+                        } else if (meters >= 10.1 && meters <= 15){
+                            //counterGreen15Mts = 0
+                            counterRed15Mts++
+                            console.log(`counterRed15Mts: ${counterRed15Mts}`)
+                        } else if (meters >= 15.1 && meters <= 20){
+                           //counterGreen20Mts = 0
+                            counterFucsia20Mts++
+                            console.log(`counterFucsia20Mts: ${counterFucsia20Mts}`)
+                        } else if (meters >= 20.1 && meters <= 25){
+                            //counterGreen25Mts = 0
+                            counterBlue25Mts++
+                            console.log(`counterBlue25Mts: ${counterBlue25Mts}`)
+                        }    
+                    }
+                    // run it
+                    metersRangeCounter(distanceInMeters)    
                 }
 
-                // Converts numeric degrees to radians */
-                if (typeof(Number.prototype.toRad) === "undefined") {
-                        Number.prototype.toRad = function() {
-                        return this * Math.PI / 180;
-                    }
-                } 
-                
-                // vars the user in line data
-                // let latUserInLine = coordsInLiveDataSets[Math.floor(Math.random() * coordsInLiveDataSets.length)].coords.lat;
-                // let lonUserInLine = coordsInLiveDataSets[Math.floor(Math.random() * coordsInLiveDataSets.length)].coords.lon;
+                // user whait for answer
                 let latUserInLine = dataInDBDoc.coords.lat;
                 let lonUserInLine = dataInDBDoc.coords.lon;
 
-                // user whait for answer
+                // other users
                 let latArrayCoordsInDB = coordsInLiveDataSets[i].coords.lat;
                 let lonArrayCoordsInDB = coordsInLiveDataSets[i].coords.lon;
                 let thingIdCloseUser = coordsInLiveDataSets[i].thingId;
@@ -134,7 +126,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     thingId:thingIdCloseUser
                 }
                 // run it
-                checkDistance(argz)
+                checkDistance(argz) 
             }
             // print result
             console.log(`top5CoordLast: ${JSON.stringify(top5Coord)}`);

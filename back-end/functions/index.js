@@ -397,7 +397,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             .update({
                 ...obj
             }) 
-        
+        ///////////////////////////////////////////////////////////////////////////////////////////////// ojo
         // init process to make the meassures of the gps coords in heartbeat things
         return dbDataFromLiveDataSets
         .get()    
