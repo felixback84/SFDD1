@@ -399,16 +399,18 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             }) 
         ///////////////////////////////////////////////////////////////////////////////////////////////// ojo
         // init process to make the meassures of the gps coords in heartbeat things
-        return dbDataFromLiveDataSets
-        .get()    
-        .then((doc)=>{
-            let dataDB = doc.data()
-            // run it
-            detectGPSCoordsProximityRange(dataDB);  
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+        if(nameOfDevice == "Heartbeat"){
+            return dbDataFromLiveDataSets
+                .get()    
+                .then((doc)=>{
+                    let dataDB = doc.data()
+                    // run it
+                    detectGPSCoordsProximityRange(dataDB);  
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
     })
 
     

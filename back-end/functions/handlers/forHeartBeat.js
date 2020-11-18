@@ -1,26 +1,29 @@
 // firebase
 const { db } = require('../utilities/admin');
 
+// to measure the distance between user
 exports.detectGPSCoordsProximityRange = (inWait) => {
     
     // var to hold coors object in an array
     let coordsInLiveDataSets = [];
     // list top 5
-    let top5Coord = [];
+    let top5Coords = [];
+
     // print
-    console.log(`inWait.coords: ${inWait.coords}`)
-    console.log(`inWait: ${JSON.stringify(inWait)}`)
+    console.log(`inWait.coords to message coords inline: ${inWait.coords}`)
+    console.log(`inWait to the entire message inline: ${JSON.stringify(inWait)}`)
     
     // coords of the user inline
     let dataInDBDoc = {
         thingId: inWait.thingId,
-        coords:{
-            lat: inWait.coords.lat,
-            lon: inWait.coords.lon
-        }
+        coords: inWait.coords,
+        profileToMatch: inWait.profileToMatch ///////////// to check
     }
     // print
-    console.log(`coords.lat: ${dataInDBDoc.coords.lat}, coords.thingId: ${dataInDBDoc.thingId}`); 
+    console.log(`Data results of message inline: coords.lat: ${dataInDBDoc.coords.lat}, 
+                thingId: ${dataInDBDoc.thingId}, 
+                profileToMatch: ${dataInDBDoc.profileToMatch}`
+            ); 
     //////////////////////////////////////////////////////////////// extract data from the rest of users
     // observer group collection part
     db
@@ -34,20 +37,27 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                 // push data to array
                 coordsInLiveDataSets.push({
                     coords: doc.data().coords,
-                    thingId: doc.data().thingId
+                    thingId: doc.data().thingId,
+                    profileToMatch: doc.data().profileToMatch //////////////////////////////////////////// to check
                 })
             })
             // print
-            console.log(`coordsInLiveDataSets: ${coordsInLiveDataSets.length}`); // quantity of objects
-            console.log(JSON.stringify(coordsInLiveDataSets)); // [{...},{...}]
+            console.log(`Number of devices with data in db (coordsInLiveDataSets): ${coordsInLiveDataSets.length}`); // quantity of objects
+            console.log(`Data result on the devices connected: ${JSON.stringify(coordsInLiveDataSets)}`); // [{...},{...}]
         })
+        // meassure gps coords of all the users involve
         .then(()=>{
-            // meassure gps coords of all the users involve
+            
+            // vars to hold counters of matches in the specific range ------------> hacer objeto para pasarlo a la funcion del mensaje
+            let counterGreen5Mts = 0;
+            let counterYellow10Mts = 0;
+            let counterRed15Mts = 0;
+            let counterFucsia20Mts = 0; 
+            let counterBlue25Mts = 0;
+            
             // loop the results on the array
-            // vars to hold 
-            let counterGreen5Mts = 0, counterYellow10Mts = 0, counterRed15Mts = 0, counterFucsia20Mts = 0, counterBlue25Mts = 0
-
             for(let i = 0; i < coordsInLiveDataSets.length; i++){
+                
                 function checkDistance(args){
                     // print
                     console.log(`args.coords: ${args.coords}`)
@@ -65,71 +75,235 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     let distanceInMeters = d * 100; // Distance in m
 
                     // print
-                    console.log(`distanceInMeters: ${distanceInMeters}`)
+                    console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`)
 
-                    // make the array with the must close coords
+                    // make the array with the must close coords -------> to check
                     if(distanceInMeters <= 25) {
-                        top5Coord.push({
+                        top5Coords.push({
                             thingId: args.thingId, 
-                            coords: args.coords,
+                            coords: {
+                                lat2: args.coords.lat2,
+                                lon2: args.coords.lon2
+                            },
+                            profileToMatch: args.profileToMatch,
                             meters: distanceInMeters
                         }) 
-                    }
-                    // // vars to hold 
-                    // let counterGreen5Mts, counterGreen10Mts, counterGreen15Mts, counterGreen20Mts, counterGreen25Mts
-                    
-                    // function to count user in the range
-                    function metersRangeCounter(meters){
-                        if(meters >= 0 && meters <= 5){
-                            //counterGreen5Mts = 0
-                            counterGreen5Mts++
-                            console.log(`counterGreen5Mts: ${counterGreen5Mts}`)
-                        } else if (meters >= 5.1 && meters <= 10){
-                            // counterGreen10Mts = 0
-                            counterYellow10Mts++
-                            console.log(`counterYellow10Mts: ${counterYellow10Mts}`)
-                        } else if (meters >= 10.1 && meters <= 15){
-                            //counterGreen15Mts = 0
-                            counterRed15Mts++
-                            console.log(`counterRed15Mts: ${counterRed15Mts}`)
-                        } else if (meters >= 15.1 && meters <= 20){
-                           //counterGreen20Mts = 0
-                            counterFucsia20Mts++
-                            console.log(`counterFucsia20Mts: ${counterFucsia20Mts}`)
-                        } else if (meters >= 20.1 && meters <= 25){
-                            //counterGreen25Mts = 0
-                            counterBlue25Mts++
-                            console.log(`counterBlue25Mts: ${counterBlue25Mts}`)
-                        }    
-                    }
-                    // run it
-                    metersRangeCounter(distanceInMeters)    
+                    } 
+                    // return in meters
+                    return distanceInMeters
                 }
-
-                // user whait for answer
-                let latUserInLine = dataInDBDoc.coords.lat;
-                let lonUserInLine = dataInDBDoc.coords.lon;
-
-                // other users
-                let latArrayCoordsInDB = coordsInLiveDataSets[i].coords.lat;
-                let lonArrayCoordsInDB = coordsInLiveDataSets[i].coords.lon;
-                let thingIdCloseUser = coordsInLiveDataSets[i].thingId;
-
+                
+                // function to count user in the range
+                function metersRangeCounter(meters){
+                    if(meters >= 0 && meters <= 5){
+                        counterGreen5Mts++
+                        console.log(`counterGreen5Mts: ${counterGreen5Mts}`)
+                    } else if (meters >= 5.1 && meters <= 10){
+                        counterYellow10Mts++
+                        console.log(`counterYellow10Mts: ${counterYellow10Mts}`)
+                    } else if (meters >= 10.1 && meters <= 15){
+                        counterRed15Mts++
+                        console.log(`counterRed15Mts: ${counterRed15Mts}`)
+                    } else if (meters >= 15.1 && meters <= 20){
+                        counterFucsia20Mts++
+                        console.log(`counterFucsia20Mts: ${counterFucsia20Mts}`)
+                    } else if (meters >= 20.1 && meters <= 25){
+                        counterBlue25Mts++
+                        console.log(`counterBlue25Mts: ${counterBlue25Mts}`)
+                    }    
+                }
+                
                 // data to pass
                 let argz = {
                     coords:{
-                        lon1:lonUserInLine,     
-                        lat1:latUserInLine, 
-                        lon2:lonArrayCoordsInDB, 
-                        lat2:latArrayCoordsInDB
+                        lon1:dataInDBDoc.coords.lon,     
+                        lat1:dataInDBDoc.coords.lat, 
+                        lon2:coordsInLiveDataSets[i].coords.lon, 
+                        lat2:coordsInLiveDataSets[i].coords.lat
                     },
-                    thingId:thingIdCloseUser
+                    profileToMatch: coordsInLiveDataSets[i].profileToMatch,
+                    thingId:coordsInLiveDataSets[i].thingId
                 }
-                // run it
-                checkDistance(argz) 
+                
+                // check to not loop over himself    
+                if(argz.thingId != dataInDBDoc.thingId){
+                    // run it
+                    metersRangeCounter(checkDistance(argz)) 
+                } else {
+                    console.log('Not possible make the comparation')
+                }
             }
-            // print result
-            console.log(`top5CoordLast: ${JSON.stringify(top5Coord)}`);
+
+            // print it meters counters
+            console.log(`Results for counter of distances in - 
+                counterGreen5Mts: ${counterGreen5Mts}, 
+                counterYellow10Mts: ${counterYellow10Mts}, 
+                counterRed15Mts:${counterRed15Mts}, 
+                counterFucsia20Mts:${counterFucsia20Mts}, 
+                counterBlue25Mts:${counterBlue25Mts}`
+            )
+            // print list top5 result
+            console.log(`Results of the list top5CoordLast: ${JSON.stringify(top5Coords)}`);
+        })
+        .then(()=>{
+            
+            // qualify match
+            let evaluationOfMatch = 0;
+            // vars to count coincidence
+            let fullMatch = 0;
+            let midMatch = 0;
+            let bottomMatch = 0;
+            let noneMatch = 0;
+
+            // to eval the match in the selec ones of proximity
+            function toCompareProfileToMatch(labels){
+                // vars to receive data
+                const labelsToFind = labels.labelsToFind;
+                const labelsToCheck = labels.labelsToCheck;
+                
+                // check a full coincidence first
+                // 1-1-1
+                if(labelsToFind == labelsToCheck){
+                    evaluationOfMatch += 3
+                    fullMatch++
+                // 0 - 1 - 1    
+                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero == labelsToCheck.dcHero &&
+                    labelsToFind.cat == labelsToCheck.cat){
+                        evaluationOfMatch += 2
+                        midMatch++
+                // 1 - 0 - 1 
+                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero != labelsToCheck.dcHero &&
+                    labelsToFind.cat == labelsToCheck.cat){
+                        evaluationOfMatch += 2
+                        midMatch++
+                // 1 - 1 - 0         
+                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero == labelsToCheck.dcHero &&
+                    labelsToFind.cat != labelsToCheck.cat){
+                        evaluationOfMatch += 2
+                        midMatch++
+                // 0 - 0 - 1    
+                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero != labelsToCheck.dcHero &&
+                    labelsToFind.cat == labelsToCheck.cat){
+                        evaluationOfMatch += 1
+                        bottomMatch++
+                // 0 - 1 - 0     
+                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero == labelsToCheck.dcHero &&
+                    labelsToFind.cat != labelsToCheck.cat){
+                        evaluationOfMatch += 1
+                        bottomMatch++
+                // 1 - 0 - 0         
+                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero != labelsToCheck.dcHero &&
+                    labelsToFind.cat != labelsToCheck.cat){
+                        evaluationOfMatch += 1
+                        bottomMatch++
+                // 0 - 0 - 0        
+                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                    labelsToFind.dcHero != labelsToCheck.dcHero &&
+                    labelsToFind.cat != labelsToCheck.cat){
+                        evaluationOfMatch = 0
+                        noneMatch++
+                }
+            }
+
+            // run it
+            for(let i = 0; i < top5Coords.length; i++){
+                // var to pass in obj comparer
+                let labelz = {
+                    labelsToFind: dataInDBDoc.profileToMatch,
+                    labelsToCheck: top5Coords[i].profileToMatch
+                }
+                // check to ensure
+                if(top5Coords != 0){
+                    toCompareProfileToMatch(labelz);
+                } else {
+                    console.log('Not items in top5Coords')
+                }
+            }
+
+            // print
+            console.log(`Results for match in - 
+                evaluationOfMatch: ${evaluationOfMatch},
+                fullMatch: ${fullMatch},
+                midMatch: ${midMatch},
+                bottomMatch: ${bottomMatch},
+                noneMatch: ${noneMatch}`
+            )
+        })
+        //////////////////////////////////////////////////////////////// res message part to device
+        .then(()=>{
+            // function to send message
+            async function sendCommandGPSColor(colorObj){
+                // global vars
+                const cloudRegion = 'us-central1';
+                const deviceId = dataInDBDoc.thingId;
+                const string = JSON.stringify(colorObj);
+                const commandMessage = string;
+                const projectId = 'sfdd-d8a16';
+                const registryId = 'Heartbeat';
+                // lib iot core
+                const iot = require('@google-cloud/iot');
+                // client
+                const iotClient = new iot.v1.DeviceManagerClient({
+                // optional auth parameters.
+                });
+                // client and path of device
+                const formattedName = iotClient.devicePath(
+                    projectId,
+                    cloudRegion,
+                    registryId,
+                    deviceId
+                );
+                // message data
+                const binaryData = Buffer.from(commandMessage);
+                // request
+                const request = {
+                    name: formattedName,
+                    binaryData: binaryData,
+                };
+
+                try {
+                    const responses = await iotClient.sendCommandToDevice(request);
+                    console.log('Sent command: ', responses[0]);
+                    //res.json(responses[0])
+                } catch (err) {
+                    console.error('Could not send command:', err);
+                    //res.json(err)
+                }
+            }
+            
+            // color to send to device
+            function colorPicker(){
+                //x >= 0.001 && x <= 0.009
+                if(){
+                    let colorToThingResponse = {cororValue:{r:1,g:2,b:3}, colorName:"green"}
+                    // command to thing
+                    sendCommandGPSColor(colorToThingResponse)
+                } else if (){
+                    let colorToThingResponse = {cororValue:{r:4,g:5,b:6}, colorName:"yellow"}
+                    // command to thing
+                    sendCommandGPSColor(colorToThingResponse)
+                } else if (){
+                    let colorToThingResponse = {cororValue:{r:7,g:8,b:9}, colorName:"red"}
+                    // command to thing
+                    sendCommandGPSColor(colorToThingResponse)
+                } else if (){
+                    let colorToThingResponse = {cororValue:{r:10,g:11,b:12}, colorName:"fucsia"}
+                    // command to thing
+                    sendCommandGPSColor(colorToThingResponse)
+                } else if (){
+                    let colorToThingResponse = {cororValue:{r:13,g:14,b:15}, colorName:"blue"}
+                    // command to thing
+                    sendCommandGPSColor(colorToThingResponse)
+                }
+            }
+            // run it
+            colorPicker();
         })
         .catch((err) => {
             console.error(err);
