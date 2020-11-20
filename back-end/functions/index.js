@@ -396,10 +396,10 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         dbDataFromLiveDataSets
             .update({
                 ...obj
-            }) 
+            })  
         ///////////////////////////////////////////////////////////////////////////////////////////////// ojo
         // init process to make the meassures of the gps coords in heartbeat things
-        if(nameOfDevice == "Heartbeat"){
+        if(nameOfDevice == "Heartbeat"){ // nameOfDevice in thing
             return dbDataFromLiveDataSets
                 .get()    
                 .then((doc)=>{

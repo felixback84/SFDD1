@@ -13,6 +13,7 @@ import devicesReducer from './reducers/devicesReducer';
 import adventuresReducer from './reducers/adventuresReducer';
 import haloThingReducer from './reducers/haloThingReducer';
 import hildaThingReducer from './reducers/hildaThingReducer';
+import heartbeatThingReducer from './reducers/heartbeatThingReducer';
 
 // empty initial state
 const initialState = {};
@@ -32,6 +33,7 @@ const reducers = combineReducers({
     adventures1: adventuresReducer,
     haloThing1: haloThingReducer,
     hildaThing1: hildaThingReducer,
+    heartbeatThing1: heartbeatThingReducer,
 });
 
 // creation of store and dev redux tools

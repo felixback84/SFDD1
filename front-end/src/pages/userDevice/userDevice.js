@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // components
 import HildaUI from '../../components/userDevice/HildaUIParts/HildaUI';
 import HaloUI from '../../components/userDevice/HaloUIParts/HaloUI';
+import HeartbeatUI from '../../components/userDevice/HeartbeatUIParts/HeartbeatUI';
 import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
 
 // Redux stuff
@@ -26,6 +27,7 @@ class Device extends Component {
         // devices ids
         const HALO = 'MZInC971tJYurv3OYzjR';
         const HILDA = 'gE2ySDQaMymbZe0r6KEH';
+        const HEARTBEAT = 'AdPadmSiw6GnVggUAj51';
         // pick active one
         const activeOne = userDevices.filter(userDevice => userDevice.active === true);
         // pick his deviceId and thingId and other stuff
@@ -58,6 +60,17 @@ class Device extends Component {
                         <UserDeviceSkeleton/>
                     );
                 return(UIHaloMarkup);
+            case HEARTBEAT:    
+                // specific component
+                let UIHeartbeatMarkup = !loading ? (
+                    <HearbeatUI 
+                        thingid={resultThingId[0]}
+                        userdeviceid={resultUserDeviceId[0]}
+                    />
+                    ) : (
+                        <UserDeviceSkeleton/>
+                    );
+                return(UIHeartbeatMarkup);
             default:
                 return null;
         }

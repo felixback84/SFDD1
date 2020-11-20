@@ -17,21 +17,29 @@ export const GET_INACTIVE_USER_ADVENTURES = 'GET_INACTIVE_USER_ADVENTURES';
 export const LOADING_USER_DEVICES = 'LOADING_USER_DEVICES';
 export const GET_USER_DEVICES = 'GET_USER_DEVICES';
 export const GET_USER_DEVICE = 'GET_USER_DEVICE';
+
 // halo thing reducers types
 export const LOADING_GET_EVENTS_FROM_HALO_THING = 'LOADING_GET_EVENTS_FROM_HALO_THING';
 export const GET_EVENTS_FROM_HALO_THING = 'GET_EVENTS_FROM_HALO_THING';
+
+// heartbeat thing reducers types
+export const LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'LOADING_GET_EVENTS_FROM_HEARTBEAT_THING';
+// from liveDataSets
+export const GET_EVENTS_FROM_HEARTBEAT_THING = 'GET_EVENTS_FROM_HEARTBEAT_THING';
 
 ////////////////////////////////////////////////////////////////////////////////////////// hilda thing reducers types
 export const LOADING_GET_EVENTS_FROM_HILDA_THING = 'LOADING_GET_EVENTS_FROM_HILDA_THING';
 // from liveDataSets
 export const GET_EVENTS_FROM_HILDA_THING = 'GET_EVENTS_FROM_HILDA_THING';
-// from functions responses
+// from functions responses -------------------> to check
 export const POST_ACTIVE_COMMAND_HILDA_THING = 'POST_ACTIVE_COMMAND_HILDA_THING'
 export const POST_INACTIVE_COMMAND_HILDA_THING = 'POST_INACTIVE_COMMAND_HILDA_THING'
 export const POST_COLOR_COMMAND_HILDA_THING = 'POST_COLOR_COMMAND_HILDA_THING';
 export const POST_MOTOR_SPEED_COMMAND_HILDA_THING = 'POST_MOTOR_SPEED_COMMAND_HILDA_THING'
-// chart
+
+// charts
 export const GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY = 'GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY';
+
 // userAdventures reducers types
 export const LOADING_USER_ADVENTURES = 'LOADING_USERADVENTURES';
 export const GET_USER_ADVENTURES = 'GET_USER_ADVENTURES';

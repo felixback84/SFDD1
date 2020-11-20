@@ -8,6 +8,21 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
     let coordsInLiveDataSets = [];
     // list top 5
     let top5Coords = [];
+    
+    // vars to hold counters of matches in the specific gps range 
+    let counterGreen5Mts = 0;
+    let counterYellow10Mts = 0;
+    let counterRed15Mts = 0;
+    let counterFucsia20Mts = 0; 
+    let counterBlue25Mts = 0;
+    
+    // qualify match
+    let evaluationOfMatch = 0;
+    // vars to count coincidence
+    let fullMatch = 0;
+    let midMatch = 0;
+    let bottomMatch = 0;
+    let noneMatch = 0;
 
     // print
     console.log(`inWait.coords to message coords inline: ${inWait.coords}`)
@@ -20,7 +35,8 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
         profileToMatch: inWait.profileToMatch ///////////// to check
     }
     // print
-    console.log(`Data results of message inline: coords.lat: ${dataInDBDoc.coords.lat}, 
+    console.log(`Data results of message inline: 
+                coords.lat: ${dataInDBDoc.coords.lat}, 
                 thingId: ${dataInDBDoc.thingId}, 
                 profileToMatch: ${dataInDBDoc.profileToMatch}`
             ); 
@@ -28,8 +44,8 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
     // observer group collection part
     db
         .collectionGroup('liveDataSets')
-        //.where('thingId', '!=', thingId)
-        .where('deviceId','==','heartbeat')
+        //.where('thingId', '!=', thingId) // a cause of the other devices
+        .where('nameOfDevice','==','heartbeat')
         .get()
         .then((querySnapshot) => {
             // Do something with these reviews!
@@ -47,13 +63,6 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
         })
         // meassure gps coords of all the users involve
         .then(()=>{
-            
-            // vars to hold counters of matches in the specific range ------------> hacer objeto para pasarlo a la funcion del mensaje
-            let counterGreen5Mts = 0;
-            let counterYellow10Mts = 0;
-            let counterRed15Mts = 0;
-            let counterFucsia20Mts = 0; 
-            let counterBlue25Mts = 0;
             
             // loop the results on the array
             for(let i = 0; i < coordsInLiveDataSets.length; i++){
@@ -77,7 +86,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     // print
                     console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`)
 
-                    // make the array with the must close coords -------> to check
+                    // make the array with the must close coords 
                     if(distanceInMeters <= 25) {
                         top5Coords.push({
                             thingId: args.thingId, 
@@ -93,7 +102,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     return distanceInMeters
                 }
                 
-                // function to count user in the range
+                // function to count user/devices/things in the range
                 function metersRangeCounter(meters){
                     if(meters >= 0 && meters <= 5){
                         counterGreen5Mts++
@@ -134,7 +143,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                 }
             }
 
-            // print it meters counters
+            // print it meters counters --------------> mandar el estado de los contadores todos como respuesta
             console.log(`Results for counter of distances in - 
                 counterGreen5Mts: ${counterGreen5Mts}, 
                 counterYellow10Mts: ${counterYellow10Mts}, 
@@ -147,14 +156,6 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
         })
         .then(()=>{
             
-            // qualify match
-            let evaluationOfMatch = 0;
-            // vars to count coincidence
-            let fullMatch = 0;
-            let midMatch = 0;
-            let bottomMatch = 0;
-            let noneMatch = 0;
-
             // to eval the match in the selec ones of proximity
             function toCompareProfileToMatch(labels){
                 // vars to receive data
@@ -167,43 +168,50 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     evaluationOfMatch += 3
                     fullMatch++
                 // 0 - 1 - 1    
-                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero == labelsToCheck.dcHero &&
                     labelsToFind.cat == labelsToCheck.cat){
                         evaluationOfMatch += 2
                         midMatch++
                 // 1 - 0 - 1 
-                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero != labelsToCheck.dcHero &&
                     labelsToFind.cat == labelsToCheck.cat){
                         evaluationOfMatch += 2
                         midMatch++
                 // 1 - 1 - 0         
-                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero == labelsToCheck.dcHero &&
                     labelsToFind.cat != labelsToCheck.cat){
                         evaluationOfMatch += 2
                         midMatch++
                 // 0 - 0 - 1    
-                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero != labelsToCheck.dcHero &&
                     labelsToFind.cat == labelsToCheck.cat){
                         evaluationOfMatch += 1
                         bottomMatch++
                 // 0 - 1 - 0     
-                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero == labelsToCheck.dcHero &&
                     labelsToFind.cat != labelsToCheck.cat){
                         evaluationOfMatch += 1
                         bottomMatch++
                 // 1 - 0 - 0         
-                } else if(labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber == labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero != labelsToCheck.dcHero &&
                     labelsToFind.cat != labelsToCheck.cat){
                         evaluationOfMatch += 1
                         bottomMatch++
                 // 0 - 0 - 0        
-                } else if(labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
+                } else if(
+                    labelsToFind.luckyNumber != labelsToCheck.luckyNumber && 
                     labelsToFind.dcHero != labelsToCheck.dcHero &&
                     labelsToFind.cat != labelsToCheck.cat){
                         evaluationOfMatch = 0
@@ -276,34 +284,63 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     //res.json(err)
                 }
             }
-            
+
             // color to send to device
             function colorPicker(){
                 //x >= 0.001 && x <= 0.009
-                if(){
-                    let colorToThingResponse = {cororValue:{r:1,g:2,b:3}, colorName:"green"}
+                if(countersObj.counterGreen5Mts >= 1){
+                    let colorToThingResponse = {
+                        colorValue:{r:1,g:2,b:3}, 
+                        colorName:"green", 
+                        profileMatchQualify: evaluationOfMatch
+                    }
+                    // command to thing -------------------> enviar solo cuando se haya recorrido las lista top5Coords
+                    sendCommandGPSColor(colorToThingResponse)
+                } else if (countersObj.counterYellow10Mts >= 1){
+                    let colorToThingResponse = {
+                        colorValue:{r:4,g:5,b:6}, 
+                        colorName:"yellow", 
+                        profileMatchQualify: evaluationOfMatch
+                    }
                     // command to thing
                     sendCommandGPSColor(colorToThingResponse)
-                } else if (){
-                    let colorToThingResponse = {cororValue:{r:4,g:5,b:6}, colorName:"yellow"}
+                } else if (countersObj.counterRed15Mts >= 1){
+                    let colorToThingResponse = {
+                        colorValue:{r:7,g:8,b:9}, 
+                        colorName:"red", 
+                        profileMatchQualify: evaluationOfMatch
+                    }
                     // command to thing
                     sendCommandGPSColor(colorToThingResponse)
-                } else if (){
-                    let colorToThingResponse = {cororValue:{r:7,g:8,b:9}, colorName:"red"}
+                } else if (countersObj.counterFucsia20Mts >= 1){
+                    let colorToThingResponse = {
+                        colorValue:{r:10,g:11,b:12}, 
+                        colorName:"fucsia", 
+                        profileMatchQualify: 
+                        evaluationOfMatch
+                    }
                     // command to thing
                     sendCommandGPSColor(colorToThingResponse)
-                } else if (){
-                    let colorToThingResponse = {cororValue:{r:10,g:11,b:12}, colorName:"fucsia"}
-                    // command to thing
-                    sendCommandGPSColor(colorToThingResponse)
-                } else if (){
-                    let colorToThingResponse = {cororValue:{r:13,g:14,b:15}, colorName:"blue"}
+                } else if (countersObj.counterBlue25Mts >= 1){
+                    let colorToThingResponse = {
+                        colorValue:{r:13,g:14,b:15}, 
+                        colorName:"blue", 
+                        profileMatchQualify: evaluationOfMatch
+                    }
                     // command to thing
                     sendCommandGPSColor(colorToThingResponse)
                 }
             }
+            // obj with counters state
+            let countersObj = {
+                counterGreen5Mts,
+                counterYellow10Mts,
+                counterRed15Mts,
+                counterFucsia20Mts, 
+                counterBlue25Mts
+            }
             // run it
-            colorPicker();
+            colorPicker(countersObj);
         })
         .catch((err) => {
             console.error(err);
