@@ -63,7 +63,7 @@ class Device extends Component {
             case HEARTBEAT:    
                 // specific component
                 let UIHeartbeatMarkup = !loading ? (
-                    <HearbeatUI 
+                    <HeartbeatUI 
                         thingid={resultThingId[0]}
                         userdeviceid={resultUserDeviceId[0]}
                     />

@@ -89,7 +89,10 @@ const {
 
 // gps
 const {
-    detectGPSCoordsProximityRange
+    detectGPSCoordsProximityRange,
+    heartbeatPostInactiveCommand,
+    heartbeatPostActiveCommand,
+    heartbeatTop5CoordsData
 } = require('./handlers/forHeartBeat');
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -185,6 +188,14 @@ app.post('/device/hilda/:thingId/inactive',FBAuth, hildaPostInactiveCommand);
 app.post('/device/hilda/:thingId/motorSpeed',FBAuth, hildaPostMotorSpeedCommand);
 // post color command in hilda things
 app.post('/device/hilda/:thingId/color',FBAuth, hildaPostInactiveCommand);
+
+////////////////////////////////// heartbeat thing routes /////////////////////////////////////////////////
+// post active command in heartbeat things
+app.post('/device/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
+// post inactive command in heartbeat things
+app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
+// get top5Coords
+app.post('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
 // export functions
 exports.api = functions.https.onRequest(app);

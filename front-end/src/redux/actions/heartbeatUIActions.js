@@ -2,12 +2,18 @@
 import {
     LOADING_UI,
     STOP_LOADING_UI,
-    GET_EVENTS_FROM_HALO_THING,
-    LOADING_GET_EVENTS_FROM_HALO_THING
+    GET_EVENTS_FROM_HEARTBEAT_THING,
+    //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
+    //POST_INACTIVE_COMMAND_HEARTBEAT_THING,
+    LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+    GET_TOP5COORDSMATCHES,
+    SET_ERRORS
 } from '../types';
 
 // firebase client libs
 import firebase from '../../fb/utilities/firebase'; 
+// axios
+import axios from 'axios';
 
 // declarate a function to get data from db
 export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
@@ -38,13 +44,13 @@ export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
 export const heartbeatPostActiveCommand = (thingId, activeValue) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/device/hilda/${thingId}/active`, activeValue)
-        .then((res) => {            
-            dispatch({ 
-                type: POST_ACTIVE_COMMAND_HILDA_THING,
-                payload: res.data
-            })
-        })
+        .post(`/device/heartbeat/${thingId}/active`, activeValue)
+        // .then((res) => {            
+        //     dispatch({ 
+        //         type: POST_ACTIVE_COMMAND_HEARTBEAT_THING,
+        //         payload: res.data
+        //     })
+        // })
         .catch(err => {
             dispatch({ 
                 type: SET_ERRORS,
@@ -57,10 +63,29 @@ export const heartbeatPostActiveCommand = (thingId, activeValue) => (dispatch) =
 export const heartbeatPostInactiveCommand = (thingId, inactiveValue) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
-        .post(`/device/hilda/${thingId}/inactive`, inactiveValue)
+        .post(`/device/heartbeat/${thingId}/inactive`, inactiveValue)
+        // .then((res) => {            
+        //     dispatch({ 
+        //         type: POST_INACTIVE_COMMAND_HEARTBEAT_THING,
+        //         payload: res.data
+        //     })
+        // })
+        .catch(err => {
+            dispatch({ 
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+} 
+
+// function to find the top5Coords list
+export const getTop5CoordsMatches = (thingId) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .get(`/device/heartbeat/${thingId}/top5coords`)
         .then((res) => {            
             dispatch({ 
-                type: POST_INACTIVE_COMMAND_HILDA_THING,
+                type: GET_TOP5COORDSMATCHES,
                 payload: res.data
             })
         })
@@ -70,5 +95,5 @@ export const heartbeatPostInactiveCommand = (thingId, inactiveValue) => (dispatc
                 payload: err.response.data
             })
         });
-} 
+}
 

@@ -2,37 +2,59 @@
 import React, { Component } from 'react';
 // google-map-react
 import GoogleMapReact from 'google-map-react';
+// components
+import LocationPin from './LocationPin';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+// redux stuff
+import { connect } from 'react-redux';
 
-    class GoogleMapsToHeartbeat extends Component {
-        
-        static defaultProps = {
-            center: {
-                lat: this.props.coords.lat,
-                lng: this.props.coords.lon
+class GoogleMapsToHeartbeat extends Component {
+
+    // req for coords match around
+    componenWillMount(){
+        this.props.getTop5CoordsMatches(this.props.thingid)
+    }
+
+    render() {
+        // redux state
+        const {
+            coords:{
+                lat,
+                lon
             },
-            zoom: 11
-        };
-
-        render() {
-            return (
-                // Important! Always set the container height explicitly
-                <div style={{ height: '100vh', width: '100%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key:'' }}
-                        defaultCenter={this.props.center}
-                        defaultZoom={this.props.zoom}
-                    >
-                        <AnyReactComponent
-                            lat={59.955413}
-                            lng={30.337844}
-                            text="My Marker"
-                        />
-                    </GoogleMapReact>
-                </div>
-            );
+            top5Coords
+        } = this.props;
+        
+        // to pass keys
+        let center = {
+            lat:lat,
+            lng:lon
         }
+        
+        return (
+            // Important! Always set the container height explicitly
+            <div style={{ height: '100vh', width: '100%' }}>
+                <GoogleMapReact
+                    bootstrapURLKeys={{ key:'' }}
+                    center={center}
+                    defaultZoom={18}
+                >
+                    {/* marker */}
+                    <LocationPin
+                        lat={center.lat}
+                        lng={center.lng}
+                        text={`${center.lat} - ${center.lng} `}
+                    />
+                </GoogleMapReact>
+            </div>
+        );
+    }
 }
 
-export default GoogleMapsToHeartbeat;
+// redux state
+const mapStateToProps = (state) => ({
+    coords: state.heartbeatThing1.thingLiveDataSets.coords,
+    top5Coords: state.heartbeatThing1.top5Coords
+})
+
+export default connect(mapStateToProps)(GoogleMapsToHeartbeat);

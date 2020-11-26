@@ -32,6 +32,10 @@ fs
     })
     .on('end', () => {
         // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
+        // vars for message income from client UI
+        let active = false;
+        let colorValue = {r:0,g:0,b:0};
+
         const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
             // for loop
             for (let x = 0, ln = obj.length; x < ln; x++) {
@@ -45,12 +49,15 @@ fs
                     // obj with data
                     let payload = {
                         thingId: heartbeatThingId,
+                        nameOfDevice: 'heartbeat',
                         createdAt: new Date().toISOString(),
+                        active,
                         coords:{
                             lat: latitude,
                             lon: longitude,
                             nameOfPoint: point
-                        }
+                        },
+                        colorValue
                     }
                     // Publish "payload" to the MQTT topic.
                     client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
@@ -114,14 +121,12 @@ fs
         // The topic name must end in 'events' to publish state
         client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
 
-        // Handle the connection event
+        // Handle the connection event with iot core
         client.on('connect', success => {
             console.log('connect');
             if (!success) {
                 console.log('Client not connected...');
-            } else {
-                //publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
-            }
+            } 
         });
 
         // Handle the closing connection event
@@ -136,17 +141,19 @@ fs
  
         // Handle the message event 
         client.on('message', (topic, message) => {
-            let messageStr = 'Message received: ';
-            if (topic === MQTT_TOPIC_TO_CONFIG) {
-                messageStr = 'Config message received: ';
-            } else if (topic.startsWith(MQTT_TOPIC_TO_COMMANDS)) {
-                messageStr = 'Command message received: ';
-            } else if (topic.startsWith(MQTT_TOPIC_TO_STATE)) {
-                messageStr = 'State message received: ';
-            } else if (topic.startsWith(MQTT_TOPIC_TO_TELEMETRY)) {
-                messageStr = 'Telemetry message received: ';
+            // add and decode the message itself 
+            let messageStr = Buffer.from(message, 'base64').toString('ascii');
+            // print message in console
+            console.log(`Message from client WebApp for ${heartbeatThingId} thing ====> ${messageStr}`);
+            if(messageStr){
+                // str to obj
+                let messageToObj = JSON.parse(messageStr);
+                // extract data from message incoming of client UI
+                active = messageToObj.active;
+                colorValue = messageToObj.colorValue;
+                // publish messages
+                // publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
             }
-            messageStr += Buffer.from(message, 'base64').toString('ascii');
             // print
             console.log(messageStr);
         });

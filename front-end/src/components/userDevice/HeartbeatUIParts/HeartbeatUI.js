@@ -22,12 +22,12 @@ class HeartbeatUI extends Component {
         return (
             <CardForHeartbeatUI userdeviceid={this.props.userdeviceid}/>
         );
-    }
-} 
+    }  
+}  
 
 // redux state
 const mapStateToProps = (state) => ({
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
 })
 //export default Device;
-export default connect(mapStateToProps,{heartbeatThingSyncDataWithLiveDB})(withStyles(styles)(HeartbeatUI));
+export default connect(mapStateToProps,{heartbeatThingSyncDataWithLiveDB})(HeartbeatUI);

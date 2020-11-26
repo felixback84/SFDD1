@@ -128,12 +128,12 @@ class CardForHeartbeatUI extends Component {
                         />
                         <SwitchForActiveCommandHeartbeatUI 
                             thingid={thingId} 
-                        />
+                        /> 
                     </Paper> 
                     {/* google maps */}
                     <Paper variant="outlined" square className={classes.paper}>
                         <Typography paragraph>{nameOfDevice} is:</Typography>
-                        <GoogleMapsToHeartbeat userDeviceCoords={coords}/>
+                        <GoogleMapsToHeartbeat thingid={thingId}/>
                     </Paper>  
                     {/* button to save data */}
                     <Paper variant="outlined" square className={classes.paper}>

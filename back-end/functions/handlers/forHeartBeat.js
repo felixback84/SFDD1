@@ -1,7 +1,118 @@
 // firebase
 const { db } = require('../utilities/admin');
+// post active command in hild things
+exports.heartbeatPostActiveCommand = async (req, res) => {
+    // req data
+    const thingId = req.params.thingId;
+    const activeValue = {...req.body};
+    //const activeValue = req.body.active;
+    // print
+    console.log(activeValue)
+    // to string 
+    const string = JSON.stringify(activeValue);
+    // global vars
+    const cloudRegion = 'us-central1';
+    const deviceId = thingId;
+    const commandMessage = string;
+    const projectId = 'sfdd-d8a16';
+    const registryId = 'Heartbeat';
+    // lib iot core
+    const iot = require('@google-cloud/iot');
+    // client
+    const iotClient = new iot.v1.DeviceManagerClient({
+    // optional auth parameters.
+    });
+    // client and path of device
+    const formattedName = iotClient.devicePath(
+        projectId,
+        cloudRegion,
+        registryId,
+        deviceId
+    );
+    // message data
+    const binaryData = Buffer.from(commandMessage);
+    // request
+    const request = {
+        name: formattedName,
+        binaryData: binaryData,
+    };
 
-// to measure the distance between user
+    try {
+        const responses = await iotClient.sendCommandToDevice(request);
+        console.log('Sent command: ', responses[0]);
+        res.json(responses[0])
+    } catch (err) {
+        console.error('Could not send command:', err);
+        res.json(err)
+    }
+}
+
+// post inactive command in hild things
+exports.heartbeatPostInactiveCommand = async (req, res) => {
+    // req data
+    const thingId = req.params.thingId;
+    const inactiveValue = {...req.body};
+    // print
+    console.log(inactiveValue)
+    // to string
+    const string = JSON.stringify(inactiveValue);
+    // global vars
+    const cloudRegion = 'us-central1';
+    const deviceId = thingId;
+    const commandMessage = string;
+    const projectId = 'sfdd-d8a16';
+    const registryId = 'Heartbeat';
+    // lib iot core
+    const iot = require('@google-cloud/iot');
+    // client
+    const iotClient = new iot.v1.DeviceManagerClient({
+    // optional auth parameters.
+    });
+    // client and path of device
+    const formattedName = iotClient.devicePath(
+        projectId,
+        cloudRegion,
+        registryId,
+        deviceId
+    );
+    // message data
+    const binaryData = Buffer.from(commandMessage);
+    // request
+    const request = {
+        name: formattedName,
+        binaryData: binaryData,
+    };
+
+    try {
+        const responses = await iotClient.sendCommandToDevice(request);
+        console.log('Sent command: ', responses[0]);
+        res.json(responses[0])
+    } catch (err) {
+        console.error('Could not send command:', err);
+        res.json(err)
+    }
+}  
+
+// to get top5Coords for app
+exports.heartbeatTop5CoordsData = async (req, res) => {
+    db
+        .doc(`/userDevices/${req.params.userDeviceId}`)
+        .collection('topMatches')
+        .get()
+        .then((data) => {
+            let topMatches = [];
+            data.forEach((doc) => {
+                topMatches.push({
+                    topMatchesId: doc.id,
+                    ...doc.data()
+                });
+            });
+            return res.json(topMatches);
+        })
+        .catch((err) => console.error(err));   
+}
+
+// to measure the distance & match between users, to send a response to the thingId
 exports.detectGPSCoordsProximityRange = (inWait) => {
     
     // var to hold coors object in an array
@@ -97,6 +208,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                             profileToMatch: args.profileToMatch,
                             meters: distanceInMeters
                         }) 
+                        
                     } 
                     // return in meters
                     return distanceInMeters
@@ -142,7 +254,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     console.log('Not possible make the comparation')
                 }
             }
-
+            
             // print it meters counters --------------> mandar el estado de los contadores todos como respuesta
             console.log(`Results for counter of distances in - 
                 counterGreen5Mts: ${counterGreen5Mts}, 
@@ -153,6 +265,26 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
             )
             // print list top5 result
             console.log(`Results of the list top5CoordLast: ${JSON.stringify(top5Coords)}`);
+
+            // func to save data of top5Coords
+            function savaData(dataToSave){
+                // userDeviceId 
+                const userDeviceId = dataInDBDoc.thingId.split("-").slice(2);
+                db
+                    .doc(`/userDevices/${userDeviceId}`)
+                    .collection('liveDataSets')
+                    .doc(dataInDBDoc.thingId)
+                    .update({ top5Coords: top5Coords })
+                    .then(() => {
+                        console.log(dataToSave)
+                    })            
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: err.code });
+                    });                
+            }
+            // run it
+            savaData(top5Coords)
         })
         .then(()=>{
             
@@ -316,7 +448,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                     let colorToThingResponse = {
                         colorValue:{r:10,g:11,b:12}, 
                         colorName:"fucsia", 
-                        profileMatchQualify: 
+                        profileMatchQualify:  
                         evaluationOfMatch
                     }
                     // command to thing
@@ -346,4 +478,6 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
             console.error(err);
         });     
 }
+
+
 

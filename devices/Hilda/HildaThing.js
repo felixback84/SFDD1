@@ -80,7 +80,7 @@ client.subscribe(MQTT_TOPIC_TO_CONFIG, {qos: 1});
 client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
-
+ 
 // --------------------------------------------------------------------------- RECEIVING MESSAGES FROM CLIENT
 // Handle the message incoming event from iot core to this device 
 client.on('message', (topic, message) => {    
