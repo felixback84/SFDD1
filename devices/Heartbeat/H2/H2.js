@@ -52,8 +52,8 @@ fs
                         thingId: heartbeatThingId,
                         createdAt: new Date().toISOString(),
                         coords:{
-                            lat: latitude,
-                            lon: longitude,
+                            lat: parseFloat(latitude),
+                            lon: parseFloat(longitude),
                             nameOfPoint: point
                         },
                         colorValue,

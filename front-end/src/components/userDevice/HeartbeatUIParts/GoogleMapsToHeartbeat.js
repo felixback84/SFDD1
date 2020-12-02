@@ -10,19 +10,16 @@ import { connect } from 'react-redux';
 
 class GoogleMapsToHeartbeat extends Component {
 
-    // req for coords match around
-    componenWillMount(){
-        this.props.getTop5CoordsMatches(this.props.thingid)
-    }
-
     render() {
+
         // redux state
         const {
-            coords:{
-                lat,
-                lon
-            },
-            top5Coords
+            thingLiveDataSets:{
+                coords:{
+                    lat,lon
+                },
+                top5Coords
+            }
         } = this.props;
         
         // to pass keys
@@ -31,20 +28,39 @@ class GoogleMapsToHeartbeat extends Component {
             lng:lon
         }
         
+        // other markers
+        let otherMarkers = top5Coords.map(top5Coord => { 
+            // index
+            let i = 0
+            // print
+            console.log(`top5Coord: ${JSON.stringify(top5Coord.coords)}`);
+            // pins
+            return (
+                <LocationPin
+                    key={i++}
+                    lat={top5Coord.coords.lat2}
+                    lng={top5Coord.coords.lon2}
+                    text={`${top5Coord.coords.lat2} - ${top5Coord.coords.lon2}`}
+                />
+            )
+        });
+
         return (
             // Important! Always set the container height explicitly
             <div style={{ height: '100vh', width: '100%' }}>
                 <GoogleMapReact
-                    bootstrapURLKeys={{ key:'' }}
+                    bootstrapURLKeys={{key:''}}
                     center={center}
                     defaultZoom={18}
                 >
-                    {/* marker */}
+                    {/* main marker */}
                     <LocationPin
                         lat={center.lat}
                         lng={center.lng}
-                        text={`${center.lat} - ${center.lng} `}
+                        text={`${center.lat} - ${center.lng}`}
                     />
+                    {/* other markers */}
+                    {otherMarkers}
                 </GoogleMapReact>
             </div>
         );
@@ -53,8 +69,7 @@ class GoogleMapsToHeartbeat extends Component {
 
 // redux state
 const mapStateToProps = (state) => ({
-    coords: state.heartbeatThing1.thingLiveDataSets.coords,
-    top5Coords: state.heartbeatThing1.top5Coords
+    thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
 })
 
 export default connect(mapStateToProps)(GoogleMapsToHeartbeat);

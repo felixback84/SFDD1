@@ -192,7 +192,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                         Math.sin(dLon/2) * Math.sin(dLon/2); 
                     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
                     let d = R * c; // Distance in km
-                    let distanceInMeters = d * 100; // Distance in m
+                    let distanceInMeters = d * 1000; // Distance in m
 
                     // print
                     console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`)

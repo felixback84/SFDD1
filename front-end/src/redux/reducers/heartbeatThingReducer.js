@@ -9,8 +9,8 @@ import {
 // initial state
 const initialState = {
     loading: false,
-    thingLiveDataSets:{coords:{}, colorValue:{}, profileToMatch:{}},
-    top5Coords:[]
+    thingLiveDataSets:{coords:{}, colorValue:{}, profileToMatch:{}, top5Coords:[]},
+    //top5Coords:[]
 };
 
 // function to determine the type of action to set state
@@ -39,12 +39,12 @@ export default function(state = initialState, action){
         //             active: action.payload
         //         }
         //     };
-        case GET_TOP5COORDSMATCHES:
-            return{
-                thing:{
-                    top5Coord: action.payload
-                }
-            };
+        // case GET_TOP5COORDSMATCHES:
+        //     return{
+        //         thing:{
+        //             top5Coord: action.payload
+        //         }
+        //     };
         default:
             return state;
     }

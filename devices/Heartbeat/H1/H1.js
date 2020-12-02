@@ -3,6 +3,7 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken'); 
 const mqtt = require('mqtt'); 
 const csvParser = require('csv-parser');
+const { parse } = require('querystring');
 
 // device id
 const heartbeatThingId = 'CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ';
@@ -53,8 +54,8 @@ fs
                         createdAt: new Date().toISOString(),
                         active,
                         coords:{
-                            lat: latitude,
-                            lon: longitude,
+                            lat: parseFloat(latitude),
+                            lon: parseFloat(longitude),
                             nameOfPoint: point
                         },
                         colorValue
