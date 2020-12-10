@@ -50,7 +50,7 @@ fs
                     // obj with data
                     let payload = {
                         thingId: heartbeatThingId,
-                        nameOfDevice: 'heartbeat',
+                        nameOfDevice: 'Heartbeat',
                         createdAt: new Date().toISOString(),
                         active,
                         coords:{
@@ -67,7 +67,7 @@ fs
                 }, x * 7500, x); // we're passing x
             }    
         }
-
+ 
         // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
         const createJwt = (projectId, privateKeyFile, algorithm) => {
             // Create a JWT to authenticate this device

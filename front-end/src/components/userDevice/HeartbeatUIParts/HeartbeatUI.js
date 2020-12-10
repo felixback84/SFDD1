@@ -18,7 +18,7 @@ class HeartbeatUI extends Component {
         // props
         const {thingLiveDataSets} = this.props;
         // print data from db liveDataSets
-        console.log(`data from db for hilda: ${thingLiveDataSets}`);
+        console.log(`data from db for heartbeat: ${thingLiveDataSets}`);
         return (
             <CardForHeartbeatUI userdeviceid={this.props.userdeviceid}/>
         );

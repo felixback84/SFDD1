@@ -179,11 +179,11 @@ exports.getAuthenticatedUser = (req, res) => {
         .get()
         .then((doc) => {
             if (doc.exists) {
-            userData.credentials = doc.data();
-            return db
-                .collection('likes')
-                .where('userHandle', '==', req.user.userHandle)
-                .get()
+                userData.credentials = doc.data();
+                return db
+                    .collection('likes')
+                    .where('userHandle', '==', req.user.userHandle)
+                    .get()
             }
         }) 
         .then((data) => {
@@ -211,8 +211,19 @@ exports.getAuthenticatedUser = (req, res) => {
             data.forEach((doc) => {
                 userData.activeUserAdventures.push(doc.data());
             });
-            return res.json(userData);
+            
+            return db
+                .collection('notifications')
+                .where('userHandle', '==', req.user.userHandle)
+                .get()
         })
+        .then((data) => {
+            userData.notifications = [];
+            data.forEach((doc) => {
+                userData.notifications.push(doc.data());
+            });
+            return res.json(userData);
+        })        
         .catch((err) => {
             console.error(err);
             return res.status(500).json({ error: err.code });

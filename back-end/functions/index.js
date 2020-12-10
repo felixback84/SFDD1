@@ -87,13 +87,20 @@ const {
     hildaPostColorCommand
 } = require('./handlers/forHildaThings');
 
-// gps
+// heartbeat
 const {
     detectGPSCoordsProximityRange,
     heartbeatPostInactiveCommand,
     heartbeatPostActiveCommand,
-    heartbeatTop5CoordsData
+    heartbeatTop5CoordsData,
 } = require('./handlers/forHeartBeat');
+
+// notifications
+const {
+    createNotificationOfOnFromThing,
+    getActiveStateFromActiveUserDeviceCollection
+} = require('./handlers/notifications')
+
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
 // signup user
@@ -187,7 +194,7 @@ app.post('/device/hilda/:thingId/inactive',FBAuth, hildaPostInactiveCommand);
 // post motor speed command in hilda things
 app.post('/device/hilda/:thingId/motorSpeed',FBAuth, hildaPostMotorSpeedCommand);
 // post color command in hilda things
-app.post('/device/hilda/:thingId/color',FBAuth, hildaPostInactiveCommand);
+app.post('/device/hilda/:thingId/color',FBAuth, hildaPostColorCommand);
 
 ////////////////////////////////// heartbeat thing routes /////////////////////////////////////////////////
 // post active command in heartbeat things
@@ -324,7 +331,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
             console.log('error from inscription')
         }
 });
- 
+
 // create live data doc in liveData collection to trasmit telemetry events to client --------------- to check response
 exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('userDevices/{userDevicesId}')
@@ -376,7 +383,7 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
 
 // detect traffic in topic events and db sync
 exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').onPublish(
-    (message, context) => {
+    async (message, context) => {
         // all data
         let data = message.data;        
         // create a buffer decoding with base64
@@ -387,14 +394,16 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         console.log(`str: ${str}`);
         // str to obj
         let obj = JSON.parse(str); 
-        // pick userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
+        // pick from userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
         const thingId = obj.thingId;
         // print object
         console.log(`obj: ${obj.createdAt} - ${thingId}`);
         // userDeviceId 
-        const userDeviceId = thingId.split("-").slice(2);
+        const userDeviceId = thingId.split("-").slice(2).toString();
         // nameOfDevice
-        const nameOfDevice = thingId.split("-").slice(1,2);
+        const nameOfDevice = thingId.split("-").slice(1,2).toString();
+        // userHandle
+        const userHandle = thingId.split("-").slice(0,1).toString();
         // print 
         console.log(`nameOfDevice: ${nameOfDevice}`);
         console.log(`userDeviceId: ${userDeviceId}`);
@@ -404,13 +413,37 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             .collection('liveDataSets')
             .doc(thingId)
         // update specific db doc
-        dbDataFromLiveDataSets
+        dbDataFromLiveDataSets  
             .update({
                 ...obj
-            })  
-        ///////////////////////////////////////////////////////////////////////////////////////////////// ojo
+            })
+        
+        // run it and get the state of activeThing
+        const getValueOnActiveStateOfThing = await getActiveStateFromActiveUserDeviceCollection(userDeviceId);
+        const resultOfActiveState = await getValueOnActiveStateOfThing;
+        // print result of state in activeThing
+        console.log(`result of activeThing: ${resultOfActiveState}`);
+            
+        //check if run the notification to ON command
+        if(obj.active == 'true'){
+            if(resultOfActiveState == false){
+                // obj to notification doc to ON command
+                const dataToNotificationOfOnThing = {
+                    read: false,
+                    active: obj.active,
+                    userDeviceId: userDeviceId,
+                    thingId: thingId,
+                    createdAt: obj.createdAt,
+                    nameOfDevice: nameOfDevice,
+                    userHandle: userHandle,
+                } 
+                // run the creation of the notification of ON
+                createNotificationOfOnFromThing(dataToNotificationOfOnThing);
+            }
+        }
+        
         // init process to make the meassures of the gps coords in heartbeat things
-        if(nameOfDevice == "Heartbeat"){ // nameOfDevice in thing
+        if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing
             return dbDataFromLiveDataSets
                 .get()    
                 .then((doc)=>{
@@ -423,7 +456,4 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 });
         }
     })
-
-    
-
 

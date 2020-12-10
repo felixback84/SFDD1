@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 class GoogleMapsToHeartbeat extends Component {
 
     render() {
-
+        
         // redux state
         const {
             thingLiveDataSets:{
@@ -30,14 +30,13 @@ class GoogleMapsToHeartbeat extends Component {
         
         // other markers
         let otherMarkers = top5Coords.map(top5Coord => { 
-            // index
-            let i = 0
+            
             // print
             console.log(`top5Coord: ${JSON.stringify(top5Coord.coords)}`);
             // pins
             return (
                 <LocationPin
-                    key={i++}
+                    key={Math.random()}
                     lat={top5Coord.coords.lat2}
                     lng={top5Coord.coords.lon2}
                     text={`${top5Coord.coords.lat2} - ${top5Coord.coords.lon2}`}
