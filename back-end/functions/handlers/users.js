@@ -7,7 +7,7 @@ firebase.initializeApp(config);
 // validate data
 const { 
     validateSignupData, 
-    validateLoginData, 
+    validateLoginData,  
     reduceUserDetails 
 } = require('../utilities/validation');
 

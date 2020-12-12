@@ -17,24 +17,36 @@ exports.getActiveStateFromActiveUserDeviceCollection = async (userDeviceId) => {
             // print data
             console.log(doc.id, '=>', doc.data());
             // extract state on activeThing
-            activeThing = doc.data().activeThing;
+            activeThingData = {
+                activeThing: doc.data().activeThing,
+                activeUserDevicesId: doc.id
+            }
             // print data of state
-            console.log(`activeThing: ${activeThing}`);
+            console.log(`activeThingData: ${activeThingData}`);
         });
         // return result
-        return activeThing
+        return activeThingData
     }
 }
 
 // create notification in db
-exports.createNotificationOfOnFromThing = (data) => {
-    // connection with db to check if the thing is already active
-    let activestateInCollectionActiveUserDevices =  db
-        .collection('activeUserDevices')
-        .where('userDeviceId','==', userDeviceId)
-        .update({
-            activeThing: true
-        })
+exports.createNotificationOfOnFromThing = async (data, docId) => {
+    // db part
+    const activeUserDevices = db.collection('activeUserDevices').doc(docId.toString());
+    //const snapshot = await activeUserDevices.where('userDeviceId', '==', data.userDeviceId.toString()).get();
+    const doc = await activeUserDevices.get();
+
+    // check if there are any coincidence
+    if (!doc.exists) {
+        console.log('No matching documents.');
+        return;
+    }  else {
+        // extract and return the results
+        console.log('Document data:', doc.data());
+        // update field
+        const res = await activeUserDevices.update({activeThing: true});
+    }
+
     // add data to notofocation collection   
     db
         .collection('notifications')

@@ -21,7 +21,8 @@ const initialState = {
     credentials: {}, 
     activeUserDevices: [],
     activeUserAdventures: [],
-    likes: []
+    likes: [],
+    notifications: []
 }; 
 
 // function to determine the type of action to set state

@@ -422,11 +422,11 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         const getValueOnActiveStateOfThing = await getActiveStateFromActiveUserDeviceCollection(userDeviceId);
         const resultOfActiveState = await getValueOnActiveStateOfThing;
         // print result of state in activeThing
-        console.log(`result of activeThing: ${resultOfActiveState}`);
+        console.log(`result of activeThing: ${resultOfActiveState.toString()}`);
             
         //check if run the notification to ON command
         if(obj.active == 'true'){
-            if(resultOfActiveState == false){
+            if(resultOfActiveState.activeThing == false){
                 // obj to notification doc to ON command
                 const dataToNotificationOfOnThing = {
                     read: false,
@@ -436,9 +436,14 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     createdAt: obj.createdAt,
                     nameOfDevice: nameOfDevice,
                     userHandle: userHandle,
+                    type: 'device',
+                    description : "active device from app"
                 } 
                 // run the creation of the notification of ON
-                createNotificationOfOnFromThing(dataToNotificationOfOnThing);
+                createNotificationOfOnFromThing(
+                    dataToNotificationOfOnThing, 
+                    resultOfActiveState.activeUserDevicesId
+                );
             }
         }
         

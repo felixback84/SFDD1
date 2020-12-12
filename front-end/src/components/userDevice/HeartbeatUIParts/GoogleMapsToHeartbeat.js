@@ -48,7 +48,7 @@ class GoogleMapsToHeartbeat extends Component {
             // Important! Always set the container height explicitly
             <div style={{ height: '100vh', width: '100%' }}>
                 <GoogleMapReact
-                    bootstrapURLKeys={{key:''}}
+                    bootstrapURLKeys={{key:'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'}}
                     center={center}
                     defaultZoom={18}
                 >
