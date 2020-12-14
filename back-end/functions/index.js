@@ -97,8 +97,7 @@ const {
 
 // notifications
 const {
-    createNotificationOfOnFromThing,
-    getActiveStateFromActiveUserDeviceCollection
+    initNotificationsToActiveStateOfThing
 } = require('./handlers/notifications')
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
@@ -144,7 +143,7 @@ app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice)
 app.get('/user/device/:userDeviceId/datasets', FBAuth, getAllDataSetsUserDevice);
 // get one dataSets in user device 
 app.get('/user/device/:userDeviceId/dataset/:dataSetId', FBAuth, getDataSetUserDevice);
- 
+
 ////////////////////////////////////////////////// CHECKOUTS ////////////////////////////////////////////////////////
 // post data for checkout device
 app.post('/user/checkout/device/:deviceId', FBAuth, postDataCheckOutDevice);
@@ -370,7 +369,7 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
         // run it
         initDevicesIotCore(userDeviceId);   
         
-        ////////////////////////////////////////////////////////////////////// create liveData doc in collection 
+        /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
         db
             .doc(`/userDevices/${userDeviceId}`)
             .collection('liveDataSets')
@@ -417,36 +416,27 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             .update({
                 ...obj
             })
-        
-        // run it and get the state of activeThing
-        const getValueOnActiveStateOfThing = await getActiveStateFromActiveUserDeviceCollection(userDeviceId);
-        const resultOfActiveState = await getValueOnActiveStateOfThing;
-        // print result of state in activeThing
-        console.log(`result of activeThing: ${resultOfActiveState.toString()}`);
-            
-        //check if run the notification to ON command
-        if(obj.active == 'true'){
-            if(resultOfActiveState.activeThing == false){
-                // obj to notification doc to ON command
-                const dataToNotificationOfOnThing = {
-                    read: false,
-                    active: obj.active,
-                    userDeviceId: userDeviceId,
-                    thingId: thingId,
-                    createdAt: obj.createdAt,
-                    nameOfDevice: nameOfDevice,
-                    userHandle: userHandle,
-                    type: 'device',
-                    description : "active device from app"
-                } 
-                // run the creation of the notification of ON
-                createNotificationOfOnFromThing(
-                    dataToNotificationOfOnThing, 
-                    resultOfActiveState.activeUserDevicesId
-                );
+
+        // obj to notification doc to ON command
+        const dataToNotificationOfStateOfThing = {
+            messageaActiveFromThing: obj.active,
+            userDeviceId,
+            dataToCretateNotification:{
+                read: false,
+                activeThing: obj.active,
+                userDeviceId: userDeviceId,
+                thingId: thingId,
+                createdAt: obj.createdAt,
+                nameOfDevice: nameOfDevice,
+                userHandle: userHandle,
+                description : "active device from app"
             }
         }
         
+        // run it to notificate the users of the active state of things
+        initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);   
+
+        //////////////////////////////////////////////////// GPS LOGIC //////////////////////////////////////////////////////
         // init process to make the meassures of the gps coords in heartbeat things
         if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing
             return dbDataFromLiveDataSets
@@ -460,5 +450,6 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     console.error(err);
                 });
         }
-    })
+    }
+)
 

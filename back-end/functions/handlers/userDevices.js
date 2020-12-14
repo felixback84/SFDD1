@@ -52,7 +52,7 @@ exports.getUserDevice = (req, res) => {
 
 // get active userdevice
 exports.getActiveUserDevices = async (req, res) => {
-
+    // ask to if ther any device active
     const activeUserDeviceDocument = db
         .collection('activeUserDevices')
         .where('userHandle', '==', req.user.userHandle)
@@ -70,6 +70,7 @@ exports.getActiveUserDevices = async (req, res) => {
             if (doc.exists) {
                 userDeviceData = doc.data();
                 userDeviceData.userDeviceId = doc.id;
+                // return active device
                 return activeUserDeviceDocument.get();
             } else {
                 return res.status(404).json({ error: 'userDevice not found' });
@@ -78,7 +79,7 @@ exports.getActiveUserDevices = async (req, res) => {
         // check if is empty this kind of item in the activeDevices collection
         .then((data) => {
             if (data.empty) {
-              //console.log(data);
+                //console.log(data);
                 return db
                     // add data to it
                     .collection('activeUserDevices')
@@ -87,7 +88,8 @@ exports.getActiveUserDevices = async (req, res) => {
                         userDeviceId: req.params.userDeviceId,
                         userHandle: req.user.userHandle,
                         createdAt: new Date().toISOString(),
-                        active: true
+                        active: true,
+                        activeThing: false
                     })
                     /////////////////////////////////////////////////
                     .then(() => {
