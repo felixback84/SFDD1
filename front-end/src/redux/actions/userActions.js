@@ -3,14 +3,14 @@ import {
     LOADING_UI,
     CLEAR_ERRORS,
     SET_ERRORS,
-
     SET_UNAUTHENTICATED,
     LOADING_USER,
     SET_USER,
     GET_ACTIVE_USER_DEVICES,
     GET_INACTIVE_USER_DEVICES,
     GET_ACTIVE_USER_ADVENTURES,
-    GET_INACTIVE_USER_ADVENTURES
+    GET_INACTIVE_USER_ADVENTURES,
+    MARK_DEVICE_NOTIFICATIONS_READ
 } from '../types';
 
 // axios
@@ -81,3 +81,15 @@ const setAuthorizationHeader = (token) => {
     localStorage.setItem('FBIdToken', FBIdToken);
     axios.defaults.headers.common['Authorization'] = FBIdToken;
 };
+
+// to determine of the notifications was read
+export const markDevicesNotificationsRead = (notificationsIds) => dispatch => {
+    axios
+        .post('/notifications', notificationsIds)
+        .then ((res) => {
+            dispatch({
+                type: MARK_DEVICE_NOTIFICATIONS_READ
+            })
+        })
+        .catch(err => console.log(err));
+} 

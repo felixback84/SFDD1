@@ -6,10 +6,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-// icons
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
-import GamesIcon from '@material-ui/icons/Games';
+// componets
+import DialogWithNotifications from '../../../components/notifications/DialogWithNotifications'
 
 const StyledMenu = withStyles( 
         {
@@ -46,16 +44,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function MyButtonNotifications() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+    
     return (
         <div>
             {/* icon button */}
@@ -63,32 +52,10 @@ export default function MyButtonNotifications() {
                 aria-controls="customized-menu"
                 aria-haspopup="true"
                 variant="contained"
-                onClick={handleClick}
             >
-                <NotificationsNoneIcon/>
+                {/* dialog for notifications */}
+                <DialogWithNotifications/>
             </IconButton>
-            {/* sub-menu */}
-            <StyledMenu
-                id="customized-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                {/* sub-menu-items */}
-                <StyledMenuItem component={Link} to="/notifications/devices">
-                    <ListItemIcon>
-                        <DevicesOtherIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Devices" />
-                </StyledMenuItem>
-                <StyledMenuItem component={Link} to="/notifications/adventures">
-                    <ListItemIcon>
-                        <GamesIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Adventures" />
-                </StyledMenuItem>
-            </StyledMenu>
         </div>
     );
 }

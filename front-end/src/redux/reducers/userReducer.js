@@ -11,7 +11,8 @@ import {
     GET_LIKE_DEVICES, 
     GET_UNLIKE_DEVICES,
     GET_LIKE_ADVENTURES,
-    GET_UNLIKE_ADVENTURES
+    GET_UNLIKE_ADVENTURES,
+    MARK_DEVICE_NOTIFICATIONS_READ
 } from '../types';
 
 // initial state
@@ -119,7 +120,12 @@ export default function(state = initialState, action){
                 likes: state.likes.filter(
                     like => like.adventureId !== action.payload.adventureId
                 )
-            }             
+            } 
+        case MARK_DEVICE_NOTIFICATIONS_READ:
+            state.notifications.forEach((notification) => (notification.read = true));
+            return {
+                ...state
+            }     
         default:
             return state;  
     }

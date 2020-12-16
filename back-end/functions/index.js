@@ -16,7 +16,8 @@ const {
     login,
     addUserDetails,
     uploadUserImage,
-    getAuthenticatedUser
+    getAuthenticatedUser,
+    markDevicesNotificationsRead    
 } = require('./handlers/users');
 
 // userDevices
@@ -25,7 +26,6 @@ const {
     getUserDevice,
     getActiveUserDevices,
     getInactiveUserDevices
-    
 } = require('./handlers/userDevices');
 
 // userAdventures
@@ -97,7 +97,7 @@ const {
 
 // notifications
 const {
-    initNotificationsToActiveStateOfThing
+    initNotificationsToActiveStateOfThing,
 } = require('./handlers/notifications')
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
@@ -112,6 +112,8 @@ app.post('/user', FBAuth, addUserDetails);
 app.post('/user/image', FBAuth, uploadUserImage);
 // get all own user data (auth)
 app.get('/user', FBAuth, getAuthenticatedUser);
+// mark if the notifications was read 
+app.post('/notifications', FBAuth, markDevicesNotificationsRead);
 
 ////////////////////////////////////////////////// USERDEVICES ////////////////////////////////////////////////////////
 // get userDevice 
@@ -125,7 +127,7 @@ app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 
 // just to test
 app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
- 
+
 ////////////////////////////////////////////////// USERADVENTURES /////////////////////////////////////////////////////
 // get userDevice 
 app.get('/useradventures', FBAuth, getAllUserAdventures);
@@ -417,25 +419,47 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 ...obj
             })
 
-        // obj to notification doc to ON command
-        const dataToNotificationOfStateOfThing = {
-            messageaActiveFromThing: obj.active,
-            userDeviceId,
-            dataToCretateNotification:{
-                read: false,
-                activeThing: obj.active,
-                userDeviceId: userDeviceId,
-                thingId: thingId,
-                createdAt: obj.createdAt,
-                nameOfDevice: nameOfDevice,
-                userHandle: userHandle,
-                description : "active device from app"
+        // data to pass to create the notification    
+        if(obj.active == "true"){
+            // obj to notification doc to ON command
+            const dataToNotificationOfStateOfThing = {
+                messageaActiveFromThing: obj.active,
+                userDeviceId,
+                dataToCretateNotification:{
+                    read: false,
+                    activeThing: obj.active,
+                    userDeviceId: userDeviceId,
+                    thingId: thingId,
+                    createdAt: obj.createdAt,
+                    nameOfDevice: nameOfDevice,
+                    userHandle: userHandle,
+                    description : "active device from app",
+                    type: 'device'
+                }
             }
+            // run it to notificate the users of the active state of things
+            initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);
+        } else if (obj.active == "false") {
+            // obj to notification doc to ON command
+            const dataToNotificationOfStateOfThing = {
+                messageaActiveFromThing: obj.active,
+                userDeviceId,
+                dataToCretateNotification:{
+                    read: false,
+                    activeThing: obj.active,
+                    userDeviceId: userDeviceId,
+                    thingId: thingId,
+                    createdAt: obj.createdAt,
+                    nameOfDevice: nameOfDevice,
+                    userHandle: userHandle,
+                    description : "inactive device from app",
+                    type: 'device'
+                }
+            }
+            // run it to notificate the users of the active state of things
+            initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);   
         }
         
-        // run it to notificate the users of the active state of things
-        initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);   
-
         //////////////////////////////////////////////////// GPS LOGIC //////////////////////////////////////////////////////
         // init process to make the meassures of the gps coords in heartbeat things
         if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing

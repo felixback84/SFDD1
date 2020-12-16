@@ -220,7 +220,10 @@ exports.getAuthenticatedUser = (req, res) => {
         .then((data) => {
             userData.notifications = [];
             data.forEach((doc) => {
-                userData.notifications.push(doc.data());
+                userData.notifications.push({
+                    ...doc.data(),
+                    notificationId: doc.id
+                });
             });
             return res.json(userData);
         })        
@@ -228,7 +231,25 @@ exports.getAuthenticatedUser = (req, res) => {
             console.error(err);
             return res.status(500).json({ error: err.code });
         });
-};
+};  
+
+// mark if the notifications was read 
+exports.markDevicesNotificationsRead = (req, res) => {
+    let batch = db.batch();
+    req.body.forEach((notificationId) => {
+        const notification = db.doc(`/notifications/${notificationId}`);
+            batch.update(notification, { read: true });
+    });
+    batch
+        .commit()
+        .then(() => {
+            return res.json({ message: 'Notifications marked read' });
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
+}; 
 
 
 

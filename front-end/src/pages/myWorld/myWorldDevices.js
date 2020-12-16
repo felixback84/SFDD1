@@ -16,12 +16,11 @@ class myWorldDevices extends Component {
 
     componentDidMount() {
         this.props.getUserDevices(); 
-        
     }
- 
+
     render() {
         const { userDevices, loading } = this.props;
-        //console.log(userDevices[0]);
+        
         let userDevicesMarkup = !loading ? (
             userDevices.map(userDevice => <UserDevice key={userDevice.userDeviceId} userDevice={userDevice}/>)
         ) : (

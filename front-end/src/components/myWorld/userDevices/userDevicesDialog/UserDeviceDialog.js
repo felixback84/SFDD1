@@ -24,7 +24,7 @@ import { getUserDevice } from '../../../../redux/actions/userDevicesActions';
 import { getAllDataSetsUserDevice } from '../../../../redux/actions/dataSetsActions';
 
 // styles
-const styles = (theme) => ({
+const styles = () => ({
     expandButton: {
         position: 'absolute',
         left: '90%'
@@ -47,7 +47,7 @@ const Transition = React.forwardRef(function Transition(props,ref) {
 class UserDeviceDialog extends Component {
 
     state = {
-        open: false
+        open: false 
     };
 
     // events

@@ -29,6 +29,7 @@ const getActiveStateFromActiveUserDeviceCollection = async (userDeviceId) => {
     }
 }
 
+// create doc in db with notification data
 const addNotificationOnDBOfActiveThingStateOfThing = async (
         dataToCretateNotification, 
         activeUserDocId, 
@@ -62,6 +63,7 @@ const addNotificationOnDBOfActiveThingStateOfThing = async (
             })
     }
 
+// select between active a not active notification
 const pickerNotificationToActiveStateOfThing = (objToPickerTheTypeOfNotification) => {
     
     // vars to pass data
@@ -94,7 +96,7 @@ const pickerNotificationToActiveStateOfThing = (objToPickerTheTypeOfNotification
     }
 }
 
-//////////////////////////////////////////////////////////// NOTIFICATIONS PART /////////////////////////////    
+// init notification with thing message data
 exports.initNotificationsToActiveStateOfThing = async (dataToNotificationOfStateOfThing) => {
     // run it and get the state of activeThing
     const getValueOnActiveStateOfThing = await getActiveStateFromActiveUserDeviceCollection(dataToNotificationOfStateOfThing.userDeviceId);
@@ -114,7 +116,7 @@ exports.initNotificationsToActiveStateOfThing = async (dataToNotificationOfState
     // run it
     pickerNotificationToActiveStateOfThing(objToPickerNotification);
 }
-
+ 
 
 
 

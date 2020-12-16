@@ -12,8 +12,6 @@ import singleStoreDevice from './pages/store/singleStoreDevice';
 import storeAdventures from './pages/store/storeAdventures';
 import singleStoreAdventure from './pages/store/singleStoreAdventure';
 import userDevice from './pages/userDevice/userDevice';
-import notificationsDevices from './pages/notifications/notificationsDevices';
-import notificationsAdventures from './pages/notifications/notificationsAdventures';
 import profile from './pages/profile/profile';
 import addCart from './pages/profile/addCart';
 import buys from './pages/profile/buys';
@@ -79,8 +77,6 @@ class App extends Component {
                   <Route exact path="/store/adventures" component={storeAdventures} />
                   <Route exact path="/store/adventures/:adventureId" component={singleStoreAdventure} />
                   <Route exact path="/userdevice" component={userDevice}/>
-                  <Route exact path="/notifications/devices" component={notificationsDevices} />
-                  <Route exact path="/notifications/adventures" component={notificationsAdventures} />
                   <Route exact path="/profile" component={profile} />
                   <Route exact path="/addcart" component={addCart} />
                   <Route exact path="/buys" component={buys} />
