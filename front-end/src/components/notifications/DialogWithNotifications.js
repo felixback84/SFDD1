@@ -10,6 +10,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
+
 // Components
 import MyButton from '../../utilities/MyButton';
 import TitleToDialogNotifications from './TitleToDialogNotifications';
@@ -86,14 +87,16 @@ class DialogWithNotifications extends Component {
                             }
                             color="secondary"
                         >
-                            <NotificationsIcon />
+                            
+                            <NotificationsIcon onClick={this.handleOpen}/>
+                            
                         </Badge>
                     )
                 ) : (
-                    notificationsIcon = <NotificationsIcon />
+                    notificationsIcon = <NotificationsIcon onClick={this.handleOpen}/>
                 );
         } else {
-            notificationsIcon = <NotificationsIcon />;
+            notificationsIcon = <NotificationsIcon onClick={this.handleOpen}/>;
         }
 
         // notification content logic
@@ -103,7 +106,7 @@ class DialogWithNotifications extends Component {
                     const description = notification.description;
                     const time = dayjs(notification.createdAt).fromNow();
                     const iconColor = notification.read ? 'primary' : 'secondary';
-                    const icon = notification.activeThing === true ? (
+                    const icon = notification.activeThing === "true" ? (
                             <FavoriteIcon color={iconColor} style={{ marginRight: 10 }} />
                         ) : (
                             <ChatIcon color={iconColor} style={{ marginRight: 10 }} />
@@ -129,13 +132,8 @@ class DialogWithNotifications extends Component {
 
         return (
             <Fragment>
-                {/* Open button */}
-                <MyButton onClick={this.handleOpen} 
-                    tip="Expand scream" 
-                    tipClassName={classes.expandButton}
-                >
-                    {notificationsIcon}
-                </MyButton>
+                {/* Open/nots button */}
+                {notificationsIcon}
                 {/* Dialog box */}
                 <Dialog 
                     fullScreen 

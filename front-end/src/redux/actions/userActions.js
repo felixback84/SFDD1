@@ -75,6 +75,17 @@ export const logoutUser = () => (dispatch) => {
     dispatch({ type: SET_UNAUTHENTICATED });
 }; 
 
+// redux action to upload image on the server
+export const uploadProfileImage = (formData) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios
+        .post('/user/image', formData)
+        .then(() => {
+            dispatch(getUserData());
+        })
+        .catch((err) => console.log(err));
+};
+
 // function to store auth header
 const setAuthorizationHeader = (token) => {
     const FBIdToken = `Bearer ${token}`;

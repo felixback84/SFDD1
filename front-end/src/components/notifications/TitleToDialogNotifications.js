@@ -2,7 +2,6 @@ import React from 'react';
 // dayjs
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-
 // mui stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
+// styles
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -24,16 +24,20 @@ const styles = (theme) => ({
     }
 });
 
+// component
 const TitleToDialogNotifications = (props) => {
+    // relative time
     dayjs.extend(relativeTime);
-    const { classes, onClose } = props;
+    // redux state
+    const { 
+        classes, 
+        onClose, 
+    } = props;
+
     return (
         <MuiDialogTitle disableTypography className={classes.root} >
             <Typography variant="body2" color="textSecondary" component="h1">
-                {`Name of Device: ${props.nameofdevice}`}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="h1">
-                {`For ages from: ${props.agerate}`}
+                Notifications
             </Typography>
             {onClose ? (
             <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>

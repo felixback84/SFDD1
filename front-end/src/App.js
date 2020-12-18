@@ -8,9 +8,7 @@ import login from './pages/login';
 import myWorldDevices from './pages/myWorld/myWorldDevices';
 import myWorldAdventures from './pages/myWorld/myWorldAdventures';
 import storeDevices from './pages/store/storeDevices';
-import singleStoreDevice from './pages/store/singleStoreDevice';
 import storeAdventures from './pages/store/storeAdventures';
-import singleStoreAdventure from './pages/store/singleStoreAdventure';
 import userDevice from './pages/userDevice/userDevice';
 import profile from './pages/profile/profile';
 import addCart from './pages/profile/addCart';
@@ -73,9 +71,7 @@ class App extends Component {
                   <Route exact path="/myworld/devices" component={myWorldDevices} />
                   <Route exact path="/myworld/adventures" component={myWorldAdventures} />
                   <Route exact path="/store/devices" component={storeDevices} />
-                  <Route exact path="/store/devices/:deviceId" component={singleStoreDevice} />
                   <Route exact path="/store/adventures" component={storeAdventures} />
-                  <Route exact path="/store/adventures/:adventureId" component={singleStoreAdventure} />
                   <Route exact path="/userdevice" component={userDevice}/>
                   <Route exact path="/profile" component={profile} />
                   <Route exact path="/addcart" component={addCart} />

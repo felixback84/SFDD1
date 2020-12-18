@@ -38,7 +38,7 @@ class signup extends Component {
     }
 
     handleSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault(); 
         this.setState({
             loading: true
         });

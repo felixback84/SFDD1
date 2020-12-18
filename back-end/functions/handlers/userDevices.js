@@ -89,6 +89,7 @@ exports.getActiveUserDevices = async (req, res) => {
                         userHandle: req.user.userHandle,
                         createdAt: new Date().toISOString(),
                         active: true,
+                        /// esto deberia extraerse del modelo de datos de cada dispositivo, los modos (active or not active) deberian ser una colleción especial
                         activeThing: false
                     })
                     /////////////////////////////////////////////////
