@@ -60,7 +60,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                 names: doc.data().names,
                 lastname: doc.data().lastname,
                 email: doc.data().email,
-                phone:doc.data().phone,
+                //phone:doc.data().phone,
                 userId: doc.data().userId
             }
             dataCheckout.user = userDataFilter;
@@ -277,7 +277,7 @@ exports.postDataCheckOutDevice = (req, res) => {
                     resJson = await response.json(); // read response body and parse as JSON
                     // add to firebase
                     if(resJson.status == 200){
-                        db.collection('checkouts').add(dataCheckout);
+                        db.collection('checkouts').add();
                     }
                 }
                 // run it
@@ -294,7 +294,7 @@ exports.postDataCheckOutDevice = (req, res) => {
     }
     
 // post data for checkout to post in userAdventures
-exports.postDataCheckOutAdventure = (req, res) => {
+exports.postAdventure = (req, res) => {
     // ask to Firebase
     const dataCheckout = {}
     // ask for userCredentials

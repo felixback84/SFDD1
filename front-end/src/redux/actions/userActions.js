@@ -54,6 +54,17 @@ export const signupUser = (newUserData, history) => (dispatch) => {
         });
 } 
 
+// redux action to edit user details
+export const editUserDetails = (userDetails) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios
+        .post('/user', userDetails)
+        .then(() => {
+            dispatch(getUserData());
+        })
+        .catch((err) => console.log(err));
+}; 
+
 // redux action to get or set user data 
 export const getUserData = () => (dispatch) => {
     dispatch({ type: LOADING_USER });

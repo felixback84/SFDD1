@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { Link } from 'react-router-dom';
 
 //dayjs
 import dayjs from 'dayjs';
@@ -14,17 +12,13 @@ import ProfileSkeleton from '../../utilities/UserDeviceSkeleton';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import MuiLink from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Icons
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalendarToday from '@material-ui/icons/CalendarToday';
-
 
 // redux
 import { connect } from 'react-redux';
@@ -121,7 +115,6 @@ class profile extends Component {
                                 {
                                     location && (
                                         <Fragment>
-                                            
                                             <Typography variant="body2">
                                             <LocationOn color="primary" />
                                                 {location}
@@ -135,7 +128,7 @@ class profile extends Component {
                                     names && (
                                         <Fragment>
                                             <Typography variant="body2">
-                                                {names} {lastname}
+                                                {names} | {lastname}
                                             </Typography>
                                             <hr />
                                         </Fragment>

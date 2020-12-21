@@ -16,7 +16,7 @@ import {
 // axios
 import axios from 'axios';
 
-// redux action to set billing address in device store
+// redux action to set shipping address in device store
 export const setAddressShipping = (userAdressShippingData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({
@@ -28,6 +28,7 @@ export const setAddressShipping = (userAdressShippingData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });
 }
 
+// redux action to set billing address in device store
 export const setAddressBilling = (userAdressBillingData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({
@@ -39,6 +40,7 @@ export const setAddressBilling = (userAdressBillingData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });
 }
 
+// redux action to set credit card in device store
 export const setCreditCard = (userCreditCardData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({
@@ -50,6 +52,7 @@ export const setCreditCard = (userCreditCardData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });
 }
 
+// redux action to post checkout to device
 export const postDataCheckOutDevice = (deviceId, userData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
@@ -70,6 +73,7 @@ export const postDataCheckOutDevice = (deviceId, userData) => (dispatch) => {
     dispatch({ type: STOP_LOADING_UI });    
 }
 
+// redux action to post checkout to adventure
 export const postDataCheckOutAdventure = (adventureId, userData) => (dispatch) => {
     dispatch({ type: LOADING_UI });
     axios
@@ -89,4 +93,21 @@ export const postDataCheckOutAdventure = (adventureId, userData) => (dispatch) =
         });
     dispatch({ type: STOP_LOADING_UI });    
 }
+
+// get all checkouts
+export const getAllCheckouts = () => (dispatch) => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .get('/user/checkouts')
+        .then((res) => {    
+            // print res 
+            console.log(res.data); 
+            dispatch({
+                type: GET_CHECKOUTS,
+                payload: res.data
+            });
+            dispatch({ type: STOP_LOADING_UI });
+        })
+        .catch((err) => console.log(err));
+}    
 
