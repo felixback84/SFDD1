@@ -5,10 +5,10 @@ import './App.css';
 import home from './pages/home';
 import signup from './pages/signup';
 import login from './pages/login';
+import vlog from './pages/vlog';
+import myHome from './pages/myHome';
 import myWorldDevices from './pages/myWorld/myWorldDevices';
-import myWorldAdventures from './pages/myWorld/myWorldAdventures';
 import storeDevices from './pages/store/storeDevices';
-import storeAdventures from './pages/store/storeAdventures';
 import userDevice from './pages/userDevice/userDevice';
 import profile from './pages/profile/profile';
 import addCart from './pages/profile/addCart';
@@ -60,18 +60,18 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Provider store={store}>
-          <div>
+          <div> 
             <Router>
               <div className="container">
                 <Switch>
+                  <Route exact path="/" component={home} />
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
-                  <Route exact path="/" component={home} />
-                  {/* auth paths */}
-                  <Route exact path="/myworld/devices" component={myWorldDevices} />
-                  <Route exact path="/myworld/adventures" component={myWorldAdventures} />
                   <Route exact path="/store/devices" component={storeDevices} />
-                  <Route exact path="/store/adventures" component={storeAdventures} />
+                  <Route exact path="/blog" component={vlog} />
+                  {/* auth paths */}
+                  <Route exact path="/myhome" component={myHome} />
+                  <Route exact path="/myworld/devices" component={myWorldDevices} />
                   <Route exact path="/userdevice" component={userDevice}/>
                   <Route exact path="/profile" component={profile} />
                   <Route exact path="/addcart" component={addCart} />

@@ -1,0 +1,70 @@
+{
+  "name": "front-end-h",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "classnames": "^2.2.6",
+    "dayjs": "^1.8.36",
+    "express-ws": "^4.0.0",
+    "firebase": "^7.18.0",
+    "firebase-admin": "^9.1.0",
+    "google-map-react": "^2.1.9",
+    "jwt-decode": "^2.2.0",
+    "material-kit-react": "^1.9.0",
+    "md5": "^2.2.1",
+    "node-fetch": "^2.6.0",
+    "node-sass": "^5.0.0",
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.10.0",
+    "react-color": "^2.18.1",
+    "react-dom": "^16.13.1",
+    "react-player": "^1.15.3",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "rfdc": "^1.1.4",
+    "socket.io-client": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/preset-react": "7.0.0",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-react": "7.14.3",
+    "gulp": "4.0.2",
+    "gulp-append-prepend": "1.0.8",
+    "prettier": "1.18.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

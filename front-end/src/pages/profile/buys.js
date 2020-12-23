@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+// mui stuff
+import Grid from '@material-ui/core/Grid';
 // components
 import Checkout from '../../components/user/Checkout';
 import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
@@ -16,7 +18,7 @@ class buys extends Component {
     render() {
 
         // redux state
-        const { checkouts } = this.props;
+        const { checkouts, loading } = this.props;
         
         // checkouts markup
         let checkoutsMarkup = loading ? (

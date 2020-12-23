@@ -1,4 +1,5 @@
 export default {
+    // color squeme
     palette: {
         primary: {
             
@@ -14,6 +15,56 @@ export default {
         }
     },
     notColor: {
+        // navabar
+        appBar: {
+            top: 0,
+            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+        },
+        grow: {
+            flexGrow: 1,
+        },
+        form: {
+            margin: "0"
+        },
+        cardHeader: {
+            width: "auto",
+            textAlign: "center",
+            marginLeft: "20px",
+            marginRight: "20px",
+            marginTop: "-40px",
+            padding: "20px 0",
+            marginBottom: "15px"
+        },
+        socialIcons: {
+            maxWidth: "24px",
+            marginTop: "0",
+            width: "100%",
+            transform: "none",
+            left: "0",
+            top: "0",
+            height: "100%",
+            lineHeight: "41px",
+            fontSize: "20px"
+        },
+        divider: {
+            marginTop: "30px",
+            marginBottom: "0px",
+            textAlign: "center"
+        },
+        cardFooter: {
+            paddingTop: "0rem",
+            border: "0",
+            borderRadius: "6px",
+            justifyContent: "center !important"
+        },
+        socialLine: {
+            marginTop: "1rem",
+            textAlign: "center",
+            padding: "0"
+        },
+        inputIconsColor: {
+            color: "#495057"
+        },
         typography: {
             useNextVariants: true
         },
@@ -53,12 +104,6 @@ export default {
         paper: {
             padding: 20
         },
-
-        // card: {
-        //     position: 'relative',
-        //     display: 'flex',
-        //     marginBottom: 20
-        // },
         image: {
             minWidth: 100
         },
@@ -66,7 +111,6 @@ export default {
             padding: 25,
             objectFit: 'cover'
         },
-
         profile: {
             '& .image-wrapper': {
                 textAlign: 'center',
@@ -118,15 +162,5 @@ export default {
             borderBottom: '1px solid rgba(0,0,0,0.1)',
             marginBottom: '10px'
         },
-        // navabar
-        appBar: {
-            top: 'auto',
-            bottom: 0,
-            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-        },
-        grow: {
-            flexGrow: 1,
-        }
     }
-    
 };

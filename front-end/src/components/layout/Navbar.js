@@ -7,15 +7,16 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+
 // icons
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import HomeIcon from '@material-ui/icons/Home';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import PhonelinkRingIcon from '@material-ui/icons/PhonelinkRing';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt';
 
 // components-buttons
-import MyButtonMyWorld from './buttons/MyButtonMyWorld';
+import GamesIcon from '@material-ui/icons/Games';
 import MyButtonStore from './buttons/MyButtonStore';
-import MyButtonUserDevice from './buttons/MyButtonUserDevice';
 import MyButtonNotifications from './buttons/MyButtonNotifications';
 import MyButtonProfile from './buttons/MyButtonProfile';
 import MyButton from './buttons/MyButtonProfile';
@@ -28,51 +29,50 @@ const styles = (theme) => ({
     ...theme.notColor
 });
 
-// const useStyles = makeStyles(() => ({
-//     appBar: {
-//         top: 'auto',
-//         bottom: 0,
-//         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-//     },
-//     grow: {
-//         flexGrow: 1,
-//     }
-// })); 
-
 class Navbar extends Component {
     render() {
-    //const classes = useStyles();
-    const { classes, authenticated } = this.props;
-    // const { credentials } = this.props;
-    // console.log(credentials);
-    // const {
-    //     user: {
-    //         credentials: { createdAt, bio }
-    //     }
-    // } = this.props;
-    // console.log(bio);
+    // redux state
+    const { classes, authenticated, credentials } = this.props;
 
     return(
         <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
             {authenticated ? (
+                // authenticated users
                 <Fragment>
-                    <MyButtonMyWorld/>
                     <div className={classes.grow} />
-                    <MyButtonStore/>
+                    <Link to="/myHome">
+                        <IconButton>
+                            <GamesIcon />
+                        </IconButton>
+                    </Link>
                     <div className={classes.grow} />
-                    <MyButtonUserDevice className={classes.fabButton}/>
+                    <Link to="/myworld/devices">
+                        <IconButton>
+                            <SentimentSatisfiedAltIcon />
+                        </IconButton>
+                    </Link>
+                    
+                    <div className={classes.grow} />
+                    <Link to="/userDevice">
+                        <IconButton>
+                            <PhonelinkRingIcon/>
+                        </IconButton>
+                    </Link>
                     <div className={classes.grow} />
                     <MyButtonNotifications/>
                     <div className={classes.grow} />
                     <MyButtonProfile/>
+                    <div className={classes.grow} />
                 </Fragment>
             ) : (
+                // not authenticated users
                 <Fragment>
                     <div className={classes.grow} />
                     <Link to="/">
                         <IconButton>
-                            <HomeIcon/>
+                            {/* <HomeIcon/> */}
+                            SFDD
                         </IconButton>
                     </Link>
                     <div className={classes.grow} />
@@ -87,6 +87,18 @@ class Navbar extends Component {
                             <AssignmentTurnedInIcon/>
                         </IconButton>
                     </Link>
+                    <div className={classes.grow} />  
+                    <Link to="/store/devices">
+                        <IconButton>
+                            <MyButtonStore/>
+                        </IconButton>
+                    </Link>                 
+                    <div className={classes.grow} />
+                    <Link to="/blog">
+                        <IconButton>
+                            Vlog
+                        </IconButton>
+                    </Link>                 
                     <div className={classes.grow} />
                 </Fragment>
             )}    
