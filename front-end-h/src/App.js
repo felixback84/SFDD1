@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router , Route, Switch } from 'react-router-dom';
 import './App.css';
 // pages
-import home from './views/home';
+import home from './views/landingPage/home';
 import signup from './views/signup';
 import login from './views/login';
 import vlog from './views/vlog';
 import myHome from './views/myHome';
-import myWorldDevices from './views/myWorld/myWorldDevices';
 import devices from './views/store/devices';
 import userDevice from './views/userDevice/userDevice';
+import graphs from './views/userDevice/graphs';
+import dataSets from './views/userDevice/dataSets';
 import profileDetails from './views/profile/profileDetails';
 import addCart from './views/profile/addCart';
 import buys from './views/profile/buys';
@@ -17,6 +18,7 @@ import buys from './views/profile/buys';
 // Components
 import Header from './components/Header/Header';
 import HeaderLinks from "./components/Header/HeaderLinks.js";
+import Footer from "components/Footer/Footer.js";
 //import AuthRoute from './utilities/AuthRoute';
 
 // jwt 
@@ -63,11 +65,12 @@ class App extends Component {
                 <Route exact path="/blog" component={vlog} />
                 {/* auth paths */}
                 <Route exact path="/myhome" component={myHome} />
-                <Route exact path="/myworld/devices" component={myWorldDevices} />
-                <Route exact path="/userdevice" component={userDevice}/>
-                <Route exact path="/profileDetails" component={profileDetails} />
-                <Route exact path="/addcart" component={addCart} />
-                <Route exact path="/buys" component={buys} />
+                <Route exact path="/userdevice/userdevice" component={userDevice}/>
+                <Route exact path="/userdevice/graphs" component={graphs}/>
+                <Route exact path="/userdevice/datasets" component={dataSets}/>
+                <Route exact path="/profile/profiledetails" component={profileDetails} />
+                <Route exact path="/profile/addcart" component={addCart} />
+                <Route exact path="/profile/buys" component={buys} />
               </Switch>
             </div>
             {/* Header */}
@@ -80,8 +83,9 @@ class App extends Component {
                 height: 400,
                 color: "white"
               }}
-              // {...rest}
             />
+            {/* footer */}
+            <Footer />
           </Router>
         </div>
       </Provider>

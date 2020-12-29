@@ -1,7 +1,5 @@
 /*eslint-disable*/
 import React from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
 // react components for routing our app without refresh
 import { Link } from "react-router-dom";
 
@@ -9,11 +7,15 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
-import { CloudDownload } from "@material-ui/icons";
 import FaceIcon from '@material-ui/icons/Face';
+import GamesIcon from '@material-ui/icons/Games';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import HomeIcon from '@material-ui/icons/Home';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -37,7 +39,7 @@ export default function HeaderLinks(props) {
             className: classes.navLink,
             color: "transparent"
           }}
-          buttonIcon={FaceIcon}
+          buttonIcon={VpnKeyIcon}
           dropdownList={[
             <Link to="/signup" className={classes.dropdownLink}>
               Signup
@@ -54,76 +56,78 @@ export default function HeaderLinks(props) {
             color="transparent"
             className={classes.navLink}
           >
-            <Link to="/store/devices" className={classes.dropdownLink}>
-              <CloudDownload className={classes.icons} /> Devices
+            <Link to="/store/devices" className={classes.link}>
+              <StorefrontIcon className={classes.icons} /> Devices
             </Link>
           </Button>
       </ListItem>
-      {/* vlog */}
-      <ListItem className={classes.listItem}>
+      {/*  --------- logged in users --------- */}
+      {/* myHome */}
+      <ListItem className={classes.listItem} to="/myhome">
           <Button
             color="transparent"
             className={classes.navLink}
           >
-            <Link to="/store/devices" className={classes.dropdownLink}>
-              <CloudDownload className={classes.icons} /> Vlog
+            <Link to="/myhome" className={classes.link}>
+              <HomeIcon className={classes.icons} /> My Home
             </Link>
           </Button>
       </ListItem>
-      {/*  --------- social --------- */}
-      {/* twitter */}
+      {/* userDevice */}
       <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-twitter"
-          title="Follow us on twitter"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            href="https://twitter.com/CreativeTim?ref=creativetim"
-            target="_blank"
-            color="transparent"
-            className={classes.navLink}
-          >
-            <i className={classes.socialIcons + " fab fa-twitter"} />
-          </Button>
-        </Tooltip>
+        <CustomDropdown
+          noLiPadding
+          buttonText="My Device"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent"
+          }}
+          buttonIcon={GamesIcon}
+          dropdownList={[
+            <Link to="/userdevice/userdevice" className={classes.dropdownLink}>
+              My Device
+            </Link>,
+            <Link to="/userdevice/graphs" className={classes.dropdownLink}>
+              My Graphs
+            </Link>,
+            <Link to="/userdevice/datasets" className={classes.dropdownLink}>
+              My Data Sets
+            </Link>,
+          ]}
+        />
       </ListItem>
-      {/* facebook */}
+      {/* notifications */}
       <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-facebook"
-          title="Follow us on facebook"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
           <Button
             color="transparent"
-            href="https://www.facebook.com/CreativeTim?ref=creativetim"
-            target="_blank"
             className={classes.navLink}
           >
-            <i className={classes.socialIcons + " fab fa-facebook"} />
+            <NotificationsIcon className={classes.icons} />
+            Notifications
           </Button>
-        </Tooltip>
       </ListItem>
-      {/* ig */}
+      {/* myProfile */}
       <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-tooltip"
-          title="Follow us on instagram"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            color="transparent"
-            href="https://www.instagram.com/CreativeTimOfficial?ref=creativetim"
-            target="_blank"
-            className={classes.navLink}
-          >
-            <i className={classes.socialIcons + " fab fa-instagram"} />
-          </Button>
-        </Tooltip>
+        <CustomDropdown
+          noLiPadding
+          buttonText="My Profile"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent"
+          }}
+          buttonIcon={FaceIcon}
+          dropdownList={[
+            <Link to="/profile/profiledetails" className={classes.dropdownLink}>
+              My Profile 
+            </Link>,
+            <Link to="/profile/addcart" className={classes.dropdownLink}>
+              Add Cart
+            </Link>,
+            <Link to="profile/buys" className={classes.dropdownLink}>
+              My Buys
+            </Link>,
+          ]}
+        />
       </ListItem>
     </List>
   );

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-export default class myWorldDevices extends Component {
+export default class dataSets extends Component {
     render() {
         return (
             <div>
-                hi from my world devices
+                hi from dataSets
             </div>
         )
     }

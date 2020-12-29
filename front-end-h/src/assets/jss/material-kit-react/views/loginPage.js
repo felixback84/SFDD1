@@ -65,7 +65,8 @@ const signupPageStyle = {
     top: "0",
     height: "100%",
     lineHeight: "41px",
-    fontSize: "20px"
+    fontSize: "20px",
+    color: "white"
   },
   divider: {
     marginTop: "30px",

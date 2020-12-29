@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,7 +17,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Menu from "@material-ui/icons/Menu";
 // core components
 import styles from "assets/jss/material-kit-react/components/headerStyle.js";
-
+// styles
 const useStyles = makeStyles(styles);
 
 export default function Header(props) {
@@ -56,13 +58,24 @@ export default function Header(props) {
   };
   // props
   const { color, rightLinks, leftLinks, brand, fixed, absolute } = props;
+  // app bar classes
   const appBarClasses = classNames({
     [classes.appBar]: true,
     [classes[color]]: color,
     [classes.absolute]: absolute,
     [classes.fixed]: fixed
   });
-  const brandComponent = <Button className={classes.title}>{brand}</Button>;
+  // brand link
+  const brandComponent = 
+  <Button
+    color="transparent"
+    className={classes.link}
+  >
+    <Link to="/" className={classes.dropdownLink}>
+      {brand}
+    </Link>
+  </Button>
+
   return (
     <AppBar className={appBarClasses}>
       <Toolbar className={classes.container}>
