@@ -7,7 +7,7 @@ import GridItem from "components/Grid/GridItem.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 // styles
-import styles from "assets/jss/material-kit-react/views/landingPageSections/workStyle.js";
+import styles from "assets/jss/material-kit-pro-react/views/landingPageSections/workStyle.js";
 const useStyles = makeStyles(styles);
 
 export default function ContactUsSection() {

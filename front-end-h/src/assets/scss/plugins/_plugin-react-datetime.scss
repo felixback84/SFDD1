@@ -146,7 +146,7 @@
       text-align: center;
       font-size: 12px;
       text-transform: uppercase;
-      font-weight: inherit;
+      font-weight: 400;
       padding-bottom: 5px;
       padding-top: 10px;
     }
@@ -210,7 +210,21 @@
   th.rdtNext,
   th.rdtPrev,
   .rdtTimeToggle {
+    color: $gray-700;
+  }
+}
+
+.rdtPicker {
+  .rdtTimeToggle {
     color: $brand-primary;
+  }
+}
+
+.rdtPicker {
+  .rdtTime {
+    th.rdtSwitch {
+      color: $brand-primary;
+    }
   }
 }
 
@@ -312,7 +326,7 @@ td.rdtYear:hover {
   cursor: pointer;
   display: block;
   border-radius: 50%;
-  color: $grey-a200;
+  color: $brand-primary;
   -webkit-transition: all 60ms ease-in;
   -moz-transition: all 60ms ease-in;
   -o-transition: all 60ms ease-in;
@@ -328,7 +342,7 @@ td.rdtYear:hover {
 }
 .rdtCounter .rdtBtn:hover {
   background: #eee;
-  color: #797979;
+  // color: #797979;
 }
 .rdtCounter .rdtCount {
   font-size: inherit;

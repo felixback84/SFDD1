@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 // @material-ui/core components
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // icons
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Email from "@material-ui/icons/Email";
-import People from "@material-ui/icons/People";
+import LockIcon from '@material-ui/icons/Lock';
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -21,14 +21,14 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/userActions';
 // styles
-import styles from "assets/jss/material-kit-react/views/loginPage.js";
+import loginPageStyle from "assets/jss/material-kit-pro-react/views/loginPageStyle.js";
 import image from "assets/img/bg7.jpg";
-const useStyles = styles;
+const useStyles = loginPageStyle;
 
 class login extends Component {
   // state
   constructor(){
-    super();
+    super(); 
     this.state = {
       email: '',
       password: '',
@@ -55,7 +55,7 @@ class login extends Component {
       };
       this.props.loginUser(userData, this.props.history); 
   };
-
+ 
   // event listener of fields in form
   onChangeEmail = (email) => {this.setState({ email })}
   onChangePassword = (password) => {this.setState({ password })}
@@ -87,19 +87,21 @@ class login extends Component {
                       {/* social login methods */}
                       <div className={classes.socialLine}>
                         <Button
+                          round
                           justIcon
-                          href="#pablo"
                           target="_blank"
                           color="facebook"
+                          className={classes.iconButtons}
                           onClick={e => e.preventDefault()}
                         >
                           <i className={"fab fa-facebook"} />
                         </Button>
                         <Button
+                          round
                           justIcon
-                          href="#pablo"
                           target="_blank"
                           color="google"
+                          className={classes.iconButtons}
                           onClick={e => e.preventDefault()}
                         >
                           <i className={"fab fa-google"} />
@@ -107,7 +109,9 @@ class login extends Component {
                       </div>
                     {/* custom login */}
                     </CardHeader>
-                    <p className={classes.divider}>Or Be Classical</p>
+                    <p className={classes.description + " " + classes.textCenter}>
+                      Or Be Classical
+                    </p>
                     <CardBody>
                       <CustomInput
                         valueField={this.onChangeEmail}
@@ -121,8 +125,8 @@ class login extends Component {
                         }}
                         inputProps={{
                           type: "email",
-                          endAdornment: (
-                            <InputAdornment position="end">
+                          startAdornment: (
+                            <InputAdornment position="start">
                               <Email className={classes.inputIconsColor} />
                             </InputAdornment>
                           )
@@ -140,10 +144,10 @@ class login extends Component {
                         }}
                         inputProps={{
                           type: "password",
-                          endAdornment: (
-                            <InputAdornment position="end">
+                          startAdornment: (
+                            <InputAdornment position="start">
                               <Icon className={classes.inputIconsColor}>
-                                <People className={classes.inputIconsColor}/>
+                                <LockIcon className={classes.inputIconsColor}/>
                               </Icon>
                             </InputAdornment>
                           ),
@@ -151,7 +155,8 @@ class login extends Component {
                         }}
                       />
                     </CardBody>
-                    <CardFooter className={classes.cardFooter}>
+                    {/* submit button */}
+                    <CardFooter className={classes.cardFooter + " " + classes.textCenter}>
                       {/* errors report */}
                       {errors.general && (
                         <Typography variant="body2" className={classes.customError}>
@@ -160,11 +165,11 @@ class login extends Component {
                       )}
                       <Button 
                         type="submit"
-                        color="primary" 
-                        size="lg"
+                        round 
+                        color="primary"
                         disabled={loading}
                       >
-                          Login
+                        Get started
                         {loading && (
                           <CircularProgress 
                             size={30}  

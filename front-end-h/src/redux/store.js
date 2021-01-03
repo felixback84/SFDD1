@@ -6,13 +6,9 @@ import thunk from 'redux-thunk';
 import uiReducer from './reducers/uiReducer';
 import userReducer from './reducers/userReducer';
 import userDevicesReducer from './reducers/userDevicesReducer';
-import userAdventuresReducer from './reducers/userAdventuresReducer';
 import dataSetsReducer from './reducers/dataSetsReducer';
 import checkoutsReducer from './reducers/checkoutsReducer';
 import devicesReducer from './reducers/devicesReducer';
-import adventuresReducer from './reducers/adventuresReducer';
-import haloThingReducer from './reducers/haloThingReducer';
-import hildaThingReducer from './reducers/hildaThingReducer';
 import heartbeatThingReducer from './reducers/heartbeatThingReducer';
 
 // empty initial state
@@ -26,13 +22,9 @@ const reducers = combineReducers({
     ui: uiReducer,
     user: userReducer,
     userDevices1: userDevicesReducer,
-    userAdventures1: userAdventuresReducer,
     dataSets1: dataSetsReducer,
     checkouts1: checkoutsReducer,
     devices1: devicesReducer,
-    adventures1: adventuresReducer,
-    haloThing1: haloThingReducer,
-    hildaThing1: hildaThingReducer,
     heartbeatThing1: heartbeatThingReducer,
 });
 

@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
 // core components
-import styles from "assets/jss/material-kit-react/components/parallaxStyle.js";
+import styles from "assets/jss/material-kit-pro-react/components/parallaxStyle.js";
 
 const useStyles = makeStyles(styles);
 
@@ -39,7 +39,7 @@ export default function Parallax(props) {
   const classes = useStyles();
   const parallaxClasses = classNames({
     [classes.parallax]: true,
-    [classes.filter]: filter,
+    [classes[filter + "Color"]]: filter !== undefined,
     [classes.small]: small,
     [className]: className !== undefined
   });
@@ -59,7 +59,15 @@ export default function Parallax(props) {
 
 Parallax.propTypes = {
   className: PropTypes.string,
-  filter: PropTypes.bool,
+  filter: PropTypes.oneOf([
+    "primary",
+    "rose",
+    "dark",
+    "info",
+    "success",
+    "warning",
+    "danger"
+  ]),
   children: PropTypes.node,
   style: PropTypes.string,
   image: PropTypes.string,

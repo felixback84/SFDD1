@@ -8,15 +8,16 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
-import styles from "assets/jss/material-kit-react/components/paginationStyle.js";
+import styles from "assets/jss/material-kit-pro-react/components/paginationStyle.js";
 
 const useStyles = makeStyles(styles);
 
 export default function Pagination(props) {
+  const { pages, color, className } = props;
   const classes = useStyles();
-  const { pages, color } = props;
+  const paginationClasses = classNames(classes.pagination, className);
   return (
-    <ul className={classes.pagination}>
+    <ul className={paginationClasses}>
       {pages.map((prop, key) => {
         const paginationLink = classNames({
           [classes.paginationLink]: true,
@@ -26,13 +27,18 @@ export default function Pagination(props) {
         return (
           <li className={classes.paginationItem} key={key}>
             {prop.onClick !== undefined ? (
-              <Button onClick={prop.onClick} className={paginationLink}>
+              <Button
+                onClick={prop.onClick}
+                className={paginationLink}
+                disabled={prop.disabled}
+              >
                 {prop.text}
               </Button>
             ) : (
               <Button
                 onClick={() => alert("you've clicked " + prop.text)}
                 className={paginationLink}
+                disabled={prop.disabled}
               >
                 {prop.text}
               </Button>
@@ -53,12 +59,11 @@ Pagination.propTypes = {
     PropTypes.shape({
       active: PropTypes.bool,
       disabled: PropTypes.bool,
-      text: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.oneOf(["PREV", "NEXT", "..."])
-      ]).isRequired,
+      text: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+        .isRequired,
       onClick: PropTypes.func
     })
   ).isRequired,
-  color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"])
+  color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
+  className: PropTypes.string
 };

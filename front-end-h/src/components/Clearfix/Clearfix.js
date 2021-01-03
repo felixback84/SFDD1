@@ -21,5 +21,3 @@ export default function Clearfix() {
   const classes = useStyles();
   return <div className={classes.clearfix} />;
 }
-
-Clearfix.propTypes = {};

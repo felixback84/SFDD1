@@ -6,12 +6,9 @@ import {
     SET_USER,
     GET_ACTIVE_USER_DEVICES,
     GET_INACTIVE_USER_DEVICES,
-    GET_ACTIVE_USER_ADVENTURES,
-    GET_INACTIVE_USER_ADVENTURES,
     GET_LIKE_DEVICES, 
     GET_UNLIKE_DEVICES,
-    GET_LIKE_ADVENTURES,
-    GET_UNLIKE_ADVENTURES,
+
     MARK_DEVICE_NOTIFICATIONS_READ
 } from '../types';
 
@@ -65,24 +62,6 @@ export default function(state = initialState, action){
                     activeUserDevice => activeUserDevice.userDeviceId !== action.payload.userDeviceId
                 )
             }  
-        case GET_ACTIVE_USER_ADVENTURES:
-            return {
-                ...state,
-                activeUserAdventures: [
-                    ...state.activeUserAdventures,
-                    {
-                        userHandle: state.credentials.userHandle,
-                        userAdventureId: action.payload.userAdventureId
-                    }
-                ]
-            }; 
-        case GET_INACTIVE_USER_ADVENTURES:
-            return {
-                ...state,
-                activeUserAdventures: state.activeUserAdventures.filter(
-                    activeUserAdventure => activeUserAdventure.userAdventureId !== action.payload.userAdventureId
-                )
-            }   
         case GET_LIKE_DEVICES:
             return{
                 ...state,
@@ -102,25 +81,6 @@ export default function(state = initialState, action){
                     like => like.deviceId !== action.payload.deviceId
                 )
             }  
-        case GET_LIKE_ADVENTURES:
-            return{
-                ...state,
-                likes: [
-                    ...state.likes,
-                    {
-                        userHandle: state.credentials.userHandle,
-                        adventureId: action.payload.adventureId,
-                        type: 'adventures'
-                    }
-                ]
-            }
-        case GET_UNLIKE_ADVENTURES:    
-            return {
-                ...state,
-                likes: state.likes.filter(
-                    like => like.adventureId !== action.payload.adventureId
-                )
-            } 
         case MARK_DEVICE_NOTIFICATIONS_READ:
             state.notifications.forEach((notification) => (notification.read = true));
             return {

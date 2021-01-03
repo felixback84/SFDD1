@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router , Route, Switch } from 'react-router-dom';
 import './App.css';
+
+// nodejs library that concatenates classes
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+
 // pages
 import home from './views/landingPage/home';
 import signup from './views/signup';
 import login from './views/login';
 import vlog from './views/vlog';
-import myHome from './views/myHome';
+import myHome from './views/myHome/myHome';
 import devices from './views/store/devices';
-import userDevice from './views/userDevice/userDevice';
+import userDevice from './views/userDevice/userDevice'; 
 import graphs from './views/userDevice/graphs';
 import dataSets from './views/userDevice/dataSets';
 import profileDetails from './views/profile/profileDetails';
 import addCart from './views/profile/addCart';
 import buys from './views/profile/buys';
+
+// @material-ui/icons
+import Favorite from "@material-ui/icons/Favorite";
+
+// styles
+import { withStyles } from "@material-ui/core/styles";
+import landingPageStyle from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
 
 // Components
 import Header from './components/Header/Header';
@@ -50,8 +62,13 @@ if (token) {
     }
 }
 
+// styles
+const useStyles = landingPageStyle;
+
 class App extends Component {
   render() {
+    // classes to css
+    const { classes } = this.props;
     return (
       <Provider store={store}>
         <div> 
@@ -76,16 +93,74 @@ class App extends Component {
             {/* Header */}
             <Header
               brand="SFDD-H"
-              rightLinks={<HeaderLinks />}
+              links={<HeaderLinks />}
               fixed
               color="transparent"
               changeColorOnScroll={{
-                height: 400,
-                color: "white"
+                height: 200,
+                color: "dark"
               }}
             />
             {/* footer */}
-            <Footer />
+            <Footer 
+              content={
+                <div>
+                  <div className={classes.left}>
+                    <List className={classes.list}>
+                      {/* LMF */}
+                      <ListItem className={classes.inlineBlock}>
+                        <a
+                          href="https://www.creative-tim.com/?ref=mkpr-landing"
+                          target="_blank"
+                          className={classes.block}
+                        >
+                          LMF
+                        </a>
+                      </ListItem>
+                      {/* About us */}
+                      <ListItem className={classes.inlineBlock}>
+                        <a
+                          href="https://www.creative-tim.com/presentation?ref=mkpr-landing"
+                          target="_blank"
+                          className={classes.block}
+                        >
+                          About us
+                        </a>
+                      </ListItem>
+                      {/* Blog */}
+                      <ListItem className={classes.inlineBlock}>
+                        <a href="//blog.creative-tim.com/" className={classes.block}>
+                          Blog
+                        </a>
+                      </ListItem>
+                      {/* Conditions */}
+                      <ListItem className={classes.inlineBlock}>
+                        <a
+                          href="https://www.creative-tim.com/license?ref=mkpr-landing"
+                          target="_blank"
+                          className={classes.block}
+                        >
+                          Licenses
+                        </a>
+                      </ListItem>
+                    </List>
+                  </div>
+                  {/* Credits */}
+                  <div className={classes.right}>
+                    &copy; {1900 + new Date().getYear()} , made with{" "}
+                    <Favorite className={classes.icon} /> by{" "}
+                    <a
+                      href="https://www.creative-tim.com/?ref=mkpr-landing"
+                      target="_blank"
+                      style={{textDecoration: "none"}}
+                    >
+                      La Maleta de Félix SAS
+                    </a>{" "}
+                    for pure fun.
+                  </div>
+                </div>
+              }
+            />
           </Router>
         </div>
       </Provider>
@@ -93,5 +168,6 @@ class App extends Component {
   }
 }
 
-export default App;
+export default (withStyles(useStyles)(App));
+
 

@@ -12,18 +12,17 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
 import Grow from "@material-ui/core/Grow";
 import Divider from "@material-ui/core/Divider";
-import Icon from "@material-ui/core/Icon";
 import Popper from "@material-ui/core/Popper";
-
 // core components
 import Button from "components/CustomButtons/Button.js";
 
-import styles from "assets/jss/material-kit-react/components/customDropdownStyle.js";
+import styles from "assets/jss/material-kit-pro-react/components/customDropdownStyle.js";
 
 const useStyles = makeStyles(styles);
 
 export default function CustomDropdown(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const handleClick = event => {
     if (anchorEl && anchorEl.contains(event.target)) {
       setAnchorEl(null);
@@ -31,19 +30,18 @@ export default function CustomDropdown(props) {
       setAnchorEl(event.currentTarget);
     }
   };
-  const handleClose = param => {
-    setAnchorEl(null);
-    if (props && props.onClick) {
-      props.onClick(param);
-    }
-  };
-  const handleCloseAway = event => {
+  const handleClose = event => {
     if (anchorEl.contains(event.target)) {
       return;
     }
     setAnchorEl(null);
   };
-  const classes = useStyles();
+  const handleCloseMenu = param => {
+    setAnchorEl(null);
+    if (props && props.onClick) {
+      props.onClick(param);
+    }
+  };
   const {
     buttonText,
     buttonIcon,
@@ -53,13 +51,17 @@ export default function CustomDropdown(props) {
     dropdownHeader,
     caret,
     hoverColor,
-    left,
+    dropPlacement,
     rtlActive,
-    noLiPadding
+    noLiPadding,
+    innerDropDown,
+    navDropdown
   } = props;
+  const classes = useStyles();
   const caretClasses = classNames({
     [classes.caret]: true,
-    [classes.caretActive]: Boolean(anchorEl),
+    [classes.caretDropup]: dropup && !anchorEl,
+    [classes.caretActive]: Boolean(anchorEl) && !dropup,
     [classes.caretRTL]: rtlActive
   });
   const dropdownItem = classNames({
@@ -68,21 +70,54 @@ export default function CustomDropdown(props) {
     [classes.noLiPadding]: noLiPadding,
     [classes.dropdownItemRTL]: rtlActive
   });
-  let icon = null;
-  switch (typeof buttonIcon) {
-    case "object":
-      icon = <props.buttonIcon className={classes.buttonIcon} />;
-      break;
-    case "string":
-      icon = <Icon className={classes.buttonIcon}>{props.buttonIcon}</Icon>;
-      break;
-    default:
-      icon = null;
-      break;
-  }
+  const dropDownMenu = (
+    <MenuList role="menu" className={classes.menuList}>
+      {dropdownHeader !== undefined ? (
+        <MenuItem
+          onClick={() => handleCloseMenu(dropdownHeader)}
+          className={classes.dropdownHeader}
+        >
+          {dropdownHeader}
+        </MenuItem>
+      ) : null}
+      {dropdownList.map((prop, key) => {
+        if (prop.divider) {
+          return (
+            <Divider
+              key={key}
+              onClick={() => handleCloseMenu("divider")}
+              className={classes.dropdownDividerItem}
+            />
+          );
+        } else if (
+          prop.props !== undefined &&
+          prop.props["data-ref"] === "multi"
+        ) {
+          return (
+            <MenuItem
+              key={key}
+              className={dropdownItem}
+              style={{ overflow: "visible", padding: 0 }}
+            >
+              {prop}
+            </MenuItem>
+          );
+        }
+        return (
+          <MenuItem
+            key={key}
+            onClick={() => handleCloseMenu(prop)}
+            className={dropdownItem}
+          >
+            {prop}
+          </MenuItem>
+        );
+      })}
+    </MenuList>
+  );
   return (
-    <div>
-      <div>
+    <div className={innerDropDown ? classes.innerManager : classes.manager}>
+      <div className={buttonText !== undefined ? "" : classes.target}>
         <Button
           aria-label="Notifications"
           aria-owns={anchorEl ? "menu-list" : null}
@@ -90,7 +125,9 @@ export default function CustomDropdown(props) {
           {...buttonProps}
           onClick={handleClick}
         >
-          {icon}
+          {buttonIcon !== undefined ? (
+            <props.buttonIcon className={classes.buttonIcon} />
+          ) : null}
           {buttonText !== undefined ? buttonText : null}
           {caret ? <b className={caretClasses} /> : null}
         </Button>
@@ -100,18 +137,11 @@ export default function CustomDropdown(props) {
         anchorEl={anchorEl}
         transition
         disablePortal
-        placement={
-          dropup
-            ? left
-              ? "top-start"
-              : "top"
-            : left
-            ? "bottom-start"
-            : "bottom"
-        }
+        placement={dropPlacement}
         className={classNames({
           [classes.popperClose]: !anchorEl,
-          [classes.popperResponsive]: true
+          [classes.pooperResponsive]: true,
+          [classes.pooperNav]: Boolean(anchorEl) && navDropdown
         })}
       >
         {() => (
@@ -125,38 +155,13 @@ export default function CustomDropdown(props) {
             }
           >
             <Paper className={classes.dropdown}>
-              <ClickAwayListener onClickAway={handleCloseAway}>
-                <MenuList role="menu" className={classes.menuList}>
-                  {dropdownHeader !== undefined ? (
-                    <MenuItem
-                      onClick={() => handleClose(dropdownHeader)}
-                      className={classes.dropdownHeader}
-                    >
-                      {dropdownHeader}
-                    </MenuItem>
-                  ) : null}
-                  {dropdownList.map((prop, key) => {
-                    if (prop.divider) {
-                      return (
-                        <Divider
-                          key={key}
-                          onClick={() => handleClose("divider")}
-                          className={classes.dropdownDividerItem}
-                        />
-                      );
-                    }
-                    return (
-                      <MenuItem
-                        key={key}
-                        onClick={() => handleClose(prop)}
-                        className={dropdownItem}
-                      >
-                        {prop}
-                      </MenuItem>
-                    );
-                  })}
-                </MenuList>
-              </ClickAwayListener>
+              {innerDropDown ? (
+                dropDownMenu
+              ) : (
+                <ClickAwayListener onClickAway={handleClose}>
+                  {dropDownMenu}
+                </ClickAwayListener>
+              )}
             </Paper>
           </Grow>
         )}
@@ -167,12 +172,13 @@ export default function CustomDropdown(props) {
 
 CustomDropdown.defaultProps = {
   caret: true,
+  dropup: false,
   hoverColor: "primary"
 };
 
 CustomDropdown.propTypes = {
   hoverColor: PropTypes.oneOf([
-    "black",
+    "dark",
     "primary",
     "info",
     "success",
@@ -181,15 +187,30 @@ CustomDropdown.propTypes = {
     "rose"
   ]),
   buttonText: PropTypes.node,
-  buttonIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  buttonIcon: PropTypes.object,
   dropdownList: PropTypes.array,
   buttonProps: PropTypes.object,
   dropup: PropTypes.bool,
   dropdownHeader: PropTypes.node,
   rtlActive: PropTypes.bool,
   caret: PropTypes.bool,
-  left: PropTypes.bool,
+  dropPlacement: PropTypes.oneOf([
+    "bottom",
+    "top",
+    "right",
+    "left",
+    "bottom-start",
+    "bottom-end",
+    "top-start",
+    "top-end",
+    "right-start",
+    "right-end",
+    "left-start",
+    "left-end"
+  ]),
   noLiPadding: PropTypes.bool,
-  // function that retuns the selected item
+  innerDropDown: PropTypes.bool,
+  navDropdown: PropTypes.bool,
+  // This is a function that returns the clicked menu item
   onClick: PropTypes.func
 };

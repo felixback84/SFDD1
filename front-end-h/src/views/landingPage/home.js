@@ -12,16 +12,15 @@ import Parallax from "components/Parallax/Parallax.js";
 import ContactUsSection from "./ContactUsSection";
 
 // styles
-import styles from "assets/jss/material-kit-react/views/landingPage.js";
+import styles from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
 const useStyles = styles;
 
 class home extends Component {
   render() {
-    //const classes = useStyles();
     const { classes } = this.props;
     return (
       <div>
-        <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+        <Parallax filter image={require("assets/img/bg9.jpg")}>
           <div className={classes.container}>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
@@ -34,7 +33,8 @@ class home extends Component {
                 </h4>
                 <br />
                 <Button
-                  color="danger"
+                  round
+                  color="rose"
                   size="lg"
                   href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ref=creativetim"
                   target="_blank"
