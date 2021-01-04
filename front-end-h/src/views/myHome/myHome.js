@@ -1,25 +1,25 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+// nodejs library that concatenates classes
+import classNames from "classnames";
 // @material-ui/core components
 import { withStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Parallax from "components/Parallax/Parallax.js";
 import Skeleton from "components/Loaders/Skeleton.js";
 // components
+import TitleSection from "./TitleSection";
 import ProfileData from "./ProfileData";
 import UserDeviceData from "./UserDeviceData";
-import TitleSection from "./TitleSection";
+import LiveDataSetsOverview from "./LiveDataSetsOverview";
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
 // styles
-import landingPageStyle from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
-
-const useStyles = {
-    landingPageStyle,
-    
-  };
+import myHomeStyles from "assets/jss/material-kit-pro-react/views/myHomeStyles.js"
+const useStyles = myHomeStyles;
 
 class myHome extends Component {
 
@@ -29,7 +29,6 @@ class myHome extends Component {
   }
 
   render() {
-    
     // redux state
     const {
       classes, 
@@ -39,31 +38,45 @@ class myHome extends Component {
 
     // map the list of one device
     let mapUserDeviceHeader = userDevices.map(userDevice => 
-      <Parallax filter image={require("assets/img/bg0.jpg")}>
-        <div className={classes.container}>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              {/* title */}
-              <TitleSection/>
-            </GridItem>
-            <GridItem xs={6} sm={6} md={6}>
-              {/* user relevant data */}
-              <ProfileData/>
-            </GridItem>
-            <GridItem xs={6} sm={6} md={6}>
-              {/* device relevant data */}
-              <UserDeviceData userdevice={userDevice}/>
-            </GridItem>
-          </GridContainer>
-        </div>
-      </Parallax>
+      <Fragment>
+        <GridItem xs={12} sm={4} md={4} key={userDevice.thingId}>
+          {/* device relevant data */}
+          <UserDeviceData userdevice={userDevice} />
+        </GridItem>
+        {/* liveDataSets relevant data */}
+        <GridItem xs={12} sm={4} md={4}>
+          <LiveDataSetsOverview thingid={userDevice.thingId}/>
+        </GridItem>
+      </Fragment>
     );
 
     // markup of my home
     let myHome = !loading ? (
       <div>
         {/* Header */}
-        {mapUserDeviceHeader}
+        <Parallax image={require("assets/img/bg0.jpg")}/>
+        {/* data cards */}
+        <div className={classNames(classes.main, classes.mainRaised)}>
+          <div className={classes.sectionGray}>
+            <div className={classes.container}>
+              <GridContainer >
+                {/* title */} 
+                <GridItem xs={12} sm={12} md={12}>
+                  <TitleSection>
+                    Resume account:
+                  </TitleSection> 
+                  <Divider/> 
+                </GridItem>
+                {/* user relevant data */}
+                <GridItem xs={12} sm={4} md={4}>
+                  <ProfileData/>
+                </GridItem>
+                {/* userDevice box & liveDataSets Overview*/}
+                {mapUserDeviceHeader}
+              </GridContainer>
+            </div>
+          </div>
+        </div>
       </div> 
     ) : (
       <Skeleton/>

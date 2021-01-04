@@ -12,7 +12,7 @@ import {
 
 // firebase client libs
 import firebase from '../../fb/utilities/firebase'; 
-// axios
+// axios 
 import axios from 'axios';
 
 // declarate a function to get data from db

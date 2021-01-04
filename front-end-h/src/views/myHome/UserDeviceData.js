@@ -43,31 +43,31 @@ class UserDeviceData extends Component {
 
     return(
       
-        <div className={classes.container}>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Card profile>
-                <CardAvatar profile>
-                  <a href="#pablo" onClick={e => e.preventDefault()}>
-                    <img src={badgeUrl} alt={thingId} />
-                  </a>
-                </CardAvatar>
-                <CardBody>
-                  <Divider variant="middle" />
-                  <h4 className={classes.cardTitle}>ThingId: {thingId}</h4>
-                  <Divider variant="middle" />
-                  <Muted>
-                    <h4 className={classes.cardCategory}>Name of device: {nameOfDevice}</h4>
-                  </Muted>
-                  <Divider variant="middle" />
-                  <p className={classes.description}>
-                    Device description: {description}
-                  </p>
-                </CardBody>
-              </Card>
-            </GridItem>
-          </GridContainer>
-        </div>
+      <div className={classes.container}>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card profile>
+              <CardAvatar profile>
+                <a href="#pablo" onClick={e => e.preventDefault()}>
+                  <img src={badgeUrl} alt={thingId} />
+                </a>
+              </CardAvatar>
+              <CardBody>
+                <Divider variant="middle" />
+                <h4 className={classes.cardTitle}>ThingId: {thingId}</h4>
+                <Divider variant="middle" />
+                <Muted>
+                  <h4 className={classes.cardCategory}>Name of device: {nameOfDevice}</h4>
+                </Muted>
+                <Divider variant="middle" />
+                <p className={classes.description}>
+                  Device description: {description}
+                </p>
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
+      </div>
       
     )
   }

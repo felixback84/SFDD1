@@ -12,8 +12,8 @@ import Parallax from "components/Parallax/Parallax.js";
 import ContactUsSection from "./ContactUsSection";
 
 // styles
-import styles from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
-const useStyles = styles;
+import landingPageStyle from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
+const useStyles = landingPageStyle;
 
 class home extends Component {
   render() {
@@ -52,7 +52,7 @@ class home extends Component {
             {/* contact us */}
             <ContactUsSection /> 
           </div>
-        </div>
+        </div> 
       </div>      
     )
   }

@@ -4,44 +4,46 @@ import React, { Component } from "react";
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
+import { red, green } from '@material-ui/core/colors';
+import Avatar from '@material-ui/core/Avatar';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
-import Muted from "components/Typography/Muted.js";
+
+// icons
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 // Redux stuff
 import { connect } from 'react-redux';
+import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
 const useStyles = teamsStyle;
 
-class ProfileData extends Component {
+class LiveDataSetsOverview extends Component {
+
+  //redux action
+  componentWillMount(){
+    const thingId = this.props.thingid;
+    this.props.heartbeatThingSyncDataWithLiveDB(thingId);
+  } 
 
   render(){
 
     const {
       classes, 
-      user:{
-        credentials: { 
-          userHandle, 
-          createdAt, 
-          imgUrl, 
-          bio, 
-          location, 
-          email,
-          lastname,
-          names,
-          phone,
-          userId
-        },
+      thingLiveDataSets:{
+        active,
+        createdAt,
+        coords, 
+        colorValue, 
+        profileToMatch, 
+        top5Coords
       }
     } = this.props;
 
@@ -52,34 +54,41 @@ class ProfileData extends Component {
           <GridItem xs={12} sm={12} md={12}>
             <Card profile>
               <CardAvatar profile>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  <img src={imgUrl} alt={userHandle} />
-                </a>
+                {
+                  active == "true" ? ( 
+                    <Avatar aria-label="recipe" style={{backgroundColor: green[A400]}}>
+                      <PowerSettingsNewIcon className={classes.icons} /> ON
+                    </Avatar>
+                  ) : (
+                    <Avatar aria-label="recipe" style={{backgroundColor: red[500]}}>
+                      <PowerSettingsNewIcon className={classes.icons} /> OFF
+                    </Avatar>
+                  )
+                }
               </CardAvatar>
               <CardBody>
                 <Divider variant="middle" />
-                <h4 className={classes.cardTitle}>Names: {names} {lastname}</h4>
+                <h4 className={classes.cardTitle}>Mine since: {createdAt}</h4>
                 <Divider variant="middle" />
-                <Muted>
+                {/* <Muted>
                   <h4 className={classes.cardCategory}>Username: {userHandle}</h4>
                 </Muted>
                 <Divider variant="middle" />
                 <p className={classes.description}>
                   Bio: {bio}
-                </p>
+                </p> */}
               </CardBody>
             </Card>
           </GridItem>
         </GridContainer>
       </div>
-      
     )
   }
 }
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-  user: state.user
+  thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
 });
 
-export default connect(mapStateToProps)(withStyles(useStyles)(ProfileData));
+export default connect(mapStateToProps,{heartbeatThingSyncDataWithLiveDB})(withStyles(useStyles)(LiveDataSetsOverview));

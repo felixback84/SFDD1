@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
 // pages
-import home from './views/landingPage/home';
+import home from './views/landingPage/landing';
 import signup from './views/signup';
 import login from './views/login';
 import vlog from './views/vlog';
@@ -75,7 +75,7 @@ class App extends Component {
           <Router>
             <div className="container">
               <Switch>
-                <Route exact path="/" component={home} />
+                <Route exact path="/" component={landing} />
                 <Route exact path="/login" component={login} />
                 <Route exact path="/signup" component={signup} />
                 <Route exact path="/store/devices" component={devices} />
