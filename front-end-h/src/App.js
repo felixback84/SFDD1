@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router , Route, Switch } from 'react-router-dom';
 import './App.css';
 
@@ -7,7 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
 // pages
-import home from './views/landingPage/landing';
+import landing from './views/landingPage/landing';
 import signup from './views/signup';
 import login from './views/login';
 import vlog from './views/vlog';
@@ -24,7 +25,6 @@ import buys from './views/profile/buys';
 import Favorite from "@material-ui/icons/Favorite";
 
 // styles
-import { withStyles } from "@material-ui/core/styles";
 import landingPageStyle from "assets/jss/material-kit-pro-react/views/landingPageStyle.js";
 
 // Components

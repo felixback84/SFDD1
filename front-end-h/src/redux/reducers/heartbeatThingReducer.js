@@ -9,7 +9,13 @@ import {
 // initial state
 const initialState = {
     loading: false,
-    thingLiveDataSets:{coords:{}, colorValue:{}, profileToMatch:{}, top5Coords:[]},
+    thingLiveDataSets:{
+        coords:{}, 
+        colorValue:{}, 
+        profileToMatch:{}, 
+        top5Coords:[], 
+        searchingMode:[]
+    },
     //top5Coords:[]
 };
 

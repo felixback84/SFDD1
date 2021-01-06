@@ -4,16 +4,15 @@ import React, { Component } from "react";
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
 import Muted from "components/Typography/Muted.js";
 
 // styles
@@ -27,6 +26,7 @@ class UserDeviceData extends Component {
     const {
       classes, 
       userdevice:{
+        userDeviceId,
         active,
         createdAt,
         deviceId,
@@ -42,7 +42,6 @@ class UserDeviceData extends Component {
     } = this.props;
 
     return(
-      
       <div className={classes.container}>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
@@ -53,22 +52,27 @@ class UserDeviceData extends Component {
                 </a>
               </CardAvatar>
               <CardBody>
-                <Divider variant="middle" />
-                <h4 className={classes.cardTitle}>ThingId: {thingId}</h4>
-                <Divider variant="middle" />
+                <Divider variant="fullWidth" />
+                <h4 className={classes.cardTitle}>Property Id: {userDeviceId}</h4>
+                <Divider variant="fullWidth" />
                 <Muted>
                   <h4 className={classes.cardCategory}>Name of device: {nameOfDevice}</h4>
                 </Muted>
-                <Divider variant="middle" />
+                <Divider variant="fullWidth" />
                 <p className={classes.description}>
                   Device description: {description}
                 </p>
               </CardBody>
+              <CardFooter profile className={classes.justifyContent}>
+                <Chip
+                  label="Property Info"
+                  variant="outlined"
+                />
+              </CardFooter>
             </Card>
           </GridItem>
         </GridContainer>
-      </div>
-      
+      </div> 
     )
   }
 }

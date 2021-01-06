@@ -4,6 +4,7 @@ import React, { Component } from "react";
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -57,17 +58,23 @@ class ProfileData extends Component {
                 </a>
               </CardAvatar>
               <CardBody>
-                <Divider variant="middle" />
+                <Divider variant="fullWidth" />
                 <h4 className={classes.cardTitle}>Names: {names} {lastname}</h4>
-                <Divider variant="middle" />
+                <Divider variant="fullWidth" />
                 <Muted>
                   <h4 className={classes.cardCategory}>Username: {userHandle}</h4>
                 </Muted>
-                <Divider variant="middle" />
+                <Divider variant="fullWidth" />
                 <p className={classes.description}>
                   Bio: {bio}
                 </p>
               </CardBody>
+              <CardFooter profile className={classes.justifyContent}>
+                <Chip
+                  label="User Info"
+                  variant="outlined"
+                />
+              </CardFooter>
             </Card>
           </GridItem>
         </GridContainer>

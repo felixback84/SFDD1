@@ -38,13 +38,13 @@ class myHome extends Component {
 
     // map the list of one device
     let mapUserDeviceHeader = userDevices.map(userDevice => 
-      <Fragment>
-        <GridItem xs={12} sm={4} md={4} key={userDevice.thingId}>
+      <Fragment key={userDevice.thingId}>
+        <GridItem xs={12} sm={6} md={6}>
           {/* device relevant data */}
           <UserDeviceData userdevice={userDevice} />
         </GridItem>
         {/* liveDataSets relevant data */}
-        <GridItem xs={12} sm={4} md={4}>
+        <GridItem xs={12} sm={12} md={12}>
           <LiveDataSetsOverview thingid={userDevice.thingId}/>
         </GridItem>
       </Fragment>
@@ -56,19 +56,12 @@ class myHome extends Component {
         {/* Header */}
         <Parallax image={require("assets/img/bg0.jpg")}/>
         {/* data cards */}
-        <div className={classNames(classes.main, classes.mainRaised)}>
+        {/* <div className={classNames(classes.main, classes.mainRaised)}> */}
           <div className={classes.sectionGray}>
             <div className={classes.container}>
               <GridContainer >
-                {/* title */} 
-                <GridItem xs={12} sm={12} md={12}>
-                  <TitleSection>
-                    Resume account:
-                  </TitleSection> 
-                  <Divider/> 
-                </GridItem>
                 {/* user relevant data */}
-                <GridItem xs={12} sm={4} md={4}>
+                <GridItem xs={12} sm={6} md={6}>
                   <ProfileData/>
                 </GridItem>
                 {/* userDevice box & liveDataSets Overview*/}
@@ -77,7 +70,7 @@ class myHome extends Component {
             </div>
           </div>
         </div>
-      </div> 
+      // </div> 
     ) : (
       <Skeleton/>
     );
