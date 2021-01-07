@@ -1,7 +1,7 @@
 // firebase
 const { db } = require('../utilities/admin');
 
-// Post a device for an user - without use
+// Post a complete device for an user or userDevice property - without use
 exports.postInUserDevices = (req, res) => {
     const newUserDevice = {
         deviceId: req.params.deviceId,

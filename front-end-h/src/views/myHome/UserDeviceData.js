@@ -66,7 +66,7 @@ class UserDeviceData extends Component {
               <CardFooter profile className={classes.justifyContent}>
                 <Chip
                   label="Property Info"
-                  variant="outlined"
+                  color="secondary"
                 />
               </CardFooter>
             </Card>

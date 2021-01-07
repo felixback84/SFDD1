@@ -1,4 +1,7 @@
 back-end/functions/node_modules
+back-end-h/functions/node_modules
+back-end/
+front-end/
 front-end/node_modules
 devices/Halo/node_modules
 devices/Hilda/node_modules
@@ -29,4 +32,5 @@ devices/Heartbeat/H4/rsa_private.pem
 devices/Heartbeat/H5/rsa_cert.pem
 devices/Heartbeat/H5/rsa_private.pem
 front-end-h/node_modules
+front-end-h/functions/node_modules
 front-end-h/src/assets

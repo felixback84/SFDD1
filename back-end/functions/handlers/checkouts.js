@@ -294,7 +294,7 @@ exports.postDataCheckOutDevice = (req, res) => {
     }
     
 // post data for checkout to post in userAdventures
-exports.postAdventure = (req, res) => {
+exports.postDataCheckOutAdventure = (req, res) => {
     // ask to Firebase
     const dataCheckout = {}
     // ask for userCredentials

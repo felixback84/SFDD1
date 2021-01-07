@@ -27,27 +27,11 @@ class GoogleMapsToHeartbeat extends Component {
 				lng:lon
 		}
 		
-		// other markers
-		// let otherMarkers = top5Coords.map(top5Coord => { 
-				
-		// 		// print
-		// 		console.log(`top5Coord: ${JSON.stringify(top5Coord.coords)}`);
-		// 		// pins
-		// 		return (
-		// 				<LocationPin
-		// 						key={Math.random()}
-		// 						lat={top5Coord.coords.lat2}
-		// 						lng={top5Coord.coords.lon2}
-		// 						text={`${top5Coord.coords.lat2} - ${top5Coord.coords.lon2}`}
-		// 				/>
-		// 		)
-		// });
-
 		return (
 			// Important! Always set the container height explicitly
-			<div style={{ height: '100vh', width: '100%' }}>
+			<div style={{ height: '50vh', width: '100%' }}>
 				<GoogleMapReact
-					bootstrapURLKeys={{key:''}}
+					bootstrapURLKeys={{key:'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'}}
 					center={center}
 					defaultZoom={18}
 			>
@@ -55,10 +39,7 @@ class GoogleMapsToHeartbeat extends Component {
 					<LocationPin
 						lat={center.lat}
 						lng={center.lng}
-						text={`${center.lat} - ${center.lng}`}
 					/>
-					{/* other markers */}
-					{/* {otherMarkers} */}
 				</GoogleMapReact>
 			</div>
 		);

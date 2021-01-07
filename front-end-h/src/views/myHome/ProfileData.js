@@ -72,7 +72,7 @@ class ProfileData extends Component {
               <CardFooter profile className={classes.justifyContent}>
                 <Chip
                   label="User Info"
-                  variant="outlined"
+                  color="secondary"
                 />
               </CardFooter>
             </Card>

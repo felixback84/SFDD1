@@ -1,7 +1,7 @@
 // firebase
 const { db } = require('../utilities/admin');
 
-// gat all devices
+// get all devices
 exports.getAllDevices = (req,res) => { 
     db
         .collection('devices')

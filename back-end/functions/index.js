@@ -98,7 +98,7 @@ const {
 // notifications
 const {
     initNotificationsToActiveStateOfThing,
-} = require('./handlers/notifications')
+} = require('./handlers/notifications');
 
 //////////////////////////////////////////// API REST ROUTES ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userAdventures
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 
-// just to test
+// just to test an easily create an userDevice property
 app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
 
 ////////////////////////////////////////////////// USERADVENTURES /////////////////////////////////////////////////////
@@ -186,7 +186,6 @@ app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
 
 ////////////////////////////////// halo thing routes /////////////////////////////////////////////////
 
-
 ////////////////////////////////// hilda thing routes /////////////////////////////////////////////////
 // post active command in hilda things
 app.post('/device/hilda/:thingId/active',FBAuth, hildaPostActiveCommand);
@@ -202,14 +201,14 @@ app.post('/device/hilda/:thingId/color',FBAuth, hildaPostColorCommand);
 app.post('/device/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
 // post inactive command in heartbeat things
 app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
-// get top5Coords
-app.post('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
+// get top5Coords ------> without use
+// app.get('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
 // export functions
 exports.api = functions.https.onRequest(app);
 
 ///////////////////////////////// SOME ACTIONS IN DB WITHOUT HTTP REQUEST ///////////////////////////////////////////////
-// after creation of checkout means userDevice/Adventure property
+// after creation of checkout means userDevice/userAdventure property
 exports.createUserPropertyAfterCheckout = functions.firestore
     .document('checkouts/{checkoutsId}')
     .onCreate((snap) => {
@@ -333,7 +332,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         }
 });
 
-// create live data doc in liveData collection to trasmit telemetry events to client --------------- to check response
+// create liveDataSet doc in liveDataSets collection to trasmit telemetry events to client --------------- to check response
 exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('userDevices/{userDevicesId}')
     .onCreate((snap) => {
@@ -395,7 +394,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         console.log(`str: ${str}`);
         // str to obj
         let obj = JSON.parse(str); 
-        // pick from userDeviceId -- CarlosTal84-Halo-8n4ohAo247H1W5SsxY9s
+        // pick from userDeviceId -- CarlosTal84-Heartbeat-8n4ohAo247H1W5SsxY9s
         const thingId = obj.thingId;
         // print object
         console.log(`obj: ${obj.createdAt} - ${thingId}`);
@@ -418,7 +417,8 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             .update({
                 ...obj
             })
-
+        
+        //////////////////////////////////////////// NOTIFICATIONS PART  ////////////////////////////
         // data to pass to create the notification    
         if(obj.active == "true"){
             // obj to notification doc to ON command

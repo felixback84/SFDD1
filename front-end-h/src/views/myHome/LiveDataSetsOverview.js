@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
@@ -21,6 +21,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import Muted from "components/Typography/Muted.js";
 import Badge from "components/Badge/Badge.js";
 import CustomLinearProgress from "components/CustomLinearProgress/CustomLinearProgress.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 
 // components
 import GoogleMaps from "./GoogleMaps";
@@ -29,10 +30,12 @@ import GoogleMaps from "./GoogleMaps";
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import WifiIcon from '@material-ui/icons/Wifi';
 import WifiOffIcon from '@material-ui/icons/WifiOff';
+import LocationSearchingIcon from '@material-ui/icons/LocationSearching';
 
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
@@ -70,7 +73,6 @@ class LiveDataSetsOverview extends Component {
     dayjs.extend(relativeTime);
 
     return(
-      
       <div className={classes.container}>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
@@ -84,7 +86,6 @@ class LiveDataSetsOverview extends Component {
                         {
                           minWidth: "130px",
                           minHeight: "130px",
-                          color: green[A400]
                         }
                       }
                     />
@@ -104,51 +105,63 @@ class LiveDataSetsOverview extends Component {
               </CardAvatar>
               {/* content */}
               <CardBody>
+                
+                {/* searchingMode */}
+                <SnackbarContent
+                  message={
+                    <span>
+                      <b>Searching mode:</b> {`You are searching mode is:`}
+                    </span>
+                  }
+                  icon={LocationSearchingIcon}
+                />  
+
                 {/* thingId */}
-                <Divider variant="fullWidth" />
-                <h4 className={classes.cardTitle}>ThingId: {thingId}</h4>
-                <Divider variant="fullWidth" />
+                <SnackbarContent
+                  message={
+                    <span>
+                      <b>ThingId:</b> {`The ID of your thing is:`}
+                    </span>
+                  }
+                  icon={FingerprintIcon}
+                /> 
+                
                 {/* connection status */}
+                <h4 className={classes.cardCategory}>Connection status:</h4>
                 {
                   connectionStatus == true ? ( 
-                    <span>
-                      Connection status:
-                      <Chip
-                        icon={<WifiIcon 
-                        className={classes.icons} 
-                        style={
-                          {
-                            minWidth: "30px",
-                            minHeight: "30px",
-                            color: green[A400]
-                          }
+                    <Chip
+                      icon={<WifiIcon 
+                      className={classes.icons} 
+                      style={
+                        {
+                          minWidth: "30px",
+                          minHeight: "30px",
+                          color: green[A400]
                         }
-                        />}
-                        label="Connected"
-                        variant="outlined"
-                      />
-                    </span>
-                  ) : ( 
-                    <span>
-                      Connection status:
-                      <Chip
-                      icon={<WifiOffIcon 
-                        className={classes.icons} 
-                        style={
-                          {
-                            minWidth: "30px",
-                            minHeight: "30px",
-                            color: red[500]
-                          }
-                        }
+                      }
                       />}
-                      label="Disconnected"
+                      label="Connected"
                       variant="outlined"
                     />
-                    </span>
+                  ) : ( 
+                    <Chip
+                    icon={<WifiOffIcon 
+                      className={classes.icons} 
+                      style={
+                        {
+                          minWidth: "30px",
+                          minHeight: "30px",
+                          color: red[500]
+                        }
+                      }
+                    />}
+                    label="Disconnected"
+                    variant="outlined"
+                    />
                   )
                 }
-                <Divider variant="fullWidth" />
+                {/* <Divider variant="fullWidth" /> */}
                 {/* battery life */}
                 <Muted>
                   <h4 className={classes.cardCategory}>
@@ -162,40 +175,51 @@ class LiveDataSetsOverview extends Component {
                   valueBuffer={batteryLife}
                   style={{ width: "100%", display: "inline-block", padding:"10px", marging: "10px"}}
                 />
-                <Divider variant="fullWidth" />
+                {/* <Divider variant="fullWidth" /> */}
                 {/* last seen */}
                 <Muted>
                   <h4 className={classes.cardCategory}>
                     Last messsage: {dayjs(createdAt).format('h:mm a, MMMM DD YYYY')}
                   </h4>
                 </Muted>
-                <Divider variant="fullWidth" />
+                {/* <Divider variant="fullWidth" /> */}
                 {/* cooords */}
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                    {/* title */}
-                    <h4 className={classes.cardCategory}>Last know position:</h4>
-                    {/* name point */}
-                    <Badge color="primary">
-                      {`Point name: ${coords.nameOfPoint}`}
-                    </Badge>  
-                    {/* lat */}
-                    <Badge color="info">
-                      {`Latitude: ${coords.lat}`}
-                    </Badge> 
-                    {/* lon */}
-                    <Badge color="rose">
-                      {`Longitude: ${coords.lon}`}
-                    </Badge> 
-                    {/* Google Maps */}
-                    <GoogleMaps coords={coords}/>
-                  </GridItem>
-                </GridContainer>  
+                {/* title */}
+                <h4 className={classes.cardCategory}>Last know position:</h4>
+                {/* name point */}
+                <Badge color="primary">
+                  {`Point name: ${coords.nameOfPoint}`}
+                </Badge>  
+                {/* lat */}
+                <Badge color="info">
+                  {`Latitude: ${coords.lat}`}
+                </Badge> 
+                {/* lon */}
+                <Badge color="rose">
+                  {`Longitude: ${coords.lon}`}
+                </Badge> 
+                {/* Google Maps */}
+                <GoogleMaps coords={coords}/>
+                {/* Profile to match */}
+                <h4 className={classes.cardCategory}>Profile to match:</h4>
+                <Chip
+                  label={`Lucky number: ${profileToMatch.luckyNumber}`}
+                  variant="outlined"
+                />
+                <Chip
+                  label={`Your DC Hero: ${profileToMatch.dcHero}`}
+                  variant="outlined"
+                />
+                <Chip
+                  label={`Cat lover: ${profileToMatch.cat + ''}`}
+                  variant="outlined"
+                />
               </CardBody>
+              {/* footer */}
               <CardFooter profile className={classes.justifyContent}>
                 <Chip
                   label="Thing Info"
-                  variant="outlined"
+                  color="secondary"
                 />
               </CardFooter>
             </Card>

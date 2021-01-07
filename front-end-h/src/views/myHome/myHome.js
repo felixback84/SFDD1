@@ -39,12 +39,12 @@ class myHome extends Component {
     // map the list of one device
     let mapUserDeviceHeader = userDevices.map(userDevice => 
       <Fragment key={userDevice.thingId}>
-        <GridItem xs={12} sm={6} md={6}>
+        <GridItem xs={12} sm={12} md={6}>
           {/* device relevant data */}
           <UserDeviceData userdevice={userDevice} />
         </GridItem>
         {/* liveDataSets relevant data */}
-        <GridItem xs={12} sm={12} md={12}>
+        <GridItem xs={12} sm={12} md={6}>
           <LiveDataSetsOverview thingid={userDevice.thingId}/>
         </GridItem>
       </Fragment>
@@ -61,7 +61,7 @@ class myHome extends Component {
             <div className={classes.container}>
               <GridContainer >
                 {/* user relevant data */}
-                <GridItem xs={12} sm={6} md={6}>
+                <GridItem xs={12} sm={12} md={12}>
                   <ProfileData/>
                 </GridItem>
                 {/* userDevice box & liveDataSets Overview*/}
