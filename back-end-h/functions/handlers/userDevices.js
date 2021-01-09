@@ -1,53 +1,6 @@
 // firebase
 const { db } = require('../utilities/admin');
 
-// get all userDevices
-exports.getAllUserDevices = (req, res) => {
-    let userDevices = [];
-    db
-        .collection('userDevices')
-        .where('userHandle', '==', req.user.userHandle)
-        .get()
-        .then((data)=> {
-            data.forEach((doc) => {
-                userDevices.push({
-                    userDeviceId: doc.id,
-                    userHandle: doc.data().userHandle,
-                    active: doc.data().active,
-                    createdAt: doc.data().createdAt,
-                    device: doc.data().device,
-                    deviceId: doc.data().deviceId,
-                    thingId: doc.data().thingId
-                });
-            });
-            return res.json(userDevices);
-        })    
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
-}
-
-// get one userDevice
-exports.getUserDevice = (req, res) => {
-    let userDeviceData;
-    db
-        .doc(`/userDevices/${req.params.userDeviceId}`)
-        .get()
-        .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'userDevice not found' });
-            }
-            userDeviceData = doc.data();
-            userDeviceData.userDeviceId = doc.id;
-            return res.json(userDeviceData);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
-}
-
 // *********************** Post a complete device for an user or userDevice property - without use
 exports.postInUserDevices = (req, res) => {
     const newUserDevice = {
@@ -108,6 +61,53 @@ exports.postInUserDevices = (req, res) => {
             res.status(500).json({ error: err.code });
         });
 };
+
+// get all userDevices
+exports.getAllUserDevices = (req, res) => {
+    let userDevices = [];
+    db
+        .collection('userDevices')
+        .where('userHandle', '==', req.user.userHandle)
+        .get()
+        .then((data)=> {
+            data.forEach((doc) => {
+                userDevices.push({
+                    userDeviceId: doc.id,
+                    userHandle: doc.data().userHandle,
+                    active: doc.data().active,
+                    createdAt: doc.data().createdAt,
+                    device: doc.data().device,
+                    deviceId: doc.data().deviceId,
+                    thingId: doc.data().thingId
+                });
+            });
+            return res.json(userDevices);
+        })    
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+}
+
+// get one userDevice
+exports.getUserDevice = (req, res) => {
+    let userDeviceData;
+    db
+        .doc(`/userDevices/${req.params.userDeviceId}`)
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(404).json({ error: 'userDevice not found' });
+            }
+            userDeviceData = doc.data();
+            userDeviceData.userDeviceId = doc.id;
+            return res.json(userDeviceData);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+}
 
 // get active userdevice
 exports.getActiveUserDevices = async (req, res) => {

@@ -1,67 +1,15 @@
 // firebase
 const { db } = require('../utilities/admin');
 
-// get all staticDevices
-exports.getAllStaticDevices = (req,res) => {
-	let staticDevices = [];
-    db
-        .collection('staticDevices')
-        .where('userHandle', '==', req.user.userHandle)
-        .get()
-        .then((data)=> {
-            data.forEach((doc) => {
-                staticDevices.push({
-                    staticDeviceId: doc.id,
-                    userHandle: doc.data().userHandle,
-                    active: doc.data().active,
-                    createdAt: doc.data().createdAt,
-                    static: doc.data().static,
-                    staticId: doc.data().staticId,
-                    staticThingId: doc.data().staticThingId
-                });
-            });
-            return res.json(staticDevices);
-        })    
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
-}
-
-// get a specific staticDevice
-exports.getStaticDevice = (req,res) => {
-	let staticDeviceData;
-    db
-        .doc(`/staticDevices/${req.params.staticDeviceId}`)
-        .get()
-        .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'staticDevice not found' });
-            }
-        	staticDeviceData = doc.data();
-            staticDeviceData.staticDeviceId = doc.id;
-            return res.json(staticDeviceData);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });
-}
-
 // post staticDevice
-exports.postStaticDevice = (req,res) => {
+exports.postInStaticDevice = (req,res) => {
 	// obj to save data in db
 	const newStaticDevice = {
 		staticId: req.params.staticId,
 		createdAt: new Date().toISOString(),
 		userHandle: req.user.userHandle,
-		coords:{
-			lat: req.coords.lat,
-			lon: req.coords.lon,
-			nameOfPoint: req.coords.nameOfPoint,
-		},
-		active: false,
-		staticThingId: ''
+		active: false, 
+		thingId: ''
 	};
 
 	// object to hold all info
@@ -86,16 +34,15 @@ exports.postStaticDevice = (req,res) => {
                     .then((doc) => {
                         // now save the select info of .doc (device) of the collection
                         let selectInfoStatic = {
-                            nameOfStatic: doc.data().nameOfStatic,
+                            nameOfDevice: doc.data().nameOfDevice,
                             description: doc.data().description,
-                            imgUrl: doc.data().imgUrl,
                             coverUrl: doc.data().coverUrl,
                             videoUrl: doc.data().videoUrl,
                             badgeUrl: doc.data().badgeUrl,
                             createdAt: doc.data().createdAt,
                             dataSets: doc.data().dataSets
                         };
-                        allStaticDeviceData.static = selectInfoStatic;
+                        allStaticDeviceData.device = selectInfoStatic;
                         // write in global object
                         return db
                         .collection('staticDevices')
@@ -109,6 +56,53 @@ exports.postStaticDevice = (req,res) => {
                         res.status(500).json({ error: err.code });
                     });
             }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+}
+
+// get all staticDevices
+exports.getAllStaticDevices = (req,res) => {
+	let staticDevices = [];
+    db
+        .collection('staticDevices')
+        .where('userHandle', '==', req.user.userHandle)
+        .get()
+        .then((data)=> {
+            data.forEach((doc) => {
+                staticDevices.push({
+                    staticDeviceId: doc.id,
+                    userHandle: doc.data().userHandle,
+                    active: doc.data().active,
+                    createdAt: doc.data().createdAt,
+                    device: doc.data().device,
+                    staticId: doc.data().staticId,
+                    thingId: doc.data().thingId
+                });
+            });
+            return res.json(staticDevices);
+        })    
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+}
+
+// get a specific staticDevice
+exports.getStaticDevice = (req,res) => {
+	let staticDeviceData;
+    db
+        .doc(`/staticDevices/${req.params.staticDeviceId}`)
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(404).json({ error: 'staticDevice not found' });
+            }
+        	staticDeviceData = doc.data();
+            staticDeviceData.staticDeviceId = doc.id;
+            return res.json(staticDeviceData);
         })
         .catch((err) => {
             console.error(err);
@@ -156,7 +150,7 @@ exports.getActiveStaticDevices = async (req, res) => {
                         createdAt: new Date().toISOString(),
                         active: true,
                         /// esto deberia extraerse del modelo de datos de cada dispositivo, los modos (active or not active) deberian ser una colleción especial
-                        activeStaticThing: false
+                        activeThing: false
                     })
                     /////////////////////////////////////////////////
                     .then(() => {

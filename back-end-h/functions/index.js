@@ -35,7 +35,7 @@ const {
 const {
     getAllStaticDevices,
     getStaticDevice,
-    postStaticDevice,
+    postInStaticDevice,
     getActiveStaticDevices,
     getInactiveStaticDevices
 } = require('./handlers/staticDevices');
@@ -65,7 +65,8 @@ const {
 
 // iot core & pub/sub
 const {
-    createDeviceInIotCore
+    createDeviceInIotCore,
+    createStaticDeviceInIotCore
 } = require('./handlers/finalCycleIotGcloud');
 
 // heartbeat
@@ -118,7 +119,7 @@ app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices)
 // get inactive userAdventures
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
 // post static device
-app.post('/staticdevice', FBAuth, postStaticDevice);
+app.post('/staticdevices/:staticId/create', FBAuth, postInStaticDevice);
 
 ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
 // post dataSets in user device 
@@ -149,8 +150,10 @@ app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
 app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
 
 ////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
-// creation of device in iot core
-app.get('/device/:userDeviceId/createDevicesInIotCore', createDeviceInIotCore);
+// creation of user device in iot core
+app.get('/device/:userDeviceId/createDeviceInIotCore', createDeviceInIotCore);
+// creation of static device in iot core
+app.get('/staticdevice/:staticDeviceId/createStaicDeviceInIotCore', createStaticDeviceInIotCore);
 
 ////////////////////////////////// heartbeat thing routes /////////////////////////////////////////////////
 // post active command in heartbeat things
@@ -164,7 +167,7 @@ app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveComm
 exports.api = functions.https.onRequest(app);
 
 ///////////////////////////////// +++++++ SOME ACTIONS IN DB WITHOUT HTTP REQUEST ++++++++ /////////////////////////////////////
-// after creation of checkout means userDevice/userAdventure property
+// after creation of checkout means userDevice property
 exports.createUserPropertyAfterCheckout = functions.firestore
     .document('checkouts/{checkoutsId}')
     .onCreate((snap) => {
@@ -229,7 +232,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
         }   
 });
 
-// create liveDataSet doc in liveDataSets collection to trasmit telemetry events to client --------------- to check response
+// create liveDataSet (userDevices) doc in liveDataSets collection to trasmit telemetry events to client fot userDevices --------------- to check response
 exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('userDevices/{userDevicesId}')
     .onCreate((snap) => {
@@ -255,7 +258,7 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
         async function initDevicesIotCore(valueUserDeviceId){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/createDevicesInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/createDeviceInIotCore`;
             const options = {
                 method: 'GET'
             };
@@ -278,6 +281,55 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
             });
     })
 
+// create liveDataSet (staticDevices) doc in liveDataSets collection to trasmit telemetry events to client fot staticDevices
+exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
+    .document('staticDevices/{staticDevicesId}')
+    .onCreate((snap) => {
+        // grab data from firebase snapshot
+        const newStaticDevice = snap.data();
+        // doc id
+        const staticDeviceId = snap.id;
+        // other data
+        const userHandle = newStaticDevice.userHandle;
+        const dataSetModel = newStaticDevice.device.dataSets;
+        const nameOfDevice = newStaticDevice.device.nameOfDevice;
+        // thingId
+        const thingId = `${userHandle}-${nameOfDevice}-${staticDeviceId}`;
+
+        //////////////////////////////////////////////////////////////////// add staticThingId to staticDevice property
+        db
+            .doc(`/staticDevices/${staticDeviceId}`)
+            .update({thingId: thingId})
+            .catch((err) => {
+                console.error(err);
+            });
+        ////////////////////////////////////////////////////////////////////// create device in iot core
+        async function initStaticDevicesIotCore(valueStaticDeviceId){
+            // api url
+            const fetch = require('node-fetch');
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/staticdevice/${valueStaticDeviceId}/createStaticDeviceInIotCore`;
+            const options = {
+                method: 'GET'
+            };
+            //fetch
+            const iotResponse = await fetch(urlApi, options);
+            const iotJsonData = await iotResponse.json();
+            console.log(`Response for initStaticDevicesIotCore: ${iotJsonData}`);
+        }
+        // run it
+        // initStaticDevicesIotCore(staticDeviceId); 
+
+        /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
+        db
+            .doc(`/staticDevices/${staticDeviceId}`)
+            .collection('liveDataSets')
+            .doc(thingId)
+            .set(dataSetModel)
+            .catch((err) => {
+                console.error(err);
+            });
+    })
+
 // detect traffic in topic events and db sync
 exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').onPublish(
     async (message, context) => {
@@ -291,12 +343,13 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         console.log(`str: ${str}`);
         // str to obj
         let obj = JSON.parse(str); 
-        // pick from userDeviceId -- CarlosTal84-Heartbeat-8n4ohAo247H1W5SsxY9s
+        // pick from userDeviceId -- CarlosTal84-(static)Heartbeat-PT44TQIpPyLJXRBqXZAQ
         const thingId = obj.thingId;
+        // check the type of device send the message
         // print object
         console.log(`obj: ${obj.createdAt} - ${thingId}`);
-        // userDeviceId 
-        const userDeviceId = thingId.split("-").slice(2).toString();
+        // userDeviceId OR staticDeviceId means id of property
+        const userDeviceIdOrStaticDeviceId = thingId.split("-").slice(2).toString();
         // nameOfDevice
         const nameOfDevice = thingId.split("-").slice(1,2).toString();
         // userHandle
@@ -304,17 +357,32 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // print 
         console.log(`nameOfDevice: ${nameOfDevice}`);
         console.log(`userDeviceId: ${userDeviceId}`);
-        //db part
-        let dbDataFromLiveDataSets = db
-            .doc(`/userDevices/${userDeviceId}`)
-            .collection('liveDataSets')
-            .doc(thingId)
-        // update specific db doc
-        dbDataFromLiveDataSets  
-            .update({
-                ...obj
-            })
-        
+
+        // check the type of device logic
+        if(nameOfDevice == "Heartbeat"){
+            //db part
+            let dbDataFromLiveDataSets = db
+                .doc(`/userDevices/${userDeviceIdOrStaticDeviceId}`)
+                .collection('liveDataSets')
+                .doc(thingId)
+            // update specific db doc
+            dbDataFromLiveDataSets  
+                .update({
+                    ...obj
+                })
+        } else if(nameOfDevice == "staticHeartbeat"){
+            //db part
+            let dbDataFromLiveDataSets = db
+                .doc(`/staticDevices/${userDeviceIdOrStaticDeviceId}`)
+                .collection('liveDataSets')
+                .doc(thingId)
+            // update specific db doc
+            dbDataFromLiveDataSets  
+                .update({
+                    ...obj
+                })
+        }
+
         //////////////////////////////////////////// NOTIFICATIONS PART  ////////////////////////////
         // data to pass to create the notification    
         if(obj.active == "true"){
