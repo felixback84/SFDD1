@@ -41,7 +41,10 @@ const addNotificationOnDBOfActiveThingStateOfThing = async (
         const activeThingStateVar = activeThingState;
 
         // db part
-        const activeUserDevices = db.collection('activeUserDevices').doc(activeUserDocIdVar.toString());
+        const activeUserDevices = db
+            .collection('activeUserDevices')
+            .doc(activeUserDocIdVar.toString());
+        // hold result doc    
         const doc = await activeUserDevices.get();
 
         // check if there are any coincidence
@@ -105,7 +108,7 @@ exports.initNotificationsToActiveStateOfThing = async (dataToNotificationOfState
     // print result of state in activeThing
     console.log(`result of activeThing: ${resultOfActiveState.toString()}`);
 
-    // obj to pass too the picker notification
+    // obj to pass to the picker notification
     const objToPickerNotification = {
         messageaActiveFromThing: dataToNotificationOfStateOfThing.messageaActiveFromThing,
         dataToCretateNotification : dataToNotificationOfStateOfThing.dataToCretateNotification,

@@ -22,7 +22,8 @@
     "googleapis": "^52.1.0",
     "md5": "^2.2.1",
     "node-fetch": "^2.6.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "underscore": "^1.12.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6"

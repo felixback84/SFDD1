@@ -69,13 +69,21 @@ const {
     createStaticDeviceInIotCore
 } = require('./handlers/finalCycleIotGcloud');
 
-// heartbeat
+// heartbeats in general
 const {
-    detectGPSCoordsProximityRange,
     heartbeatPostInactiveCommand,
     heartbeatPostActiveCommand,
-    heartbeatTop5CoordsData,
-} = require('./handlers/forHeartBeat');
+} = require('./handlers/forHeartbeatsInGeneral');
+
+// heartbeats all in move
+const {
+    detectGPSCoordsProximityRange,
+} = require('./handlers/forHeartbeatsAllInMove');
+
+// heartbeat statics and dynamics
+const {
+    detectGPSCoordsProximityRangeForStaticsAndDynamics,
+} = require('./handlers/forHeartbeatsStaticsAndDynamics');
 
 // notifications
 const {
@@ -162,6 +170,8 @@ app.post('/device/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand)
 app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
 // get top5Coords ------> without use
 // app.get('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
+// to get liveDataSets for static devices ----------> just to test
+app.get('/statics/', detectGPSCoordsProximityRangeForStaticsAndDynamics);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -371,7 +381,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     ...obj
                 })
         } else if(nameOfDevice == "staticHeartbeat"){
-            //db part
+            //db part -----> si es necesartio se pueden hacer dos variables diferentes una para cada dispositivo
             let dbDataFromLiveDataSets = db
                 .doc(`/staticDevices/${userDeviceIdOrStaticDeviceId}`)
                 .collection('liveDataSets')
@@ -433,7 +443,8 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 .then((doc)=>{
                     let dataDB = doc.data()
                     // run it
-                    detectGPSCoordsProximityRange(dataDB);  
+                    //detectGPSCoordsProximityRange(dataDB);  
+                    detectGPSCoordsProximityRangeForStaticsAndDynamics(dataDB);
                 })
                 .catch((err) => {
                     console.error(err);

@@ -1,121 +1,10 @@
 // firebase
 const { db } = require('../utilities/admin');
-// post active command in hild things
-exports.heartbeatPostActiveCommand = async (req, res) => {
-    // req data
-    const thingId = req.params.thingId;
-    const activeValue = {...req.body};
-    //const activeValue = req.body.active;
-    // print
-    console.log(activeValue)
-    // to string 
-    const string = JSON.stringify(activeValue);
-    // global vars
-    const cloudRegion = 'us-central1';
-    const deviceId = thingId;
-    const commandMessage = string;
-    const projectId = 'sfdd-d8a16';
-    const registryId = 'Heartbeat';
-    // lib iot core
-    const iot = require('@google-cloud/iot');
-    // client
-    const iotClient = new iot.v1.DeviceManagerClient({
-    // optional auth parameters.
-    });
-    // client and path of device
-    const formattedName = iotClient.devicePath(
-        projectId,
-        cloudRegion,
-        registryId,
-        deviceId
-    );
-    // message data
-    const binaryData = Buffer.from(commandMessage);
-    // request
-    const request = {
-        name: formattedName,
-        binaryData: binaryData,
-    };
-
-    try {
-        const responses = await iotClient.sendCommandToDevice(request);
-        console.log('Sent command: ', responses[0]);
-        res.json(responses[0])
-    } catch (err) {
-        console.error('Could not send command:', err);
-        res.json(err)
-    }
-}
-
-// post inactive command in hild things
-exports.heartbeatPostInactiveCommand = async (req, res) => {
-    // req data
-    const thingId = req.params.thingId;
-    const inactiveValue = {...req.body};
-    // print
-    console.log(inactiveValue)
-    // to string
-    const string = JSON.stringify(inactiveValue);
-    // global vars
-    const cloudRegion = 'us-central1';
-    const deviceId = thingId;
-    const commandMessage = string;
-    const projectId = 'sfdd-d8a16';
-    const registryId = 'Heartbeat';
-    // lib iot core
-    const iot = require('@google-cloud/iot');
-    // client
-    const iotClient = new iot.v1.DeviceManagerClient({
-    // optional auth parameters.
-    });
-    // client and path of device
-    const formattedName = iotClient.devicePath(
-        projectId,
-        cloudRegion,
-        registryId,
-        deviceId
-    );
-    // message data
-    const binaryData = Buffer.from(commandMessage);
-    // request
-    const request = {
-        name: formattedName,
-        binaryData: binaryData,
-    };
-
-    try {
-        const responses = await iotClient.sendCommandToDevice(request);
-        console.log('Sent command: ', responses[0]);
-        res.json(responses[0])
-    } catch (err) {
-        console.error('Could not send command:', err);
-        res.json(err)
-    }
-}   
-
-// to get top5Coords for app
-exports.heartbeatTop5CoordsData = async (req, res) => {
-    db
-        .doc(`/userDevices/${req.params.userDeviceId}`)
-        .collection('topMatches')
-        .get()
-        .then((data) => {
-            let topMatches = [];
-            data.forEach((doc) => {
-                topMatches.push({
-                    topMatchesId: doc.id,
-                    ...doc.data()
-                });
-            });
-            return res.json(topMatches);
-        })
-        .catch((err) => console.error(err));   
-}
 
 // to measure the distance & match between users, to send a response to the thingId
 exports.detectGPSCoordsProximityRange = (inWait) => {
     
-    // var to hold coors object in an array
+    // var to hold coors object in an array of the rest
     let coordsInLiveDataSets = [];
     // list top 5
     let top5Coords = [];
@@ -155,13 +44,13 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
     // observer group collection part
     db
         .collectionGroup('liveDataSets')
-        //.where('thingId', '!=', thingId) // a cause of the other devices
-        .where('nameOfDevice','==','heartbeat')
+        .where('thingId', '!=', dataInDBDoc.thingId) // a cause of the other devices
+        //.where('nameOfDevice','==','heartbeat')
         .get()
         .then((querySnapshot) => {
             // Do something with these reviews!
             querySnapshot.forEach((doc) => {
-                // push data to array
+                // push data to an array
                 coordsInLiveDataSets.push({
                     coords: doc.data().coords,
                     thingId: doc.data().thingId,
@@ -249,7 +138,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
                 // check to not loop over himself    
                 if(argz.thingId != dataInDBDoc.thingId){
                     // run it
-                    metersRangeCounter(checkDistance(argz)) 
+                    metersRangeCounter(checkDistance(argz)); 
                 } else {
                     console.log('Not possible make the comparation')
                 }
