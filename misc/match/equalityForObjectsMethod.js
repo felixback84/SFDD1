@@ -3,8 +3,8 @@ let _ = require('underscore');
 
 const company = {
     dcHeros:['Batman', 'Superman', 'Cyborg', 'Flash', 'Aquaman'],
-    luckyNumbers:[2,4,5,7,8,9],
-    animals:['cat','dog','rabbit','snake'],
+    luckyNumbers:[0,1,2,3,4,5,7,8,9],
+    animals:['cat','dog','rabbit','snake', 'hamster','spider','bird',],
     fruits:['🍎', '🍋', '🍊', '🍇', '🍍', '🍐']
 }
 

@@ -171,7 +171,7 @@ app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveComm
 // get top5Coords ------> without use
 // app.get('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 // to get liveDataSets for static devices ----------> just to test
-app.get('/statics/', detectGPSCoordsProximityRangeForStaticsAndDynamics);
+app.post('/statics/', detectGPSCoordsProximityRangeForStaticsAndDynamics);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -233,8 +233,8 @@ exports.createUserPropertyAfterCheckout = functions.firestore
                             allUserDeviceData.device = selectInfoDevice;
                             // write in global object
                             return db
-                                    .collection('userDevices')
-                                    .add(allUserDeviceData) 
+                                .collection('userDevices')
+                                .add(allUserDeviceData) 
                         })
                 }
             })
