@@ -1,33 +1,47 @@
 // find if exists a particular item(s) in an array inside an object
-let _ = require('underscore');
+// let _ = require('underscore');
 
-const company = {
-    dcHeros:['Batman', 'Superman', 'Cyborg', 'Flash', 'Aquaman'],
-    luckyNumbers:[0,1,2,3,4,5,7,8,9],
-    animals:['cat','dog','rabbit','snake', 'hamster','spider','bird',],
-    fruits:['🍎', '🍋', '🍊', '🍇', '🍍', '🍐']
-}
+// const company = {
+//     dcHeros:['Batman', 'Superman', 'Cyborg', 'Flash', 'Aquaman'],
+//     luckyNumbers:[0,1,2,3,4,5,7,8,9],
+//     animals:['cat','dog','rabbit','snake', 'hamster','spider','bird',],
+//     fruits:['🍎', '🍋', '🍊', '🍇', '🍍', '🍐']
+// }
 
-// obj user in move
-let bobaFett ={
-    dcHeros:["Batman", 'Cyborg'],
-    luckyNumbers:[1,5],
-    animals:['cat'],
-    fruits:['🍎', '🍍']
-}
+// // obj user in move
+// let bobaFett ={
+//     dcHeros:["Batman", 'Cyborg'],
+//     luckyNumbers:[1,5],
+//     animals:['cat'],
+//     fruits:['🍎', '🍍']
+// }
 
-console.log(_.intersection(company.dcHeros, bobaFett.dcHeros));
-console.log(_.intersection(company.fruits, bobaFett.fruits));
+// let one = _.intersection(company.dcHeros, bobaFett.dcHeros)
+// let two = _.intersection(company.fruits, bobaFett.fruits)
+// console.log(one);
+// console.log(two);
 
 // output
 // ["Batman", 'Cyborg']
 // ['🍎', '🍍']
 
 // pass args to the intersection method
-let dcHeros = _.intersection(args.objProfileOfDynamic.dcHeros, args.coordsInLiveDataSets.dcHeros);
-let luckyNumbers = _.intersection(args.objProfileOfDynamic.luckyNumbers, args.coordsInLiveDataSets.luckyNumbers);
-let animals = _.intersection(args.objProfileOfDynamic.animals, args.coordsInLiveDataSets.animals);
-let fruits = _.intersection(args.objProfileOfDynamic.fruits, args.coordsInLiveDataSets.fruits);
+// let dcHeros = _.intersection(args.objProfileOfDynamic.dcHeros, args.coordsInLiveDataSets.dcHeros);
+// let luckyNumbers = _.intersection(args.objProfileOfDynamic.luckyNumbers, args.coordsInLiveDataSets.luckyNumbers);
+// let animals = _.intersection(args.objProfileOfDynamic.animals, args.coordsInLiveDataSets.animals);
+// let fruits = _.intersection(args.objProfileOfDynamic.fruits, args.coordsInLiveDataSets.fruits);
+
+// flat arrays
+// flat arrays func
+// function flattenArr(arr) {
+//     var flat = [];
+//     for (var i = 0; i < arr.length; i++) {
+//         flat = flat.concat(arr[i]);
+//     }
+//     return flat;
+// }
+// // run it
+// flattenArr(arraysToCheck) 
 
 // find if exists a particular item in an array inside an object
 // const company = {
@@ -157,6 +171,9 @@ let fruits = _.intersection(args.objProfileOfDynamic.fruits, args.coordsInLiveDa
 // active: true
 // jangoFett: [object Object]
 
+// array length
+let arr = [{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":["cat","fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[15]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1,21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["melon"]},{"luckyNumbers":[21]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""}]
+console.log(arr.length);
 
 
 

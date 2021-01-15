@@ -6,6 +6,8 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
     let objProfileDataOfDynamic = req.body.objProfileDataOfDynamic
     // var to hold coors object in an array of the rest
     let profilesInLiveDataSets = [];
+    // var to hold the results of the intersections
+    let dataWithFinalMatches = [];
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -26,72 +28,55 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
             console.log(`Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`); // [{...},{...}
         })
         .then(()=>{
-            // var to hold the results of the intersections
-            let dataWithMatches = [];
+            // hold var
+            let arraysToCheck = [];
+            // underscore
+            let _ = require('underscore');
             // loop the results on the array
             for(let i = 0; i < profilesInLiveDataSets.length; i++){
                 // func to check the match
                 function checkProfilesStaicsVsDynamics(args){
-                    // underscore
-                    let _ = require('underscore');
                     // obj to extract key names
                     let keyNames = args.dynamics;
                     // iterate over the user object
-                    for (const key in keyNames) {
+                    let coincidences = [];
+                    // loop
+                    for (let key in keyNames) {
                         if (keyNames.hasOwnProperty(key)) {
                             // print
-                            console.log(`key names: ${key}`);
-                            // pass the key
-                            let arraysToCheck = _.intersection(
-                                args.statics.key, 
-                                args.dynamics.key
-                            );
-                            // create arrays
-                            dataWithMatches = {
-                                [key]: []
-                            };
-                            // push the results 
-                            dataWithMatches.push({
-                                ...arraysToCheck,
-                            })
+                            console.log(`to compare --> statics: ${args.statics[key]} & dynamic: ${args.dynamics[key]}`)
+                            // passing the keys
+                            let statics = args.statics[key];
+                            let dynamics = args.dynamics[key];
+                            // isntersector
+                            let intersection = _.intersection(statics, dynamics)
+                            // check if is empty
+                            if(intersection.length != 0){
+                                // pass data to var
+                                coincidences.push({
+                                    [key]:intersection,
+                                });
+                            }
                         }
                     }
+                    // return data results
+                    return coincidences;
                 }
-                // pass the rest of the data
-                dataWithMatches = profilesInLiveDataSets.coords;
-                dataWithMatches = profilesInLiveDataSets.thingId;
-                // dataWithMatches = profilesInLiveDataSets.profileToMatch;
-                // data to pass
+                // data to pass 
                 let argz = {
-                    statics: profilesInLiveDataSets[i],
-                    dynamics: objProfileDataOfDynamic.profileToMatch
+                    statics: profilesInLiveDataSets[i].profileToSearch,
+                    dynamics: objProfileDataOfDynamic.profileToMatch,
+                    //thingId: profilesInLiveDataSets[i].thingId,
+                    //coords: profilesInLiveDataSets[i].coords,
                 };
-                // run it
-                checkProfilesStaicsVsDynamics(argz);
-                
-                // func to save data of top5Coords
-                function savaData(dataToSave){
-                    // userDeviceId 
-                    const staticDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
-                    db
-                        .doc(`/userDevices/${staticDeviceId}`)
-                        .collection('liveDataSets')
-                        .doc(objProfileDataOfDynamic.thingId)
-                        .update({ top5Coords: dataToSave })
-                        .then(() => {
-                            // print
-                            console.log(dataToSave);
-                            // res
-                            return res.json(dataWithMatches);
-                        })            
-                        .catch((err) => {
-                            console.error(err);
-                            res.status(500).json({ error: err.code });
-                        });                
-                }
-                // run it
-                savaData(dataWithMatches)
+                // run it & push it
+                arraysToCheck.push({
+                    initialMatches: checkProfilesStaicsVsDynamics(argz),
+                });
             }
+            // print results
+            console.log(`arraysToCheck result --> ${JSON.stringify(arraysToCheck)}`);
+            // [{"initialMatches":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},]
         })
 }
 

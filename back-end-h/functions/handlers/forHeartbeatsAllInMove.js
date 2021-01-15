@@ -51,7 +51,7 @@ exports.detectGPSCoordsProximityRange = (inWait) => {
             // Do something with these reviews!
             querySnapshot.forEach((doc) => {
                 // push data to an array
-                coordsInLiveDataSets.push({
+                coordsInLiveDataSets.push({           
                     coords: doc.data().coords,
                     thingId: doc.data().thingId,
                     profileToMatch: doc.data().profileToMatch //////////////////////////////////////////// to check
