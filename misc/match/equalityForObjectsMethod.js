@@ -43,7 +43,7 @@
 // // run it
 // flattenArr(arraysToCheck) 
 
-// find if exists a particular item in an array inside an object
+// //find if exists a particular item in an array inside an object
 // const company = {
 //     dcHeros:['Batman', 'Superman', 'Cyborg', 'Flash', 'Aquaman'],
 //     luckyNumbers:[2,4,5,7,8,9],
@@ -172,9 +172,15 @@
 // jangoFett: [object Object]
 
 // array length
-let arr = [{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":["cat","fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[15]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1,21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["melon"]},{"luckyNumbers":[21]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""}]
-console.log(arr.length);
+// let arr = [{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":["cat","fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[15]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1,21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["melon"]},{"luckyNumbers":[21]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""}]
+// console.log(arr.length);
 
+let some = {initialMatches:{}}
+if(Object.entries(some).length === 0){
+    console.log("is empty")
+} else {
+    console.log("has something")
+}
 
 
 

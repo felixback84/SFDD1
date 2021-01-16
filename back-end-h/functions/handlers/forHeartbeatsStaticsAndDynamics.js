@@ -6,8 +6,6 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
     let objProfileDataOfDynamic = req.body.objProfileDataOfDynamic
     // var to hold coors object in an array of the rest
     let profilesInLiveDataSets = [];
-    // var to hold the results of the intersections
-    let dataWithFinalMatches = [];
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -38,8 +36,8 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
                 function checkProfilesStaicsVsDynamics(args){
                     // obj to extract key names
                     let keyNames = args.dynamics;
-                    // iterate over the user object
-                    let coincidences = [];
+                    // var to hold coincidences
+                    let coincidences = {};
                     // loop
                     for (let key in keyNames) {
                         if (keyNames.hasOwnProperty(key)) {
@@ -52,10 +50,8 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
                             let intersection = _.intersection(statics, dynamics)
                             // check if is empty
                             if(intersection.length != 0){
-                                // pass data to var
-                                coincidences.push({
-                                    [key]:intersection,
-                                });
+                                // pass data to var obj
+                                coincidences[key] = intersection;
                             }
                         }
                     }
@@ -66,17 +62,17 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
                 let argz = {
                     statics: profilesInLiveDataSets[i].profileToSearch,
                     dynamics: objProfileDataOfDynamic.profileToMatch,
-                    //thingId: profilesInLiveDataSets[i].thingId,
-                    //coords: profilesInLiveDataSets[i].coords,
                 };
                 // run it & push it
                 arraysToCheck.push({
                     initialMatches: checkProfilesStaicsVsDynamics(argz),
+                    coords: profilesInLiveDataSets[i].coords,
+                    thingId: profilesInLiveDataSets[i].thingId,
                 });
             }
             // print results
             console.log(`arraysToCheck result --> ${JSON.stringify(arraysToCheck)}`);
-            // [{"initialMatches":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},]
+            //[{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},{"initialMatches":{}},{"initialMatches":{"fruits":["watermelon"]}},{"initialMatches":{"luckyNumbers":[21]}},{"initialMatches":{"pets":["fox"]}},{"initialMatches":{"dcHeros":["Flash"],"pets":["cat"]}},{"initialMatches":{"fruits":["watermelon"],"pets":["cat","fox"]}},{"initialMatches":{"luckyNumbers":[1],"pets":["cat"]}},{"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[15],"pets":["cat"]}},{"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[1]}},{"initialMatches":{"luckyNumbers":[1,21]}},{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},{"initialMatches":{"fruits":["melon"],"luckyNumbers":[21],"pets":["fox"]}},{"initialMatches":{"fruits":["watermelon"]}}]
         })
 }
 
