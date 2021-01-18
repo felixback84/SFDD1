@@ -1,11 +1,13 @@
 // firebase
 const { db } = require('../utilities/admin');
 
-exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
+exports.detectGPSCoordsProximityRangeForDynamicsVsStatics = (req,res) => {
     // profile of dynamic
     let objProfileDataOfDynamic = req.body.objProfileDataOfDynamic
     // var to hold coors object in an array of the rest
     let profilesInLiveDataSets = [];
+    // hold var
+    let arraysToCheck = [];
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -22,22 +24,21 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
                 })
             })
             // print
-            console.log(`Number of statics with data in db (profilesInLiveDataSets): ${profilesInLiveDataSets.length}`); // quantity of objects
-            console.log(`Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`); // [{...},{...}
+            console.log(`Number of statics with data in db (profilesInLiveDataSets): ${profilesInLiveDataSets.length} & 
+                Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`); 
+                // quantity of objects & [{...},{...}
         })
         .then(()=>{
-            // hold var
-            let arraysToCheck = [];
             // underscore
             let _ = require('underscore');
             // loop the results on the array
             for(let i = 0; i < profilesInLiveDataSets.length; i++){
+                // var to hold coincidences
+                let coincidences = {};
                 // func to check the match
                 function checkProfilesStaicsVsDynamics(args){
                     // obj to extract key names
                     let keyNames = args.dynamics;
-                    // var to hold coincidences
-                    let coincidences = {};
                     // loop
                     for (let key in keyNames) {
                         if (keyNames.hasOwnProperty(key)) {
@@ -52,28 +53,68 @@ exports.detectGPSCoordsProximityRangeForStaticsAndDynamics = (req,res) => {
                             if(intersection.length != 0){
                                 // pass data to var obj
                                 coincidences[key] = intersection;
+                                // print
+                                console.log(`coincidences: ${JSON.stringify(coincidences)}`)
                             }
                         }
                     }
                     // return data results
                     return coincidences;
                 }
+
                 // data to pass 
                 let argz = {
                     statics: profilesInLiveDataSets[i].profileToSearch,
                     dynamics: objProfileDataOfDynamic.profileToMatch,
                 };
+                
                 // run it & push it
-                arraysToCheck.push({
-                    initialMatches: checkProfilesStaicsVsDynamics(argz),
-                    coords: profilesInLiveDataSets[i].coords,
-                    thingId: profilesInLiveDataSets[i].thingId,
-                });
+                let test = checkProfilesStaicsVsDynamics(argz);
+                if(Object.entries(test).length !== 0){
+                    arraysToCheck.push({
+                        initialMatches: test,
+                        coords: profilesInLiveDataSets[i].coords,
+                        thingId: profilesInLiveDataSets[i].thingId,
+                    });
+                }
             }
             // print results
-            console.log(`arraysToCheck result --> ${JSON.stringify(arraysToCheck)}`);
-            //[{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},{"initialMatches":{}},{"initialMatches":{"fruits":["watermelon"]}},{"initialMatches":{"luckyNumbers":[21]}},{"initialMatches":{"pets":["fox"]}},{"initialMatches":{"dcHeros":["Flash"],"pets":["cat"]}},{"initialMatches":{"fruits":["watermelon"],"pets":["cat","fox"]}},{"initialMatches":{"luckyNumbers":[1],"pets":["cat"]}},{"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[15],"pets":["cat"]}},{"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[1]}},{"initialMatches":{"luckyNumbers":[1,21]}},{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},{"initialMatches":{"fruits":["melon"],"luckyNumbers":[21],"pets":["fox"]}},{"initialMatches":{"fruits":["watermelon"]}}]
+            console.log(`arraysToCheck result before empty ones filter --> 
+                ${JSON.stringify(arraysToCheck)}`);
         })
+        // .then(()=>{
+        //     // filter empty objects
+        //     for(let i = 0; i < arraysToCheck.length; i++){
+        //         const hi = arraysToCheck[i].initialMatches;
+        //         const arraysToCheckresult = hi.filter(emptyObj => Object.keys(emptyObj).length !== 0);
+        //         // print results
+        //         console.log(`arraysToCheckresult after empty ones filter --> 
+        //             ${JSON.stringify(arraysToCheckresult)}`);
+        //     }
+        // })
+        // .then(()=>{
+        //     // func to save data of top5Coords in liveDataSets of dynamics
+        //     function savaDataOfDynamicDeviceOnLiveDataSetsDoc(dataToSave){
+        //         // userDeviceId 
+        //         const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
+        //         db
+        //             .doc(`/userDevices/${userDeviceId}`)
+        //             .collection('liveDataSets')
+        //             .doc(objProfileDataOfDynamic.thingId)
+        //             .update({ top5Coords: dataToSave })
+        //             .then(() => {
+        //                 console.log(`final response to the user: ${dataToSave}`);
+        //                 return res.json(dataToSave);
+        //             })            
+        //             .catch((err) => {
+        //                 console.error(err);
+        //                 res.status(500).json({ error: err.code });
+        //             });                
+        //     }
+        //     // run it
+        //     savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheckresult)
+        // })
+        .catch((err) => console.error(err));
 }
 
 

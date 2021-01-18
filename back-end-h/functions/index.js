@@ -1,6 +1,6 @@
 // firebase
 const functions = require('firebase-functions');
-const { admin, db, realDB } = require('./utilities/admin');
+const { db } = require('./utilities/admin');
 // express    
 const app = require('express')();
 // middleware for auth
@@ -35,7 +35,9 @@ const {
 const {
     getAllStaticDevices,
     getStaticDevice,
+    //////////////////// to test mode
     postInStaticDevice,
+    /////////////////////// 
     getActiveStaticDevices,
     getInactiveStaticDevices
 } = require('./handlers/staticDevices');
@@ -82,7 +84,7 @@ const {
 
 // heartbeat statics and dynamics
 const {
-    detectGPSCoordsProximityRangeForStaticsAndDynamics,
+    detectGPSCoordsProximityRangeForDynamicsVsStatics,
 } = require('./handlers/forHeartbeatsStaticsAndDynamics');
 
 // notifications
@@ -126,7 +128,7 @@ app.get('/staticdevices/:staticdevice', FBAuth, getStaticDevice);
 app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices);
 // get inactive userAdventures
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
-// post static device
+// *************************** just to test an easily create an staticDevice property
 app.post('/staticdevices/:staticId/create', FBAuth, postInStaticDevice);
 
 ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
@@ -171,7 +173,7 @@ app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveComm
 // get top5Coords ------> without use
 // app.get('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 // to get liveDataSets for static devices ----------> just to test
-app.post('/statics/', detectGPSCoordsProximityRangeForStaticsAndDynamics);
+app.post('/statics/', detectGPSCoordsProximityRangeForDynamicsVsStatics);
 
 // export functions
 exports.api = functions.https.onRequest(app);
@@ -326,7 +328,7 @@ exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.f
             const iotJsonData = await iotResponse.json();
             console.log(`Response for initStaticDevicesIotCore: ${iotJsonData}`);
         }
-        // run it
+        // run it ------> by now not available
         // initStaticDevicesIotCore(staticDeviceId); 
 
         /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
@@ -444,7 +446,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     let dataDB = doc.data()
                     // run it
                     //detectGPSCoordsProximityRange(dataDB);  
-                    detectGPSCoordsProximityRangeForStaticsAndDynamics(dataDB);
+                    //detectGPSCoordsProximityRangeForStaticsAndDynamics(dataDB);
                 })
                 .catch((err) => {
                     console.error(err);

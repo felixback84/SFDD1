@@ -45,8 +45,8 @@ exports.postInStaticDevice = (req,res) => {
                         allStaticDeviceData.device = selectInfoStatic;
                         // write in global object
                         return db
-                        .collection('staticDevices')
-                        .add(allStaticDeviceData)  
+                            .collection('staticDevices')
+                            .add(allStaticDeviceData)  
                     })
                     .then(() => {
                         return res.json(allStaticDeviceData);

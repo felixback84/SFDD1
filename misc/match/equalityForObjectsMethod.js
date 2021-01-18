@@ -25,11 +25,10 @@
 // ["Batman", 'Cyborg']
 // ['🍎', '🍍']
 
-// pass args to the intersection method
-// let dcHeros = _.intersection(args.objProfileOfDynamic.dcHeros, args.coordsInLiveDataSets.dcHeros);
-// let luckyNumbers = _.intersection(args.objProfileOfDynamic.luckyNumbers, args.coordsInLiveDataSets.luckyNumbers);
-// let animals = _.intersection(args.objProfileOfDynamic.animals, args.coordsInLiveDataSets.animals);
-// let fruits = _.intersection(args.objProfileOfDynamic.fruits, args.coordsInLiveDataSets.fruits);
+
+
+
+
 
 // flat arrays
 // flat arrays func
@@ -42,6 +41,10 @@
 // }
 // // run it
 // flattenArr(arraysToCheck) 
+
+
+
+
 
 // //find if exists a particular item in an array inside an object
 // const company = {
@@ -63,6 +66,10 @@
 // console.log(company.dcHeros.includes('Superman'));  
 // console.log(company.luckyNumbers.includes(2));
 
+
+
+
+
 // *************************** with underscore
 // let _ = require('underscore');
 
@@ -74,6 +81,9 @@
 // console.log(_.intersection(target, fruit2)); //returns [apple, orange]
 // console.log(_.intersection(target, fruit3)); //returns []
 // console.log(_.intersection(target, fruit4)); //returns [orange]
+
+
+
 
 // ***************** find if two objects are exact
 // // obj 1
@@ -120,6 +130,9 @@
 // // output 
 // // true
 
+
+
+
 // **************** just compare specific key pairs in an object
 // // obj 1
 // let bobaFett ={
@@ -147,6 +160,9 @@
 // // output
 // // true
 
+
+
+
 // *************** loop in every key-pair and extract the data
 // const user = {
 //     name: 'John Doe',
@@ -171,15 +187,49 @@
 // active: true
 // jangoFett: [object Object]
 
+
+
+
 // array length
 // let arr = [{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":["cat","fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[15]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":[]},{"luckyNumbers":[1]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":[]},{"luckyNumbers":[1,21]},{"pets":[]}],"thingId":""},{"match":[{"dcHeros":["Flash"]},{"fruits":["melon"]},{"luckyNumbers":[]},{"pets":["cat"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["melon"]},{"luckyNumbers":[21]},{"pets":["fox"]}],"thingId":""},{"match":[{"dcHeros":[]},{"fruits":["watermelon"]},{"luckyNumbers":[]},{"pets":[]}],"thingId":""}]
 // console.log(arr.length);
 
-let some = {initialMatches:{}}
-if(Object.entries(some).length === 0){
-    console.log("is empty")
+
+
+
+
+// // to check the quantity of keys in an object
+// let some = {something:{}}
+// if(Object.entries(some).length == 0){
+//     console.log("is empty")
+// } else {
+//     console.log("has something")
+// }
+
+
+
+
+// // to eliminate empty obj
+// let arraysToCheck = [{initialMatches:{"dcHeros":["Flash"]}},{initialMatches:{}}]
+// const myOutputArray = []
+// const mySearchValue = {initialMatches:{}}
+
+// for(let i = 0; i < arraysToCheck.length; i++){
+//     if(arraysToCheck[i].initialMatches !== mySearchValue){
+//         myOutputArray.push(arraysToCheck[i])
+//     }
+// }
+// console.log(myOutputArray)
+
+
+
+
+// check true
+let coincidences = {};
+if(coincidences === {}){
+    console.log("true")
 } else {
-    console.log("has something")
+    console.log("false")
 }
 
 
