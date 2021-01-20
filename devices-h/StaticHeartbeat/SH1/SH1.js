@@ -1,13 +1,12 @@
-// Include needed modules
+// nodes
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
-const mqtt = require('mqtt');
+const jwt = require('jsonwebtoken'); 
+const mqtt = require('mqtt'); 
 
 // device id
-const hildaThingId = 'CarlosTal84-Hilda-mggbCoK1pihIqDJzJf3T';
+const thingId = 'bibidise-staticHeartbeat-2WUdDyX4NdeZrBt0deYC';
 // say hi to my little friend
-console.log(`HILDA_THING: ${hildaThingId} ---> ACTIVATED`);
-
+console.log(`STATICHEARTBEAT_THING: ${thingId} ---> ACTIVATED`);
 // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
 const createJwt = (projectId, privateKeyFile, algorithm) => {
     const token = {
@@ -18,33 +17,38 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
     const privateKey = fs.readFileSync(privateKeyFile);
     return jwt.sign(token, privateKey, {algorithm: algorithm});
 };
+
 // ----------------------------------------------------------------------------- PUBLISHING MESSAGES
-// vars for message income from client UI
+// vars for message income from logic server or client UI commands      
 let active = {};
+let coords = {};
 let motorSpeed = {};
 let colorValue = {colorValue:{}};
+
 // Function to publish messages on any change
 const publishAsync = (mqttTopic, client) => {
-    // Function to generate random values to send to the cloud platform
+    // obj to hold data to pass in the publish message
     const payload = {
-        thingId: hildaThingId,
+        nameOfDevice: "staticHeartbeat",
+        thingId: thingId,
         createdAt: new Date().toISOString(),
         active: active,
+        batteryLife: 100,
+        connectionStatus: true,
         motorSpeed: motorSpeed,
-        colorValue: colorValue
+        colorValue: colorValue,
+        coords: coords
     }
     // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
     client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
     console.log('Publishing message:', JSON.stringify(payload));
-    // recursive run
-    // publishAsync(mqttTopic, client);
 }
 
 // --------------------------------------------------------------------------- SUBSCRIBING TO TOPICS
 // Arguments of the google cloud platform
 const projectId = `sfdd-d8a16`;
-const deviceId = hildaThingId;
-const registryId = `Hilda`; 
+const deviceId = thingId;
+const registryId = `Heartbeat`; 
 const region = `us-central1`;
 const algorithm = `RS256`;
 const privateKeyFile = `./rsa_private.pem`;
@@ -78,7 +82,7 @@ client.subscribe(MQTT_TOPIC_TO_CONFIG, {qos: 1});
 client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
 client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 client.subscribe(MQTT_TOPIC_TO_TELEMETRY, {qos: 0});
- 
+
 // --------------------------------------------------------------------------- RECEIVING MESSAGES FROM CLIENT
 // Handle the message incoming event from iot core to this device 
 client.on('message', (topic, message) => {    
@@ -93,6 +97,7 @@ client.on('message', (topic, message) => {
         active = messageToObj.active;
         motorSpeed = messageToObj.motorSpeed;
         colorValue = messageToObj.colorValue;
+        coords = messageToObj.coords;
         // publish messages here
         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }

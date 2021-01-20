@@ -20,6 +20,11 @@ const {
     markDevicesNotificationsRead    
 } = require('./handlers/users');
 
+    // notifications
+    const {
+        initNotificationsToActiveStateOfThing,
+    } = require('./handlers/notifications');
+
 // userDevices
 const {
     getAllUserDevices,
@@ -28,8 +33,16 @@ const {
     postInUserDevices,
     /////////////////////// 
     getActiveUserDevices,
-    getInactiveUserDevices
+    getInactiveUserDevices,
+    detectProfileMatchBetweenUserDevicesAndStaticDevices
 } = require('./handlers/userDevices');
+    
+    // things heartbeats in general
+    const {
+        detectGPSCoordsProximityRangeToHearbeats,
+        heartbeatPostActiveCommand,
+        heartbeatPostInactiveCommand,
+    } = require('./handlers/forThingsHeartbeats');
 
 // static devices
 const {
@@ -41,6 +54,29 @@ const {
     getActiveStaticDevices,
     getInactiveStaticDevices
 } = require('./handlers/staticDevices');
+
+    // things staticHeartbeats in general
+    const {
+        //detectGPSCoordsProximityRangeToStaticHearbeats,
+        staticHeartbeatPostActiveCommand,
+        staticHeartbeatPostInactiveCommand,
+        staticHeartbeatPostCoordsCommand,
+    } = require('./handlers/forThingsStaticsHeartbeats');
+    
+// devices
+const { 
+    getAllDevices,
+    getDevice,
+    likeDevice,
+    unlikeDevice,
+    postDeviceComment
+} = require('./handlers/devices');
+
+// iot core & pub/sub
+const {
+    createUserDeviceInIotCore,
+    createStaticDeviceInIotCore
+} = require('./handlers/finalCycleIotGcloud');
 
 // dataSets
 const {
@@ -55,42 +91,6 @@ const {
     getAllCheckouts,
     getCheckout
 } = require('./handlers/checkouts');
-
-// devices
-const { 
-    getAllDevices,
-    getDevice,
-    likeDevice,
-    unlikeDevice,
-    postDeviceComment
-} = require('./handlers/devices');
-
-// iot core & pub/sub
-const {
-    createDeviceInIotCore,
-    createStaticDeviceInIotCore
-} = require('./handlers/finalCycleIotGcloud');
-
-// heartbeats in general
-const {
-    heartbeatPostInactiveCommand,
-    heartbeatPostActiveCommand,
-} = require('./handlers/forHeartbeatsInGeneral');
-
-// heartbeats all in move
-const {
-    detectGPSCoordsProximityRange,
-} = require('./handlers/forHeartbeatsAllInMove');
-
-// heartbeat statics and dynamics
-const {
-    detectGPSCoordsProximityRangeForDynamicsVsStatics,
-} = require('./handlers/forHeartbeatsStaticsAndDynamics');
-
-// notifications
-const {
-    initNotificationsToActiveStateOfThing,
-} = require('./handlers/notifications');
 
 //////////////////////////////////////////// +++++++ API REST ROUTES +++++++ ///////////////////////////////////////////
 ///////////////////////////////////////////////// USERS /////////////////////////////////////////////////////////////
@@ -108,6 +108,8 @@ app.get('/user', FBAuth, getAuthenticatedUser);
 app.post('/notifications', FBAuth, markDevicesNotificationsRead);
 
 ////////////////////////////////////////////////// USERDEVICES ////////////////////////////////////////////////////////
+// *************************** just to test an easily create an userDevice property
+app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
 // get userDevice 
 app.get('/userdevices', FBAuth, getAllUserDevices); 
 // get one userDevice 
@@ -116,10 +118,20 @@ app.get('/userdevices/:userDeviceId', FBAuth, getUserDevice);
 app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userAdventures
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
-// *************************** just to test an easily create an userDevice property
-app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
+// to post userDevice data to make the initial match
+app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
+
+    ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
+    // post active command in heartbeat things
+    app.post('/userdevice/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
+    // post inactive command in heartbeat things
+    app.post('/userdevice/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
+    // get top5Coords ------> without use yet
+    // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
+// *************************** just to test an easily create an staticDevice property
+app.post('/staticdevices/:staticId/create', FBAuth, postInStaticDevice);
 // get all static devices
 app.get('/staticdevices', FBAuth, getAllStaticDevices);
 // get specific static device
@@ -128,8 +140,35 @@ app.get('/staticdevices/:staticdevice', FBAuth, getStaticDevice);
 app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices);
 // get inactive userAdventures
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
-// *************************** just to test an easily create an staticDevice property
-app.post('/staticdevices/:staticId/create', FBAuth, postInStaticDevice);
+
+    ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
+    // post active command in static heartbeat things
+    app.post('/staticdevice/staticheartbeat/:thingId/active',FBAuth, staticHeartbeatPostActiveCommand);
+    // post inactive command in static heartbeat things
+    app.post('/staticdevice/staticheartbeat/:thingId/inactive',FBAuth, staticHeartbeatPostInactiveCommand);
+    // post coords command in static hearbeat things
+    app.post('/staticdevice/staticheartbeat/:thingId/coords',FBAuth, staticHeartbeatPostCoordsCommand);
+    
+////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
+// get all devices
+app.get('/devices', getAllDevices);
+// get one device:pub
+app.get('/devices/:deviceId', getDevice);
+// like for device
+app.get('/device/:deviceId/like', FBAuth, likeDevice);
+// unlike for device
+app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
+// comment on device
+app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
+
+////////////////////////////////////////////////// STATICS ////////////////////////////////////////////////////////
+//---------------> not yet
+
+////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
+// creation of user device in iot core
+app.get('/device/:userDeviceId/createDeviceInIotCore', createUserDeviceInIotCore);
+// creation of static device in iot core
+app.get('/device/:staticDeviceId/createStaicDeviceInIotCore', createStaticDeviceInIotCore);
 
 ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
 // post dataSets in user device 
@@ -147,40 +186,12 @@ app.get('/user/checkouts', FBAuth, getAllCheckouts);
 // get one checkout
 app.get('/user/checkouts/:checkoutId', FBAuth, getCheckout);
 
-////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
-// get all devices
-app.get('/devices', getAllDevices);
-// get one device:pub
-app.get('/devices/:deviceId', getDevice);
-// like for device
-app.get('/device/:deviceId/like', FBAuth, likeDevice);
-// unlike for device
-app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
-// comment on device
-app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
-
-////////////////////////////////////// iot core & pub/sub routes  ////////////////////////////////////////////////////
-// creation of user device in iot core
-app.get('/device/:userDeviceId/createDeviceInIotCore', createDeviceInIotCore);
-// creation of static device in iot core
-app.get('/staticdevice/:staticDeviceId/createStaicDeviceInIotCore', createStaticDeviceInIotCore);
-
-////////////////////////////////// heartbeat thing routes /////////////////////////////////////////////////
-// post active command in heartbeat things
-app.post('/device/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
-// post inactive command in heartbeat things
-app.post('/device/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
-// get top5Coords ------> without use
-// app.get('/device/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
-// to get liveDataSets for static devices ----------> just to test
-app.post('/statics/', detectGPSCoordsProximityRangeForDynamicsVsStatics);
-
 // export functions
 exports.api = functions.https.onRequest(app);
 
 ///////////////////////////////// +++++++ SOME ACTIONS IN DB WITHOUT HTTP REQUEST ++++++++ /////////////////////////////////////
 // after creation of checkout means userDevice property
-exports.createUserPropertyAfterCheckout = functions.firestore
+exports.createUserDevicePropertyAfterCheckout = functions.firestore
     .document('checkouts/{checkoutsId}')
     .onCreate((snap) => {
         // Get an object representing the document
@@ -192,7 +203,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
             // pick data from checkout process
             let snapShotDeviceId = newCheckout.device.deviceId;
             let snapShotUserHandle =  newCheckout.userHandle;
-            let snapShotnameOfDevice = newCheckout.device.nameOfDevice;
+            //let snapShotnameOfDevice = newCheckout.device.nameOfDevice;
 
             //obj to inicial data in property
             const newUserDevice = {
@@ -245,7 +256,7 @@ exports.createUserPropertyAfterCheckout = functions.firestore
 });
 
 // create liveDataSet (userDevices) doc in liveDataSets collection to trasmit telemetry events to client fot userDevices --------------- to check response
-exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
+exports.createUserDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('userDevices/{userDevicesId}')
     .onCreate((snap) => {
         // grab data from firebase snapshot
@@ -267,7 +278,7 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
             });
         
         ////////////////////////////////////////////////////////////////////// create device in iot core
-        async function initDevicesIotCore(valueUserDeviceId){
+        async function initUserDevicesIotCore(valueUserDeviceId){
             // api url
             const fetch = require('node-fetch');
             const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueUserDeviceId}/createDeviceInIotCore`;
@@ -280,7 +291,7 @@ exports.createDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firesto
             console.log(`Response for initDevicesIotCore: ${iotJsonData}`);
         }
         // run it
-        initDevicesIotCore(userDeviceId);   
+        initUserDevicesIotCore(userDeviceId);   
         
         /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
         db
@@ -319,7 +330,7 @@ exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.f
         async function initStaticDevicesIotCore(valueStaticDeviceId){
             // api url
             const fetch = require('node-fetch');
-            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/staticdevice/${valueStaticDeviceId}/createStaticDeviceInIotCore`;
+            const urlApi = `https://us-central1-sfdd-d8a16.cloudfunctions.net/api/device/${valueStaticDeviceId}/createStaticDeviceInIotCore`;
             const options = {
                 method: 'GET'
             };
@@ -328,8 +339,8 @@ exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.f
             const iotJsonData = await iotResponse.json();
             console.log(`Response for initStaticDevicesIotCore: ${iotJsonData}`);
         }
-        // run it ------> by now not available
-        // initStaticDevicesIotCore(staticDeviceId); 
+        // run it 
+        initStaticDevicesIotCore(staticDeviceId); 
 
         /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
         db
@@ -368,7 +379,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         const userHandle = thingId.split("-").slice(0,1).toString();
         // print 
         console.log(`nameOfDevice: ${nameOfDevice}`);
-        console.log(`userDeviceId: ${userDeviceId}`);
+        console.log(`userDeviceIdOrStaticDeviceId: ${userDeviceIdOrStaticDeviceId}`);
 
         // check the type of device logic
         if(nameOfDevice == "Heartbeat"){
@@ -380,8 +391,27 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             // update specific db doc
             dbDataFromLiveDataSets  
                 .update({
+                    ////// exceptions ////////
+                    top5Coords,
+                    searchingMode,
+                    profileToMatch,
+                    ////////////////////
                     ...obj
                 })
+            //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
+            // init process to make the meassures of the gps coords in heartbeat things
+            if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing
+                return dbDataFromLiveDataSets
+                    .get()    
+                    .then((doc)=>{
+                        let dataDB = doc.data()
+                        // run it meassure GPS coords
+                        detectGPSCoordsProximityRangeToHearbeats(dataDB);  
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }
         } else if(nameOfDevice == "staticHeartbeat"){
             //db part -----> si es necesartio se pueden hacer dos variables diferentes una para cada dispositivo
             let dbDataFromLiveDataSets = db
@@ -435,22 +465,6 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             }
             // run it to notificate the users of the active state of things
             initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);   
-        }
-        
-        //////////////////////////////////////////////////// GPS LOGIC //////////////////////////////////////////////////////
-        // init process to make the meassures of the gps coords in heartbeat things
-        if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing
-            return dbDataFromLiveDataSets
-                .get()    
-                .then((doc)=>{
-                    let dataDB = doc.data()
-                    // run it
-                    //detectGPSCoordsProximityRange(dataDB);  
-                    //detectGPSCoordsProximityRangeForStaticsAndDynamics(dataDB);
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
         }
     }
 )

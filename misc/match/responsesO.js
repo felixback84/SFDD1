@@ -1,0 +1,46 @@
+[
+    {"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},
+    {"initialMatches":{}},
+    {"initialMatches":{"fruits":["watermelon"]}},{"initialMatches":{"luckyNumbers":[21]}},
+    {"initialMatches":{"pets":["fox"]}},{"initialMatches":{"dcHeros":["Flash"],"pets":["cat"]}},
+    {"initialMatches":{"fruits":["watermelon"],"pets":["cat","fox"]}},
+    {"initialMatches":{"luckyNumbers":[1],"pets":["cat"]}},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[15],"pets":["cat"]}},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[1]}},
+    {"initialMatches":{"luckyNumbers":[1,21]}},
+    {"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]}},
+    {"initialMatches":{"fruits":["melon"],"luckyNumbers":[21],"pets":["fox"]}},
+    {"initialMatches":{"fruits":["watermelon"]}}
+]
+
+[
+    {"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]},"coords":{"lon":-74.070602,"nameOfPoint":"bibidisePosition","lat":4.635157},"thingId":""},
+    {"initialMatches":{},"coords":{"lon":-74.070913,"lat":4.634837,"nameOfPoint":"jobsIdiotPosition"},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"]},"coords":{"lat":4.635005,"lon":-74.070752,"nameOfPoint":"garcialaPosition"},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[21]},"coords":{"nameOfPoint":"ctoIdiotPosition","lat":4.63466,"lon":-74.070747},"thingId":""},
+    {"initialMatches":{"pets":["fox"]},"coords":{"lon":-74.070573,"nameOfPoint":"searchIdiotPosition","lat":4.634489},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"pets":["cat"]},"coords":{"lon":-74.070337,"nameOfPoint":"julyroloPosition","lat":4.635131},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"],"pets":["cat","fox"]},"coords":{"lat":4.634641,"nameOfPoint":"worksIdiotPosition","lon":-74.070406},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[1],"pets":["cat"]},"coords":{"lon":-74.070221,"lat":4.634837,"nameOfPoint":"lmfStockPosition"},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[15],"pets":["cat"]},"coords":{"lat":4.634997,"lon":-74.070106,"nameOfPoint":"dataIdiotPosition"},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[1]},"coords":{"nameOfPoint":"infoIdiotPosition","lon":-74.07002,"lat":4.635139},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[1,21]},"coords":{"nameOfPoint":"ceoIdiotPosition","lon":-74.070205,"lat":4.635278},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]},"coords":{"lat":4.635385,"nameOfPoint":"titajaPosition","lon":-74.070417},"thingId":""},
+    {"initialMatches":{"fruits":["melon"],"luckyNumbers":[21],"pets":["fox"]},"coords":{"nameOfPoint":"catalaePosition","lon":-74.070578,"lat":4.634855},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"]},"coords":{"lon":-74.070516,"nameOfPoint":"importantIdiotPosition","lat":4.635275},"thingId":""}]
+
+
+    [{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]},"coords":{"lat":4.635157,"lon":-74.070602,"nameOfPoint":"bibidisePosition"},"thingId":""},
+    {"initialMatches":{},"coords":{"nameOfPoint":"jobsIdiotPosition","lon":-74.070913,"lat":4.634837},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"]},"coords":{"lat":4.635005,"nameOfPoint":"garcialaPosition","lon":-74.070752},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[21]},"coords":{"lat":4.63466,"lon":-74.070747,"nameOfPoint":"ctoIdiotPosition"},"thingId":""},
+    {"initialMatches":{"pets":["fox"]},"coords":{"nameOfPoint":"searchIdiotPosition","lon":-74.070573,"lat":4.634489},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"pets":["cat"]},"coords":{"lat":4.635131,"lon":-74.070337,"nameOfPoint":"julyroloPosition"},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"],"pets":["cat","fox"]},"coords":{"nameOfPoint":"worksIdiotPosition","lon":-74.070406,"lat":4.634641},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[1],"pets":["cat"]},"coords":{"lon":-74.070221,"lat":4.634837,"nameOfPoint":"lmfStockPosition"},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[15],"pets":["cat"]},"coords":{"lon":-74.070106,"lat":4.634997,"nameOfPoint":"dataIdiotPosition"},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"luckyNumbers":[1]},"coords":{"lon":-74.07002,"lat":4.635139,"nameOfPoint":"infoIdiotPosition"},"thingId":""},
+    {"initialMatches":{"luckyNumbers":[1,21]},"coords":{"lon":-74.070205,"nameOfPoint":"ceoIdiotPosition","lat":4.635278},"thingId":""},
+    {"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]},"coords":{"lon":-74.070417,"nameOfPoint":"titajaPosition","lat":4.635385},"thingId":""},
+    {"initialMatches":{"fruits":["melon"],"luckyNumbers":[21],"pets":["fox"]},"coords":{"lon":-74.070578,"lat":4.634855,"nameOfPoint":"catalaePosition"},"thingId":""},
+    {"initialMatches":{"fruits":["watermelon"]},"coords":{"nameOfPoint":"importantIdiotPosition","lon":-74.070516,"lat":4.635275},"thingId":""}]

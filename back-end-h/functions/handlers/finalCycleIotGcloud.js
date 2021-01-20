@@ -1,5 +1,5 @@
 // create decive & topics in iot core and pub/sub
-exports.createDeviceInIotCore = (req, res) => {
+exports.createUserDeviceInIotCore = (req, res) => {
     // firebase part
     const { db } = require('../utilities/admin');
     // var to firebase consult
@@ -69,7 +69,7 @@ exports.createStaticDeviceInIotCore = (req, res) => {
     // var to firebase consult
     const staticDeviceId = req.params.staticDeviceId
     // var for hold id of device
-    let staticThingId = ""; 
+    let thingId = ""; 
     // var project id
     const projectId = 'sfdd-d8a16';
 
@@ -80,14 +80,14 @@ exports.createStaticDeviceInIotCore = (req, res) => {
         .then((doc) => {
             let staticDeviceData = doc.data();
             let userHandle = staticDeviceData.userHandle;
-            let nameOfStatic = userDeviceData.static.nameOfStatic;
+            let nameOfDevice = userDeviceData.static.nameOfDevice;
             // var with vars to pass through function
-            staticThingId = `Static-${userHandle}-${nameOfStatic}-${staticDeviceId}`
+            thingId = `${userHandle}-${nameOfDevice}-${staticDeviceId}`
             // determine wich type of device is
-            switch(nameOfStatic){
-                case 'staticOne': 
+            switch(nameOfDevice){
+                case 'staticHeartbeat': 
                     //////////////////////////////////////////////////////////////////// CREATION OF HILDA DEVICE
-                    async function createDeviceToHeartbeat(projectId ,staticThingId) {
+                    async function createDeviceToHeartbeat(projectId ,thingId) {
                         // client library
                         const iot = require('@google-cloud/iot');
                         // instantiate client
@@ -99,13 +99,12 @@ exports.createStaticDeviceInIotCore = (req, res) => {
                         const regPath = client.registryPath(projectId, Location, nameOfRegistryToDevice); 
                         // The device id, and in general the device information that you want to send
                         const heartbeatDevice = {
-                            id: staticThingId,
+                            id: thingId,
                         } 
                         // all the info for the creation of the device
                         const heartbeatRequest = {
                             parent: regPath,
                             device: heartbeatDevice
-                        
                         };
                         // run the main method
                         const [device] = await client.createDevice(heartbeatRequest);
@@ -118,7 +117,7 @@ exports.createStaticDeviceInIotCore = (req, res) => {
                         // show all
                         console.log(heartbeatStaticDeviceName);
                     }
-                    createDeviceToHeartbeat(projectId ,staticThingId).catch(console.error);
+                    createDeviceToHeartbeat(projectId ,thingId).catch(console.error);
                     break;    
                 case 'default':
                     null

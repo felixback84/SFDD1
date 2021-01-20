@@ -1,0 +1,19 @@
+{
+    "name": "sh5-thing",
+    "version": "1.0.0",
+    "description": "SH5 test device",
+    "main": "SH5.js",
+    "scripts": {
+        "start": "node SH5.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "csv-parser": "^2.3.3",
+        "fs": "0.0.1-security",
+        "iohook": "^0.6.6",
+        "jsonwebtoken": "^8.5.1",
+        "mqtt": "^3.0.0",
+        "node-fetch": "^2.6.0"
+    }
+}
