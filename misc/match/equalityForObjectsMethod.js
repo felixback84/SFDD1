@@ -225,12 +225,14 @@
 
 
 // check true
-let coincidences = {};
-if(coincidences === {}){
-    console.log("true")
-} else {
-    console.log("false")
-}
+// let coincidences = {};
+// if(coincidences === {}){
+//     console.log("true")
+// } else {
+//     console.log("false")
+// }
+
+
 
 
 

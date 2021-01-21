@@ -35,7 +35,7 @@ fs
         // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
         // vars for message income from client UI
         let active = false;
-        let colorValue = {r:0,g:0,b:0};
+        let colorValue = {r:1,g:2,b:3};
 
         const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
             // for loop

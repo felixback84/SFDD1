@@ -20,8 +20,7 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
 
 // ----------------------------------------------------------------------------- PUBLISHING MESSAGES
 // vars for message income from logic server or client UI commands      
-let active = {};
-let coords = {};
+let active = {}; 
 let motorSpeed = {};
 let colorValue = {colorValue:{}};
 
@@ -37,7 +36,6 @@ const publishAsync = (mqttTopic, client) => {
         connectionStatus: true,
         motorSpeed: motorSpeed,
         colorValue: colorValue,
-        coords: coords
     }
     // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
     client.publish(mqttTopic, JSON.stringify(payload), {qos: 1});
@@ -97,7 +95,6 @@ client.on('message', (topic, message) => {
         active = messageToObj.active;
         motorSpeed = messageToObj.motorSpeed;
         colorValue = messageToObj.colorValue;
-        coords = messageToObj.coords;
         // publish messages here
         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }

@@ -34,12 +34,12 @@ const {
     /////////////////////// 
     getActiveUserDevices,
     getInactiveUserDevices,
-    detectProfileMatchBetweenUserDevicesAndStaticDevices
+    detectProfileMatchBetweenUserDevicesAndStaticDevices,
+    detectGPSCoordsProximityRangeToHearbeats
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
     const {
-        detectGPSCoordsProximityRangeToHearbeats,
         heartbeatPostActiveCommand,
         heartbeatPostInactiveCommand,
     } = require('./handlers/forThingsHeartbeats');
@@ -52,7 +52,9 @@ const {
     postInStaticDevice,
     /////////////////////// 
     getActiveStaticDevices,
-    getInactiveStaticDevices
+    getInactiveStaticDevices,
+    postCoordsStaticDevices,
+    postProfileToSearchStaticDevices
 } = require('./handlers/staticDevices');
 
     // things staticHeartbeats in general
@@ -60,7 +62,6 @@ const {
         //detectGPSCoordsProximityRangeToStaticHearbeats,
         staticHeartbeatPostActiveCommand,
         staticHeartbeatPostInactiveCommand,
-        staticHeartbeatPostCoordsCommand,
     } = require('./handlers/forThingsStaticsHeartbeats');
     
 // devices
@@ -120,14 +121,14 @@ app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
+// get top5Coords ------> without use yet
+// app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
     ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things
     app.post('/userdevice/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
     // post inactive command in heartbeat things
     app.post('/userdevice/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
-    // get top5Coords ------> without use yet
-    // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property
@@ -140,14 +141,16 @@ app.get('/staticdevices/:staticdevice', FBAuth, getStaticDevice);
 app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices);
 // get inactive userAdventures
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
+// post coords data in staticHearbeat
+app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
+// post profile data in staticHearbeat
+app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
 
     ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in static heartbeat things
     app.post('/staticdevice/staticheartbeat/:thingId/active',FBAuth, staticHeartbeatPostActiveCommand);
     // post inactive command in static heartbeat things
     app.post('/staticdevice/staticheartbeat/:thingId/inactive',FBAuth, staticHeartbeatPostInactiveCommand);
-    // post coords command in static hearbeat things
-    app.post('/staticdevice/staticheartbeat/:thingId/coords',FBAuth, staticHeartbeatPostCoordsCommand);
     
 ////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
 // get all devices
@@ -391,16 +394,17 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             // update specific db doc
             dbDataFromLiveDataSets  
                 .update({
-                    ////// exceptions ////////
-                    top5Coords,
-                    searchingMode,
-                    profileToMatch,
-                    ////////////////////
-                    ...obj
+                    // ////// exceptions ////////
+                    // top5Coords,
+                    // searchingMode,
+                    // profileToMatch,
+                    // ////////////////////
+                    // ...obj
+                    coords:obj.coords
                 })
             //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things
-            if(nameOfDevice == "Heartbeat" && obj.active == 'true'){ // nameOfDevice in thing
+            if(obj.active == 'true'){ 
                 return dbDataFromLiveDataSets
                     .get()    
                     .then((doc)=>{
@@ -423,6 +427,20 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 .update({
                     ...obj
                 })
+            //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
+            // init process to make the meassures of the gps coords in heartbeat things
+            // if(obj.active == 'true'){ 
+            //     return dbDataFromLiveDataSets
+            //         .get()    
+            //         .then((doc)=>{
+            //             let dataDB = doc.data()
+            //             // run it meassure GPS coords
+            //             detectGPSCoordsProximityRangeToStaticsHearbeats(dataDB);  
+            //         })
+            //         .catch((err) => {
+            //             console.error(err);
+            //         });
+            // }
         }
 
         //////////////////////////////////////////// NOTIFICATIONS PART  ////////////////////////////

@@ -287,6 +287,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                         matchDataResuls: matchDataResuls,
                         coords: profilesInLiveDataSets[i].coords,
                         thingId: profilesInLiveDataSets[i].thingId,
+                        mtsBetweenDevices: 0
                     });
                 }
             }
@@ -317,4 +318,64 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheck);
         })
         .catch((err) => console.error(err));
+}
+
+// measure distance between userdevices and staticdevices
+exports.detectGPSCoordsProximityRangeToHearbeats = (inWait) => {
+    // print
+    console.log(`inWait complete data from DB "liveDataSets": ${JSON.stringify(inWait)}`)
+    // loop the results on the array
+    for(let i = 0; i < inWait.top5Cooords.length; i++){
+        // func to meassure dstance between given coords
+        function checkDistance(args){
+            // print
+            console.log(`args: ${JSON.stringify(args)}`)
+            console.log(`args.coords: ${JSON.stringify(args.coordsInEval)}`)
+            // logic to make the meassure part
+            let R = 6371; // Radius of the earth in km
+            let dLat = (args.coordsInEval.latStaticDevices - args.coordsInEval.latUserDevice) * Math.PI / 180;  // Javascript functions in radians
+            let dLon = (args.coordsInEval.lonStaticDevices - args.coordsInEval.lonUserDevice) * Math.PI / 180; 
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(args.coordsInEval.lat1 * Math.PI / 180) * Math.cos(args.coordsInEval.lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            let d = R * c; // Distance in km
+            let distanceInMeters = d * 1000; // Distance in m
+
+            // print
+            console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
+            // userDeviceId
+            const userDeviceId = args.thingsIds.thingIdDynamic.split("-").slice(2).toString();
+            // update mts in profileMatches
+            let dbDataFromLiveDataSets = db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('liveDataSets')
+                .doc(args.thingsIds.thingIdDynamic)
+                
+            // update specific db doc
+            dbDataFromLiveDataSets  
+                .update({
+                    top5Cooords:{
+                        mtsBetweenDevices:distanceInMeters,
+                    }
+                })
+            // return in meters
+            return distanceInMeters
+        }  
+        // data to pass it
+        let argz = {
+            coordsInEval:{
+                lonUserDevice:inWait.coords.lon,     
+                latUserDevice:inWait.coords.lat, 
+                lonStaticDevices:inWait.top5Cooords[i].coords.lon, 
+                latStaticDevices:inWait.top5Cooords[i].coords.lat
+            },
+            thingsIds:{
+                thingIdStatics:inWait.top5Cooords[i].thingId,
+                thingIdDynamic:inWait.thingId
+            }
+        }
+        // run it -----> run also the color command function to thing
+        checkDistance(argz)     
+    }
 }
