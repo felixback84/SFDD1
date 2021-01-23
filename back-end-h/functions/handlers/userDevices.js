@@ -1,6 +1,11 @@
 // firebase
 const { db } = require('../utilities/admin');
 
+// imports
+const { 
+    sendCommandGPSColor   
+} = require('./forThingsHeartbeats');
+
 // *********************** Post a complete device for an user or userDevice property - without use
 exports.postInUserDevices = (req, res) => {
     const newUserDevice = {
@@ -232,7 +237,8 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 profilesInLiveDataSets.push({
                     coords: doc.data().coords,
                     thingId: doc.data().thingId,
-                    profileToSearch: doc.data().profileToSearch //////////////////////////////////////////// to check
+                    profileToSearch: doc.data().profileToSearch, 
+                    findMe: false,
                 })
             })
             // print
@@ -287,7 +293,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                         matchDataResuls: matchDataResuls,
                         coords: profilesInLiveDataSets[i].coords,
                         thingId: profilesInLiveDataSets[i].thingId,
-                        mtsBetweenDevices: 0
                     });
                 }
             }
@@ -320,62 +325,101 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
         .catch((err) => console.error(err));
 }
 
-// measure distance between userdevices and staticdevices
-exports.detectGPSCoordsProximityRangeToHearbeats = (inWait) => {
-    // print
-    console.log(`inWait complete data from DB "liveDataSets": ${JSON.stringify(inWait)}`)
-    // loop the results on the array
-    for(let i = 0; i < inWait.top5Cooords.length; i++){
-        // func to meassure dstance between given coords
-        function checkDistance(args){
-            // print
-            console.log(`args: ${JSON.stringify(args)}`)
-            console.log(`args.coords: ${JSON.stringify(args.coordsInEval)}`)
+// to pick wich color message send to the device
+async function metersRangeMatch(metersArr,thingId){
+    for(let i = 0; i < metersArr.length; i++){
+        // check ranges
+        if(metersArr[i].meters >= 0 && metersArr[i].meters <= 5){
+            let colorToThingResponse = {
+                colorValue:{r:1,g:2,b:3}, 
+                colorName:"green", 
+            }
+            console.log("hi from meters range match: 0-5");
+            // command to thing
+            sendCommandGPSColor(colorToThingResponse,thingId);
+            return
+        } else if (metersArr[i].meters >= 5.1 && metersArr[i].meters <= 10){
+            let colorToThingResponse = {
+                colorValue:{r:4,g:5,b:6}, 
+                colorName:"yellow", 
+            }
+            console.log("hi from meters range match: 5-10");
+            // command to thing
+            sendCommandGPSColor(colorToThingResponse,thingId);
+            return
+        } else if (metersArr[i].meters >= 10.1 && metersArr[i].meters <= 15){
+            let colorToThingResponse = {
+                colorValue:{r:7,g:8,b:9}, 
+                colorName:"red", 
+            }
+            console.log("hi from meters range match: 10-15");
+            // command to thing
+            sendCommandGPSColor(colorToThingResponse,thingId);
+            return
+        } else if (metersArr[i].meters >= 15.1 && metersArr[i].meters <= 20){
+            let colorToThingResponse = {
+                colorValue:{r:10,g:11,b:12}, 
+                colorName:"fucsia", 
+            }
+            console.log("hi from meters range match: 15-20");
+            // command to thing
+            sendCommandGPSColor(colorToThingResponse,thingId);
+            return
+        } else if (metersArr[i].meters >= 20.1 && metersArr[i].meters <= 25){
+            let colorToThingResponse = {
+                colorValue:{r:13,g:14,b:15}, 
+                colorName:"blue", 
+            }
+            console.log("hi from meters range match: 20-25");
+            // command to thing
+            sendCommandGPSColor(colorToThingResponse,thingId);
+            return
+        }  
+    }
+}
+
+// to meassure distance between devices
+exports.detectGPSCoordsProximityRangeToHearbeats = async (inWait) => {
+    const dataEnter = inWait
+    // var to hold mtsBetweenDevices
+    let mtsBetweenDevices = [];
+    // func
+    function checkDistance(inWaitAfter){
+        // print
+        console.log(`complete args: ${JSON.stringify(inWaitAfter)}`)
+        for(let i = 0; i < inWaitAfter.top5Coords.length; i++){
             // logic to make the meassure part
             let R = 6371; // Radius of the earth in km
-            let dLat = (args.coordsInEval.latStaticDevices - args.coordsInEval.latUserDevice) * Math.PI / 180;  // Javascript functions in radians
-            let dLon = (args.coordsInEval.lonStaticDevices - args.coordsInEval.lonUserDevice) * Math.PI / 180; 
+            let dLat = (inWaitAfter.top5Coords[i].coords.lat - inWaitAfter.coords.lat) * Math.PI / 180;  // Javascript functions in radians
+            let dLon = (inWaitAfter.top5Coords[i].coords.lon - inWaitAfter.coords.lon) * Math.PI / 180; 
             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(args.coordsInEval.lat1 * Math.PI / 180) * Math.cos(args.coordsInEval.lat2 * Math.PI / 180) * 
+                Math.cos(inWaitAfter.top5Coords[i].coords.lat * Math.PI / 180) * Math.cos(inWait.coords.lat* Math.PI / 180) * 
                 Math.sin(dLon/2) * Math.sin(dLon/2); 
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
             let d = R * c; // Distance in km
             let distanceInMeters = d * 1000; // Distance in m
-
             // print
             console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
-            // userDeviceId
-            const userDeviceId = args.thingsIds.thingIdDynamic.split("-").slice(2).toString();
-            // update mts in profileMatches
-            let dbDataFromLiveDataSets = db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(args.thingsIds.thingIdDynamic)
-                
-            // update specific db doc
-            dbDataFromLiveDataSets  
-                .update({
-                    top5Cooords:{
-                        mtsBetweenDevices:distanceInMeters,
-                    }
-                })
-            // return in meters
-            return distanceInMeters
+            // push data to mtsBetweenDevices vart
+            mtsBetweenDevices.push({
+                meters: distanceInMeters
+            })
         }  
-        // data to pass it
-        let argz = {
-            coordsInEval:{
-                lonUserDevice:inWait.coords.lon,     
-                latUserDevice:inWait.coords.lat, 
-                lonStaticDevices:inWait.top5Cooords[i].coords.lon, 
-                latStaticDevices:inWait.top5Cooords[i].coords.lat
-            },
-            thingsIds:{
-                thingIdStatics:inWait.top5Cooords[i].thingId,
-                thingIdDynamic:inWait.thingId
-            }
-        }
-        // run it -----> run also the color command function to thing
-        checkDistance(argz)     
-    }
+        // sort arr
+        mtsBetweenDevices.sort((a, b) => {
+            return a.meters - b.meters;
+        });
+        // db save mts results part
+        console.log(`Order mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
+    }  
+    // run it 
+    await checkDistance(dataEnter);
+    await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
 }
+
+// specific the mode of search
+exports.heartbeatPostSearchMode = (req,res) => {
+
+}
+
+// search for a specific static devices

@@ -34,8 +34,8 @@ fs
     .on('end', () => {
         // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
         // vars for message income from client UI
-        let active = false;
-        let colorValue = {r:1,g:2,b:3};
+        //let active = 'true';
+        let colorValue = {r:0,g:0,b:0};
 
         const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
             // for loop
@@ -51,23 +51,25 @@ fs
                     let payload = {
                         thingId: heartbeatThingId,
                         nameOfDevice: 'Heartbeat',
+                        connectionStatus: true,
+                        batteryLife: 100,
                         createdAt: new Date().toISOString(),
-                        active,
+                        active: "true",
                         coords:{
                             lat: parseFloat(latitude),
                             lon: parseFloat(longitude),
                             nameOfPoint: point
                         },
-                        colorValue
+                        colorValue:colorValue
                     }
                     // Publish "payload" to the MQTT topic.
                     client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
                     // print
                     console.log('Publishing message:', JSON.stringify(payload));
-                }, x * 7500, x); // we're passing x
+                }, x * 15000, x); // we're passing x
             }    
         }
- 
+
         // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
         const createJwt = (projectId, privateKeyFile, algorithm) => {
             // Create a JWT to authenticate this device

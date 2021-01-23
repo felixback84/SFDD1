@@ -34,6 +34,7 @@ const {
     /////////////////////// 
     getActiveUserDevices,
     getInactiveUserDevices,
+    heartbeatPostSearchMode,
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
     detectGPSCoordsProximityRangeToHearbeats
 } = require('./handlers/userDevices');
@@ -121,6 +122,8 @@ app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
+// post searach mode command in heartbeat things
+app.post('/userdevice/heartbeat/:thingId/searchmode',FBAuth, heartbeatPostSearchMode);
 // get top5Coords ------> without use yet
 // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
@@ -394,13 +397,14 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             // update specific db doc
             dbDataFromLiveDataSets  
                 .update({
-                    // ////// exceptions ////////
-                    // top5Coords,
-                    // searchingMode,
-                    // profileToMatch,
-                    // ////////////////////
-                    // ...obj
-                    coords:obj.coords
+                    createdAt:obj.createdAt,
+                    thingId:obj.thingId,
+                    nameOfDevice:obj.nameOfDevice,
+                    active:obj.active,
+                    connectionStatus:obj.connectionStatus,
+                    batteryLife:obj.batteryLife,
+                    coords:obj.coords,
+                    colorValue:obj.colorValue,
                 })
             //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things
@@ -408,7 +412,11 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 return dbDataFromLiveDataSets
                     .get()    
                     .then((doc)=>{
-                        let dataDB = doc.data()
+                        let dataDB = {
+                            thingId:doc.data().thingId,
+                            coords:doc.data().coords,
+                            top5Coords:doc.data().top5Coords
+                        }
                         // run it meassure GPS coords
                         detectGPSCoordsProximityRangeToHearbeats(dataDB);  
                     })
@@ -462,7 +470,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     type: 'device'
                 }
             }
-            // run it to notificate the users of the active state of things
+            // run it to notificate the users of the inactive state of things
             initNotificationsToActiveStateOfThing(dataToNotificationOfStateOfThing);
         } else if (obj.active == "false") {
             // obj to notification doc to ON command
