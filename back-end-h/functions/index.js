@@ -29,14 +29,18 @@ const {
 const {
     getAllUserDevices,
     getUserDevice,
-    //////////////////// to test mode
+    //////////////////// to test mode /////////////////
     postInUserDevices,
-    /////////////////////// 
+    /////////////////////// SETTINGS FROM UX /////////////////////////
     getActiveUserDevices,
     getInactiveUserDevices,
-    heartbeatPostSearchMode,
+    heartbeatPostSearchingMode,
+    postProfileToSearchUserDevices,
+    selectStaticDeviceToSearchByUserDevice,
+    ////////////////////////////////////////////////////////////
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
-    detectGPSCoordsProximityRangeToHearbeats
+    detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
+    detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
@@ -123,7 +127,11 @@ app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
 // post searach mode command in heartbeat things
-app.post('/userdevice/heartbeat/:thingId/searchmode',FBAuth, heartbeatPostSearchMode);
+app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
+// post profile data in staticHearbeat
+app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
+//  post to selectStaticDeviceToSearch by userDevice
+app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice)
 // get top5Coords ------> without use yet
 // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
@@ -415,10 +423,20 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         let dataDB = {
                             thingId:doc.data().thingId,
                             coords:doc.data().coords,
-                            top5Coords:doc.data().top5Coords
+                            top5Coords:doc.data().top5Coords,
+                            searchingMode:doc.data().searchingMode
                         }
-                        // run it meassure GPS coords
-                        detectGPSCoordsProximityRangeToHearbeats(dataDB);  
+                        // print
+                        console.log(`dataDB: ${JSON.stringify(dataDB)}`);
+                        //////////////////////////////////////////////////// GPS MEASSURE MODES /////////////////////////////////////////////////////
+                        // if(console.log(dataDB.searchingMode[0] == "modeOne")){
+                        //     // run it meassure GPS coords for the userDevice and all the matches statics
+                        //     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB); 
+                        // } else if(console.log(dataDB.searchingMode[0] == "modeTwo")){
+                        //     // run it meassure GPS for a specific static device pick by the user
+                        //     detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
+                        // }
+                        detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
                     })
                     .catch((err) => {
                         console.error(err);

@@ -1,5 +1,5 @@
 // firebase
-const { db } = require('../utilities/admin');
+const { admin, db } = require('../utilities/admin');
 
 // imports
 const { 
@@ -238,7 +238,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     coords: doc.data().coords,
                     thingId: doc.data().thingId,
                     profileToSearch: doc.data().profileToSearch, 
-                    findMe: false,
+                    findMeMode: false,
                 })
             })
             // print
@@ -379,7 +379,7 @@ async function metersRangeMatch(metersArr,thingId){
 }
 
 // to meassure distance between devices
-exports.detectGPSCoordsProximityRangeToHearbeats = async (inWait) => {
+exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWait) => {
     const dataEnter = inWait
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
@@ -393,7 +393,7 @@ exports.detectGPSCoordsProximityRangeToHearbeats = async (inWait) => {
             let dLat = (inWaitAfter.top5Coords[i].coords.lat - inWaitAfter.coords.lat) * Math.PI / 180;  // Javascript functions in radians
             let dLon = (inWaitAfter.top5Coords[i].coords.lon - inWaitAfter.coords.lon) * Math.PI / 180; 
             let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(inWaitAfter.top5Coords[i].coords.lat * Math.PI / 180) * Math.cos(inWait.coords.lat* Math.PI / 180) * 
+                Math.cos(inWaitAfter.top5Coords[i].coords.lat * Math.PI / 180) * Math.cos(inWaitAfter.coords.lat* Math.PI / 180) * 
                 Math.sin(dLon/2) * Math.sin(dLon/2); 
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
             let d = R * c; // Distance in km
@@ -405,7 +405,7 @@ exports.detectGPSCoordsProximityRangeToHearbeats = async (inWait) => {
                 meters: distanceInMeters
             })
         }  
-        // sort arr
+        // sort arr asc
         mtsBetweenDevices.sort((a, b) => {
             return a.meters - b.meters;
         });
@@ -417,9 +417,141 @@ exports.detectGPSCoordsProximityRangeToHearbeats = async (inWait) => {
     await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
 }
 
-// specific the mode of search
-exports.heartbeatPostSearchMode = (req,res) => {
-
+// to meassure between a specific static devices and dynamic
+exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async (inWait) => {
+    // var to hold mtsBetweenDevices
+    let mtsBetweenDevices = [];
+    // data from db after message income
+    const dataEnter = inWait;
+    // "String value"
+    //if(typeof dataEnter.top5Coords[-1] == "number"){
+        // pick the last item in the arr
+        const index = dataEnter.top5Coords[dataEnter.top5Coords.length - 1];
+        // init meassure
+        console.log(`jo - index:${index}`)
+        async function checkDistance(args){
+            console.log("jo - jo")
+            // logic to make the meassure part
+            let R = 6371; // Radius of the earth in km
+            let dLat = (args.staticDevice.coords.lat - args.userDevice.coords.lat) * Math.PI / 180;  // Javascript functions in radians
+            let dLon = (args.staticDevice.coords.lon - args.userDevice.coords.lon) * Math.PI / 180; 
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(args.staticDevice.coords.lat * Math.PI / 180) * Math.cos(args.userDevice.coords.lat* Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            let d = R * c; // Distance in km
+            let distanceInMeters = d * 1000; // Distance in m
+            // print
+            console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
+            // run it
+            // push data to mtsBetweenDevices vart
+            mtsBetweenDevices.push({
+                meters: distanceInMeters
+            })
+        }
+        // args to pass it
+        const argz = {
+            userDevice:{
+                coords:inWait.coords
+            },
+            staticDevice:{
+                coords:inWait.top5Coords[index].coords
+            }
+        }
+        // run it
+        await checkDistance(argz);
+        await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
+    //}
 }
 
-// search for a specific static devices
+
+
+
+///////////////////////////////////////////// SETTINGS TO THING FROM UX //////////////////////////////////////////////////
+// pass data of statics users means profileToMatch
+exports.postProfileToSearchUserDevices = (req,res) => {
+    // profile of dynamic
+    let profileToSearchOfDynamicData = req.body;
+    // db part
+    // userDeviceId 
+    const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2);
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId)
+        .update({ profileToMatch: profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.profileToMatch, })
+        .then(() => {
+            console.log(`objWithProfileToSearchOfDynamic: ${profileToSearchOfDynamicData}`)
+            // res
+            return res.json(profileToSearchOfDynamicData);
+        })            
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });  
+}
+
+// specific the mode of search
+exports.heartbeatPostSearchingMode = (req,res) => {
+    const searchingModeData = req.body;
+    // db part
+    // userDeviceId 
+    const userDeviceId = searchingModeData.objSearchingModeData.thingId.split("-").slice(2);
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(searchingModeData.objSearchingModeData.thingId)
+        .update({ searchingMode: searchingModeData.objSearchingModeData.searchingMode, })
+        .then(() => {
+            console.log(`objWithProfileToSearchOfDynamic: ${searchingModeData}`)
+            // res
+            return res.json(searchingModeData);
+        })            
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        }); 
+}
+
+// search and marck a specific static devices to posterior meassure
+exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
+    const selectProfileToSearchData = req.body;
+    // userDeviceId 
+    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2);
+    // var to hold the index
+    let index = undefined;
+    // db part
+    let infoInLiveDataSets = db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
+        
+    
+    // search in array init
+    return infoInLiveDataSets
+        .get()
+        .then((doc)=>{
+            // extract just the fiel that i need
+            const top5Coords = doc.data().top5Coords;
+            // print
+            console.log(`top5Coords array: ${JSON.stringify(top5Coords)}`);
+            // filter the item in the array
+            index = top5Coords.findIndex((element, index) => {
+                if (element.thingId === selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch) {
+                    return true
+                }
+            })
+            // print
+            console.log(`filter index in an array: ${index}`)
+        })
+        .then(()=>{
+            return infoInLiveDataSets
+                .update({
+                    top5Coords: admin.firestore.FieldValue.arrayUnion(index),
+                })
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        }); 
+}

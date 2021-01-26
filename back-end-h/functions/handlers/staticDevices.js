@@ -213,6 +213,7 @@ exports.getInactiveStaticDevices = (req, res) => {
         });   
 }
 
+///////////////////////////////////////////// SETTINGS TO THING FROM UX  //////////////////////////////////////////////////
 // pass data of statics users means coords 
 exports.postCoordsStaticDevices = (req, res) => {
     // profile of dynamic
