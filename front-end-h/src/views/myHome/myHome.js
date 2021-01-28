@@ -14,6 +14,7 @@ import TitleSection from "./TitleSection";
 import ProfileData from "./ProfileData";
 import UserDeviceData from "./UserDeviceData";
 import LiveDataSetsOverview from "./LiveDataSetsOverview";
+import ProfileMatches from "./ProfileMatches";
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
@@ -39,13 +40,17 @@ class myHome extends Component {
     // map the list of one device
     let mapUserDeviceHeader = userDevices.map(userDevice => 
       <Fragment key={userDevice.thingId}>
+        {/* ProfileMatchesrelevant data */}
         <GridItem xs={12} sm={12} md={6}>
-          {/* device relevant data */}
-          <UserDeviceData userdevice={userDevice} />
+          <ProfileMatches thingid={userDevice.thingId}/>
         </GridItem>
         {/* liveDataSets relevant data */}
         <GridItem xs={12} sm={12} md={6}>
           <LiveDataSetsOverview thingid={userDevice.thingId}/>
+        </GridItem>
+        {/* device relevant data */}
+        <GridItem xs={12} sm={12} md={6}>
+          <UserDeviceData userdevice={userDevice} />
         </GridItem>
       </Fragment>
     );

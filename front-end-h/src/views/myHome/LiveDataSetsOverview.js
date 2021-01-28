@@ -3,9 +3,10 @@ import React, { Component, Fragment } from "react";
 
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
-import Divider from '@material-ui/core/Divider';
 import { red, green } from '@material-ui/core/colors';
 import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 
 // dayjs
 import dayjs from 'dayjs';
@@ -18,24 +19,24 @@ import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Muted from "components/Typography/Muted.js";
 import Badge from "components/Badge/Badge.js";
-import CustomLinearProgress from "components/CustomLinearProgress/CustomLinearProgress.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 
 // components
 import GoogleMaps from "./GoogleMaps";
+import ArraysListBadge from "./ArraysListBadge";
 
 // icons
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import WifiIcon from '@material-ui/icons/Wifi';
 import WifiOffIcon from '@material-ui/icons/WifiOff';
 import LocationSearchingIcon from '@material-ui/icons/LocationSearching';
+import BatteryStdRoundedIcon from '@material-ui/icons/BatteryStdRounded';
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
-import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
@@ -86,6 +87,7 @@ class LiveDataSetsOverview extends Component {
                         {
                           minWidth: "130px",
                           minHeight: "130px",
+                          color: green[500]
                         }
                       }
                     />
@@ -105,84 +107,100 @@ class LiveDataSetsOverview extends Component {
               </CardAvatar>
               {/* content */}
               <CardBody>
+
+                {/* connection status */}
+                <Card color="success">
+                  <CardBody color>
+                    { connectionStatus == true ? (
+                      <Grid container  justify="space-between">
+                        <Grid item xs={12}>
+                          <div className={classes.icon}> 
+                            <WifiIcon color="secondary" fontSize="large"/>
+                          </div>
+                          <h4 className={classes.cardCategorySocialWhite}>
+                            Connection status: Connected
+                          </h4>
+                        </Grid>
+                      </Grid>
+                    ) : (
+                        <Grid container  justify="space-between">
+                          <Grid item xs={12}>
+                            <div className={classes.icon}>
+                              <WifiOffIcon color="secondary" fontSize="large"/>
+                            </div>
+                            <h4 className={classes.cardCategorySocialWhite}>
+                              Connection status: Disconnected
+                            </h4>
+                          </Grid>
+                        </Grid> 
+                      )
+                    }
+                  </CardBody>
+                </Card>
                 
                 {/* searchingMode */}
-                <SnackbarContent
-                  message={
-                    <span>
-                      <b>Searching mode:</b> {`You are searching mode is:`}
-                    </span>
-                  }
-                  icon={LocationSearchingIcon}
-                />  
+                <Card color="success">
+                  <CardBody color>
+                    <Grid container justify="space-around">
+                      <Grid item xs={5}>
+                        <div className={classes.icon}> 
+                          <LocationSearchingIcon color="secondary" fontSize="large"/>
+                        </div>
+                        <h4 className={classes.cardCategorySocialWhite}>
+                          {`You are searching mode is: ${searchingMode}`}
+                        </h4>
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      {/* thingId */}
+                      <Grid item xs={5}>
+                        <div className={classes.icon}> 
+                          <FingerprintIcon color="secondary" fontSize="large"/>
+                        </div>
+                        <h4 className={classes.cardCategorySocialWhite}>
+                          {`The ID of your thing is: ${thingId}`}
+                        </h4>
+                      </Grid>
+                    </Grid> 
+                  </CardBody>
+                </Card>
 
-                {/* thingId */}
-                <SnackbarContent
-                  message={
-                    <span>
-                      <b>ThingId:</b> {`The ID of your thing is:`}
-                    </span>
-                  }
-                  icon={FingerprintIcon}
-                /> 
-                
-                {/* connection status */}
-                <h4 className={classes.cardCategory}>Connection status:</h4>
-                {
-                  connectionStatus == true ? ( 
-                    <Chip
-                      icon={<WifiIcon 
-                      className={classes.icons} 
-                      style={
-                        {
-                          minWidth: "30px",
-                          minHeight: "30px",
-                          color: green[A400]
-                        }
-                      }
-                      />}
-                      label="Connected"
-                      variant="outlined"
-                    />
-                  ) : ( 
-                    <Chip
-                    icon={<WifiOffIcon 
-                      className={classes.icons} 
-                      style={
-                        {
-                          minWidth: "30px",
-                          minHeight: "30px",
-                          color: red[500]
-                        }
-                      }
-                    />}
-                    label="Disconnected"
-                    variant="outlined"
-                    />
-                  )
-                }
-                {/* <Divider variant="fullWidth" /> */}
                 {/* battery life */}
-                <Muted>
-                  <h4 className={classes.cardCategory}>
-                    Battery life: {batteryLife}%
-                  </h4>
-                </Muted>
-                <CustomLinearProgress
-                  variant="determinate"
-                  color="warning"
-                  value={batteryLife}
-                  valueBuffer={batteryLife}
-                  style={{ width: "100%", display: "inline-block", padding:"10px", marging: "10px"}}
-                />
-                {/* <Divider variant="fullWidth" /> */}
-                {/* last seen */}
-                <Muted>
-                  <h4 className={classes.cardCategory}>
-                    Last messsage: {dayjs(createdAt).format('h:mm a, MMMM DD YYYY')}
-                  </h4>
-                </Muted>
-                {/* <Divider variant="fullWidth" /> */}
+                <Card color="success">
+                  <CardBody color>
+                    <Grid container  justify="space-between">
+                      <Grid item xs={5}>
+                        <div className={classes.icon}>
+                          <BatteryStdRoundedIcon color="secondary" fontSize="large"/>
+                        </div>
+                        <h4 className={classes.cardCategorySocialWhite}>
+                          Battery life: {batteryLife}%
+                        </h4>
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      <Grid item xs={5}>
+                        <div className={classes.icon}>
+                          <RemoveRedEyeIcon color="secondary" fontSize="large"/>
+                        </div>
+                        <h4 className={classes.cardCategorySocialWhite}>
+                          Last messsage: {dayjs(createdAt).format('h:mm a, MMMM DD YYYY')}
+                        </h4>
+                      </Grid>
+                    </Grid> 
+                  </CardBody>
+                </Card>
+
+                {/* profile to match */}
+                <Card color="success">
+                  <CardBody color>
+                    <Grid container  justify="space-between">
+                      <Grid item xs={12}>
+                        {/* tags */}
+                        <ArraysListBadge profiletomatch={profileToMatch}/>
+                      </Grid>
+                    </Grid> 
+                  </CardBody>
+                </Card>
+
                 {/* cooords */}
                 {/* title */}
                 <h4 className={classes.cardCategory}>Last know position:</h4>
@@ -200,20 +218,6 @@ class LiveDataSetsOverview extends Component {
                 </Badge> 
                 {/* Google Maps */}
                 <GoogleMaps coords={coords}/>
-                {/* Profile to match */}
-                <h4 className={classes.cardCategory}>Profile to match:</h4>
-                <Chip
-                  label={`Lucky number: ${profileToMatch.luckyNumber}`}
-                  variant="outlined"
-                />
-                <Chip
-                  label={`Your DC Hero: ${profileToMatch.dcHero}`}
-                  variant="outlined"
-                />
-                <Chip
-                  label={`Cat lover: ${profileToMatch.cat + ''}`}
-                  variant="outlined"
-                />
               </CardBody>
               {/* footer */}
               <CardFooter profile className={classes.justifyContent}>

@@ -5,7 +5,11 @@ import { withStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 // @material-ui/icons
 import Timeline from "@material-ui/icons/Timeline";
 import Code from "@material-ui/icons/Code";
@@ -32,16 +36,19 @@ const useStyles = signupPageStyle;
 
 
 class signup extends Component{
+  // state
   constructor(){
     super();
     this.state = {
         email: '',
         password: '',
+        type: '',
         confirmPassword: '',
         userHandle: '',
         errors: {},
-        checked:[1], 
-        setChecked:[1]
+        ////////////////// UX
+        checked:[], 
+        setChecked:[],
     }
 
     // to hold fields
@@ -64,41 +71,50 @@ class signup extends Component{
     this.setState({
         loading: true
     });
+    // data to send
     const newUserData = {
         email: this.state.email,
         userHandle: this.state.userHandle,
+        type: this.state.type,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
     };
+    // redux trigger
     this.props.signupUser(newUserData, this.props.history);
   };
 
   // event listener of fields in form
   onChangeEmail = (email) => {this.setState({ email })}
   onChangeUserHandle = (userHandle) => {this.setState({ userHandle })}
+  onChangeTypeOfUser = (type) => {this.setState({ type })}
   onChangePassword = (password) => {this.setState({ password })}
   onChangeConfirmPassword = (confirmPassword) => {this.setState({ confirmPassword })}
+
+  // select
+  handleTypeOfUSer = event => {
+    this.onChangeTypeOfUser(event.target.value);
+  };
+
+  // to the toggle
+  handleToggle = (value) => {
+    const currentIndex = this.state.checked.indexOf(value);
+    const newChecked = [...this.state.checked];
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    this.setState({
+      setChecked: newChecked
+    });
+  };
+
 
   render(){
 
     // props
     const { classes, ui:{loading} } = this.props;
     const { errors } = this.state;
-    const checked = []
-
-    // to the toggle
-    const handleToggle = (value) => {
-      const currentIndex = checked.indexOf(value);
-      const newChecked = [...checked];
-      if (currentIndex === -1) {
-        newChecked.push(value);
-      } else {
-        newChecked.splice(currentIndex, 1);
-      }
-      this.setState({
-        setChecked: newChecked
-      });
-    };
 
     return (
       <div>
@@ -161,6 +177,7 @@ class signup extends Component{
                         </div>
                         {/* register clasical form */}
                         <form className={classes.form} onSubmit={this.handleSubmit}>
+                          {/* email */}
                           <CustomInput
                             valueField={this.onChangeEmail}
                             labelText="Email..."
@@ -185,6 +202,7 @@ class signup extends Component{
                               placeholder: "Email..."
                             }}
                           />
+                          {/* username */}
                           <CustomInput
                             valueField={this.onChangeUserHandle}
                             id="userHandle" 
@@ -211,6 +229,57 @@ class signup extends Component{
                               placeholder: "Username"
                             }}
                           />
+                          {/* type of device */}
+                          <FormControl fullWidth className={classes.selectFormControl}>
+                            <InputLabel
+                                htmlFor="simple-select"
+                                className={classes.selectLabel}
+                            >
+                                Type of user
+                            </InputLabel>
+                            <Select
+                                MenuProps={{
+                                className: classes.selectMenu
+                                }}
+                                classes={{
+                                select: classes.select
+                                }}
+                                value={this.state.type}
+                                onChange={this.handleTypeOfUSer}
+                                inputProps={{
+                                name: "type",
+                                id: "type"
+                                }}
+                            >
+                                <MenuItem
+                                    disabled
+                                    classes={{
+                                        root: classes.selectMenuItem
+                                    }}
+                                    >
+                                    Type of user
+                                </MenuItem>
+                                <MenuItem
+                                    classes={{
+                                        root: classes.selectMenuItem,
+                                        selected: classes.selectMenuItemSelected
+                                    }}
+                                    value="static"
+                                    >
+                                    static
+                                </MenuItem>
+                                <MenuItem
+                                    classes={{
+                                        root: classes.selectMenuItem,
+                                        selected: classes.selectMenuItemSelected
+                                    }}
+                                    value="dynamic"
+                                    >
+                                    dynamic
+                                </MenuItem>
+                            </Select>
+                          </FormControl>
+                          {/* password */}
                           <CustomInput
                             valueField={this.onChangePassword}
                             labelText="Password"
@@ -235,6 +304,7 @@ class signup extends Component{
                               placeholder: "Password"
                             }}
                           />
+                          {/* confrim password */}
                           <CustomInput
                             valueField={this.onChangeConfirmPassword}
                             id="confirmPassword" 
@@ -269,7 +339,7 @@ class signup extends Component{
                             control={
                               <Checkbox
                                 tabIndex={-1}
-                                onClick={() => handleToggle(1)}
+                                onClick={() => this.handleToggle(1)}
                                 checkedIcon={
                                   <Check className={classes.checkedIcon} />
                                 }
@@ -278,7 +348,7 @@ class signup extends Component{
                                   checked: classes.checked,
                                   root: classes.checkRoot
                                 }}
-                                checked={checked.indexOf(1) !== -1 ? true : false}
+                                checked={this.state.checked.indexOf(1) !== -1 ? true : false}
                               />
                             }
                             label={

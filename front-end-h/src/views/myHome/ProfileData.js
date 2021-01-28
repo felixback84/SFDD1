@@ -33,6 +33,7 @@ class ProfileData extends Component {
       user:{
         credentials: { 
           userHandle, 
+          type,
           createdAt, 
           imgUrl, 
           bio, 
@@ -50,7 +51,8 @@ class ProfileData extends Component {
       
       <div className={classes.container}>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={12}>
+          <GridItem xs={4}/>
+          <GridItem xs={4} sm={4} md={4}>
             <Card profile>
               <CardAvatar profile>
                 <a href="#pablo" onClick={e => e.preventDefault()}>
@@ -77,6 +79,7 @@ class ProfileData extends Component {
               </CardFooter>
             </Card>
           </GridItem>
+          <GridItem xs={4}/>
         </GridContainer>
       </div>
       
