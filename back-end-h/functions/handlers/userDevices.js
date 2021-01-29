@@ -227,6 +227,8 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     let profilesInLiveDataSets = [];
     // hold var
     let arraysToCheck = [];
+    // var to hold data
+    let outputList = [];
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -300,28 +302,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             }
         })
         .then(()=>{
-            // func to save data of top5Coords in liveDataSets of dynamics
-            function savaDataOfDynamicDeviceOnLiveDataSetsDoc(dataToSave){
-                // userDeviceId 
-                const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
-                db
-                    .doc(`/userDevices/${userDeviceId}`)
-                    .collection('liveDataSets')
-                    .doc(objProfileDataOfDynamic.thingId)
-                    .update({ top5Coords: dataToSave })
-                    .then(() => {
-                        console.log(`final response to the user: ${dataToSave}`);
-                    })            
-                    .catch((err) => {
-                        console.error(err);
-                    });                
-            }
-            // run it
-            savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheck);
-        })
-        .then(()=>{
-            // var to hold data
-            var outputList = [];
             const promises = [];
             // loop
             arraysToCheck.forEach(function(arrayToCheck) {
@@ -355,12 +335,49 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 promises.push(promise);
             }) 
             Promise.all(promises).then(() => {
-                res.send(JSON.stringify(outputList));
+                //res.send(JSON.stringify(outputList));
+                return outputList
+            })
+            .then(()=>{
+                // var to hold userHandle
+                let userHandle = "";
+                arraysToCheck.forEach((arrayToCheck)=>{
+                    // userHandle
+                    userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString();
+                    // second obj loop
+                    outputList.forEach((outputItem)=>{
+                        if(userHandle == outputItem.userHandle){
+                            arrayToCheck.userCredentials = outputItem
+                        }
+                    })
+                })
+                // print
+                console.log(`arraysToCheck after push user credentials: ${arraysToCheck}`);
+            })
+            .then(()=>{
+                // func to save data of top5Coords in liveDataSets of dynamics
+                function savaDataOfDynamicDeviceOnLiveDataSetsDoc(dataToSave){
+                    // userDeviceId 
+                    const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
+                    db
+                        .doc(`/userDevices/${userDeviceId}`)
+                        .collection('liveDataSets')
+                        .doc(objProfileDataOfDynamic.thingId)
+                        .update({ top5Coords: dataToSave })
+                        .then(() => {
+                            console.log(`final response to the user: ${dataToSave}`);
+                        })            
+                        .catch((err) => {
+                            console.error(err);
+                        });                
+                }
+                // run it
+                savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheck);
             })
             .catch(err => {
                 res.status(500, err);
             })
-        });   
+        })
 }
 
 // to pick wich color message send to the device

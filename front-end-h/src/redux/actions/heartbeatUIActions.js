@@ -79,21 +79,23 @@ export const heartbeatPostInactiveCommand = (thingId, inactiveValue) => (dispatc
 } 
 
 // function to find the top5Coords list
-export const getTop5CoordsMatches = (thingId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
-    axios
-        .get(`/device/heartbeat/${thingId}/top5coords`)
-        .then((res) => {            
-            dispatch({ 
-                type: GET_TOP5COORDSMATCHES,
-                payload: res.data
-            })
-        })
-        .catch(err => {
-            dispatch({ 
-                type: SET_ERRORS,
-                payload: err.response.data
-            })
-        });
-}
+// export const getTop5CoordsMatches = (thingId) => (dispatch) => {
+//     dispatch({ type: LOADING_UI });
+//     axios
+//         .get(`/device/heartbeat/${thingId}/top5coords`)
+//         .then((res) => {            
+//             dispatch({ 
+//                 type: GET_TOP5COORDSMATCHES,
+//                 payload: res.data
+//             })
+//         })
+//         .catch(err => {
+//             dispatch({ 
+//                 type: SET_ERRORS,
+//                 payload: err.response.data
+//             })
+//         });
+// }
+
+// function post a get the answer to make the matches
 

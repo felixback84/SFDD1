@@ -53,7 +53,7 @@ class myHome extends Component {
           <UserDeviceData userdevice={userDevice} />
         </GridItem>
       </Fragment>
-    );
+    ); 
 
     // markup of my home
     let myHome = !loading ? (

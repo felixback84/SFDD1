@@ -31,7 +31,6 @@
 
 
     [{"initialMatches":{"dcHeros":["Flash"],"fruits":["melon"],"pets":["cat"]},"coords":{"lat":4.635157,"lon":-74.070602,"nameOfPoint":"bibidisePosition"},"thingId":""},
-    {"initialMatches":{},"coords":{"nameOfPoint":"jobsIdiotPosition","lon":-74.070913,"lat":4.634837},"thingId":""},
     {"initialMatches":{"fruits":["watermelon"]},"coords":{"lat":4.635005,"nameOfPoint":"garcialaPosition","lon":-74.070752},"thingId":""},
     {"initialMatches":{"luckyNumbers":[21]},"coords":{"lat":4.63466,"lon":-74.070747,"nameOfPoint":"ctoIdiotPosition"},"thingId":""},
     {"initialMatches":{"pets":["fox"]},"coords":{"nameOfPoint":"searchIdiotPosition","lon":-74.070573,"lat":4.634489},"thingId":""},
