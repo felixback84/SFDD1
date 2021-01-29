@@ -141,7 +141,7 @@ class LiveDataSetsOverview extends Component {
                 {/* searchingMode */}
                 <Card color="success">
                   <CardBody color>
-                    <Grid container justify="space-around">
+                    <Grid container justify="space-between">
                       <Grid item xs={5}>
                         <div className={classes.icon}> 
                           <LocationSearchingIcon color="secondary" fontSize="large"/>

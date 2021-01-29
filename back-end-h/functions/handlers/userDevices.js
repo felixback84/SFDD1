@@ -8,14 +8,16 @@ const {
 
 // *********************** Post a complete device for an user or userDevice property - without use
 exports.postInUserDevices = (req, res) => {
+
+    // pass data to user var
     const newUserDevice = {
         deviceId: req.params.deviceId,
         userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
         active: false,
         thingId: '' 
-    };
-
+    };    
+    
     // object to hold all info, newUserDevice, deviceData
     let allUserDeviceData = {};
     allUserDeviceData = newUserDevice;
@@ -296,9 +298,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     });
                 }
             }
-            // print results
-            console.log(`arraysToCheck result before empty ones filter --> 
-                ${JSON.stringify(arraysToCheck)}`);
         })
         .then(()=>{
             // func to save data of top5Coords in liveDataSets of dynamics
@@ -312,17 +311,56 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     .update({ top5Coords: dataToSave })
                     .then(() => {
                         console.log(`final response to the user: ${dataToSave}`);
-                        return res.json(dataToSave);
                     })            
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: err.code });
                     });                
             }
             // run it
             savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheck);
         })
-        .catch((err) => console.error(err));
+        .then(()=>{
+            // var to hold data
+            var outputList = [];
+            const promises = [];
+            // loop
+            arraysToCheck.forEach(function(arrayToCheck) {
+                // print item
+                console.log("Current item: " + arrayToCheck);
+                // extract userHandle
+                const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString();
+                // db connection
+                let promise = db
+                    .collection("users")
+                    .where('userHandle','==',userHandle)
+                    .get()
+                    .then(snapshot => {
+                        // check if exists
+                        if (snapshot.empty) {
+                            console.log('No matching documents.');
+                        } else {
+                            snapshot.forEach(doc => {
+                                outputList.push({
+                                    userHandle:doc.data().userHandle,
+                                    type:doc.data().type,
+                                    email:doc.data().email,
+                                });
+                            });
+                            return;
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Error getting documents', err);
+                    });
+                promises.push(promise);
+            }) 
+            Promise.all(promises).then(() => {
+                res.send(JSON.stringify(outputList));
+            })
+            .catch(err => {
+                res.status(500, err);
+            })
+        });   
 }
 
 // to pick wich color message send to the device
