@@ -5,26 +5,19 @@ import GoogleMapReact from 'google-map-react';
 // components
 import LocationPin from './LocationPin';
 
-// redux stuff
-import { connect } from 'react-redux';
 
-class GoogleMapsToHeartbeat extends Component {
+class GoogleMaps extends Component {
 
 	render() {
 		// redux state
 		const {
-				thingLiveDataSets:{
-						coords:{
-								lat,lon
-						},
-						top5Coords
-				}
+			coords
 		} = this.props;
 		
 		// to pass keys
 		let center = {
-				lat:lat,
-				lng:lon
+			lat:coords.lat,
+			lng:coords.lon
 		}
 		
 		return (
@@ -46,9 +39,4 @@ class GoogleMapsToHeartbeat extends Component {
 	}
 }
 
-// redux state
-const mapStateToProps = (state) => ({
-    thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
-})
-
-export default connect(mapStateToProps)(GoogleMapsToHeartbeat);
+export default (GoogleMaps);

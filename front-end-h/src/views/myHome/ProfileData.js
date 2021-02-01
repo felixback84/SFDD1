@@ -11,10 +11,8 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
 import Muted from "components/Typography/Muted.js";
 
 // Redux stuff
@@ -51,8 +49,8 @@ class ProfileData extends Component {
       
       <div className={classes.container}>
         <GridContainer>
-          <GridItem xs={4}/>
-          <GridItem xs={4} sm={4} md={4}>
+          <GridItem xs={2} sm={3} md={3}/>
+          <GridItem xs={4} sm={6} md={6}>
             <Card profile>
               <CardAvatar profile>
                 <a href="#pablo" onClick={e => e.preventDefault()}>
@@ -79,7 +77,7 @@ class ProfileData extends Component {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={4}/>
+          <GridItem xs={4} sm={3} md={3}/>
         </GridContainer>
       </div>
       
