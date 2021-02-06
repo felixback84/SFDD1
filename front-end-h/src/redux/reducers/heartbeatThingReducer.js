@@ -16,7 +16,6 @@ const initialState = {
         top5Coords:[], 
         searchingMode:[]
     },
-    //top5Coords:[]
 };
 
 // function to determine the type of action to set state

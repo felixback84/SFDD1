@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React, { Component } from "react";
-
+ 
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
@@ -14,6 +14,10 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Muted from "components/Typography/Muted.js";
+
+// components
+import ProfileMatches from "./ProfileMatches";
+import SwitchButtonToUserDevice from "../components/SwitchButtonToUserDevice"
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
@@ -52,6 +56,15 @@ class UserDeviceData extends Component {
                 </a>
               </CardAvatar>
               <CardBody>
+                <Chip
+                  label="Property Info"
+                  color="secondary"
+                />
+                {/* switch button */}
+                <Divider variant="fullWidth" />
+                <SwitchButtonToUserDevice 
+                  labelToSwitch={nameOfDevice} 
+                  userdeviceid={userDeviceId}/>
                 <Divider variant="fullWidth" />
                 <h4 className={classes.cardTitle}>Property Id: {userDeviceId}</h4>
                 <Divider variant="fullWidth" />
@@ -63,13 +76,22 @@ class UserDeviceData extends Component {
                   Device description: {description}
                 </p>
               </CardBody>
-              <CardFooter profile className={classes.justifyContent}>
-                <Chip
-                  label="Property Info"
-                  color="secondary"
-                />
-              </CardFooter>
+              <CardFooter profile className={classes.justifyContent}/>
             </Card>
+          </GridItem>
+
+          {/* matches between statics and dynamics */}
+          <GridItem xs={12} sm={12} md={12}>
+            <Card profile>
+              <CardBody>
+                <Chip
+                  label="Matches"
+                  color="secondary"
+                /> 
+                <Divider variant="fullWidth" />
+                <ProfileMatches thingid={thingId}/>
+              </CardBody>
+            </Card>  
           </GridItem>
         </GridContainer>
       </div> 

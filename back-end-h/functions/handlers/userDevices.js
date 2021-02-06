@@ -242,7 +242,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     coords: doc.data().coords,
                     thingId: doc.data().thingId,
                     profileToSearch: doc.data().profileToSearch, 
-                    findMeMode: false,
                 })
             })
             // print
@@ -291,10 +290,10 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 };
                 
                 // check it, run it & push it
-                let matchDataResuls = checkProfilesStaicsVsDynamics(argz);
-                if(Object.entries(matchDataResuls).length !== 0){
+                let matchDataResults = checkProfilesStaicsVsDynamics(argz);
+                if(Object.entries(matchDataResults).length !== 0){
                     arraysToCheck.push({
-                        matchDataResuls: matchDataResuls,
+                        matchDataResults: matchDataResults,
                         coords: profilesInLiveDataSets[i].coords,
                         thingId: profilesInLiveDataSets[i].thingId,
                     });
@@ -324,6 +323,11 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                                     userHandle:doc.data().userHandle,
                                     type:doc.data().type,
                                     email:doc.data().email,
+                                    names:doc.data().names,
+                                    lastname:doc.data().lastname,
+                                    companyName:doc.data().companyName,
+                                    imgUrl:doc.data().imgUrl,
+                                    bio:doc.data().bio,
                                 });
                             });
                             return;
@@ -352,7 +356,8 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     })
                 })
                 // print
-                console.log(`arraysToCheck after push user credentials: ${arraysToCheck}`);
+                console.log(`arraysToCheck after push user credentials: ${JSON.stringify(arraysToCheck)}`);
+                return arraysToCheck
             })
             .then(()=>{
                 // func to save data of top5Coords in liveDataSets of dynamics

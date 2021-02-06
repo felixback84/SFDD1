@@ -5,15 +5,17 @@ import { withStyles } from "@material-ui/core/styles";
 import Carousel from "react-slick";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Card from "components/Card/Card.js";
 // components
-import GoogleMaps from './GoogleMaps'
+import GoogleMaps from '../components/GoogleMaps'
+import CardForDataOfStaticMatches from '../components/CardForDataOfStaticMatches'
+import ArraysListBadge from '../components/ArraysListBadge'
 // Redux stuff
 import { connect } from 'react-redux';
 // styles
 import image1 from "assets/img/bg.jpg";
 import carouselStyle from "assets/jss/material-kit-pro-react/views/componentsSections/carouselStyle.js";
 import "assets/scss/plugins/_plugin-react-slick.scss"
+
 const useStyles = carouselStyle;
 
 class ProfileMatches extends Component{
@@ -25,34 +27,27 @@ class ProfileMatches extends Component{
 			thingLiveDataSets:{
 				top5Coords
 			}
-		}=this.props
+		} = this.props
 
 		// map list
-    let listOfMatches = top5Coords.map(top5Coord => 
-      <div>
+    let listOfMatches = top5Coords.map((top5Coord) => 
+    <div>
+			{/* profile to */}
+			<ArraysListBadge key={top5Coord.thingId} profiletomatch={top5Coord.matchDataResults}/>
 				<div
 					style={{ backgroundImage: `url("${image1}")` }}
 				>
 					<div className={classes.container}>
 						<GridContainer>
 							<GridItem xs={12} sm={4} md={4}>
-								<h1 className={classes.title}></h1>
-								<h4>
-									<div className={classes.container}>
-										<GridContainer>
-											<GridItem xs={12} sm={6} md={6}>
-												<h1 className={classes.title}>Material Kit PRO React</h1>
-												<h4>{top5Coord.userCredentials.userHandle}</h4>
-											</GridItem>
-										</GridContainer>
-									</div>
-								</h4>
+								{/* card of static */}
+								<CardForDataOfStaticMatches credentials={top5Coord.userCredentials}/>
 							</GridItem>
-							<GridItem xs={12} sm={8} md={8}>
+							<GridItem xs={12} sm={7} md={7} style={{marginTop:30}}>
 								{/* google maps */}
 								<GoogleMaps coords={top5Coord.coords}/>
 							</GridItem>
-						</GridContainer>
+						</GridContainer> 
 					</div>
 				</div>
 			</div>
@@ -60,12 +55,12 @@ class ProfileMatches extends Component{
 		
 		// settings slider
     const settings = {
-      dots: true,
-      infinite: true,
-      speed: 1000,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      autoplay: false
+			dots: false,
+			infinite: true,
+			speed: 1000,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			autoplay: false
 		};
 		
 		return (
@@ -84,3 +79,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(withStyles(useStyles)(ProfileMatches));
+
+
+

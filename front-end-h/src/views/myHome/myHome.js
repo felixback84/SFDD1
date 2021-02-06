@@ -7,10 +7,9 @@ import GridItem from "components/Grid/GridItem.js";
 import Parallax from "components/Parallax/Parallax.js";
 import Skeleton from "components/Loaders/Skeleton.js";
 // components
-import ProfileData from "./ProfileData";
-import UserDeviceData from "./UserDeviceData";
-import LiveDataSetsOverview from "./LiveDataSetsOverview";
-import ProfileMatches from "./ProfileMatches";
+import ProfileData from "./sections/ProfileData";
+import UserDeviceData from "./sections/UserDeviceData";
+import LiveDataSetsOverview from "./sections/LiveDataSetsOverview";
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
@@ -18,14 +17,14 @@ import { getUserDevices } from '../../redux/actions/userDevicesActions';
 import myHomeStyles from "assets/jss/material-kit-pro-react/views/myHomeStyles.js"
 const useStyles = myHomeStyles;
 
-class myHome extends Component {
+class myHome extends Component { 
 
   // trigger redux action
   componentDidMount() {
     this.props.getUserDevices(); 
   }
 
-  render() {
+  render() { 
     // redux state
     const {
       classes, 
@@ -44,14 +43,9 @@ class myHome extends Component {
         <GridItem xs={12} sm={12} md={6}>
           <UserDeviceData userdevice={userDevice} />
         </GridItem> 
-      </Fragment>
+      </Fragment> 
     );  
     
-    {/* ProfileMatchesrelevant data */}
-    let mapProfileMatches = userDevices.map(userDevice => 
-      <ProfileMatches thingid={userDevice.thingId}/>
-    );
-
     // markup of my home
     let myHome = !loading ? (
       <div>
@@ -70,12 +64,10 @@ class myHome extends Component {
             </GridContainer>
           </div>
         </div>
-        {/* matches between statics and dynamics */}
-        {mapProfileMatches}
       </div>
 
     ) : (
-      <Skeleton/>
+      <Skeleton/> 
     );
 
     return (

@@ -20,10 +20,10 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Badge from "components/Badge/Badge.js";
-
+ 
 // components
-import GoogleMaps from "./GoogleMaps";
-import ArraysListBadge from "./ArraysListBadge";
+import GoogleMaps from "../components/GoogleMaps";
+import ArraysListBadge from "../components/ArraysListBadge";
 
 // icons
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
@@ -36,7 +36,7 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
+import { heartbeatThingSyncDataWithLiveDB } from '../../../redux/actions/heartbeatUIActions';
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
@@ -107,9 +107,12 @@ class LiveDataSetsOverview extends Component {
               </CardAvatar>
               {/* content */}
               <CardBody>
-
+                <Chip
+                  label="Thing Info"
+                  color="secondary"
+                />
                 {/* connection status */}
-                <Card color="success">
+                <Card color="warning">
                   <CardBody color>
                     { connectionStatus == true ? (
                       <Grid container  justify="space-between">
@@ -139,7 +142,7 @@ class LiveDataSetsOverview extends Component {
                 </Card>
                 
                 {/* searchingMode */}
-                <Card color="success">
+                <Card color="warning">
                   <CardBody color>
                     <Grid container justify="space-between">
                       <Grid item xs={5}>
@@ -165,7 +168,7 @@ class LiveDataSetsOverview extends Component {
                 </Card>
 
                 {/* battery life */}
-                <Card color="success">
+                <Card color="warning">
                   <CardBody color>
                     <Grid container  justify="space-between">
                       <Grid item xs={5}>
@@ -190,8 +193,12 @@ class LiveDataSetsOverview extends Component {
                 </Card>
 
                 {/* profile to match */}
-                <Card color="success">
+                <Card color="warning">
                   <CardBody color>
+                  <Chip
+                    label="My Profile"
+                    color="secondary"
+                  />
                     <Grid container  justify="space-between">
                       <Grid item xs={12}>
                         {/* tags */}
@@ -221,10 +228,7 @@ class LiveDataSetsOverview extends Component {
               </CardBody>
               {/* footer */}
               <CardFooter profile className={classes.justifyContent}>
-                <Chip
-                  label="Thing Info"
-                  color="secondary"
-                />
+                
               </CardFooter>
             </Card>
           </GridItem>

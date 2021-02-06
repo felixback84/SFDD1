@@ -12,6 +12,7 @@ import landing from './views/landingPage/landing';
 import signup from './views/signup';
 import login from './views/login';
 import vlog from './views/vlog';
+
 import myHome from './views/myHome/myHome';
 import devices from './views/store/devices';
 import userDevice from './views/userDevice/userDevice'; 
@@ -20,6 +21,8 @@ import dataSets from './views/userDevice/dataSets';
 import profileDetails from './views/profile/profileDetails';
 import addCart from './views/profile/addCart';
 import buys from './views/profile/buys';
+
+
 
 // @material-ui/icons
 import Favorite from "@material-ui/icons/Favorite";
@@ -72,7 +75,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div> 
-          <Router>
+          <Router> 
             <div className="container">
               <Switch>
                 <Route exact path="/" component={landing} />

@@ -14,7 +14,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Muted from "components/Typography/Muted.js";
-
+ 
 // Redux stuff
 import { connect } from 'react-redux';
 
@@ -58,8 +58,14 @@ class ProfileData extends Component {
                 </a>
               </CardAvatar>
               <CardBody>
+                <Chip
+                  label="User Info"
+                  color="secondary"
+                />
                 <Divider variant="fullWidth" />
-                <h4 className={classes.cardTitle}>Names: {names} {lastname}</h4>
+                  <h4 className={classes.cardTitle}>Type of user: {type}</h4>
+                <Divider variant="fullWidth" />
+                  <h4 className={classes.cardTitle}>Names: {names} {lastname}</h4>
                 <Divider variant="fullWidth" />
                 <Muted>
                   <h4 className={classes.cardCategory}>Username: {userHandle}</h4>
@@ -69,12 +75,7 @@ class ProfileData extends Component {
                   Bio: {bio}
                 </p>
               </CardBody>
-              <CardFooter profile className={classes.justifyContent}>
-                <Chip
-                  label="User Info"
-                  color="secondary"
-                />
-              </CardFooter>
+              <CardFooter profile className={classes.justifyContent}/>
             </Card>
           </GridItem>
           <GridItem xs={4} sm={3} md={3}/>
