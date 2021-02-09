@@ -88,7 +88,6 @@ class UserDeviceData extends Component {
                   label="Matches"
                   color="secondary"
                 /> 
-                <Divider variant="fullWidth" />
                 <ProfileMatches thingid={thingId}/>
               </CardBody>
             </Card>  

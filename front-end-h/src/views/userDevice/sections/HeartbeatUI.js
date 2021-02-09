@@ -7,7 +7,7 @@ import GridItem from "components/Grid/GridItem.js";
 import Skeleton from "components/Loaders/Skeleton.js";
 // componets
 import HeartbeatUIHeader from './HeartbeatUIHeader';
-import HeartbeatUISatatus from './HeartbeatUISatatus';
+import HeartbeatUIStatus from './HeartbeatUIStatus';
 import HeartbeatUIDataSens from './HeartbeatUIDataSens';
 import HeartbeatUIMyProfile from './HeartbeatUIMyProfile';
 import HeartbeatUISearchingMode from './HeartbeatUISearchingMode';
@@ -68,17 +68,22 @@ class HeartbeatUI extends Component {
 								<HeartbeatUIHeader
 									userdevice={userDevice}
 								/>
-                            </GridItem>
+                            </GridItem> 
 							{/* Status Thing */}
                             <GridItem xs={12} sm={12} md={12}>
-								<HeartbeatUISatatus
-									userdeviceid={this.props.userdeviceid}
+								<HeartbeatUIStatus
+                                    active={active}
+                                    thingid={thingId}
+                                    connectionstatus={connectionStatus}
+                                    batterylife={batteryLife}
 								/>
                             </GridItem>
 							{/* Data sens Thing */}
                             <GridItem xs={12} sm={12} md={12}>
 								<HeartbeatUIDataSens
-									userdeviceid={this.props.userdeviceid}
+									createdat={createdAt}
+									colorvalue={colorValue}
+									motorspeed={motorSpeed}
 								/>
                             </GridItem>
 							{/* My profile sens Thing */}

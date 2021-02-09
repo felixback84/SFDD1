@@ -3,59 +3,59 @@ import React, { Component } from 'react'
 import { withStyles } from "@material-ui/core/styles";
 // core components
 import Card from "components/Card/Card.js";
-import CardAvatar from "components/Card/CardAvatar.js";
+import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
-import Muted from "components/Typography/Muted.js";
+import Danger from "components/Typography/Danger.js";
+// icons
+import Schedule from "@material-ui/icons/Schedule";
+import TrendingUp from "@material-ui/icons/TrendingUp";
+// components
+import GoogleMaps from '../components/GoogleMaps'
+import ArraysListBadge from '../components/ArraysListBadge'
 // styles
-import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
+import teamsStyle from "assets/jss/material-kit-pro-react/views/componentsSections/sectionCards.js";
+import marc from "assets/img/faces/marc.jpg";
 const useStyles = teamsStyle;
  
 class CardForDataOfStaticMatches extends Component {
 	render() {
 		const {
 			classes,
-			credentials
+			credentials,
+			coords,
+			thingid,
+			profiletomatch
 		} = this.props
 		return ( 
 			<div>
-				<Card profile>
-					<CardAvatar profile plain>
-						<a href="#pablo" onClick={e => e.preventDefault()}>
-							<img src={credentials.userHandle} alt={credentials.imagUrl} className={classes.img} />
-						</a>
-					</CardAvatar>
+				<Card>
+					<CardHeader>
+						<GoogleMaps coords={coords}/>
+					</CardHeader>
 					<CardBody>
-						<h4 className={classes.cardTitle}>{credentials.companyName}</h4>
-						<Muted>
-							<h4 className={classes.cardCategory}>{credentials.names} {credentials.lastname}</h4>
-						</Muted>
-						<p className={classes.description}>
-							{credentials.bio}
-						</p>
+						<Danger>
+							<h3 className={classes.cardCategory}>
+								<TrendingUp /> {credentials.companyName}
+							</h3>
+						</Danger>
+						{/* profile to */}
+						<ArraysListBadge key={thingid} profiletomatch={profiletomatch}/>
+						<h4 className={classes.cardTitle}>
+							<p>{credentials.bio}</p>
+						</h4>
 					</CardBody>
-					<CardFooter profile className={classes.justifyContent}>
-						<Button
-							href="#pablo"
-							justIcon
-							simple
-							color="facebook"
-							className={classes.btn}
-							onClick={e => e.preventDefault()}
-						> 
-							<i className="fab fa-facebook" />
-						</Button>
-						<Button
-							href="#pablo"
-							justIcon
-							simple
-							color="dribbble"
-							className={classes.btn}
-							onClick={e => e.preventDefault()}
-						>
-							<i className="fab fa-dribbble" />
-						</Button>
+					<CardFooter>
+						<div className={classes.author}>
+							<a href="#pablo" onClick={e => e.preventDefault()}>
+								<img
+									src={credentials.imgUrl}
+									alt={credentials.userHandle}
+									className={classes.avatar}
+								/>
+								<span>{credentials.names} {credentials.lastname}</span>
+							</a>
+						</div>
 					</CardFooter>
 				</Card>
 			</div>

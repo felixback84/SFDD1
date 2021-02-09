@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 // @material-ui/core components
 import { withStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-// core components
-import Card from "components/Card/Card.js";
-import CardAvatar from "components/Card/CardAvatar.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
-// components
-import SwitchButtonToUserDevice from "../components/SwitchButtonToUserDevice"
-// styles
-import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
-const useStyles = teamsStyle;
+    import Divider from '@material-ui/core/Divider';
+    // core components
+    import Card from "components/Card/Card.js";
+    import CardAvatar from "components/Card/CardAvatar.js";
+    import CardBody from "components/Card/CardBody.js";
+    import CardFooter from "components/Card/CardFooter.js";
+    import Button from "components/CustomButtons/Button.js";
+    // components
+    import SwitchButtonToUserDevice from "../components/SwitchButtonToUserDevice"
+    // styles
+    import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
+    const useStyles = teamsStyle;
 
 class HeartbeatUIHeader extends Component {
     render() {
@@ -58,7 +58,6 @@ class HeartbeatUIHeader extends Component {
                         <p className={classes.cardDescription}>
                             {description}
                         </p>
-                        <Divider variant="fullWidth" />
                         <Button round color="warning">
                             ThingId: {thingId}
                         </Button>

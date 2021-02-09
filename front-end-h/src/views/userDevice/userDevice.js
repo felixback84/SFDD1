@@ -28,7 +28,7 @@ class userDevice extends Component {
 		// pick active one
 		const activeOne = userDevices.filter(userDevice => userDevice.active === true);
 		// check if any active device exists
-		if(activeOne == false){
+		if(activeOne === false){
 			// specific component
 			let UINullMarkup = !loading ? (
 				<NullDeviceUI />

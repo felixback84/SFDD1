@@ -391,7 +391,7 @@ async function metersRangeMatch(metersArr,thingId){
         // check ranges
         if(metersArr[i].meters >= 0 && metersArr[i].meters <= 5){
             let colorToThingResponse = {
-                colorValue:{r:1,g:2,b:3}, 
+                colorValue:{r:76,g:175,b:80}, 
                 colorName:"green", 
             }
             console.log("hi from meters range match: 0-5");
@@ -400,7 +400,7 @@ async function metersRangeMatch(metersArr,thingId){
             return
         } else if (metersArr[i].meters >= 5.1 && metersArr[i].meters <= 10){
             let colorToThingResponse = {
-                colorValue:{r:4,g:5,b:6}, 
+                colorValue:{r:255,g:235,b:59}, 
                 colorName:"yellow", 
             }
             console.log("hi from meters range match: 5-10");
@@ -409,7 +409,7 @@ async function metersRangeMatch(metersArr,thingId){
             return
         } else if (metersArr[i].meters >= 10.1 && metersArr[i].meters <= 15){
             let colorToThingResponse = {
-                colorValue:{r:7,g:8,b:9}, 
+                colorValue:{r:244,g:67,b:54}, 
                 colorName:"red", 
             }
             console.log("hi from meters range match: 10-15");
@@ -418,7 +418,7 @@ async function metersRangeMatch(metersArr,thingId){
             return
         } else if (metersArr[i].meters >= 15.1 && metersArr[i].meters <= 20){
             let colorToThingResponse = {
-                colorValue:{r:10,g:11,b:12}, 
+                colorValue:{r:233,g:30,b:99}, 
                 colorName:"fucsia", 
             }
             console.log("hi from meters range match: 15-20");
@@ -427,7 +427,7 @@ async function metersRangeMatch(metersArr,thingId){
             return
         } else if (metersArr[i].meters >= 20.1 && metersArr[i].meters <= 25){
             let colorToThingResponse = {
-                colorValue:{r:13,g:14,b:15}, 
+                colorValue:{r:33,g:150,b:243}, 
                 colorName:"blue", 
             }
             console.log("hi from meters range match: 20-25");
