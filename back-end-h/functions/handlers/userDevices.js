@@ -386,7 +386,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
 }
 
 // to pick wich color message send to the device
-async function metersRangeMatch(metersArr,thingId){
+async function metersRangeMatchColor(metersArr,thingId){
     for(let i = 0; i < metersArr.length; i++){
         // check ranges
         if(metersArr[i].meters >= 0 && metersArr[i].meters <= 5){
@@ -444,7 +444,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
     // func
-    function checkDistance(inWaitAfter){
+    async function checkDistance(inWaitAfter){
         // print
         console.log(`complete args: ${JSON.stringify(inWaitAfter)}`)
         for(let i = 0; i < inWaitAfter.top5Coords.length; i++){
@@ -462,19 +462,39 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
             // push data to mtsBetweenDevices vart
             mtsBetweenDevices.push({
-                meters: distanceInMeters
+                meters: distanceInMeters,
+                thingId: inWaitAfter.top5Coords[i].thingId
             })
         }  
         // sort arr asc
         mtsBetweenDevices.sort((a, b) => {
             return a.meters - b.meters;
         });
-        // db save mts results part
+        // print
         console.log(`Order mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
+        // return results
+        return mtsBetweenDevices
     }  
-    // run it 
-    await checkDistance(dataEnter);
-    await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
+ 
+    // pass mts distance to top5Coords array in doc
+    await checkDistance(dataEnter).then((data)=>{
+        // userDeviceId
+        let userDeviceId = inWait.thingId.split("-").slice(2).toString();
+        // db save mts results part
+        db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('liveDataSets')
+            .doc(inWait.thingId)
+            .update({
+                mtsBetweenDevices:data
+            })
+        })
+        .catch(err => {
+            res.status(500, err);
+        })
+
+    // run it
+    await metersRangeMatchColor(mtsBetweenDevices, dataEnter.thingId);
 }
 
 // to meassure between a specific static devices and dynamic

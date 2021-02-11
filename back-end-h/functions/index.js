@@ -419,7 +419,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
             if(obj.active == 'true'){ 
                 return dbDataFromLiveDataSets
                     .get()    
-                    .then((doc)=>{
+                    .then(async(doc)=>{
                         let dataDB = {
                             thingId:doc.data().thingId,
                             coords:doc.data().coords,
@@ -429,14 +429,14 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         // print
                         console.log(`dataDB: ${JSON.stringify(dataDB)}`);
                         //////////////////////////////////////////////////// GPS MEASSURE MODES /////////////////////////////////////////////////////
-                        // if(console.log(dataDB.searchingMode[0] == "modeOne")){
-                        //     // run it meassure GPS coords for the userDevice and all the matches statics
-                        //     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB); 
-                        // } else if(console.log(dataDB.searchingMode[0] == "modeTwo")){
-                        //     // run it meassure GPS for a specific static device pick by the user
-                        //     detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
-                        // }
-                        detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
+                        if(dataDB.searchingMode[0] === "modeOne"){
+                            // run it meassure GPS coords for the userDevice and all the matches statics
+                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB); 
+                            console.log("say hello to my little friend")
+                        } else if(dataDB.searchingMode[0] === "modeTwo"){
+                            // run it meassure GPS for a specific static device pick by the user
+                            await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
+                        }   
                     })
                     .catch((err) => {
                         console.error(err);
@@ -453,7 +453,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                 .update({
                     ...obj
                 })
-            //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
+            //////////////////////////////////////////////////// GPS LOGIC FOR STATICDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things
             // if(obj.active == 'true'){ 
             //     return dbDataFromLiveDataSets

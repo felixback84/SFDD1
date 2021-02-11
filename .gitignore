@@ -8,6 +8,7 @@ front-end/node_modules
 
 misc/py/venv
 misc/match/node_modules
+misc/wifi-scan/venv
 
 devices/Halo/node_modules
 devices/Hilda/node_modules
