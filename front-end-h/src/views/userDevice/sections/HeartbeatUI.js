@@ -41,6 +41,7 @@ class HeartbeatUI extends Component {
                 batteryLife,
                 colorValue,
                 connectionStatus,
+                mtsBetweenDevices,
                 coords,
                 createdAt,
                 motorSpeed,
@@ -83,9 +84,10 @@ class HeartbeatUI extends Component {
 								<HeartbeatUIDataSens
 									createdat={createdAt}
 									colorvalue={colorValue}
-									motorspeed={motorSpeed}
+                                    motorspeed={motorSpeed}
+                                    mtsbetweendevices={mtsBetweenDevices}
 								/>
-                            </GridItem>
+                            </GridItem> 
 							{/* My profile sens Thing */}
                             <GridItem xs={12} sm={12} md={12}>
 								<HeartbeatUIMyProfile

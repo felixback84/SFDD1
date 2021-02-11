@@ -8,16 +8,14 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Danger from "components/Typography/Danger.js";
 // icons
-import Schedule from "@material-ui/icons/Schedule";
 import TrendingUp from "@material-ui/icons/TrendingUp";
 // components
 import GoogleMaps from '../components/GoogleMaps'
 import ArraysListBadge from '../components/ArraysListBadge'
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/componentsSections/sectionCards.js";
-import marc from "assets/img/faces/marc.jpg";
 const useStyles = teamsStyle;
- 
+
 class CardForDataOfStaticMatches extends Component {
 	render() {
 		const {
@@ -25,11 +23,13 @@ class CardForDataOfStaticMatches extends Component {
 			credentials,
 			coords,
 			thingid,
-			profiletomatch
+			profiletomatch,
+			mtsbetweendevice,
+			key
 		} = this.props
 		return ( 
 			<div>
-				<Card>
+				<Card key={key}>
 					<CardHeader>
 						<GoogleMaps coords={coords}/>
 					</CardHeader>
@@ -41,8 +41,11 @@ class CardForDataOfStaticMatches extends Component {
 						</Danger>
 						{/* profile to */}
 						<ArraysListBadge key={thingid} profiletomatch={profiletomatch}/>
+						{/* bio */}
+						<p>{credentials.bio}</p>
+						{/* mtsBetweenDevices */}
 						<h4 className={classes.cardTitle}>
-							<p>{credentials.bio}</p>
+							{mtsbetweendevice}
 						</h4>
 					</CardBody>
 					<CardFooter>

@@ -14,6 +14,7 @@ const initialState = {
         colorValue:{}, 
         profileToMatch:{}, 
         top5Coords:[], 
+        mtsBetweenDevices:[],
         searchingMode:[]
     },
 };

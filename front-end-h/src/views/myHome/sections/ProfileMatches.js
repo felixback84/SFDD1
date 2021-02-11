@@ -22,30 +22,33 @@ class ProfileMatches extends Component{
 		const{
 			classes,
 			thingLiveDataSets:{
-				top5Coords
+				top5Coords,
+				mtsBetweenDevices
 			}
 		} = this.props
+		
 
 		// map list
-    let listOfMatches = top5Coords.map((top5Coord) => 
-    <div>
-				<div>
-					<div className={classes.container}>
-						<GridContainer>
-							<GridItem xs={12} sm={12} md={12}>
-								{/* card of static */}
-								<CardForDataOfStaticMatches 
-									credentials={top5Coord.userCredentials}
-									coords={top5Coord.coords}
-									profiletomatch={top5Coord.matchDataResults}
-									thingid={top5Coord.thingId}
-								/>
-							</GridItem>
-						</GridContainer> 
-					</div>
+		let listOfMatches = top5Coords.map((top5Coord, i)=>{
+			console.log(mtsBetweenDevices[i])
+			return(
+				<div className={classes.container} key={top5Coord.thingId}>
+					<GridContainer>
+						<GridItem xs={12} sm={12} md={12}>
+							{/* card of static */}
+							<CardForDataOfStaticMatches 
+								key={top5Coord.thingId}
+								credentials={top5Coord.userCredentials}
+								coords={top5Coord.coords}
+								profiletomatch={top5Coord.matchDataResults}
+								thingid={top5Coord.thingId}
+								mtsbetweendevice={mtsBetweenDevices[i].meters}
+							/>
+						</GridItem>
+					</GridContainer> 
 				</div>
-			</div>
-		)
+			) 		
+		})
 		
 		// settings slider
     const settings = {

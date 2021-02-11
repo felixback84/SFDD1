@@ -387,9 +387,16 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
 
 // to pick wich color message send to the device
 async function metersRangeMatchColor(metersArr,thingId){
-    for(let i = 0; i < metersArr.length; i++){
+    // sort arr asc
+    let arrSort = metersArr.sort((a, b) => {
+        return a.meters - b.meters;
+    });
+    // print
+    console.log(`Order now mtsBetweenDevices: ${JSON.stringify(arrSort)}`)
+    // loop
+    for(let i = 0; i < arrSort.length; i++){
         // check ranges
-        if(metersArr[i].meters >= 0 && metersArr[i].meters <= 5){
+        if(arrSort[i].meters >= 0 && arrSort[i].meters <= 5){
             let colorToThingResponse = {
                 colorValue:{r:76,g:175,b:80}, 
                 colorName:"green", 
@@ -398,7 +405,7 @@ async function metersRangeMatchColor(metersArr,thingId){
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
-        } else if (metersArr[i].meters >= 5.1 && metersArr[i].meters <= 10){
+        } else if (arrSort[i].meters >= 5.1 && arrSort[i].meters <= 10){
             let colorToThingResponse = {
                 colorValue:{r:255,g:235,b:59}, 
                 colorName:"yellow", 
@@ -407,7 +414,7 @@ async function metersRangeMatchColor(metersArr,thingId){
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
-        } else if (metersArr[i].meters >= 10.1 && metersArr[i].meters <= 15){
+        } else if (arrSort[i].meters >= 10.1 && arrSort[i].meters <= 15){
             let colorToThingResponse = {
                 colorValue:{r:244,g:67,b:54}, 
                 colorName:"red", 
@@ -416,7 +423,7 @@ async function metersRangeMatchColor(metersArr,thingId){
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
-        } else if (metersArr[i].meters >= 15.1 && metersArr[i].meters <= 20){
+        } else if (arrSort[i].meters >= 15.1 && arrSort[i].meters <= 20){
             let colorToThingResponse = {
                 colorValue:{r:233,g:30,b:99}, 
                 colorName:"fucsia", 
@@ -425,7 +432,7 @@ async function metersRangeMatchColor(metersArr,thingId){
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
-        } else if (metersArr[i].meters >= 20.1 && metersArr[i].meters <= 25){
+        } else if (arrSort[i].meters >= 20.1 && arrSort[i].meters <= 25){
             let colorToThingResponse = {
                 colorValue:{r:33,g:150,b:243}, 
                 colorName:"blue", 
@@ -464,14 +471,10 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             mtsBetweenDevices.push({
                 meters: distanceInMeters,
                 thingId: inWaitAfter.top5Coords[i].thingId
-            })
+            }) 
         }  
-        // sort arr asc
-        mtsBetweenDevices.sort((a, b) => {
-            return a.meters - b.meters;
-        });
         // print
-        console.log(`Order mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
+        console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
         // return results
         return mtsBetweenDevices
     }  
@@ -503,45 +506,42 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async
     let mtsBetweenDevices = [];
     // data from db after message income
     const dataEnter = inWait;
-    // "String value"
-    //if(typeof dataEnter.top5Coords[-1] == "number"){
-        // pick the last item in the arr
-        const index = dataEnter.top5Coords[dataEnter.top5Coords.length - 1];
-        // init meassure
-        console.log(`jo - index:${index}`)
-        async function checkDistance(args){
-            console.log("jo - jo")
-            // logic to make the meassure part
-            let R = 6371; // Radius of the earth in km
-            let dLat = (args.staticDevice.coords.lat - args.userDevice.coords.lat) * Math.PI / 180;  // Javascript functions in radians
-            let dLon = (args.staticDevice.coords.lon - args.userDevice.coords.lon) * Math.PI / 180; 
-            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(args.staticDevice.coords.lat * Math.PI / 180) * Math.cos(args.userDevice.coords.lat* Math.PI / 180) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2); 
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            let d = R * c; // Distance in km
-            let distanceInMeters = d * 1000; // Distance in m
-            // print
-            console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
-            // run it
-            // push data to mtsBetweenDevices vart
-            mtsBetweenDevices.push({
-                meters: distanceInMeters
-            })
-        }
-        // args to pass it
-        const argz = {
-            userDevice:{
-                coords:inWait.coords
-            },
-            staticDevice:{
-                coords:inWait.top5Coords[index].coords
-            }
-        }
+    // pick the last item in the arr
+    const index = dataEnter.indexOfSpecificUserDevice
+    // init meassure
+    console.log(`jo - index:${index}`)
+    async function checkDistance(args){
+        console.log("jo - jo")
+        // logic to make the meassure part
+        let R = 6371; // Radius of the earth in km
+        let dLat = (args.staticDevice.coords.lat - args.userDevice.coords.lat) * Math.PI / 180;  // Javascript functions in radians
+        let dLon = (args.staticDevice.coords.lon - args.userDevice.coords.lon) * Math.PI / 180; 
+        let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(args.staticDevice.coords.lat * Math.PI / 180) * Math.cos(args.userDevice.coords.lat* Math.PI / 180) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        let d = R * c; // Distance in km
+        let distanceInMeters = d * 1000; // Distance in m
+        // print
+        console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
         // run it
-        await checkDistance(argz);
-        await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
-    //}
+        // push data to mtsBetweenDevices var
+        mtsBetweenDevices.push({
+            meters: distanceInMeters
+        })
+    }
+    // args to pass it
+    const argz = {
+        userDevice:{
+            coords:inWait.coords
+        },
+        staticDevice:{
+            coords:inWait.top5Coords[index].coords
+        }
+    }
+    // run it
+    await checkDistance(argz);
+    await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
 }
 
 
@@ -593,7 +593,7 @@ exports.heartbeatPostSearchingMode = (req,res) => {
         }); 
 }
 
-// search and marck a specific static devices to posterior meassure
+// search and mark a specific static devices to posterior meassure
 exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
     const selectProfileToSearchData = req.body;
     // userDeviceId 
@@ -606,7 +606,6 @@ exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
         .collection('liveDataSets')
         .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
         
-    
     // search in array init
     return infoInLiveDataSets
         .get()
@@ -616,7 +615,7 @@ exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
             // print
             console.log(`top5Coords array: ${JSON.stringify(top5Coords)}`);
             // filter the item in the array
-            index = top5Coords.findIndex((element, index) => {
+            index = top5Coords.findIndex((element) => {
                 if (element.thingId === selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch) {
                     return true
                 }
@@ -627,7 +626,7 @@ exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
         .then(()=>{
             return infoInLiveDataSets
                 .update({
-                    top5Coords: admin.firestore.FieldValue.arrayUnion(index),
+                    indexOfSpecificUserDevice: index
                 })
         })
         .catch((err) => {

@@ -52,7 +52,7 @@ class userDevice extends Component {
 							thingid={resultThingId[0]}
 							userdeviceid={resultUserDeviceId[0]}
 						/>
-						) : (
+						) : ( 
 							<UserDeviceSkeleton/>
 						);
 					return(UIHeartbeatMarkup);
