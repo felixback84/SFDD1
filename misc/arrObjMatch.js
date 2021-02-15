@@ -1,11 +1,15 @@
 const arr1 = [
     {
-        thingId: "searchIdiot-staticHeartbeat-AGNz26lv8q4SSWuNWeJL",
-        mts: 12
+        thingId: "lmfstockssss-staticHeartbeat-Q9nEDwKwXgtPpBlRfhb5",
+        mts: 600
     },
     {
         thingId: "worksIdiot-staticHeartbeat-PDd834YOogSxu99axgqw",
         mts: 15
+    },
+    {
+        thingId: "searchIdiot-staticHeartbeat-AGNz26lv8q4SSWuNWeJL",
+        mts: 12
     },
     {
         thingId: "ctoIdiot-staticHeartbeat-9TQ3jPMiKU2GTxr3ywaq",
@@ -19,11 +23,6 @@ const arr1 = [
         thingId: "lmfstock-staticHeartbeat-Q9nEDwKwXgtPpBlRfhb5",
         mts: 50
     },
-    {
-        thingId: "lmfstockssss-staticHeartbeat-Q9nEDwKwXgtPpBlRfhb5",
-        mts: 600
-    },
-
 ]
 
 const arr2 = [
@@ -48,6 +47,13 @@ const arr2 = [
         hi: "5"
     },
 ]
+
+// sort arr asc
+let any = arr1.sort((a, b) => {
+    return a.mts - b.mts;
+})
+
+console.log(any[0].mts)
 
 // function arr(_arr1,_arr2){
 //     let results = []

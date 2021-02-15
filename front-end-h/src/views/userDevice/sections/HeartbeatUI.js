@@ -41,7 +41,6 @@ class HeartbeatUI extends Component {
                 batteryLife,
                 colorValue,
                 connectionStatus,
-                mtsBetweenDevices,
                 coords,
                 createdAt,
                 motorSpeed,
@@ -49,7 +48,8 @@ class HeartbeatUI extends Component {
                 profileToMatch,
                 searchingMode,
                 thingId,
-                top5Coords
+                top5Coords,
+                mtsBetweenDevices
             },
             userDevices1:{
                 loading,
@@ -57,6 +57,19 @@ class HeartbeatUI extends Component {
             }
         } = this.props;
 
+        // underscore
+        let _ = require('underscore');
+        // less distances in mts for matches
+        let resMts = _.min(mtsBetweenDevices, function(o){ 
+                return o.meters; 
+            }
+        )
+        // pick data from the closer match
+        let top5CoordData = top5Coords.filter(top5Coord => {
+            if(_.isEqual(top5Coord.thingId,resMts.thingId)){
+                return top5Coord
+            }    
+        })
         // markup
         let heartbeatUIMarkUp = !loading ? (
             <div>
@@ -85,7 +98,8 @@ class HeartbeatUI extends Component {
 									createdat={createdAt}
 									colorvalue={colorValue}
                                     motorspeed={motorSpeed}
-                                    mtsbetweendevices={mtsBetweenDevices}
+                                    mtsbetweendevices={resMts.meters}
+                                    top5coorddata={top5CoordData}
 								/>
                             </GridItem> 
 							{/* My profile sens Thing */}

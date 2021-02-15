@@ -35,7 +35,7 @@ fs
         // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
         // vars for message income from client UI
         //let active = 'true';
-        let colorValue = {r:0,g:0,b:0};
+        //let colorValue = {r:0,g:0,b:0};
 
         const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
             // for loop
@@ -60,13 +60,13 @@ fs
                             lon: parseFloat(longitude),
                             nameOfPoint: point
                         },
-                        colorValue:colorValue
+                        
                     }
                     // Publish "payload" to the MQTT topic.
                     client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
                     // print
                     console.log('Publishing message:', JSON.stringify(payload));
-                }, x * 15000, x); // we're passing x
+                }, x * 5000, x); // we're passing x
             }    
         }
 

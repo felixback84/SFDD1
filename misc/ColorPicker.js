@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { green, yellow, red, pink, blue } from '@material-ui/core/colors';
 // core components
 import CardBody from "components/Card/CardBody.js";
@@ -27,39 +27,59 @@ const ColorPicker = (props) => {
 	switch (JSON.stringify(props.colorvalue)) {
 		case JSON.stringify(colorsDB.green):
 			// print
-			console.log(`colorValue: color.green`);
+			console.log(`colorValue: colors.green`);
 			return(
-				<CardBody style={{backgroundColor:colors.green}}>
-					{props.content}
-				</CardBody>  
+				<Fragment>
+					
+				</Fragment> 
 			)
 			break;
 		case JSON.stringify(colorsDB.yellow):
 			// print
-			console.log(`colorValue: color.yellow`);
-			return colors.yellow
+			console.log(`colorValue: colors.yellow`);
+			return(
+				<Fragment>
+					<CardBody style={{backgroundColor:colors.yellow}}>
+						{props.content}
+					</CardBody> 
+				</Fragment> 
+			)
 			break;
 		case JSON.stringify(colorsDB.red):
 			// print
-			console.log(`colorValue: color.red`);
-			return colors.red
+			console.log(`colorValue: colors.red`);
+			return(
+				<Fragment>
+					<CardBody style={{backgroundColor:colors.red}}>
+						{props.content}
+					</CardBody> 
+				</Fragment> 
+			)
 			break;
 		case JSON.stringify(colorsDB.pink):
 			// print
-			console.log(`colorValue: color.pink`);
+			console.log(`colorValue: colors.pink`);
 			return(
-				<CardBody style={{backgroundColor:colors.pink}}>
-					{props.content}
-				</CardBody>  
+				<Fragment>
+					<CardBody style={{backgroundColor:colors.pink}}>
+						{props.content}
+					</CardBody>  
+				</Fragment>
 			)
 			break;
 		case JSON.stringify(colorsDB.blue):
 			// print
-			console.log(`colorValue: color.blue`);
-			return colors.blue
+			console.log(`colorValue: colors.blue`);
+			return(
+				<Fragment>
+					<CardBody style={{backgroundColor:colors.blue}}>
+						{props.content}
+					</CardBody>  
+				</Fragment>
+			)
 			break;
 		default:
-			return null;
+			return null
 			break;
 	}
     

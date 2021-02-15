@@ -412,7 +412,6 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     connectionStatus:obj.connectionStatus,
                     batteryLife:obj.batteryLife,
                     coords:obj.coords,
-                    colorValue:obj.colorValue,
                 })
             //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things

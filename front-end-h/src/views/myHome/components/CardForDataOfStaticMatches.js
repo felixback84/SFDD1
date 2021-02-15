@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 // mui stuff
 import { withStyles } from "@material-ui/core/styles";
+import Divider from '@material-ui/core/Divider';
 // core components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -13,8 +14,8 @@ import TrendingUp from "@material-ui/icons/TrendingUp";
 import GoogleMaps from '../components/GoogleMaps'
 import ArraysListBadge from '../components/ArraysListBadge'
 // styles
-import teamsStyle from "assets/jss/material-kit-pro-react/views/componentsSections/sectionCards.js";
-const useStyles = teamsStyle;
+import styles from "assets/jss/material-kit-pro-react/views/componentsSections/sectionCards.js";
+const useStyles = styles;
 
 class CardForDataOfStaticMatches extends Component {
 	render() {

@@ -73,7 +73,7 @@ exports.postInUserDevices = (req, res) => {
 exports.getAllUserDevices = (req, res) => {
     let userDevices = [];
     db
-        .collection('userDevices')
+        .collection('userDevices') 
         .where('userHandle', '==', req.user.userHandle)
         .get()
         .then((data)=> {
@@ -385,6 +385,25 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
         })
 }
 
+// color in db
+async function colorInDb(thingId,colorVal){
+    // userDeviceId
+    let userDeviceId = thingId.split("-").slice(2).toString();
+    // print
+    console.log(`color db func data: ${thingId} - ${colorVal}`)
+    // db save mts results part
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(thingId)
+        .update({
+            colorValue:colorVal
+        })
+        .catch(err => {
+            res.status(500, err);
+        })
+}
+
 // to pick wich color message send to the device
 async function metersRangeMatchColor(metersArr,thingId){
     // sort arr asc
@@ -402,8 +421,10 @@ async function metersRangeMatchColor(metersArr,thingId){
                 colorName:"green", 
             }
             console.log("hi from meters range match: 0-5");
+            // color in db
+            await colorInDb(thingId,colorToThingResponse.colorValue);
             // command to thing
-            sendCommandGPSColor(colorToThingResponse,thingId);
+            await sendCommandGPSColor(colorToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 5.1 && arrSort[i].meters <= 10){
             let colorToThingResponse = {
@@ -411,6 +432,8 @@ async function metersRangeMatchColor(metersArr,thingId){
                 colorName:"yellow", 
             }
             console.log("hi from meters range match: 5-10");
+            // color in db
+            await colorInDb(thingId,colorToThingResponse.colorValue);
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
@@ -420,6 +443,8 @@ async function metersRangeMatchColor(metersArr,thingId){
                 colorName:"red", 
             }
             console.log("hi from meters range match: 10-15");
+            // color in db
+            await colorInDb(thingId,colorToThingResponse.colorValue);
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
@@ -429,6 +454,8 @@ async function metersRangeMatchColor(metersArr,thingId){
                 colorName:"fucsia", 
             }
             console.log("hi from meters range match: 15-20");
+            // color in db
+            await colorInDb(thingId,colorToThingResponse.colorValue);
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
@@ -438,6 +465,8 @@ async function metersRangeMatchColor(metersArr,thingId){
                 colorName:"blue", 
             }
             console.log("hi from meters range match: 20-25");
+            // color in db
+            await colorInDb(thingId,colorToThingResponse.colorValue);
             // command to thing
             sendCommandGPSColor(colorToThingResponse,thingId);
             return
