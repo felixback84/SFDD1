@@ -1,5 +1,9 @@
 // firebase
 const { admin, db } = require('../utilities/admin');
+// thing commands
+const {
+    heartbeatPostToDisablePublishTelemetry
+} = require('./forThingsHeartbeats');
 
 // imports
 const { 
@@ -219,6 +223,41 @@ exports.getInactiveUserDevices = (req, res) => {
         });   
 }
 
+// post coords points from app in userDevice geoCoords collection
+exports.postGeoCoordsUserDeviceApp = (req,res)=>{
+    // geo data in req body
+    let geoData = req.body.geoData
+    // thingId
+    const userDeviceId = geoData.thingId.split("-").slice(2).toString();
+    // counter
+    let counter = 0
+    // db part to save all data in geoCoords
+    db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('geoCoords')
+        .add({
+            nameOfPoint: `coordsFromApp-${counter++}`,
+            createdAt: new Date().toISOString(),
+            coords: new GeoPoint({longitude: geoData.lon, latitude: geoData.lat})
+        })
+        .then(async()=>{
+            // let it know trouhgt a command send to the thing the disable data publish
+            await heartbeatPostToDisablePublishTelemetry(false,geoData.thingId)
+            // add data in liveDataSets in specific field for this to see the user position
+
+            // create a method that extract from liveDataSets and return (dataDB) the data to the funtion to meassure function
+            // run it meassure GPS coords for the userDevice and all the matches statics
+            // await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB); 
+            // same cycle already achieve for the device
+            // look the timestamp in the collection geoCoords or in leveDataSets and check if the time go up some specific ammount of millis
+            // send a command to the thing to starts sending again telemetry
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    
+}
+
 // to make the match between userDevices and staticDevices
 exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     // profile of dynamic
@@ -386,18 +425,19 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
 }
 
 // color in db
-async function colorInDb(thingId,colorVal){
+async function colorAndMotorInDb(thingId,data){
     // userDeviceId
     let userDeviceId = thingId.split("-").slice(2).toString();
     // print
-    console.log(`color db func data: ${thingId} - ${colorVal}`)
+    console.log(`color db func data: ${thingId} - ${data}`)
     // db save mts results part
     db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
         .doc(thingId)
         .update({
-            colorValue:colorVal
+            colorValue:data.colorValue,
+            motorSpeed: data.motorSpeed
         })
         .catch(err => {
             res.status(500, err);
@@ -416,59 +456,64 @@ async function metersRangeMatchColor(metersArr,thingId){
     for(let i = 0; i < arrSort.length; i++){
         // check ranges
         if(arrSort[i].meters >= 0 && arrSort[i].meters <= 5){
-            let colorToThingResponse = {
+            let colorAndMotorValuesToThingResponse = {
                 colorValue:{r:76,g:175,b:80}, 
                 colorName:"green", 
+                motorSpeed: 100
             }
             console.log("hi from meters range match: 0-5");
-            // color in db
-            await colorInDb(thingId,colorToThingResponse.colorValue);
+            // color & motor in db
+            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
             // command to thing
-            await sendCommandGPSColor(colorToThingResponse,thingId);
+            await sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 5.1 && arrSort[i].meters <= 10){
-            let colorToThingResponse = {
+            let colorAndMotorValuesToThingResponse = {
                 colorValue:{r:255,g:235,b:59}, 
                 colorName:"yellow", 
+                motorSpeed: 75
             }
             console.log("hi from meters range match: 5-10");
-            // color in db
-            await colorInDb(thingId,colorToThingResponse.colorValue);
+            // color & motor in db
+            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorToThingResponse,thingId);
+            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 10.1 && arrSort[i].meters <= 15){
-            let colorToThingResponse = {
+            let colorAndMotorValuesToThingResponse = {
                 colorValue:{r:244,g:67,b:54}, 
                 colorName:"red", 
+                motorSpeed: 50
             }
             console.log("hi from meters range match: 10-15");
-            // color in db
-            await colorInDb(thingId,colorToThingResponse.colorValue);
+            // color & motor in db
+            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorToThingResponse,thingId);
+            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 15.1 && arrSort[i].meters <= 20){
-            let colorToThingResponse = {
+            let colorAndMotorValuesToThingResponse = {
                 colorValue:{r:233,g:30,b:99}, 
                 colorName:"fucsia", 
+                motorSpeed: 25
             }
             console.log("hi from meters range match: 15-20");
-            // color in db
-            await colorInDb(thingId,colorToThingResponse.colorValue);
+            // color & motor in db
+            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorToThingResponse,thingId);
+            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 20.1 && arrSort[i].meters <= 25){
-            let colorToThingResponse = {
+            let colorAndMotorValuesToThingResponse = {
                 colorValue:{r:33,g:150,b:243}, 
                 colorName:"blue", 
+                motorSpeed: 5
             }
             console.log("hi from meters range match: 20-25");
-            // color in db
-            await colorInDb(thingId,colorToThingResponse.colorValue);
+            // color & motor in db
+            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorToThingResponse,thingId);
+            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
             return
         }  
     }
@@ -501,7 +546,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
                 meters: distanceInMeters,
                 thingId: inWaitAfter.top5Coords[i].thingId
             }) 
-        }  
+        }   
         // print
         console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
         // return results
@@ -538,9 +583,9 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async
     // pick the last item in the arr
     const index = dataEnter.indexOfSpecificUserDevice
     // init meassure
-    console.log(`jo - index:${index}`)
+    console.log(`index of array to find - index:${index}`)
     async function checkDistance(args){
-        console.log("jo - jo")
+        console.log(`check checkDistance to specific static Vs dynaic`)
         // logic to make the meassure part
         let R = 6371; // Radius of the earth in km
         let dLat = (args.staticDevice.coords.lat - args.userDevice.coords.lat) * Math.PI / 180;  // Javascript functions in radians

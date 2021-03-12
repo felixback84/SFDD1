@@ -1,6 +1,6 @@
 // nodes
 const fs = require('fs');
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');  
 const mqtt = require('mqtt'); 
 const csvParser = require('csv-parser');
 const { parse } = require('querystring');
@@ -33,9 +33,11 @@ fs
     })
     .on('end', () => {
         // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
-        // vars for message income from client UI
-        //let active = 'true';
-        //let colorValue = {r:0,g:0,b:0};
+        // vars for message income from client UI -----> check error in message flow
+        let active = 'true';
+        let colorValue = {r:0,g:0,b:0};
+        let disabledTelemetry = false
+        let motorSpeed = 0
 
         const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
             // for loop
@@ -60,7 +62,6 @@ fs
                             lon: parseFloat(longitude),
                             nameOfPoint: point
                         },
-                        
                     }
                     // Publish "payload" to the MQTT topic.
                     client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
@@ -115,6 +116,7 @@ fs
 
         // Create a client, and connect to the Google MQTT bridge.
         const client = mqtt.connect(connectionArgs);
+
         // Subscribe to the /devices/{device-id}/config topic to receive config updates.
         client.subscribe(MQTT_TOPIC_TO_CONFIG, {qos: 1});
         // Subscribe to the /devices/{device-id}/commands/# topic to receive all commands
@@ -154,6 +156,8 @@ fs
                 // extract data from message incoming of client UI
                 active = messageToObj.active;
                 colorValue = messageToObj.colorValue;
+                motorSpeed = messageToObj.motorSpeed
+                disabledTelemetry = messageToObj.disabledTelemetry
                 // publish messages
                 // publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
             }
@@ -162,7 +166,10 @@ fs
         });
 
         // run it
-        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        if(disabledTelemetry === false){
+            publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        }
+        
     })
 
 

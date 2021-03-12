@@ -1,4 +1,9 @@
 # import libs
+
+import time
+import sys
+import gsm
+
 import machine
 import esp32
 from third_party import string
@@ -21,18 +26,91 @@ sta_if = network.WLAN(network.STA_IF)
 led_pin = machine.Pin(config.device_config['led_pin'], Pin.OUT) #built-in LED pin
 led_pin.value(1)
 
-# function to establish and eval the status of the connection 
+# function to establish and eval the status of the connection ---> wifi
+# def connect():
+
+#     if not sta_if.isconnected():
+
+#         print('connecting to network...')
+#         sta_if.active(True)
+#         sta_if.connect(config.wifi_config['ssid'], config.wifi_config['password'])
+#         while not sta_if.isconnected():
+#             pass
+
+#     print('network config: {}'.format(sta_if.ifconfig()))
+
+# function to establish and eval the status of the connection ---> GSM
 def connect():
+    SIM800L_IP5306_VERSION_20190610 = 0
+    SIM800L_AXP192_VERSION_20200327 = 1
+    SIM800C_AXP192_VERSION_20200609 = 2
+    SIM800L_IP5306_VERSION_20200811 = 3
 
-    if not sta_if.isconnected():
+    # Please change to the version you use here, the default version is IP5306
+    board_type = SIM800C_AXP192_VERSION_20200609
 
-        print('connecting to network...')
-        sta_if.active(True)
-        sta_if.connect(config.wifi_config['ssid'], config.wifi_config['password'])
-        while not sta_if.isconnected():
-            pass
+    # APN credentials (replace with yours)
+    GSM_APN = 'internet.comcel.com.co'  # Your APN
+    GSM_USER = ''  # Your User
+    GSM_PASS = ''  # Your Pass
 
-    print('network config: {}'.format(sta_if.ifconfig()))
+    UART_BAUD = 115200
+
+    # defaule use SIM800L_IP5306_VERSION_20190610
+    MODEM_POWER_PIN = 23
+    MODEM_RST = 5
+    MODEM_PWRKEY_PIN = 4
+    MODEM_TX = 27
+    MODEM_RX = 26
+    LED_PIN = 13
+
+    # if board_type == SIM800C_AXP192_VERSION_20200609:
+    #     LED_PIN = 12
+    #     MODEM_POWER_PIN = 25
+    #     MODEM_RST = 0
+
+        # Power on the GSM module
+    GSM_POWER = machine.Pin(MODEM_POWER_PIN, machine.Pin.OUT)
+    GSM_POWER.value(1)
+
+    LED = machine.Pin(LED_PIN, machine.Pin.OUT)
+    LED.value(1)
+
+    if MODEM_RST > 0:
+        MODEM_RST = machine.Pin(MODEM_RST, machine.Pin.OUT)
+        MODEM_RST.value(1)
+
+    GSM_PWR = machine.Pin(MODEM_PWRKEY_PIN, machine.Pin.OUT)
+    GSM_PWR.value(1)
+    time.sleep_ms(200)
+    GSM_PWR.value(0)
+    time.sleep_ms(1000)
+    GSM_PWR.value(1)
+
+    # Init PPPoS
+    gsm.debug(True)  # Uncomment this to see more logs, investigate issues, etc.
+
+    gsm.start(tx=MODEM_TX, rx=MODEM_RX, apn=GSM_APN,
+            user=GSM_USER, password=GSM_PASS)
+
+    sys.stdout.write('Waiting for AT command response...')
+    for retry in range(20):
+        if gsm.atcmd('AT'):
+            break
+        else:
+            sys.stdout.write('.')
+            time.sleep_ms(5000)
+    else:
+        raise Exception("Modem not responding!")
+    print()
+
+    print("Connecting to GSM...")
+    gsm.connect()
+
+    while gsm.status()[0] != 1:
+        pass
+
+    print('IP:', gsm.ifconfig()[0])
 
 # take care about the time for the messaging ----> i guess
 def set_time():
@@ -79,6 +157,8 @@ def create_jwt(project_id, private_key, algorithm, token_ttl):
 # Epoch_offset is needed because micropython epoch is 2000-1-1 and unix is 1970-1-1. Adding 946684800 (30 years)
 epoch_offset = 946684800  
 
+
+############################################# mine
 # type of message var
 typeMessage = ""
 print("typeMessage - 1: {}".format(typeMessage))

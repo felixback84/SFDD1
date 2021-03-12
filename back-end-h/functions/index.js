@@ -37,6 +37,7 @@ const {
     heartbeatPostSearchingMode,
     postProfileToSearchUserDevices,
     selectStaticDeviceToSearchByUserDevice,
+    postGeoCoordsUserDeviceApp,
     ////////////////////////////////////////////////////////////
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
@@ -116,22 +117,24 @@ app.post('/notifications', FBAuth, markDevicesNotificationsRead);
 ////////////////////////////////////////////////// USERDEVICES ////////////////////////////////////////////////////////
 // *************************** just to test an easily create an userDevice property
 app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
-// get userDevice 
+// get userDevices
 app.get('/userdevices', FBAuth, getAllUserDevices); 
 // get one userDevice 
 app.get('/userdevices/:userDeviceId', FBAuth, getUserDevice);
 // get active userDevices
 app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
-// get inactive userAdventures
+// get inactive userDevices
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
-// post searach mode command in heartbeat things
+// post search mode command in heartbeat things
 app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
-// post profile data in staticHearbeat
+// post profile data to search for userDevice
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
 //  post to selectStaticDeviceToSearch by userDevice
-app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice)
+app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice);
+// post coords points from app in userDevice geoCoords collection
+app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceApp);
 // get top5Coords ------> without use yet
 // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
@@ -148,9 +151,9 @@ app.post('/staticdevices/:staticId/create', FBAuth, postInStaticDevice);
 app.get('/staticdevices', FBAuth, getAllStaticDevices);
 // get specific static device
 app.get('/staticdevices/:staticdevice', FBAuth, getStaticDevice);
-// get active userDevices
+// get active staticDevices
 app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices);
-// get inactive userAdventures
+// get inactive staticDevice
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
 // post coords data in staticHearbeat
 app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
@@ -166,7 +169,7 @@ app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevice
 ////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
 // get all devices
 app.get('/devices', getAllDevices);
-// get one device:pub
+// get one device:public
 app.get('/devices/:deviceId', getDevice);
 // like for device
 app.get('/device/:deviceId/like', FBAuth, likeDevice);
@@ -316,6 +319,15 @@ exports.createUserDeviceInIotCoreAndDocumentInLiveDataCollection = functions.fir
             .catch((err) => {
                 console.error(err);
             });
+        /////////////////////////////////////////////////////////////// create geoCoords doc in collection //////////////////////////////////    
+        db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('geoCoords')
+            .doc(thingId)
+            .catch((err) => {
+                console.error(err);
+            });
+    
     })
 
 // create liveDataSet (staticDevices) doc in liveDataSets collection to trasmit telemetry events to client fot staticDevices
