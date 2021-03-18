@@ -132,9 +132,9 @@ exports.heartbeatPostInactiveCommand = async (req, res) => {
 }   
 
 // let it know trouhgt a command send to the thing the disable data publish
-exports.heartbeatPostToDisablePublishTelemetry = async (stateOfTelemetryDisabled,thingId) => {
+exports.heartbeatPostToDisablePublishTelemetry = async (stateOfTelemetryDisabled,theThingId) => {
     // req data
-    const thingId = thingId;
+    const thingId = theThingId;
     const disabledPublishTelemetry = {disabledTelemetry:stateOfTelemetryDisabled};
     // print
     console.log(disabledPublishTelemetry)
@@ -170,10 +170,56 @@ exports.heartbeatPostToDisablePublishTelemetry = async (stateOfTelemetryDisabled
     try {
         const responses = await iotClient.sendCommandToDevice(request);
         console.log('Sent command: ', responses[0]);
-        res.json(responses[0])
+        //res.json(responses[0])
     } catch (err) {
         console.error('Could not send command:', err);
-        res.json(err)
+        //res.json(err)
+    }
+}  
+
+// let it know trouhgt a command send to the thing the disable data publish
+exports.heartbeatPostToEneablePublishTelemetry = async (stateOfTelemetryDisabled,theThingId) => {
+    // req data
+    const thingId = theThingId;
+    const disabledPublishTelemetry = {disabledTelemetry:stateOfTelemetryDisabled};
+    // print
+    console.log(disabledPublishTelemetry)
+    // to string
+    const string = JSON.stringify(disabledPublishTelemetry);
+    // global vars
+    const cloudRegion = 'us-central1';
+    const deviceId = thingId;
+    const commandMessage = string;
+    const projectId = 'sfdd-d8a16';
+    const registryId = 'Heartbeat';
+    // lib iot core
+    const iot = require('@google-cloud/iot');
+    // client
+    const iotClient = new iot.v1.DeviceManagerClient({
+    // optional auth parameters.
+    }); 
+    // client and path of device
+    const formattedName = iotClient.devicePath(
+        projectId,
+        cloudRegion,
+        registryId,
+        deviceId
+    );
+    // message data
+    const binaryData = Buffer.from(commandMessage);
+    // request
+    const request = {
+        name: formattedName,
+        binaryData: binaryData,
+    };
+
+    try {
+        const responses = await iotClient.sendCommandToDevice(request);
+        console.log('Sent command: ', responses[0]);
+        //res.json(responses[0])
+    } catch (err) {
+        console.error('Could not send command:', err);
+        //res.json(err)
     }
 }  
 

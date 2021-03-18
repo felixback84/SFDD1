@@ -228,7 +228,14 @@ exports.postCoordsStaticDevices = (req, res) => {
         .update(
             { 
                 thingId: objWithCoordsOfStatic.thingId,
-                coords: objWithCoordsOfStatic.coords,
+                coords:{
+                    lat:objWithCoordsOfStatic.coords.lat,
+                    lon:objWithCoordsOfStatic.coords.lon,
+                    hash: geofire.geohashForLocation([
+                            objWithCoordsOfStatic.coords.lat,
+                            objWithCoordsOfStatic.coords.lon
+                        ])
+                }
             }
         )
         .then(() => {

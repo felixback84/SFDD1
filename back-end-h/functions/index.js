@@ -17,6 +17,7 @@ const {
     addUserDetails,
     uploadUserImage,
     getAuthenticatedUser,
+    ///////// notifications
     markDevicesNotificationsRead    
 } = require('./handlers/users');
 
@@ -37,7 +38,7 @@ const {
     heartbeatPostSearchingMode,
     postProfileToSearchUserDevices,
     selectStaticDeviceToSearchByUserDevice,
-    postGeoCoordsUserDeviceApp,
+    postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
     ////////////////////////////////////////////////////////////
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
@@ -134,7 +135,7 @@ app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
 //  post to selectStaticDeviceToSearch by userDevice
 app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice);
 // post coords points from app in userDevice geoCoords collection
-app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceApp);
+app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
 // get top5Coords ------> without use yet
 // app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
 
@@ -327,13 +328,13 @@ exports.createUserDeviceInIotCoreAndDocumentInLiveDataCollection = functions.fir
             .catch((err) => {
                 console.error(err);
             });
-    
     })
 
 // create liveDataSet (staticDevices) doc in liveDataSets collection to trasmit telemetry events to client fot staticDevices
 exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.firestore
     .document('staticDevices/{staticDevicesId}')
     .onCreate((snap) => {
+        
         // grab data from firebase snapshot
         const newStaticDevice = snap.data();
         // doc id
@@ -382,6 +383,8 @@ exports.createStaticDeviceInIotCoreAndDocumentInLiveDataCollection = functions.f
 // detect traffic in topic events and db sync
 exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').onPublish(
     async (message, context) => {
+        // geofire
+        const geofire = require('geofire-common');
         // all data
         let data = message.data;        
         // create a buffer decoding with base64
@@ -423,8 +426,34 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     active:obj.active,
                     connectionStatus:obj.connectionStatus,
                     batteryLife:obj.batteryLife,
-                    coords:obj.coords,
+                    disabledTelemetry:obj.disabledTelemetry,
+                    coords:{
+                        lat:obj.coords.lat,
+                        lon:obj.coords.lon,
+                        hash:geofire.geohashForLocation([obj.coords.lat, obj.coords.lon]),
+                        nameOfPoint:obj.coords.nameOfPoint
+                    },
                 })
+                .then(()=>{
+                     // save data in geoCoords collection
+                    return db
+                        .doc(`/userDevices/${userDeviceIdOrStaticDeviceId}`)
+                        .collection('geoCoords')
+                        .add({
+                            createdAt: new Date().toISOString(),
+                            coords: {
+                                        lat:obj.coords.lat,
+                                        lon:obj.coords.lon, 
+                                        hash:geofire.geohashForLocation([obj.coords.lat,obj.coords.lon]),
+                                        nameOfPoint:obj.coords.nameOfPoint
+                                    } 
+                        })
+                        .catch((err) => {   
+                            console.error(err);
+                        });
+                })
+            
+
             //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things
             if(obj.active == 'true'){ 
@@ -442,11 +471,14 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         //////////////////////////////////////////////////// GPS MEASSURE MODES /////////////////////////////////////////////////////
                         if(dataDB.searchingMode[0] === "modeOne"){
                             // run it meassure GPS coords for the userDevice and all the matches statics
-                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB); 
-                            console.log("say hello to my little friend")
+                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB);
+                            // print 
+                            console.log("say hello to my little friend from thing modeOne")
                         } else if(dataDB.searchingMode[0] === "modeTwo"){
                             // run it meassure GPS for a specific static device pick by the user
                             await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
+                            // print 
+                            console.log("say hello to my little friend from thing modeTwo")
                         }   
                     })
                     .catch((err) => {

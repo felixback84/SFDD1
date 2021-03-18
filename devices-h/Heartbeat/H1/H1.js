@@ -31,43 +31,61 @@ fs
             obj.push(row)
         })
     })
-    .on('end', () => {
-        // ----------------------------------------------------------------------------- PUBLISHING FUNCTION
-        // vars for message income from client UI -----> check error in message flow
-        let active = 'true';
+    .on('end', ()=>{
+        // ----------------------------------------------------------------------------- PUBLISHING PART
+        // vars for message income from client UI 
+        // overall status
+        let active = "true";
+        let disabledTelemetry = false;
+        let connectionStatus = true;
+        let batteryLife = 100;
+        // changes
         let colorValue = {r:0,g:0,b:0};
-        let disabledTelemetry = false
-        let motorSpeed = 0
-
-        const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client) => {
-            // for loop
+        let motorSpeed = undefined;
+        // timeout
+        let timeOut = undefined
+        // publish data
+        const publishAsync = (MQTT_TOPIC_TO_TELEMETRY, client)=>{
+            // for loop 
             for (let x = 0, ln = obj.length; x < ln; x++) {
-                setTimeout(function(y) { 
-                    // print each obj   
-                    console.log(obj[y]);
-                    // vars to fill message
-                    let latitude = obj[y].latitude;
-                    let longitude = obj[y].longitude;
-                    let point = obj[y].nameOfPoint;
-                    // obj with data
-                    let payload = {
-                        thingId: heartbeatThingId,
-                        nameOfDevice: 'Heartbeat',
-                        connectionStatus: true,
-                        batteryLife: 100,
-                        createdAt: new Date().toISOString(),
-                        active: "true",
-                        coords:{
-                            lat: parseFloat(latitude),
-                            lon: parseFloat(longitude),
-                            nameOfPoint: point
-                        },
-                    }
-                    // Publish "payload" to the MQTT topic.
-                    client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
-                    // print
-                    console.log('Publishing message:', JSON.stringify(payload));
-                }, x * 5000, x); // we're passing x
+                // timeout pattern
+                timeOut = x * 5000
+                // check it
+                if(disabledTelemetry === false){
+                    // timeout method
+                    setTimeout((y)=>{ 
+                        // print each obj   
+                        console.log(`coords obj: ${obj[y]}`);
+                        // vars for coords to fill message
+                        let latitude = obj[y].latitude; 
+                        let longitude = obj[y].longitude;
+                        let nameOfPoint = `${obj[y].nameOfPoint} - thing`;
+                        // obj with data
+                        let payload = {
+                            thingId: heartbeatThingId,
+                            nameOfDevice: 'Heartbeat',
+                            connectionStatus,
+                            batteryLife,
+                            createdAt: new Date().toISOString(),
+                            active,
+                            coords:{
+                                lat: parseFloat(latitude),
+                                lon: parseFloat(longitude),
+                                nameOfPoint 
+                            },
+                            disabledTelemetry
+                        }
+                        // run it & check it
+                        if(disabledTelemetry === false){
+                            // Publish "payload" to the MQTT topic.
+                            client.publish(MQTT_TOPIC_TO_TELEMETRY, JSON.stringify(payload), {qos: 1});
+                            // print
+                            console.log('Publishing message:', JSON.stringify(payload));
+                        }
+                    }, timeOut, x); // we're passing x
+                } else if(disabledTelemetry === true){
+                    break
+                }
             }    
         }
 
@@ -128,48 +146,71 @@ fs
 
         // Handle the connection event with iot core
         client.on('connect', success => {
-            console.log('connect');
+            // print
+            console.log('Client connect with IoT Core of GCP');
             if (!success) {
                 console.log('Client not connected...');
             } 
         });
 
-        // Handle the closing connection event
-        client.on('close', () => {
-            console.log('close');
-        });
+        // // Handle the closing connection event
+        // client.on('close', () => {
+        //     // print
+        //     console.log('close client connection');
+        // });
 
         // Handle the error event
-        client.on('error', err => {
-            console.log('error', err);
+        client.on('error', (err) => {
+            // print
+            console.log('error in connection', err);
         });
  
         // Handle the message event 
         client.on('message', (topic, message) => {
             // add and decode the message itself 
             let messageStr = Buffer.from(message, 'base64').toString('ascii');
-            // print message in console
-            console.log(`Message from client WebApp for ${heartbeatThingId} thing ====> ${messageStr}`);
+            // check if exists a message
             if(messageStr){
                 // str to obj
                 let messageToObj = JSON.parse(messageStr);
                 // extract data from message incoming of client UI
-                active = messageToObj.active;
-                colorValue = messageToObj.colorValue;
-                motorSpeed = messageToObj.motorSpeed
-                disabledTelemetry = messageToObj.disabledTelemetry
-                // publish messages
+                if(messageToObj.active){
+                    active = messageToObj.active;
+                } else if(messageToObj.disabledTelemetry){
+                    disabledTelemetry = messageToObj.disabledTelemetry
+                } else if(messageToObj.colorValue && messageToObj.motorSpeed){
+                    colorValue = messageToObj.colorValue;
+                    motorSpeed = messageToObj.motorSpeed
+                }
+                // publish messages when the command arrives
                 // publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
             }
-            // print
-            console.log(messageStr);
+            // print message in console
+            console.log(`Message from client WebApp for ${heartbeatThingId} thing ==> ${messageStr}`);
         });
 
-        // run it
-        if(disabledTelemetry === false){
-            publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
-        }
-        
+        // run it & check it
+        // do {
+        //     publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        // }
+        // while (disabledTelemetry === false);
+
+        // run it & check it
+        // while(console.log(disabledTelemetry === false)){
+        //     if(disabledTelemetry === false){
+        //         publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        //     }
+        // }
+
+        // run it & check it
+        // if(disabledTelemetry === false){
+        //     publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
+        // } else if(disabledTelemetry === true){
+        //     // Handle the closing connection event
+        //     client.end();
+        // } 
+
+        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     })
 
 
