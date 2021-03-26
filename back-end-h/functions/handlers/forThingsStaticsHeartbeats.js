@@ -1,3 +1,5 @@
+const { db } = require('../utilities/admin');
+
 // post active command in staticheartbeat things
 exports.staticHeartbeatPostActiveCommand = async (req, res) => {
     // req data
@@ -45,6 +47,8 @@ exports.staticHeartbeatPostActiveCommand = async (req, res) => {
     }
 }   
 
+///////////////////////////////////////////////////////////////////////////// products cycle
+
 // post inactive command in staticheartbeat things
 exports.staticHeartbeatPostInactiveCommand = async (req, res) => {
     // req data
@@ -90,4 +94,4 @@ exports.staticHeartbeatPostInactiveCommand = async (req, res) => {
         res.json(err)
     }
 }   
- 
+

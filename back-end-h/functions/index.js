@@ -61,7 +61,10 @@ const {
     getActiveStaticDevices,
     getInactiveStaticDevices,
     postCoordsStaticDevices,
-    postProfileToSearchStaticDevices
+    postProfileToSearchStaticDevices,
+    postProductsToStaticDevices,
+    searchStaticDevicesByCategoriesAndTags,
+    postListOfProductsToFind
 } = require('./handlers/staticDevices');
 
     // things staticHeartbeats in general
@@ -160,6 +163,12 @@ app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevi
 app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
 // post profile data in staticHearbeat
 app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
+// post products in statics
+app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
+// search of static devices according to the categories and tags it has
+app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
+// to post list of products to find his positions and owners
+app.post('/staticdevice/postlistofproducts',FBAuth,postListOfProductsToFind)
 
     ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in static heartbeat things

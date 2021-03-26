@@ -272,3 +272,259 @@ exports.postProfileToSearchStaticDevices = (req, res) => {
         });  
 }
 
+// post products in statics
+exports.postProductsToStaticDevices = (req, res) => {
+    // product data var
+    const productData = req.body.productData
+    // obj
+    const productDataToPost = {
+        name:productData.name,
+        tags:productData.tags,
+        category:productData.category,
+        staticDeviceProperty:productData.staticDeviceProperty,
+        description:productData.description,
+        familyOfDevices:productData.familyOfDevices,
+        imgUrl:productData.imgUrl,
+        price:productData.price,
+        createdAt:new Date().toISOString(),
+    }
+    // db part
+    db
+        .collection('products')
+        .add(productDataToPost)
+        .then(()=>{
+            return res.json(productDataToPost);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        }); 
+}
+
+// search of static devices according to the categories and tags it has
+exports.searchStaticDevicesByCategoriesAndTags = (req, res) => {
+    // var to hold results
+    let resultsOfProductsInDB = []
+    // db part
+    db
+        .collection('products')
+        .where('category','==',req.params.category)
+        .where('tags','==',req.params.tags)
+        .get()
+        .then((data)=>{
+            // chack if exists data
+            if (data.empty) {
+                return res.status(400).json({ error: 'This product dosen´t exists' });
+            } else {
+                data.forEach((doc)=>{
+                    // push data to an array
+                    resultsOfProductsInDB.push({
+                        name:doc.data().name,
+                        tags:doc.data().tags,
+                        category:doc.data().category,
+                        staticDeviceProperty:doc.data().staticDeviceProperty,
+                        description:doc.data().description,
+                        familyOfDevices:doc.data().familyOfDevices,
+                        imgUrl:doc.data().imgUrl,
+                        price:doc.data().price,
+                        createdAt:doc.data().createdAt,
+                        productId:doc.id
+                    })
+                })
+                // res
+                return res.json(resultsOfProductsInDB);
+            }
+        })
+        .catch(err => {
+            res.status(500, err);
+        })
+}
+
+// post list of products and
+exports.postListOfProductsToFind = async (req, res) => {
+    // receive list of products
+    let listOfProducts = req.body.listOfProducts
+    // var to hold results for products
+    let resultsOfMatchOfProducts = []
+    // var to hold coords of statics
+    let resultOfCoords = []
+    // to hold the order obj
+    let arrWithCoordsKeysInOrder = []
+    // var to hold all
+    let allData = []
+    // userDeviceId
+    let userDeviceId = req.body.userDeviceId
+    // find those products on the collection 
+    const toMakelistOfProducts = async () => {
+        for(let i = 0; i < listOfProducts.length; i++){
+            // dp liveDataSets part
+            db
+                .doc(`/products/${listOfProducts[i].productsId}`)
+                .get()
+                .then((doc)=>{
+                    resultsOfMatchOfProducts.push({
+                        name:doc.data().name,
+                        tags:doc.data().tags,
+                        category:doc.data().category,
+                        staticDeviceProperty:doc.data().staticDeviceProperty,
+                        description:doc.data().description,
+                        familyOfDevices:doc.data().familyOfDevices,
+                        imgUrl:doc.data().imgUrl,
+                        price:doc.data().price,
+                        createdAt:doc.data().createdAt,
+                        productId:doc.id
+                    })
+                    // print
+                    // console.log(`resultsOfMatchOfProducts:${resultsOfMatchOfProducts}`)  
+                    return resultsOfMatchOfProducts
+                })
+                .catch(err => {
+                    res.status(500, err);
+                })
+        }     
+    }   
+    // run it
+    await toMakelistOfProducts()
+    
+    // coords of vendors
+    const toMakelistOfCoords = async () => {
+        // arr for promise
+        const searchPromises = [];
+        // loop
+        for(let i = 0; i < listOfProducts.length; i++){
+            // staticDeviceId means id of property
+            const staticDeviceId = listOfProducts[i].staticDeviceProperty.split("-").slice(2).toString();
+            // dp liveDataSets part
+            let searchPromise = db
+                .doc(`/staticDevices/${staticDeviceId}`)
+                .collection('liveDataSets')
+                .doc(listOfProducts[i].staticDeviceProperty)
+                .get()
+                .then((doc)=>{
+                    // make a list in db with the coincidences like top5Coords
+                    resultOfCoords.push({
+                        coords:doc.data().coords,
+                        thingId:doc.data().thingId
+                    })
+                })
+                .catch(err => {
+                    res.status(500, err);
+                })
+                // push promise list
+                searchPromises.push(searchPromise);
+        }
+        // promise
+        Promise
+            .all(searchPromises)
+            .then(()=>{
+                // print
+                console.log(`resultOfCoords:${JSON.stringify(resultOfCoords)}`)
+                // return raw data from db & map the unorder obj
+                return resultOfCoords
+            })
+            .then(async(data)=>{
+                // map the unorder obj
+                data.map((resultOfCoord)=>{
+                    // vars
+                    let sortedCoordsKeys = {} 
+                    let keysOfCoords = []
+                    // loop to extract keys
+                    for (key in resultOfCoord.coords) {
+                        if (resultOfCoord.coords.hasOwnProperty(key)) {
+                            keysOfCoords.push(key);
+                        }
+                    }
+                    // print
+                    console.log(`sort a:${keysOfCoords.sort()}`)
+                    // loop to make obj in order
+                    for (key = 0; key < keysOfCoords.length; key++) {
+                        sortedCoordsKeys[keysOfCoords[key]] = resultOfCoord.coords[keysOfCoords[key]];
+                    }
+                    // to push the the final list
+                    arrWithCoordsKeysInOrder.push({
+                        coords:sortedCoordsKeys,
+                        thingId:resultOfCoord.thingId
+                    })
+                    // return sorted obj
+                    return arrWithCoordsKeysInOrder;
+                })
+                // print
+                console.log(`arrWithCoordsKeysInOrder:${JSON.stringify(arrWithCoordsKeysInOrder)}`)
+            })
+            .then(()=>{
+                //to eliminate duplicates of coords
+                const removeDuplicates = async (arr) => {
+                    // print
+                    // console.log(`hi from duplicate: ${JSON.stringify(arr)}`)
+                    // to string
+                    const jsonObject = arr.map(JSON.stringify);
+                    // find repeats
+                    const uniqueSet = new Set(jsonObject);
+                    // write arr
+                    const uniqueArray = Array.from(uniqueSet).map(JSON.parse); 
+                    //print
+                    console.log(`uniqueArray:${JSON.stringify(uniqueArray)}`)   
+                    // return arr
+                    return uniqueArray
+                }
+                //run it & hold it to remove duplicates in coords
+                let listUniqueObjCoords = removeDuplicates(arrWithCoordsKeysInOrder)
+                // return result
+                return listUniqueObjCoords
+            })    
+            .then((data)=>{
+                // to find equals and create obj with the specific data
+                const findEqual = (resultOfCoord) => {
+                    resultsOfMatchOfProducts.forEach((item) => {
+                        if(resultOfCoord.thingId === item.staticDeviceProperty){
+                            allData.push({
+                                coords:resultOfCoord.coords,
+                                products:item,
+                                thingId:resultOfCoord.thingId
+                            })
+                            return allData
+                        }
+                    })    
+                    // print
+                    console.log(`allData:${JSON.stringify(allData)}`)
+                }
+                // run find method to establish a relation between the two arrays (coords & products)
+                data.find(findEqual)
+            }) 
+            .then(()=>{
+                // underscore lib
+                let _ = require('underscore');
+                // make groups
+                let groups = _.groupBy(allData,"thingId")
+                // print
+                console.log(`groups:${JSON.stringify(groups)}`)
+                // return
+                return groups
+            })
+            .then((data)=>{
+                // db part to save data
+                db
+                    .doc(`/userDevices/${userDeviceId}`)
+                    .collection('liveDataSets')
+                    .doc('CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ')
+                    .update({
+                        top5Products:data
+                    })
+                    .catch(err => {
+                        res.status(500, err);
+                    })
+            })
+            .catch(err => {
+                res.status(500, err);
+            })
+    }
+    // run it to begin
+    await toMakelistOfCoords()
+}
+
+// method to make the meassuremnt with the list of coincidence in products
+exports.meassureOfMatchesInProducts = async (req, res) => {
+    console.log("hi")
+}
+
+

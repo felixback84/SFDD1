@@ -584,7 +584,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async
     await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
 }
 
-// post coords points from app in userDevice geoCoords collection
+// post coords points from app in userDevice geoCoords collection and liveDataSets and many more
 exports.postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus = (req,res)=>{
     // geofire
     const geofire = require('geofire-common');
