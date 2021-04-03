@@ -1,5 +1,5 @@
-const admin = require('firebase-admin');
-admin.initializeApp();
+let admin = require("firebase-admin");
+admin.initializeApp()
 const db = admin.firestore()
 // firebase db
 const realDB = admin.database();

@@ -42,7 +42,10 @@ const {
     ////////////////////////////////////////////////////////////
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
-    detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice
+    detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice,
+    postListOfProductsToFind,
+    meassureOfMatchesInProducts,
+    findProductsInSpecificMtsRange
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
@@ -64,7 +67,6 @@ const {
     postProfileToSearchStaticDevices,
     postProductsToStaticDevices,
     searchStaticDevicesByCategoriesAndTags,
-    postListOfProductsToFind
 } = require('./handlers/staticDevices');
 
     // things staticHeartbeats in general
@@ -135,12 +137,14 @@ app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenU
 app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
 // post profile data to search for userDevice
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
-//  post to selectStaticDeviceToSearch by userDevice
+// post to selectStaticDeviceToSearch by userDevice
 app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice);
 // post coords points from app in userDevice geoCoords collection
 app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
-// get top5Coords ------> without use yet
-// app.get('/userdevice/heartbeat/:thingId/top5Coords',FBAuth, heartbeatTop5CoordsData);
+// to post list of products to find his positions and owners
+app.post('/userdevice/postlistofproducts',FBAuth,postListOfProductsToFind)
+// to post and find wich statics are close to me by geohash
+app.post('/userdevice/findproductsinspecificmtsrange',FBAuth,findProductsInSpecificMtsRange)
 
     ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things
@@ -165,10 +169,8 @@ app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
 app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
 // post products in statics
 app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
-// search of static devices according to the categories and tags it has
+// search of static devices products according to the categories and tags it has
 app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
-// to post list of products to find his positions and owners
-app.post('/staticdevice/postlistofproducts',FBAuth,postListOfProductsToFind)
 
     ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in static heartbeat things
@@ -418,7 +420,6 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
         // print 
         console.log(`nameOfDevice: ${nameOfDevice}`);
         console.log(`userDeviceIdOrStaticDeviceId: ${userDeviceIdOrStaticDeviceId}`);
-
         // check the type of device logic
         if(nameOfDevice == "Heartbeat"){
             //db part
@@ -451,44 +452,60 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         .add({
                             createdAt: new Date().toISOString(),
                             coords: {
-                                        lat:obj.coords.lat,
-                                        lon:obj.coords.lon, 
-                                        hash:geofire.geohashForLocation([obj.coords.lat,obj.coords.lon]),
-                                        nameOfPoint:obj.coords.nameOfPoint
-                                    } 
+                                lat:obj.coords.lat,
+                                lon:obj.coords.lon, 
+                                hash:geofire.geohashForLocation([obj.coords.lat,obj.coords.lon]),
+                                nameOfPoint:obj.coords.nameOfPoint
+                            } 
                         })
                         .catch((err) => {   
                             console.error(err);
                         });
                 })
             
-
             //////////////////////////////////////////////////// GPS LOGIC FOR USERDEVICES //////////////////////////////////////////////////////
             // init process to make the meassures of the gps coords in heartbeat things
             if(obj.active == 'true'){ 
                 return dbDataFromLiveDataSets
                     .get()    
                     .then(async(doc)=>{
-                        let dataDB = {
-                            thingId:doc.data().thingId,
-                            coords:doc.data().coords,
-                            top5Coords:doc.data().top5Coords,
-                            searchingMode:doc.data().searchingMode
-                        }
+                        // conditions
+                        let searchingMode = doc.data().searchingMode
+                        let data = doc.data()
                         // print
-                        console.log(`dataDB: ${JSON.stringify(dataDB)}`);
+                        console.log(
+                            `searchingMode & dataToMeassure: 
+                            ${JSON.stringify(searchingMode)} - 
+                            ${JSON.stringify(data)}`
+                        );
                         //////////////////////////////////////////////////// GPS MEASSURE MODES /////////////////////////////////////////////////////
-                        if(dataDB.searchingMode[0] === "modeOne"){
+                        // import
+                        const {
+                            objFromDBToMeassureProcess
+                        } = require('./handlers/utilsForThings');
+                        // picker mode
+                        if(searchingMode[0] === "modeOne"){
                             // run it meassure GPS coords for the userDevice and all the matches statics
-                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(dataDB);
+                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
+                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                            );
                             // print 
                             console.log("say hello to my little friend from thing modeOne")
-                        } else if(dataDB.searchingMode[0] === "modeTwo"){
+                        } else if(searchingMode[0] === "modeTwo"){
                             // run it meassure GPS for a specific static device pick by the user
-                            await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(dataDB);
+                            await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(
+                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                            );
                             // print 
                             console.log("say hello to my little friend from thing modeTwo")
-                        }   
+                        }  else if(searchingMode[0] === "modeThree"){
+                            // run it meassure GPS for a specific static device pick by the user
+                            await meassureOfMatchesInProducts(
+                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                            );
+                            // print 
+                            console.log("say hello to my little friend from thing modeThree")
+                        }
                     })
                     .catch((err) => {
                         console.error(err);

@@ -1,7 +1,8 @@
 back-end/functions/node_modules
 back-end-h/functions/node_modules
 back-end-h/node_modules
-back-end-h/sfdd-d8a16-e34f64f5d52f.json
+back-end-h/.env
+back-end-h/firebaseEnv.txt
 back-end/
 
 front-end/

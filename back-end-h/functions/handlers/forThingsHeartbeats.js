@@ -52,7 +52,7 @@ exports.heartbeatPostActiveCommand = async (req, res) => {
     const cloudRegion = 'us-central1';
     const deviceId = thingId;
     const commandMessage = string;
-    const projectId = 'sfdd-d8a16';
+    const projectId = 'sfdd-d8a16'; 
     const registryId = 'Heartbeat';
     // lib iot core
     const iot = require('@google-cloud/iot');
