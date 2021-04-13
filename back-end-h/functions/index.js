@@ -45,7 +45,8 @@ const {
     detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice,
     postListOfProductsToFind,
     meassureOfMatchesInProducts,
-    findProductsInSpecificMtsRange
+    findStaticsInSpecificMtsRange,
+    findStaticsProductsInSpecificMtsRange
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
@@ -144,7 +145,9 @@ app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTel
 // to post list of products to find his positions and owners
 app.post('/userdevice/postlistofproducts',FBAuth,postListOfProductsToFind)
 // to post and find wich statics are close to me by geohash
-app.post('/userdevice/findproductsinspecificmtsrange',FBAuth,findProductsInSpecificMtsRange)
+app.get('/userdevice/findstatics/lat/:lat/lng/:lng/mts/:mts',findStaticsInSpecificMtsRange)
+// to post and find wich statics are close to me by geohash
+app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
     ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things

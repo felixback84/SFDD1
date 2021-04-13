@@ -216,6 +216,8 @@ exports.getInactiveStaticDevices = (req, res) => {
 ///////////////////////////////////////////// SETTINGS TO THING FROM UX  //////////////////////////////////////////////////
 // pass data of statics users means coords 
 exports.postCoordsStaticDevices = (req, res) => {
+    // geofire
+    const geofire = require('geofire-common');
     // profile of dynamic
     let objWithCoordsOfStatic = req.body.objWithCoordsOfStatic;
     // db part
@@ -276,6 +278,8 @@ exports.postProfileToSearchStaticDevices = (req, res) => {
 exports.postProductsToStaticDevices = (req, res) => {
     // product data var
     const productData = req.body.productData
+    // geofire
+    const geofire = require('geofire-common');
     // obj
     const productDataToPost = {
         name:productData.name,
@@ -287,6 +291,7 @@ exports.postProductsToStaticDevices = (req, res) => {
         imgUrl:productData.imgUrl,
         price:productData.price,
         createdAt:new Date().toISOString(),
+        geoHash:geofire.geohashForLocation([productData.coords.lat,productData.coords.lon]),
     }
     // db part
     db
