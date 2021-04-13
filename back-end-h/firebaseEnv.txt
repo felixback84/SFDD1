@@ -1,2 +1,0 @@
-firebase functions:config:set payu.apikey.key="4Vj8eK4rloUd272L48hsrarnUA" payu.apikey.id="API_KEY" payu.apilogin.key="pRRXKOl8ikMmt9u" payu.apilogin.id="API_LOGIN" payu.accountid.key="512321" payu.accountid.id="ACCOUNT_ID"
-
