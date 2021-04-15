@@ -30,7 +30,7 @@ class ProfileMatches extends Component{
 
 		// map list
 		let listOfMatches = top5Coords.map((top5Coord, i)=>{
-			console.log(mtsBetweenDevices[i])
+			//console.log(mtsBetweenDevices[i])
 			return(
 				<div className={classes.container} key={top5Coord.thingId}>
 					<GridContainer>

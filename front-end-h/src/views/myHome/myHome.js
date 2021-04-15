@@ -10,6 +10,7 @@ import Skeleton from "components/Loaders/Skeleton.js";
 import ProfileData from "./sections/ProfileData";
 import UserDeviceData from "./sections/UserDeviceData";
 import LiveDataSetsOverview from "./sections/LiveDataSetsOverview";
+import ProductsData from "./sections/ProductsData"
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
@@ -43,8 +44,12 @@ class myHome extends Component {
         <GridItem xs={12} sm={12} md={6}>
           <UserDeviceData userdevice={userDevice} />
         </GridItem> 
+        {/* products relevant data */}
+        <GridItem xs={12} sm={12} md={12}>
+          <ProductsData/>
+        </GridItem> 
       </Fragment> 
-    );  
+    );   
     
     // markup of my home
     let myHome = !loading ? (

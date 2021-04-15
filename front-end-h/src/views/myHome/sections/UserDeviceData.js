@@ -59,7 +59,7 @@ class UserDeviceData extends Component {
                 <Chip
                   label="Property Info"
                   color="secondary"
-                />
+                /> 
                 {/* switch button */}
                 <Divider variant="fullWidth" />
                 <SwitchButtonToUserDevice 

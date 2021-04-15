@@ -68,7 +68,7 @@ class LiveDataSetsOverview extends Component {
         connectionStatus,
         batteryLife
       }
-    } = this.props;
+    } = this.props; 
 
     // dayjs
     dayjs.extend(relativeTime);
