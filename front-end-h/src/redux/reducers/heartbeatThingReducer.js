@@ -2,6 +2,7 @@
 import {
     LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
     GET_EVENTS_FROM_HEARTBEAT_THING,
+    GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     //POST_INACTIVE_COMMAND_HEARTBEAT_THING 
 } from '../types';
@@ -17,8 +18,9 @@ const initialState = {
         top5Products:{},
         mtsBetweenDevices:[], 
         mtsBetweenDevicesToProducts:[],
-        searchingMode:[]
+        searchingMode:[],
     },
+    top5ProductsAndMtsBetweenDevicesToProducts:[],
 };
 
 // function to determine the type of action to set state
@@ -34,7 +36,14 @@ export default function(state = initialState, action){
             return{
                 ...state,
                 thingLiveDataSets: action.payload,
+                loading: false,
+                //load: true
             };
+        case GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS:
+            return{
+                ...state,
+                top5ProductsAndMtsBetweenDevicesToProducts: action.payload
+            }    
         // case POST_ACTIVE_COMMAND_HEARTBEAT_THING:
         //     return{
         //         thing:{

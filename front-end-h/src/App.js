@@ -16,7 +16,7 @@ import vlog from './views/vlog';
 import myHome from './views/myHome/myHome';
 import devices from './views/store/devices';
 import userDevice from './views/userDevice/userDevice'; 
-import graphs from './views/userDevice/graphs';
+import graphs from './views/userDevice/maps/graphs';
 import dataSets from './views/userDevice/dataSets';
 import profileDetails from './views/profile/profileDetails';
 import addCart from './views/profile/addCart';

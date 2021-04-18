@@ -13,7 +13,7 @@ import { getUserDevices } from '../../redux/actions/userDevicesActions';
 class userDevice extends Component {
 
 	componentWillMount(){
-		this.props.dispatch(getUserDevices());
+		this.props.getUserDevices();
 	}
 
 	render(){
@@ -26,9 +26,9 @@ class userDevice extends Component {
 		// device ids
 		const HEARTBEAT = 'AdPadmSiw6GnVggUAj51';
 		// pick active one
-		const activeOne = userDevices.filter(userDevice => userDevice.active === true);
+		const activeOne = userDevices.filter(userDevice => userDevice.active === "true");
 		// check if any active device exists
-		if(activeOne === false){
+		if(activeOne === "false"){
 			// specific component
 			let UINullMarkup = !loading ? (
 				<NullDeviceUI />
@@ -45,7 +45,7 @@ class userDevice extends Component {
 			console.log(`Result of active device: ${resultDeviceId} - ${resultThingId} - ${resultUserDeviceId}`)
 			// pick UI
 			switch(resultDeviceId[0]){
-				case HEARTBEAT:    
+				case HEARTBEAT:     
 					// specific component
 					let UIHeartbeatMarkup = !loading ? (
 						<HeartbeatUI 
@@ -69,6 +69,6 @@ const mapStateToProps = (state) => ({
 })
 
 //export default Device;
-export default connect(mapStateToProps)(userDevice);
+export default connect(mapStateToProps,{getUserDevices})(userDevice);
 
 

@@ -12,58 +12,38 @@ import CardFooter from "components/Card/CardFooter.js";
 import Tooltip from "@material-ui/core/Tooltip";
 // @material-ui/icons
 import Favorite from "@material-ui/icons/Favorite";
+// Redux stuff
+import { connect } from 'react-redux';
 
 // dayjs
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 // cards
-export default function ListsItems(props){
-	// vars to hold props
-	let classes = props.classes
-    let top5Products = props.top5products
-    let mtsBetweenDevicesToProducts = props.mtsbetweendevicestoproducts
-	// print
-	console.log(`classes & top5Products: ${classes} - ${JSON.stringify(top5Products)}`)
+class ListsItems extends Component {
 
-	// dayjs
-	dayjs.extend(relativeTime);
+    render(){
+        
+        // dayjs
+        dayjs.extend(relativeTime);
 
-    // product items list
-    let itemJSx = []
+        // redux state
+        const {
+            classes,
+            top5ProductsAndMtsBetweenDevicesToProducts
+        } = this.props
 
-	// loops
-	for(let items in top5Products){
-		// cheker
-		if(top5Products.hasOwnProperty(items)){
-			// print
-			console.log(`items:${items}`)
-            // map products
-			top5Products[items].map((item)=>{
-                //if(id === item.thingId){
-                    // print
-                    console.log(`item:${JSON.stringify(item)}`)
-                    // push
-                    itemJSx.push(
-                        item
-                    )
-                //}
-			})
-		}
-    }
-    
-    // match id
-    itemJSx.map(JSx => {
-        mtsBetweenDevicesToProducts.map((mtsBetweenDevicesToProduct)=>{
-            let mts = mtsBetweenDevicesToProduct.meters
-            let id = mtsBetweenDevicesToProduct.thingId
+        // var for cards
+        let nodesList = []
 
-            if(JSx.thingId == id){
+        // map
+        top5ProductsAndMtsBetweenDevicesToProducts.map((arr)=>{
+            nodesList.push(
                 <GridItem sm={6} md={3}>
                     <Card product>
                         <CardHeader image>
                             <a href="#pablo">
-                                <img src={item.products.imgUrl} alt={item.thingId} />
+                                <img src={arr.products.imgUrl} alt={arr.thingId} />
                             </a>
                         </CardHeader>
                         <CardBody>
@@ -73,16 +53,16 @@ export default function ListsItems(props){
                                     classes.textRose
                                 )}
                             >
-                                {mts} mts
+                                {arr.meters} mts
                             </h6>
-                            <h4 className={classes.cardTitle}>{item.products.name}</h4>
+                            <h4 className={classes.cardTitle}>{arr.products.name}</h4>
                             <div className={classes.cardDescription}>
-                                {item.products.description}
+                                {arr.products.description}
                             </div>
                         </CardBody>
                         <CardFooter className={classes.justifyContentBetween}>
                             <div className={classes.price}>
-                                <h4>$ {item.products.price}</h4>
+                                <h4>$ {arr.products.price}</h4>
                             </div>
                             <div className={classes.stats}>
                                 <Tooltip
@@ -99,16 +79,24 @@ export default function ListsItems(props){
                         </CardFooter>
                     </Card>
                 </GridItem>
-            }
-        }) 
-    })
+            )
+        })
 
-    // return
-    return(
-        <Fragment>	
-            <GridContainer>
-                {itemJSx}
-            </GridContainer>
-        </Fragment>
-    )
+        // return
+        return(
+            <Fragment>	
+                <GridContainer>
+                    {nodesList}
+                </GridContainer>
+            </Fragment>
+        )
+    }
 }
+
+// connect to global state in redux
+const mapStateToProps = (state) => ({
+    //thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
+    top5ProductsAndMtsBetweenDevicesToProducts: state.heartbeatThing1.top5ProductsAndMtsBetweenDevicesToProducts
+});
+
+export default connect(mapStateToProps)(ListsItems);

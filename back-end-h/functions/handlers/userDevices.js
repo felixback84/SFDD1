@@ -780,7 +780,7 @@ exports.postListOfProductsToFind = async (req, res) => {
                 db
                     .doc(`/userDevices/${userDeviceId}`)
                     .collection('liveDataSets')
-                    .doc('CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ')
+                    .doc('CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ')////////////////////////// check for dynamic thingid
                     .update({
                         top5Products:data
                     })

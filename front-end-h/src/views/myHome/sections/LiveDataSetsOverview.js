@@ -36,7 +36,6 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { heartbeatThingSyncDataWithLiveDB } from '../../../redux/actions/heartbeatUIActions';
 
 // styles
 import teamsStyle from "assets/jss/material-kit-pro-react/views/sectionsSections/teamsStyle.js";
@@ -44,11 +43,6 @@ const useStyles = teamsStyle;
 
 class LiveDataSetsOverview extends Component {
 
-  //redux action
-  componentWillMount(){
-    const thingId = this.props.thingid;
-    this.props.heartbeatThingSyncDataWithLiveDB(thingId);
-  } 
 
   render(){
 
@@ -210,26 +204,24 @@ class LiveDataSetsOverview extends Component {
 
                 {/* cooords */}
                 {/* title */}
-                <h4 className={classes.cardCategory}>Last know position:</h4>
+                {/* <h4 className={classes.cardCategory}>Last know position:</h4> */}
                 {/* name point */}
-                <Badge color="primary">
+                {/* <Badge color="primary">
                   {`Point name: ${coords.nameOfPoint}`}
-                </Badge>  
+                </Badge>   */}
                 {/* lat */}
-                <Badge color="info">
+                {/* <Badge color="info">
                   {`Latitude: ${coords.lat}`}
-                </Badge> 
+                </Badge>  */}
                 {/* lon */}
-                <Badge color="rose">
+                {/* <Badge color="rose">
                   {`Longitude: ${coords.lon}`}
-                </Badge> 
+                </Badge>  */}
                 {/* Google Maps */}
-                <GoogleMaps coords={coords}/>
+                {/* <GoogleMaps coords={coords}/> */}
               </CardBody>
               {/* footer */}
-              <CardFooter profile className={classes.justifyContent}>
-                
-              </CardFooter>
+              <CardFooter profile className={classes.justifyContent}/>
             </Card>
           </GridItem>
         </GridContainer>
@@ -243,4 +235,4 @@ const mapStateToProps = (state) => ({
   thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets
 });
 
-export default connect(mapStateToProps,{heartbeatThingSyncDataWithLiveDB})(withStyles(useStyles)(LiveDataSetsOverview));
+export default connect(mapStateToProps)(withStyles(useStyles)(LiveDataSetsOverview));
