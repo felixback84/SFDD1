@@ -104,6 +104,7 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
 // to make the object that pass through the meassure function
 exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
     if(mode === "modeOne"){
+        // to selected and match with tags             
         // list with statics
         let top5Coords = []
         // db part
@@ -130,6 +131,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
         }
 
     } else if(mode === "modeTwo"){
+        // to specific staticDevice (vendors)
         // db part
         const tagsRef = db
             .doc(`/userDevices/${userDeviceId}`)
@@ -144,6 +146,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             staticDeviceCoords:tagsRef,
         }
     } else if(mode === "modeThree"){
+        // to selected products
         // list with statics
         let top5Products = []
         // db part
@@ -166,6 +169,21 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             coords:doc.coords,
             // arr
             top5Products:top5Products,
+        }
+    } else if(mode === "modeFour"){
+        // to specific product
+        // db part
+        const tagsRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Products')
+            .doc(doc.idOfSpecificStaticDevice)
+            .get('coords')
+
+        return {
+            thingId:doc.thingId,
+            coords:doc.coords,
+            docId:doc.idOfSpecificProduct,
+            staticDeviceCoords:tagsRef,
         }
     }
 }

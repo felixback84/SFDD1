@@ -38,15 +38,19 @@ const {
     heartbeatPostSearchingMode,
     postProfileToSearchUserDevices,
     selectStaticDeviceToSearchByUserDevice,
+    selectProductOfStaticDeviceToSearchByUserDevice,
     postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
-    ////////////////////////////////////////////////////////////
+    postListOfProductsToFind,
+    //////////////////////////////////////////////////////////// matches
     detectProfileMatchBetweenUserDevicesAndStaticDevices,
+    findStaticsProductsInSpecificMtsRange,
+    findStaticsInSpecificMtsRange,
+    ////////////////////////////////////////////// meassure modes
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
     detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice,
-    postListOfProductsToFind,
     meassureOfMatchesInProducts,
-    findStaticsInSpecificMtsRange,
-    findStaticsProductsInSpecificMtsRange
+    meassureOfMatchToEspecificProduct,
+    ////////////////////////////////////////////
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
@@ -140,6 +144,8 @@ app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMod
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
 // post to selectStaticDeviceToSearch by userDevice
 app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice);
+// post product to Search by userDevice
+app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
 // post coords points from app in userDevice geoCoords collection
 app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
 // to post list of products to find his positions and owners
@@ -488,6 +494,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             objFromDBToMeassureProcess
                         } = require('./handlers/utilsForThings');
                         // picker mode
+                        // to selected and match with tags
                         if(searchingMode[0] === "modeOne"){
                             // run it meassure GPS coords for the userDevice and all the matches statics
                             await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
@@ -496,6 +503,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             // print 
                             console.log("say hello to my little friend from thing modeOne")
                         } else if(searchingMode[0] === "modeTwo"){
+                            // to specific staticDevice (vendors)
                             // run it meassure GPS for a specific static device pick by the user
                             await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(
                                 await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
@@ -503,12 +511,19 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             // print 
                             console.log("say hello to my little friend from thing modeTwo")
                         }  else if(searchingMode[0] === "modeThree"){
-                            // run it meassure GPS for a specific static device pick by the user
+                            // to selected products
                             await meassureOfMatchesInProducts(
                                 await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             );
                             // print 
                             console.log("say hello to my little friend from thing modeThree")
+                        } else if (searchingMode[0] === "modeFour"){
+                            // to specific product  
+                            meassureOfMatchToEspecificProduct(
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            )
+                            // print 
+                            console.log("say hello to my little friend from thing modeFour")
                         }
                     })
                     .catch((err) => {

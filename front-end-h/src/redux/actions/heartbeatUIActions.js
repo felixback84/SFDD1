@@ -35,13 +35,6 @@ export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
             type: GET_EVENTS_FROM_HEARTBEAT_THING,
             payload: resultDB
         });
-        // products and meters
-        // dispatch(
-        //     productMeassures(
-        //         resultDB.top5Products,
-        //         resultDB.mtsBetweenDevicesToProducts
-        //     )
-        // );
         dispatch({ type: STOP_LOADING_UI });
     }, err => {
         console.log(`Encountered error: ${err}`);
@@ -86,101 +79,6 @@ export const heartbeatPostInactiveCommand = (thingId, inactiveValue) => (dispatc
         });
 } 
 
-// function to conform the products response from to filds in db
-export const productMeassures = (top5Products,mtsBetweenDevicesToProducts) => (dispatch) => {
-    
-    console.log("ji ji ji")
-    // var to hold arr with products
-    let itemJSx = []
 
-    // loops
-    for(let items in top5Products){
-        // cheker
-        if(top5Products.hasOwnProperty(items)){
-            // print
-            console.log(`items:${items}`)
-            // map products
-            top5Products[items].map((item)=>{
-                // print
-                console.log(`item:${JSON.stringify(item)}`)
-                // push
-                itemJSx.push(
-                    item
-                )
-            })
-        }
-    }
 
-    // var to hold results
-    const allData = [] 
-    
-    // callback
-    const findEqual = (JSx) => {
-        // loop
-        mtsBetweenDevicesToProducts.forEach((item) => {
-            // checker
-            if(JSx.thingId === item.thingId){
-                allData.push({
-                    coords:JSx.coords,
-                    products:JSx.products,
-                    thingId:JSx.thingId,
-                    meters:item.meters
-                })
-                return allData
-            }
-        })    
-    }
-    // run find method to establish a relation between the two arrays 
-    itemJSx.find(findEqual)
-
-    let uniqueArray = []
-    //to eliminate duplicates of coords
-    const removeDuplicates = async (arr) => {
-        // to string
-        const jsonObject = arr.map(JSON.stringify);
-        // find repeats
-        const uniqueSet = new Set(jsonObject);
-        // write arr
-        uniqueArray = Array.from(uniqueSet).map(JSON.parse);  
-        console.log(`uniqueArray:${uniqueArray}`)
-        // return arr
-        return uniqueArray
-    }
-
-    //run it & hold it to remove duplicates in coords
-    removeDuplicates(allData).then((uniqueArray)=>{
-        console.log(`uniqueArray:${uniqueArray}`)
-        dispatch({
-            type: GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS,
-            payload: uniqueArray 
-        })
-    })
-    // .catch(err => {
-    //     dispatch({ 
-    //         type: SET_ERRORS,
-    //         payload: err.response.data
-    //     })
-    // });
-}
-
-// function to find the top5Coords list
-// export const getTop5CoordsMatches = (thingId) => (dispatch) => {
-//     dispatch({ type: LOADING_UI });
-//     axios
-//         .get(`/device/heartbeat/${thingId}/top5coords`)
-//         .then((res) => {            
-//             dispatch({ 
-//                 type: GET_TOP5COORDSMATCHES,
-//                 payload: res.data
-//             })
-//         })
-//         .catch(err => {
-//             dispatch({ 
-//                 type: SET_ERRORS,
-//                 payload: err.response.data
-//             })
-//         });
-// }
-
-// function post a get the answer to make the matches
 

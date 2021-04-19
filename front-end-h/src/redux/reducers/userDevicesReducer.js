@@ -1,10 +1,12 @@
 import {
     LOADING_USER_DEVICES, 
     GET_USER_DEVICES,
-    GET_USER_DEVICE
+    GET_USER_DEVICE,
+    GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+    GET_USER_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAGDEVICE,
+    GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
 } from '../types';
 
-// let userDevice;
 // initial state
 const initialState = {
     userDevices:[],
@@ -14,6 +16,9 @@ const initialState = {
             dataSets:{}
         }
     },
+    top5Tags:[],
+    top5Tag:{},
+    top5Products:[],
     loading: false
 }
 
@@ -27,7 +32,7 @@ export default function(state = initialState, action){
             };
         case GET_USER_DEVICES:
             return {
-                ...state,
+                ...state, 
                 userDevices: action.payload,
                 loading: false
                 
@@ -38,6 +43,24 @@ export default function(state = initialState, action){
                 userDevice: action.payload,
                 loading: false
             };
+        case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
+            return {
+                ...state,
+                top5Tags: action.payload,
+                loading: false
+            };
+        case GET_USER_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAGDEVICE:
+            return {
+                ...state,
+                top5Tag: action.payload,
+                loading: false
+            };
+        case GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS:
+            return {
+                ...state,
+                top5Products: action.payload,
+                loading: false
+            };        
         default:
             return state; 
     }    
