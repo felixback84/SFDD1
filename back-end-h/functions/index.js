@@ -133,7 +133,7 @@ app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userDevices
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 // to post userDevice data to make the initial match
-app.post('/userdevices/match/staticsdevices', FBAuth, detectProfileMatchBetweenUserDevicesAndStaticDevices);
+app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); //// remove token
 // post search mode command in heartbeat things
 app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
 // post profile data to search for userDevice
@@ -143,7 +143,7 @@ app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSea
 // post coords points from app in userDevice geoCoords collection
 app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
 // to post list of products to find his positions and owners
-app.post('/userdevice/postlistofproducts',FBAuth,postListOfProductsToFind)
+app.post('/userdevice/postlistofproducts',postListOfProductsToFind) //// remove token
 // to post and find wich statics are close to me by geohash
 app.get('/userdevice/findstatics/lat/:lat/lng/:lng/mts/:mts',findStaticsInSpecificMtsRange)
 // to post and find wich statics are close to me by geohash
@@ -474,6 +474,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                     .then(async(doc)=>{
                         // conditions
                         let searchingMode = doc.data().searchingMode
+                        // data to pass
                         let data = doc.data()
                         // print
                         console.log(
@@ -490,21 +491,21 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         if(searchingMode[0] === "modeOne"){
                             // run it meassure GPS coords for the userDevice and all the matches statics
                             await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
-                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             );
                             // print 
                             console.log("say hello to my little friend from thing modeOne")
                         } else if(searchingMode[0] === "modeTwo"){
                             // run it meassure GPS for a specific static device pick by the user
                             await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(
-                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             );
                             // print 
                             console.log("say hello to my little friend from thing modeTwo")
                         }  else if(searchingMode[0] === "modeThree"){
                             // run it meassure GPS for a specific static device pick by the user
                             await meassureOfMatchesInProducts(
-                                await objFromDBToMeassureProcess(searchingMode[0],data)
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             );
                             // print 
                             console.log("say hello to my little friend from thing modeThree")

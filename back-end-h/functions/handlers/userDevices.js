@@ -297,6 +297,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                         matchDataResults: matchDataResults,
                         coords: profilesInLiveDataSets[i].coords,
                         thingId: profilesInLiveDataSets[i].thingId,
+                        meters:0
                     });
                 }
             }
@@ -367,27 +368,30 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('liveDataSets')
-                        .doc(objProfileDataOfDynamic.thingId)
-                        .update({ top5Coords: dataToSave })
+                        .collection('top5Tags')
+                        .add({ ...dataToSave })
                         .then(() => {
                             // print
                             console.log(`final response to the user: ${dataToSave}`);
                             // res
-                            res.json("matches now in db");
+                            //res.json("matches now in db");
                         })            
                         .catch((err) => {
                             console.error(err);
                         });                
                 }
                 // run it
-                savaDataOfDynamicDeviceOnLiveDataSetsDoc(arraysToCheck);
+                arraysToCheck.forEach((arrayToCheck)=>{
+                    savaDataOfDynamicDeviceOnLiveDataSetsDoc(arrayToCheck);
+                })
             })
             .catch(err => {
                 res.status(500, err);
             })
         })
 }
+
+///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
 
 // to meassure distance between devices
 exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWait) => {
@@ -412,35 +416,34 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             let distanceInMeters = d * 1000; // Distance in m
             // print
             console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
-            // push data to mtsBetweenDevices vart
+            // push in to arr
             mtsBetweenDevices.push({
-                meters: distanceInMeters,
-                thingId: inWaitAfter.top5Coords[i].thingId
-            }) 
-        }   
+                meters:distanceInMeters,
+                thingId:top5Coords[i].thingId
+            })
+            // return mtsBetweenDevices
+            let userDeviceId = inWaitAfter.thingId.split("-").slice(2).toString();
+            // db save mts results part
+            const docRef = db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Tags')
+                .doc(inWaitAfter.top5Coords[i].docId)
+            // update meters
+            await docRef
+                .update({
+                    meters:distanceInMeters
+                })
+                .catch(err => {
+                    res.status(500, err);
+                })
+        }  
         // print
         console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
-        // return results
         return mtsBetweenDevices
     }  
 
     // pass mts distance to top5Coords array in doc
     await checkDistance(dataEnter)
-        .then((data)=>{
-            // userDeviceId
-            let userDeviceId = inWait.thingId.split("-").slice(2).toString();
-            // db save mts results part
-            db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(inWait.thingId)
-                .update({
-                    mtsBetweenDevices:data
-                })
-        })
-        .catch(err => {
-            res.status(500, err);
-        })
     // import    
     const {
         metersRangeMatchColor,
@@ -451,14 +454,16 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
 
 // to meassure between a specific static devices and dynamic
 exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async (inWait) => {
+    // dp update part
+    let userDeviceId = inWait.thingId.split("-").slice(2).toString();
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
     // data from db after message income
     const dataEnter = inWait;
     // pick the last item in the arr
-    const index = dataEnter.indexOfSpecificUserDevice
+    const id = dataEnter.idOfSpecificUserDevice
     // init meassure
-    console.log(`index of array to find - index:${index}`)
+    console.log(`id of array to find - id:${id}`)
     async function checkDistance(args){
         console.log(`check checkDistance to specific static Vs dynaic`)
         // logic to make the meassure part
@@ -478,19 +483,93 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async
         mtsBetweenDevices.push({
             meters: distanceInMeters
         })
+        
+        // db save mts results part
+        const docRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Tags')
+            .doc(inWait.docId)
+        // update meters
+        await docRef
+            .update({
+                meters:distanceInMeters
+            })
+            .catch(err => {
+                res.status(500, err);
+            })
     }
+
     // args to pass it
     const argz = {
         userDevice:{
             coords:inWait.coords
         },
         staticDevice:{
-            coords:inWait.top5Coords[index].coords
+            coords:inWait.staticDeviceCoords
         }
     }
     // run it
     await checkDistance(argz);
     await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
+}
+
+// method to make the meassurment with the list of selected products
+exports.meassureOfMatchesInProducts = async (inWait) => {
+    const dataEnter = inWait
+    // print
+    console.log(`dataEnter:${JSON.stringify(dataEnter)}`)
+    // var to hold mtsBetweenDevices    
+    let mtsBetweenDevicesToProducts = [];
+    // func
+    async function checkDistance(inWaitAfter){
+        // loop
+        for(let i = 0; i < inWaitAfter.top5Products.length; i++){
+            // print
+            console.log(`key:${inWaitAfter.top5Products[i].coords}`)
+            // logic to make the meassure part
+            let R = 6371; // Radius of the earth in km
+            let dLat = (inWaitAfter.top5Products[i].coords.lat - inWaitAfter.coords.lat) * Math.PI / 180;  
+            let dLon = (inWaitAfter.top5Products[i].coords.lon - inWaitAfter.coords.lon) * Math.PI / 180; 
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(inWaitAfter.top5Products[i].coords.lat * Math.PI / 180) 
+                * Math.cos(inWaitAfter.coords.lat* Math.PI / 180) 
+                * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            let d = R * c; // Distance in km
+            let distanceInMeters = d * 1000; // Distance in m
+            // print
+            console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
+            // push data to mtsBetweenDevices vart
+            mtsBetweenDevicesToProducts.push({
+                meters: distanceInMeters,
+                thingId: inWaitAfter.top5Products[i].thingId
+            })
+            // return mtsBetweenDevices
+            let userDeviceId = inWaitAfter.thingId.split("-").slice(2).toString();
+            // db save mts results part
+            const docRef = db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Products')
+                .doc(inWaitAfter.top5Products[i].docId)
+            // update meters
+            await docRef
+                .update({
+                    meters:distanceInMeters
+                })
+        }
+        // print
+        console.log(`Unorder yet mtsBetweenDevicesToProducts: ${JSON.stringify(mtsBetweenDevicesToProducts)}`)
+        // return results
+        return mtsBetweenDevicesToProducts
+    } 
+    // run it
+    await checkDistance(dataEnter) 
+    // import    
+    const {
+        metersRangeMatchColor,
+    } = require('./utilsForThings');    
+    // run it
+    await metersRangeMatchColor(mtsBetweenDevicesToProducts, dataEnter.thingId);
 }
 
 // post coords points from app in userDevice geoCoords collection and liveDataSets and many more
@@ -754,7 +833,8 @@ exports.postListOfProductsToFind = async (req, res) => {
                             allData.push({
                                 coords:resultOfCoord.coords,
                                 products:item,
-                                thingId:resultOfCoord.thingId
+                                thingId:resultOfCoord.thingId,
+                                meters:0
                             })
                             return allData
                         }
@@ -766,27 +846,18 @@ exports.postListOfProductsToFind = async (req, res) => {
                 data.find(findEqual)
             }) 
             .then(()=>{
-                // underscore lib
-                let _ = require('underscore');
-                // make groups
-                let groups = _.groupBy(allData,"thingId")
-                // print
-                console.log(`groups:${JSON.stringify(groups)}`)
-                // return
-                return groups
-            })
-            .then((data)=>{
-                // db part to save data
-                db
+                allData.forEach((item)=>{
+                    console.log('hi')
+                    db
                     .doc(`/userDevices/${userDeviceId}`)
-                    .collection('liveDataSets')
-                    .doc('CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ')////////////////////////// check for dynamic thingid
-                    .update({
-                        top5Products:data
+                    .collection('top5Products')
+                    .add({
+                        ...item
                     })
                     .catch(err => {
                         res.status(500, err);
                     })
+                })  
             })
             .catch(err => {
                 res.status(500, err);
@@ -794,78 +865,6 @@ exports.postListOfProductsToFind = async (req, res) => {
     }
     // run it to begin
     await toMakelistOfCoords()
-}
-
-// method to make the meassurment with the list of selected products
-exports.meassureOfMatchesInProducts = async (inWait) => {
-// exports.meassureOfMatchesInProducts = async (req,res) => {
-    const dataEnter = inWait
-    //const dataEnter = req.body
-    // print
-    console.log(`dataEnter:${JSON.stringify(dataEnter)}`)
-    // var to hold mtsBetweenDevices    
-    let mtsBetweenDevicesToProducts = [];
-    // func
-    async function checkDistance(inWaitAfter){
-        let keysArr = Object.keys(inWaitAfter.top5Products)
-        // print
-        console.log(`keysArr:${keysArr}`)
-        // loop
-        keysArr.map((key)=>{
-            // print
-            console.log(`key:${key}`)
-            // loop
-            for(let i = 0; i < inWaitAfter.top5Products[key].length; i++){
-                // print
-                console.log(`key:${inWaitAfter.top5Products[key][i].coords}`)
-                // logic to make the meassure part
-                let R = 6371; // Radius of the earth in km
-                let dLat = (inWaitAfter.top5Products[key][i].coords.lat - inWaitAfter.coords.lat) * Math.PI / 180;  
-                let dLon = (inWaitAfter.top5Products[key][i].coords.lon - inWaitAfter.coords.lon) * Math.PI / 180; 
-                let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(inWaitAfter.top5Products[key][i].coords.lat * Math.PI / 180) 
-                    * Math.cos(inWaitAfter.coords.lat* Math.PI / 180) 
-                    * Math.sin(dLon/2) * Math.sin(dLon/2); 
-                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                let d = R * c; // Distance in km
-                let distanceInMeters = d * 1000; // Distance in m
-                // print
-                console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
-                // push data to mtsBetweenDevices vart
-                mtsBetweenDevicesToProducts.push({
-                    meters: distanceInMeters,
-                    thingId: inWaitAfter.top5Products[key][i].thingId
-                })
-            }
-        })           
-        // print
-        console.log(`Unorder yet mtsBetweenDevicesToProducts: ${JSON.stringify(mtsBetweenDevicesToProducts)}`)
-        // return results
-        return mtsBetweenDevicesToProducts
-    } 
-    // run it
-    await checkDistance(dataEnter)
-        .then(async(data)=>{
-            // userDeviceId
-            let userDeviceId = dataEnter.thingId.split("-").slice(2).toString();
-            // db save mts results part
-            db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('liveDataSets')
-                .doc(dataEnter.thingId)
-                .update({
-                    mtsBetweenDevicesToProducts:data
-                })
-        })
-        .catch(err => {
-            console.log(err)
-        })  
-    // import    
-    const {
-        metersRangeMatchColor,
-    } = require('./utilsForThings');    
-    // run it
-    await metersRangeMatchColor(mtsBetweenDevicesToProducts, dataEnter.thingId);
 }
 
 // to find wich statics are close to me by geohash only for app
@@ -1077,39 +1076,17 @@ exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
     const selectProfileToSearchData = req.body;
     // userDeviceId 
     const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2);
-    // var to hold the index
-    let index = undefined;
     // db part
     let infoInLiveDataSets = db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
         .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
         
-    // search in array init
-    return infoInLiveDataSets
-        .get()
-        .then((doc)=>{
-            // extract just the fiel that i need
-            const top5Coords = doc.data().top5Coords;
-            // print
-            console.log(`top5Coords array: ${JSON.stringify(top5Coords)}`);
-            // filter the item in the array
-            index = top5Coords.findIndex((element) => {
-                if (element.thingId === selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch) {
-                    return true
-                }
-            })
-            // print
-            console.log(`filter index in an array: ${index}`)
+    infoInLiveDataSets
+        .update({
+            idOfSpecificStaticDevice: selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch
         })
         .then(()=>{
-            return infoInLiveDataSets
-                .update({
-                    indexOfSpecificStaticDevice: index
-                })
+            res.json("staticDevice Mark")
         })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        }); 
 }

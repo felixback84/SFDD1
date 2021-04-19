@@ -1,7 +1,10 @@
+// firebase
+const { db } = require('../utilities/admin');
 // thing commands
 const { 
     sendCommandGPSColor,   
 } = require('./forThingsHeartbeats');
+const { forEach } = require('underscore');
 
 // color and motor in db
 const colorAndMotorInDb = async (thingId,data) => {
@@ -99,24 +102,70 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
 }
 
 // to make the object that pass through the meassure function
-exports.objFromDBToMeassureProcess = async (mode,doc) => {
+exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
     if(mode === "modeOne"){
+        // list with statics
+        let top5Coords = []
+        // db part
+        const tagsRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Tags')
+
+        const snapshot = await tagsRef.get();
+
+        snapshot.forEach(doc => {
+            // push data in arr
+            top5Coords.push({
+                docId: doc.id,
+                ...doc.data(),
+                
+            })
+        });
+        
         return {
             thingId:doc.thingId,
             coords:doc.coords,
-            top5Coords:doc.top5Coords,
+            // arr
+            top5Coords:top5Coords,
         }
+
     } else if(mode === "modeTwo"){
+        // db part
+        const tagsRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Tags')
+            .doc(doc.idOfSpecificStaticDevice)
+            .get('coords')
+
         return {
             thingId:doc.thingId,
             coords:doc.coords,
-            top5Coords:doc.top5Coords,
+            docId:doc.idOfSpecificStaticDevice,
+            staticDeviceCoords:tagsRef,
         }
     } else if(mode === "modeThree"){
+        // list with statics
+        let top5Products = []
+        // db part
+        const tagsRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Products')
+
+        const snapshot = await tagsRef.get();
+
+        snapshot.forEach(doc => {
+            // push data in arr
+            top5Products.push({
+                docId: doc.id,
+                ...doc.data(),
+            })
+        });
+
         return {
             thingId:doc.thingId,
             coords:doc.coords,
-            top5Products:doc.top5Products,
+            // arr
+            top5Products:top5Products,
         }
     }
 }
