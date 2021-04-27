@@ -22,7 +22,7 @@ class HeaderLinks extends Component {
     // redux state
     const { 
       classes,
-      authenticated,  
+      authenticated,   
       credentials:
         {
           imgUrl, 
