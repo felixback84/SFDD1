@@ -15,6 +15,7 @@ import Menu from "@material-ui/core/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from '@material-ui/core/IconButton';
+
 // @material-ui/icons components
 import Clear from "@material-ui/icons/Clear";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -22,7 +23,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import componentStyles from "assets/theme/components/sidebar.js";
 const useStyles = makeStyles(componentStyles);
 
-//export default function Sidebar({ routes, logo, dropdown, input }) {
 export default function Sidebar(props) {
   // setts
   const classes = useStyles();
@@ -104,8 +104,8 @@ export default function Sidebar(props) {
                     selected: classes.listItemSelected,
                 }}
                 target="_blank"
-              >
-                {textContent}hi
+              > 
+                {textContent}
               </ListItem>
             );
           } else {
@@ -226,9 +226,11 @@ export default function Sidebar(props) {
             marginLeft="1.25rem!important"
             marginRight="1.25rem!important"
           />
-          <Box paddingLeft="1.25rem" paddingRight="1.25rem">
+          {/* searchbox */}
+          {/* <Box paddingLeft="1.25rem" paddingRight="1.25rem">
             {props.input}
-          </Box>
+          </Box> */}
+          {/* menu */}
           <List classes={{ root: classes.listRoot }}>
             {/* links */}
             {createLinks(props.routes)}

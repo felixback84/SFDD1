@@ -4,7 +4,7 @@ export default class addCart extends Component {
     render() {
         return (
             <div>
-                hi from add cart
+                <p>hi from add cart</p>
             </div>
         )
     }

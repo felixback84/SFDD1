@@ -4,7 +4,7 @@ export default class devices extends Component {
     render() {
         return (
             <div>
-                hi from store devices
+                <p>hi from store devices</p>
             </div>
         )
     }

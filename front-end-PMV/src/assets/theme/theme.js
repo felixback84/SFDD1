@@ -12,7 +12,7 @@ const defaultHeaderStyles = {
   fontFamily: "inherit",
   fontWeight: 600,
   lineHeight: 1.5,
-  color: themeColors.gray[800],
+  //color: themeColors.gray[800],
 };
 
 // A custom theme for this app

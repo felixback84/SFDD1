@@ -18,10 +18,10 @@ import routes from "routes.js";
 import componentStyles from "assets/theme/layouts/auth.js";
 const useStyles = makeStyles(componentStyles);
 
-const Auth = () => {
+const Auth = (props) => {
   const classes = useStyles();
   const mainContent = React.useRef(null);
-  const location = useLocation();
+  const location = useLocation(); 
 
   React.useEffect(() => {
     document.body.classList.add(classes.bgDefault);
@@ -32,12 +32,13 @@ const Auth = () => {
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
+    // mainContent.current.scrollTop = 0;
   }, [location]);
 
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.layout === "/auth") {
+  const getRoutes = (routez) => {
+    const authRoutes = routez.auth
+    return authRoutes.map((prop, key) => {
+      if (prop.layout === "/auth" || prop.layout === "") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -51,31 +52,48 @@ const Auth = () => {
     });
   };
 
-  return (
+  // check if the user is auth
+  const resultLayoutUserDevicesAdmin = () => {
+    if(!props.authenticated){
+      return (
+        <>
+          <div className="main-content" ref={mainContent}>
+            {/* navbar to guest */}
+            <AuthNavbar />
+            {/* header to guest */}
+            <AuthHeader />
+            {/* Page content */}
+            <Container
+              component={Box}
+              maxWidth="xl"
+              marginTop="-8rem"
+              paddingBottom="3rem"
+              position="relative"
+              zIndex="101"
+            >
+              <Box component={Grid} container justifyContent="center">
+                <Switch>
+                  {/* routes */}
+                  {getRoutes(routes)}
+                  <Redirect from="*" to="/auth/login" />
+                </Switch>
+              </Box>
+            </Container>
+          </div>
+          {/* footer */}
+          <AuthFooter />
+        </>
+      );
+    }
+  }
+
+  // final return
+  return(
     <>
-      <div className="main-content" ref={mainContent}>
-        <AuthNavbar />
-        <AuthHeader />
-        {/* Page content */}
-        <Container
-          component={Box}
-          maxWidth="xl"
-          marginTop="-8rem"
-          paddingBottom="3rem"
-          position="relative"
-          zIndex="101"
-        >
-          <Box component={Grid} container justifyContent="center">
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="*" to="/auth/login" />
-            </Switch>
-          </Box>
-        </Container>
-      </div>
-      <AuthFooter />
+      {resultLayoutUserDevicesAdmin()}
     </>
-  );
+  )
 };
 
 export default Auth;
+

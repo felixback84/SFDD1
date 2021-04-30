@@ -31,9 +31,10 @@ import FlashOn from "@material-ui/icons/FlashOn";
 // unauthenticated views
 import landingPage from './views/landingPage/landingPage';
 import devices from './views/store/devices';
+import vlog from './views/vlog/vlog';
+// auth
 import signup from './views/signup/signup';
 import login from './views/login/login';
-import vlog from './views/vlog/vlog';
 
 // authenticates views
 // dashboard
@@ -60,36 +61,6 @@ import buysByUser from './views/profile/buysByUser';
 import shoppingCart from './views/shoppingCart/shoppingCart';
 
 const routes = {
-  //////////////////////////////////////////////////// guest
-  guest:[
-    {
-      path: "/",
-      name: "Landing Page",
-      icon: HomeRoundedIcon,
-      component: landingPage,
-      layout: "/guess",
-      submenu: false,
-      single: false
-    },
-    {
-      path: "/store/devices",
-      name: "Devices Store",
-      icon: StoreRoundedIcon,
-      component: devices,
-      layout: "/guess",
-      submenu: true,
-      single: false
-    },
-    {
-      path: "/blog",
-      name: "Vlog",
-      icon: TocRoundedIcon,
-      component: vlog,
-      layout: "/guess",
-      submenu: false,
-      single: false
-    }
-  ],
   ///////////////////////////////////////////// auth
   auth:[
     {
@@ -107,6 +78,33 @@ const routes = {
       icon: AssignmentRoundedIcon,
       component: signup,
       layout: "/auth",
+      submenu: false,
+      single: false
+    },
+    {
+      path: "/",
+      name: "Landing Page",
+      icon: HomeRoundedIcon,
+      component: landingPage,
+      layout: "",
+      submenu: false,
+      single: false
+    },
+    {
+      path: "/store/devices",
+      name: "Devices Store",
+      icon: StoreRoundedIcon,
+      component: devices,
+      layout: "",
+      submenu: true,
+      single: false
+    },
+    {
+      path: "/blog",
+      name: "Vlog",
+      icon: TocRoundedIcon,
+      component: vlog,
+      layout: "",
       submenu: false,
       single: false
     }
@@ -216,6 +214,7 @@ const routes = {
     {
       name: "Notifications",
       icon: NotificationsActiveRoundedIcon,
+      single: true
     },
     {
       path: "/notifications/user",
@@ -275,29 +274,29 @@ const routes = {
   // profile
   profile:[
     {
-      path: "/profiledetails",
+      path: "/profile/profiledetails",
       name: "Profile Details",
       icon: AssignmentIndRoundedIcon,
       component: profileDetails,
-      layout: "/admin/profile",
+      layout: "/admin",
       submenu: true,
       single: false
     },
     {
-      path: "/addcardbyuser",
-      name: "Profile Details",
+      path: "/profile/addcardbyuser",
+      name: "Add Card",
       icon: PaymentRoundedIcon,
       component: addCardByUser,
-      layout: "/admin/profile",
+      layout: "/admin",
       submenu: true,
       single: false
     },
     {
-      path: "/buysbyuser",
+      path: "/profile/buysbyuser",
       name: "Buys Details",
       icon: AccountBalanceWalletRoundedIcon,
       component: buysByUser,
-      layout: "/admin/profile",
+      layout: "/admin",
       submenu: true,
       single: false
     },
@@ -322,7 +321,6 @@ const routes = {
       title: "Social",
     },
     {
-      name: "Facebook",
       href:
         "https://www.creative-tim.com/learning-lab/material-ui/overview/argon-dashboard?ref=admui-admin-sidebar",
       name: "Getting started",

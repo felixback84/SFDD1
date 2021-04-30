@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router , Route, Switch } from 'react-router-dom';
 import './App.css';
+import { createMuiTheme } from '@material-ui/core';
 
 // styles
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "assets/theme/theme.js";
+import { ThemeProvider } from '@material-ui/core/styles';
+import themeObj from "assets/theme/theme.js";
 
 // plugins
 import "assets/plugins/nucleo/css/nucleo.css";
@@ -15,7 +16,6 @@ import "assets/scss/argon-dashboard-react.scss";
 // Components
 import Auth from './layouts/Auth.js'
 import Admin from './layouts/Admin.js'
-import Guest from './layouts/Guest.js'
 //import AuthRoute from './utilities/AuthRoute';
 
 // jwt 
@@ -34,25 +34,33 @@ axios.defaults.baseURL = 'https://us-central1-sfdd-d8a16.cloudfunctions.net/api'
 
 // token decode check exp to redirect on AuthRoute
 const token = localStorage.FBIdToken;
+// auth state
+const authenticated = (bool) => (bool)
+
+// check the token
 if (token) {
+    // auth state
+    authenticated(true)
+    // decode token
     const decodedToken = jwtDecode(token);
+    // checker expiration date
     if (decodedToken.exp * 1000 < Date.now()) {
         store.dispatch(logoutUser());
-        window.location.href = '/login'; // dont work
+        window.location.href = '/auth/login'; // dont work
     } else {
         store.dispatch({ type: SET_AUTHENTICATED });
         axios.defaults.headers.common['Authorization'] = token;
         // for user data
         store.dispatch(getUserData());
     }
-} 
+}
 
-// styles
-//const useStyles = landingPageStyle;
+// theme
+const theme = createMuiTheme(themeObj);
 
 class App extends Component {
   render() {
-    return (
+    return(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Provider store={store}>
@@ -60,9 +68,10 @@ class App extends Component {
             <Router> 
               <div className="container">
                 <Switch>
-                  <Route path="/guest" render={(props) => <Guest {...props} />} />
-                  <Route path="/auth" render={(props) => <Auth {...props} />} />
                   <Route path="/admin" render={(props) => <Admin {...props} />} />
+                  <Route path="/" render={(props) => <Auth {...props} />} />
+                  <Route path="/auth" render={(props) => <Auth {...props}  authenticated={authenticated(false)} />} />
+                  <Route path="/admin/profile" render={(props) => <Admin {...props} />} />
                 </Switch> 
               </div>
             </Router>
@@ -73,6 +82,7 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App
+
 
 

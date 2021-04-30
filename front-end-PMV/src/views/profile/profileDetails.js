@@ -4,7 +4,7 @@ export default class profileDetails extends Component {
     render() {
         return (
             <div>
-                hi from profile details
+                <p>hi from profile details</p>
             </div>
         )
     }

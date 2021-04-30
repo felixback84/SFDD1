@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
@@ -14,34 +14,67 @@ import ListItem from "@material-ui/core/ListItem";
 import Menu from "@material-ui/core/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 // @material-ui/icons components
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import Clear from "@material-ui/icons/Clear";
-import Dashboard from "@material-ui/icons/Dashboard";
 import MenuIcon from "@material-ui/icons/Menu";
-import Person from "@material-ui/icons/Person";
-import VpnKey from "@material-ui/icons/VpnKey";
+// routes
+import routes from "routes.js";
 
-// core components
+// styles
 import componentStyles from "assets/theme/components/auth-navbar.js";
-
 const useStyles = makeStyles(componentStyles);
 
 export default function AuthNavbar() {
+  // setts
   const classes = useStyles();
   const theme = useTheme();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const isMenuOpen = Boolean(anchorEl);
 
+  // to open
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  // to close
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
+  // menu id
   const menuId = "responsive-menu-id";
+
+  // loop to create list items
+  const items = (routez) => {
+    const authRoutes = routez.auth
+    return authRoutes.map((prop,key)=>{
+      if(prop.layout === "/auth" || prop.layout === ""){
+        return(
+          <ListItem
+            component={Link}
+            to={prop.layout + prop.path}
+            onClick={handleMenuClose}
+            classes={{
+              root: classes.listItemRoot,
+            }}
+            selected={
+              location.pathname === prop.layout + prop.path 
+            }
+            key={key}
+          >
+            <Box
+              component={prop.icon}
+              width="1.25rem!important"
+              height="1.25rem!important"
+              marginRight=".5rem!important"
+            />
+            {prop.name}
+          </ListItem>
+        )
+      }
+    })
+  }
+
+  // list items rag
   const ListObject = (
     <Box
       display="flex"
@@ -50,72 +83,10 @@ export default function AuthNavbar() {
       component={List}
       className={classes.flexDirectionColumn}
     >
-      <ListItem
-        component={Link}
-        to="/admin/dashboard"
-        onClick={handleMenuClose}
-        classes={{
-          root: classes.listItemRoot,
-        }}
-      >
-        <Box
-          component={Dashboard}
-          width="1.25rem!important"
-          height="1.25rem!important"
-          marginRight=".5rem!important"
-        />
-        Dashboard
-      </ListItem>
-      <ListItem
-        component={Link}
-        to="/auth/register"
-        onClick={handleMenuClose}
-        classes={{
-          root: classes.listItemRoot,
-        }}
-      >
-        <Box
-          component={AccountCircle}
-          width="1.25rem!important"
-          height="1.25rem!important"
-          marginRight=".5rem!important"
-        />
-        Register
-      </ListItem>
-      <ListItem
-        component={Link}
-        to="/auth/login"
-        onClick={handleMenuClose}
-        classes={{
-          root: classes.listItemRoot,
-        }}
-      >
-        <Box
-          component={VpnKey}
-          width="1.25rem!important"
-          height="1.25rem!important"
-          marginRight=".5rem!important"
-        />
-        Login
-      </ListItem>
-      <ListItem
-        component={Link}
-        to="/admin/user-profile"
-        onClick={handleMenuClose}
-        classes={{
-          root: classes.listItemRoot,
-        }}
-      >
-        <Box
-          component={Person}
-          width="1.25rem!important"
-          height="1.25rem!important"
-          marginRight=".5rem!important"
-        />
-        Profile
-      </ListItem>
+      {items(routes)}
     </Box>
   );
+
   return (
     <>
       <AppBar position="absolute" color="transparent" elevation={0}>
@@ -135,6 +106,7 @@ export default function AuthNavbar() {
               className={classes.headerImg}
               src={require("assets/img/brand/argon-react-white.png").default}
             />
+            {/* In md devices */}
             <Hidden mdUp implementation="css">
               <IconButton
                 edge="start"
@@ -196,10 +168,13 @@ export default function AuthNavbar() {
                   marginLeft="1.25rem!important"
                   marginRight="1.25rem!important"
                 />
+                {/* Auth menu */}
                 {ListObject}
               </Menu>
             </Hidden>
+            {/* in sm devices */}
             <Hidden smDown implementation="css">
+              {/* Auth menu */}
               {ListObject}
             </Hidden>
           </Container>

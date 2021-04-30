@@ -4,7 +4,7 @@ export default class buys extends Component {
     render() {
         return (
             <div>
-                hi from buys
+                <p>hi from buys</p>
             </div>
         )
     }

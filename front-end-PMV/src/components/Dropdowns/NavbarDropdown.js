@@ -1,15 +1,16 @@
 import React from "react";
-import { Route} from "react-router-dom";
+import { Link } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
+
 // routes
 import routes from "routes.js";
 // styles
@@ -23,44 +24,38 @@ export default function NavbarDropdown() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  // routes
-  const getRoutes = (routez) => {
-    return routez.map((prop, key) => {
-      if (prop.layout === "/admin/profile") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      } else {
-        return null;
-      }
-    });
-  };
-
   // items menu
   const getItems = (routez) => {
-    return routez.map((prop, key) => {
-      return( 
-        <Box
-          display="flex!important"
-          alignItems="center!important"
-          component={MenuItem}
-          onClick={handleMenuClose}
-          key={key}
-        >
+    return routez.map((prop,key) => {
+      if (prop.divider) {
+        return <Divider key={key} classes={{ root: classes.divider }} />;
+      } else {
+        return( 
           <Box
-            component={prop.icon}
-            width="1.25rem!important"
-            height="1.25rem!important"
-            marginRight="1rem"
+            display="flex!important"
+            alignItems="center!important"
+            component={MenuItem}
+            onClick={handleMenuClose}
             key={key}
-          />
-          <span>{prop.name}</span>
-        </Box>
-      )
+          >
+            <Box
+              component={prop.icon}
+              width="1.25rem!important"
+              height="1.25rem!important"
+              marginRight="1rem"
+              key={key}
+            />
+              <Link
+                component="a"
+                key={key}
+                to={prop.layout + prop.path}
+                underline="none"
+              >
+                {prop.name}
+              </Link>
+          </Box>
+        )
+      }
     })
   }
 
@@ -88,8 +83,6 @@ export default function NavbarDropdown() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/* routes */}
-      {getRoutes(routes.profile)}
       {/* menu items ux */}
       <Typography
         variant="h6"
@@ -126,7 +119,8 @@ export default function NavbarDropdown() {
         />
         <Hidden smDown>Jessica Jones</Hidden>
       </Button>
-      {routes && renderMenu}
+      {/* menu user items */}
+      {renderMenu}
     </>
   );
 }
