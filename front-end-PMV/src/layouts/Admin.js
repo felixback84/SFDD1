@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
-// import AdminFooter from "components/Footers/AdminFooter.js";
+import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import NavbarDropdown from "components/Dropdowns/NavbarDropdown.js";
 
@@ -111,7 +111,7 @@ const Admin = (props) => {
                 //   <FormControl variant="outlined" fullWidth>
                 //     <InputLabel htmlFor="outlined-adornment-search-responsive">
                 //       Search
-                //     </InputLabel>
+                //     </InputLabel> 
                 //     <OutlinedInput
                 //       id="outlined-adornment-search-responsive"
                 //       type="text"
@@ -147,7 +147,7 @@ const Admin = (props) => {
                 classes={{ root: classes.containerRoot }}
               >
                 {/* Footer */}
-                {/* <AdminFooter /> */}
+                <AdminFooter />
               </Container>
             </Box>
           </>

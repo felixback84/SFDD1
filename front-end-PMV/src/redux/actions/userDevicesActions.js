@@ -6,8 +6,16 @@ import {
     GET_USER_DEVICES,
     GET_USER_DEVICE,
     GET_ACTIVE_USER_DEVICES,
-    GET_INACTIVE_USER_DEVICES
+    GET_INACTIVE_USER_DEVICES,
+    SET_HEARTBEAT_SEARCHING_MODE,
+    GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+    GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
+    GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
+    GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT
 } from '../types';
+
+// firebase client libs
+import firebase from '../../fb/utilities/firebase'; 
  
 // axios
 import axios from 'axios';
@@ -69,26 +77,39 @@ export const inactiveUserDevice = (userdeviceid) => (dispatch) => {
         .catch(err => console.log(err));
 }
 
+// post searching mode
+export const heartbeatPostSearchingMode = (objSearchingModeData) => (dispatch) => {
+    axios.post(`/userdevice/heartbeat/searchingmode`,objSearchingModeData)
+        .then(res => {
+            dispatch({
+                type: SET_HEARTBEAT_SEARCHING_MODE,
+                payload: res.data
+            }) 
+        })
+        .catch(err => console.log(err));
+}
+
 ///////////////////////////////////////////////////// firebase client connections
-// declarate a function to get data from db fot top5Tags (modeOne)
+// declarate a function to get data from db for top5Tags (modeOne)
 export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
 
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
-
+ 
     // snapshot
-    const data = firebase.firestore()
+    const data = firebase
+        .firestore()
         .doc(`/userDevices/${userDeviceId}`) 
         .collection('top5Tags')
+        .orderBy('meters', 'asc')
         .get()
     
     // var to hold list
     let listOfTop5Tags = []
-
+ 
     // push data
-    const observer = data.onSnapshot(dataSnapshot => {
+    const observer = data.then((dataSnapshot) => {
         dataSnapshot.forEach((doc)=>{
             listOfTop5Tags.push({
                 ...doc.data()
@@ -107,8 +128,7 @@ export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
 
 // declarate a function to get data from a specific db for top5Tags (modeTwo)
 export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
-
+    
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
@@ -121,8 +141,8 @@ export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) 
         .get()
     
     // push data
-    const observer = data.onSnapshot(docSnapshot => {
-        const resultDB = docSnapshot.data(); 
+    const observer = data.then(doc => {
+        const resultDB = doc.data(); 
         // dispatch
         dispatch({ 
             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
@@ -133,11 +153,10 @@ export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) 
         console.log(`Encountered error: ${err}`);
     });
 }
- 
-// declarate a function to get data from db fot top5Tags (modeThree)
-export const userDeviceTop5PorductsSyncData = (thingId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
 
+// declarate a function to get data from db fot top5Tags (modeThree)
+export const userDeviceTop5ProductsSyncData = (thingId) => (dispatch) => {
+    
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
@@ -146,13 +165,14 @@ export const userDeviceTop5PorductsSyncData = (thingId) => (dispatch) => {
     const data = firebase.firestore()
         .doc(`/userDevices/${userDeviceId}`) 
         .collection('top5Products')
+        .orderBy('meters', 'asc')
         .get()
     
     // var to hold list
     let listOfTop5Products = []
 
     // push data
-    const observer = data.onSnapshot(dataSnapshot => {
+    const observer = data.then(dataSnapshot => {
         dataSnapshot.forEach((doc)=>{
             listOfTop5Products.push({
                 ...doc.data()
@@ -161,7 +181,7 @@ export const userDeviceTop5PorductsSyncData = (thingId) => (dispatch) => {
         // dispatch
         dispatch({ 
             type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
-            payload: listOfTop5Tags
+            payload: listOfTop5Products
         });
         dispatch({ type: STOP_LOADING_UI });
     }, err => {
@@ -169,9 +189,8 @@ export const userDeviceTop5PorductsSyncData = (thingId) => (dispatch) => {
     });
 }
 
-// declarate a function to get data from a specific one db for top5Products (modeTwo)
+// declarate a function to get data from a specific one db for top5Products (modeFour)
 export const userDeviceSpecificTop5ProductSyncData = (thingId, docId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
 
     // vars to ask to db do
     const thingIdVal = thingId
@@ -185,8 +204,8 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, docId) => (dispat
         .get()
     
     // push data
-    const observer = data.onSnapshot(docSnapshot => {
-        const resultDB = docSnapshot.data(); 
+    const observer = data.then(doc => {
+        const resultDB = doc.data(); 
         // dispatch
         dispatch({ 
             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,

@@ -348,7 +348,7 @@ const theme = createMuiTheme({
     MuiCardContent: {
       root: {
         flex: "1 1 auto",
-        minHeight: "1px",
+        minHeight: "1px", 
         padding: "1.5rem",
       },
     },

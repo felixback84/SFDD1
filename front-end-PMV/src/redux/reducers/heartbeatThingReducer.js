@@ -2,6 +2,7 @@
 import {
     LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
     GET_EVENTS_FROM_HEARTBEAT_THING,
+    SET_HEARTBEAT_SEARCHING_MODE,
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     //POST_INACTIVE_COMMAND_HEARTBEAT_THING 
 } from '../types';
@@ -33,6 +34,12 @@ export default function(state = initialState, action){
                 loading: false,
                 //load: true
             };   
+        case SET_HEARTBEAT_SEARCHING_MODE:
+            return {
+                ...state,
+                userDevice: action.payload,
+                loading: false
+            };     
         // case POST_ACTIVE_COMMAND_HEARTBEAT_THING:
         //     return{
         //         thing:{

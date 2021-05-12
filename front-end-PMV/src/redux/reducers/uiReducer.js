@@ -30,7 +30,7 @@ switch(action.type){
     case LOADING_UI:
         return {
             ...state,
-            loading: true
+            loading: true 
         };
     case STOP_LOADING_UI:
         return{

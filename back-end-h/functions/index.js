@@ -36,7 +36,7 @@ const {
     getActiveUserDevices,
     getInactiveUserDevices,
     heartbeatPostSearchingMode,
-    postProfileToSearchUserDevices,
+    postProfileToSearchUserDevices, //// find bussiness
     selectStaticDeviceToSearchByUserDevice,
     selectProductOfStaticDeviceToSearchByUserDevice,
     postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
@@ -493,7 +493,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         const {
                             objFromDBToMeassureProcess
                         } = require('./handlers/utilsForThings');
-                        // picker mode
+                        // picker mode 
                         // to selected and match with tags
                         if(searchingMode[0] === "modeOne"){
                             // run it meassure GPS coords for the userDevice and all the matches statics

@@ -2,8 +2,8 @@ import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "views/dashboard/components/modeOne/node_modules/components/Grid/GridContainer.js.js";
+import GridItem from "views/dashboard/components/modeOne/node_modules/components/Grid/GridItem.js.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 // styles

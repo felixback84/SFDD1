@@ -37,14 +37,13 @@ export default function(state = initialState, action){
                 ...state, 
                 userDevices: action.payload,
                 loading: false
-                
             };
         case GET_USER_DEVICE:
             return {
                 ...state,
                 userDevice: action.payload,
                 loading: false
-            };
+            }; 
         case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
             return {
                 ...state,
@@ -66,6 +65,7 @@ export default function(state = initialState, action){
         case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT:
             return {
                 ...state,
+                onMode:true,
                 top5Product: action.payload,
                 loading: false
             };        

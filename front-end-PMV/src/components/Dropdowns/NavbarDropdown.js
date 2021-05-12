@@ -45,14 +45,7 @@ export default function NavbarDropdown() {
               marginRight="1rem"
               key={key}
             />
-              <Link
-                component="a"
-                key={key}
-                to={prop.layout + prop.path}
-                underline="none"
-              >
-                {prop.name}
-              </Link>
+            {prop.name}
           </Box>
         )
       }
