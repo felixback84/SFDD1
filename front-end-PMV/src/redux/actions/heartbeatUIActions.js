@@ -5,11 +5,12 @@ import {
     GET_EVENTS_FROM_HEARTBEAT_THING,
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     //POST_INACTIVE_COMMAND_HEARTBEAT_THING,
-    GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS,
+    //GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS,
     LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
     //GET_TOP5COORDSMATCHES,
     SET_ERRORS
-} from '../types';
+} from '../types'; 
 
 // firebase client libs
 import firebase from '../../fb/utilities/firebase'; 
@@ -18,24 +19,26 @@ import axios from 'axios';
 
 // declarate a function to get data from db
 export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    // event
+    dispatch({ type: LOADING_GET_EVENTS_FROM_HEARTBEAT_THING });
 
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
-
+ 
     // snapshot
     const doc = firebase
         .firestore().doc(`/userDevices/${userDeviceId}`) 
         .collection('liveDataSets').doc(thingId)
     const observer = doc.onSnapshot(docSnapshot => {
         const resultDB = docSnapshot.data();    
-        // dispatch
+        // dispatch data
         dispatch({ 
             type: GET_EVENTS_FROM_HEARTBEAT_THING,
             payload: resultDB
         });
-        dispatch({ type: STOP_LOADING_UI });
+        // event
+        dispatch({ type: STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING });
     }, err => {
         console.log(`Encountered error: ${err}`);
     });

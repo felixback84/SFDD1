@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
 // components
-import GoogleMap from '../../sections/GoogleMap';
-import ContentBoxMarkerUserDeviceModeOne from './ContentBoxMarkerUserDeviceModeOne'
 import ContentBoxMarkerTop5TagsModeOne from './ContentBoxMarkerTop5TagsModeOne';
+import GoogleMap from '../../sections/GoogleMap';
 // Redux stuff
 import { connect } from 'react-redux';
 // _
 let _ = require('underscore');
 
- //////////////////////////////////////////////////// userDevice
+//////////////////////////////////////////////////// userDevice
 
-// InfoWindow component userDevice
-const InfoWindowUserDevie = ({usercredentials, matchdataresults}) => {
+//InfoWindow component userDevice
+const InfoWindowUserDevie = ({credentials, profiletomatch}) => {
   return (
     <>
       <ContentBoxMarkerUserDeviceModeOne 
-        usercredentials={usercredentials}
-        matchdataresults={matchdataresults}
+        credentials={credentials}
+        profiletomatch={profiletomatch}
       />
     </>  
   );
 };
 
 // Marker component user device
-const MarkerUserDevice = ({ show, usercredentials, matchdataresults }) => {
+const MarkerUserDevice = ({ show, credentials, profiletomatch }) => {
   // styles
   const markerStyle = {
     border: '1px solid white',
@@ -38,10 +37,10 @@ const MarkerUserDevice = ({ show, usercredentials, matchdataresults }) => {
   return (
     <>
       <div style={markerStyle} />
-      {show && <InfoWindowUserDevie 
-        usercredentials={usercredentials}
-        matchdataresults={matchdataresults}
-      />}
+        {show && <InfoWindowUserDevie 
+          credentials={credentials}
+          profiletomatch={profiletomatch}
+        />}
     </>
   );
 };
@@ -78,57 +77,49 @@ const MarkerTop5Tags = ({ show, top5tag }) => {
   );
 };
 
-class MarkerInfoWindow extends Component {
-
-  static defaultProps = {
-    center: {
-      lat: this.props.coords.lat,
-      lng: this.props.coords.lon
-    },
-    zoom: 19
-  };
+class MarkerInfoWindowModeOne extends Component {
   
   render() {
+  
     // redux state
     const {
+      // user
+      credentials,
+      profileToMatch,
+      coords,
+      // top5Tags
+      loading,
       top5Tags,
-      userCredentials,
-      matchDataResults,
-      coords
     } = this.props
 
     return (
       <>
-        {
-          <GoogleMap
-            defaultCenter={this.props.center}
-            defaultZoom={this.props.zoom}
-            bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-          >
-            {/* userMarker */}
+        <GoogleMap>
+          {/* user marker */}
+          {
             <MarkerUserDevice
               lat={coords.lat}
               lng={coords.lon}
-              usercredentials={userCredentials}
-              matchdataresults={matchDataResults}
-              show={true}
+              credentials={credentials}
+              profiletomatch={profileToMatch}
+              show={false}
             />
-            {/* vendors markers */}
-            {
-              !_.isEmpty(top5Tags) && (
-                top5Tags.map((top5Tag) => (
-                  <MarkerTop5Tags
-                    key={top5Tag.doc.id}
-                    lat={top5Tag.coords.lat}
-                    lng={top5Tag.coords.lon}
-                    show={true}
-                    top5tag={top5Tag}
-                  />
-                ))
-              )
-            }
-          </GoogleMap>
-        }
+          }
+          {/* top5Tags markers */}
+          {
+            loading === false && (
+              top5Tags.map((top5Tag) => (
+                <MarkerTop5Tags
+                  key={top5Tag.coords.lat + top5Tag.coords.lon}
+                  lat={top5Tag.coords.lat}
+                  lng={top5Tag.coords.lon}
+                  show={false}
+                  top5tag={top5Tag}
+                />
+              ))
+            )
+          }
+        </GoogleMap>
       </>
     );
   }
@@ -136,10 +127,13 @@ class MarkerInfoWindow extends Component {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-  top5Tags:state.userDevices1.top5Tags,
-  userCredentials: state.user.userCredentials,
-  matchDataResults: state.heartbeatThing1.thingLiveDataSets.matchDataResults,
-  coords: state.heartbeatThing1.thingLiveDataSets.coords
+  // user
+  credentials: state.user.credentials,
+  profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
+  coords: state.heartbeatThing1.thingLiveDataSets.coords,
+  // top5Tags
+  loading: state.userDevices1.loading,
+  top5Tags: state.userDevices1.top5Tags,
 });
 
-export default connect(mapStateToProps)(MarkerInfoWindow)
+export default connect(mapStateToProps)(MarkerInfoWindowModeOne)

@@ -16,11 +16,11 @@ const useStyles = makeStyles(styles);
 
 // badges
 const ArrayListBadge = (props) => {
-    let matchDataResults = props.matchdataresults
+    let profileToMatch = props.profiletomatch
     let arrWithTags = [];
     let counter = 0
-    for (let keyPair in matchDataResults) {
-        arrWithTags.push(matchDataResults[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+    for (let keyPair in profileToMatch) {
+        arrWithTags.push(profileToMatch[keyPair].map((item)=><Chip label={item} key={counter++}/>))
     }  
     return(
         <GridContainer>
@@ -36,7 +36,8 @@ const ContentBoxMarkerTop5TagsModeOne = (props) => {
     const classes = useStyles();
     // props
     const {
-        userCredentials:{
+        profiletomatch,
+        credentials:{
             bio,
             email,
             imgUrl,
@@ -58,7 +59,7 @@ const ContentBoxMarkerTop5TagsModeOne = (props) => {
                                 {type}
                             </h5>
                             {/* arr of badges */}
-                            <ArrayListBadge profiletomatch={props.profiletomatch}/>
+                            <ArrayListBadge profiletomatch={profiletomatch}/>
                             {/* bio */}
                             <h4 className={classes.cardTitleWhite}>
                                 {bio}

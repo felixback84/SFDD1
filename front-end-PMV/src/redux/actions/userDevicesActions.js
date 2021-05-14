@@ -1,8 +1,13 @@
 // userDevices actions
 import {
+    // events
     LOADING_UI,
     STOP_LOADING_UI,
     LOADING_USER_DEVICES,
+    STOP_LOADING_USER_DEVICES,
+    LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+    // data
     GET_USER_DEVICES,
     GET_USER_DEVICE,
     GET_ACTIVE_USER_DEVICES,
@@ -22,8 +27,10 @@ import axios from 'axios';
 
 // redux action to get one specific userDevice
 export const getUserDevices = () => (dispatch) => {
+    // events
     dispatch({ type: LOADING_UI });
     dispatch({ type: LOADING_USER_DEVICES });
+
     axios
         .get(`/userdevices`)
         .then((res) => { 
@@ -31,8 +38,10 @@ export const getUserDevices = () => (dispatch) => {
                 type: GET_USER_DEVICES,
                 payload: res.data
             });
-            //dispatch({ type: STOP_LOADING_USER_DEVICES});
+            
+            // events
             dispatch({ type: STOP_LOADING_UI });
+            dispatch({ type: STOP_LOADING_USER_DEVICES });
         })
         .catch((err) => console.log(err));
 }
@@ -93,6 +102,9 @@ export const heartbeatPostSearchingMode = (objSearchingModeData) => (dispatch) =
 // declarate a function to get data from db for top5Tags (modeOne)
 export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
 
+    // events
+    dispatch({ type:LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
+
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
@@ -110,6 +122,7 @@ export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
  
     // push data
     const observer = data.then((dataSnapshot) => {
+
         dataSnapshot.forEach((doc)=>{
             listOfTop5Tags.push({
                 ...doc.data()
@@ -120,7 +133,10 @@ export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
             type: GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
             payload: listOfTop5Tags
         });
-        dispatch({ type: STOP_LOADING_UI });
+
+        // events
+        dispatch({ type:STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
+        
     }, err => {
         console.log(`Encountered error: ${err}`);
     });
@@ -142,6 +158,7 @@ export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) 
     
     // push data
     const observer = data.then(doc => {
+        
         const resultDB = doc.data(); 
         // dispatch
         dispatch({ 

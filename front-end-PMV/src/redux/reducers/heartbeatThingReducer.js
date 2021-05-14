@@ -1,6 +1,7 @@
 // user actions
 import {
     LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
     GET_EVENTS_FROM_HEARTBEAT_THING,
     SET_HEARTBEAT_SEARCHING_MODE,
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
@@ -16,7 +17,7 @@ const initialState = {
         profileToMatch:{}, 
         searchingMode:[],
     },
-};
+}; 
 
 // function to determine the type of action to set state
 export default function(state = initialState, action){
@@ -26,6 +27,11 @@ export default function(state = initialState, action){
                 ...state,
                 loading: true
             };
+        case STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING:
+            return{
+                ...state,
+                loading: false
+            };    
         /////////////////////////////////////////////////// liveDataSets response 
         case GET_EVENTS_FROM_HEARTBEAT_THING:
             return{

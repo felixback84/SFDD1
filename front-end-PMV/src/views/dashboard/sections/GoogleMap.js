@@ -1,77 +1,61 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // mui
 import Box from "@material-ui/core/Box";
-// componets
+// google maps
 import GoogleMapReact from 'google-map-react';
-import MarkerInfoWindowModeOne from 'views/dashboard/components/modeOne/MarkerInfoWindowModeOne';
-// import MarkerInfoWindowModeTwo from 'views/dashboard/components/modeOne/MarkerInfoWindowModeTwo';
-// import MarkerInfoWindowModeThree from 'views/dashboard/components/modeOne/MarkerInfoWindowModeThree';
-// import MarkerInfoWindowModeFour from 'views/dashboard/components/modeOne/MarkerInfoWindowModeFour';
+// Redux stuff
+import { connect } from 'react-redux';
+// _
+let _ = require('underscore');
 
-// pick the right marker mix
-const pickerMarkerMix = (searchingmode) => {
-	switch(searchingmode){
-		case "modeOne":
-			return(
-				<MarkerInfoWindowModeOne 
-					//coords={coords}
-					//top5tags={top5Tags}
-				/>
-			)
-		break;	
-		// case "modeTwo":	
-		// 	return(
-		// 		<MarkerInfoWindowModeTwo 
-		// 			coords={coords}
-		// 			top5tag={top5Tag}
-		// 		/>
-		// 	)
-		// break;
-		// case "modeThree":	
-		// 	return(
-		// 		<MarkerInfoWindowModeThree 
-		// 			coords={coords}
-		// 			top5products={top5Products}
-		// 		/>
-		// 	)
-		// break;
-		// case "modeFour":	
-		// 	return(
-		// 		<MarkerInfoWindowModeFour 
-		// 			coords={coords}
-		// 			top5product={top5Product}
-		// 		/>
-		// 	)
-		// break;
-		default:
-			return(
-				null
-			)
+
+const GoogleMap = ({ children, ...props }) => {
+
+	// checker of data available
+	if(props.loading == false){
+		// print
+		console.log(`coords:${JSON.stringify(props.coords)}`)
+
+		return(
+			<>
+				<Box
+					height="600px"
+					position="center"
+					width="100%"
+					overflow="hidden"
+					borderRadius=".375rem"
+				>
+					<GoogleMapReact
+						defaultCenter={[props.coords.lat,props.coords.lon]}
+						defaultZoom={19}
+						bootstrapURLKeys={{
+							// key: process.env.REACT_APP_MAP_KEY,
+							key: 'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'
+						}}
+						// yesIWantToUseGoogleMapApiInternals
+						// onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+						{...props}
+					>
+						{/* picker mix */}
+						{children}
+					</GoogleMapReact>
+				</Box>
+			</>
+		)
+	} else {
+		return(
+			<>
+				<p>...wait for coords</p>
+			</>
+		)
 	}
-}
+	
+};
 
-const GoogleMap = ({ ...props }) => (
-	<>
-		<Box
-			height="600px"
-			position="relative"
-			width="100%"
-			overflow="hidden"
-			borderRadius=".375rem"
-		>
-			<GoogleMapReact
-				bootstrapURLKeys={{
-					// key: process.env.REACT_APP_MAP_KEY,
-					key: 'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'
-				}}
-				{...props}
-			>
-				{/* picker mix */}
-				{pickerMarkerMix(props.searchingmode)}
-			</GoogleMapReact>
-		</Box>
-	</>
-);
+// connect to global state in redux
+const mapStateToProps = (state) => ({	
+	loading:state.heartbeatThing1.loading,
+	coords:state.heartbeatThing1.thingLiveDataSets.coords,
+});
 
-export default GoogleMap;
+export default connect(mapStateToProps)(GoogleMap);

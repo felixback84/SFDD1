@@ -1,25 +1,27 @@
-// UI reducer types
+//////////////////////////////////////////////////////////////// UI reducer types //////////////////////////////////////////////////////////////
 export const SET_ERRORS = 'SET_ERRORS';
-export const LOADING_UI = 'LOADING_UI';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const LOADING_DATA = 'LOADING_DATA';
-export const STOP_LOADING_UI = 'STOP_LOADING_UI';
+    // events
+    export const LOADING_UI = 'LOADING_UI';
+    export const STOP_LOADING_UI = 'STOP_LOADING_UI';
 
 
-// User reducer types
+//////////////////////////////////////////////////////////////// User reducer types //////////////////////////////////////////////////////////////
 export const SET_AUTHENTICATED = 'SET_AUTHENTICATED';
 export const SET_UNAUTHENTICATED = 'SET_UNAUTHENTICATED';
-export const LOADING_USER = 'LOADING_USER';
 export const SET_USER = 'SET_USER'; 
 export const GET_ACTIVE_USER_DEVICES = 'GET_ACTIVE_USER_DEVICES';
 export const GET_INACTIVE_USER_DEVICES = 'GET_INACTIVE_USER_DEVICES';
 export const GET_ACTIVE_USER_ADVENTURES = 'GET_ACTIVE_USER_ADVENTURES';
 export const GET_INACTIVE_USER_ADVENTURES = 'GET_INACTIVE_USER_ADVENTURES';
 export const MARK_DEVICE_NOTIFICATIONS_READ = 'MARK_DEVICE_NOTIFICATIONS_READ';
+    
+    // events
+    export const LOADING_USER = 'LOADING_USER';
 
 
-// userDevices reducers types
-export const LOADING_USER_DEVICES = 'LOADING_USER_DEVICES';
+////////////////////////////////////////////////////////////// userDevices reducers types //////////////////////////////////////////////////////////
 export const GET_USER_DEVICES = 'GET_USER_DEVICES';
 export const GET_USER_DEVICE = 'GET_USER_DEVICE'; 
 // client side fb
@@ -28,22 +30,31 @@ export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'GET_DATA_FROM_
 export const GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
 export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
 
+    // events
+    export const LOADING_USER_DEVICES = 'LOADING_USER_DEVICES';
+    export const STOP_LOADING_USER_DEVICES = 'STOP_LOADING_USER_DEVICES';
+    export const LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS';
+    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS';
 
-// heartbeat thing reducers types
-export const LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'LOADING_GET_EVENTS_FROM_HEARTBEAT_THING';
+
+//////////////////////////////////////////////////////////////// heartbeat thing reducers types //////////////////////////////////////////////////////////////
 // to set the searching mode
 export const SET_HEARTBEAT_SEARCHING_MODE = 'SET_HEARTBEAT_SEARCHING_MODE'
 // from liveDataSets ---- client side fb
 export const GET_EVENTS_FROM_HEARTBEAT_THING = 'GET_EVENTS_FROM_HEARTBEAT_THING';
 //export const POST_ACTIVE_COMMAND_HEARTBEAT_THING = 'POST_ACTIVE_COMMAND_HEARTBEAT_THING';
 //export const POST_INACTIVE_COMMAND_HEARTBEAT_THING = 'POST_INACTIVE_COMMAND_HEARTBEAT_THING';
+    
+// events
+    export const LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'LOADING_GET_EVENTS_FROM_HEARTBEAT_THING';
+    export const STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING'
 
 
-// charts 
+//////////////////////////////////////////////////////////////// charts  //////////////////////////////////////////////////////////////
 export const GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY = 'GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY';
 
 
-// Checkouts reducer types
+//////////////////////////////////////////////////////////////// Checkouts reducer types //////////////////////////////////////////////////////////////
 export const SET_SHIPPING_ADDRESS_CHECKOUT = 'SET_SHIPPING_ADDRESS_CHECKOUT';
 export const SET_BILLING_ADDRESS_CHECKOUT = 'SET_BILLING_ADDRESS_CHECKOUT';
 export const SET_CREDIT_CARD = 'SET_CREDIT_CARD';
@@ -53,14 +64,14 @@ export const GET_CHECKOUTS = 'GET_CHECKOUTS';
 export const GET_CHECKOUT = 'GET_CHECKOUT';
 
 
-// DataSets reducer types
+//////////////////////////////////////////////////////////////// DataSets reducer types //////////////////////////////////////////////////////////////
 export const LOADING_DATASETS = 'LOADING_DATASETS';
 export const POST_DATASET = 'POST_DATASET';
 export const GET_DATASETS = 'GET_DATASETS';
 export const GET_DATASET = 'GET_DATASET';
 
 
-// Devices reducer types
+//////////////////////////////////////////////////////////////// Devices reducer types //////////////////////////////////////////////////////////////
 export const LOADING_DEVICES = 'LOADING_DEVICES';
 export const GET_DEVICES = 'GET_DEVICES';
 export const GET_DEVICE = 'GET_DEVICE';

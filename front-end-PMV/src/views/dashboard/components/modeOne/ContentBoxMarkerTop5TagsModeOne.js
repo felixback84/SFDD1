@@ -16,7 +16,7 @@ const useStyles = makeStyles(styles);
 
 // badges 
 const ArrayListBadge = (props) => {
-    let matchDataResults = props.top5tag.matchdataresults
+    let matchDataResults = props.matchdataresults
     let counter = 0
     let arrWithTags = [];
     for (let keyPair in matchDataResults) {
@@ -36,7 +36,7 @@ const ContentBoxMarkerTop5TagsModeOne = (props) => {
     const classes = useStyles();
     // props
     const {
-        top5Tag:{
+        top5tag:{
             matchDataResults,
             userCredentials:{
                 bio,
