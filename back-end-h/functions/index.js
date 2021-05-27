@@ -36,7 +36,7 @@ const {
     getActiveUserDevices,
     getInactiveUserDevices,
     heartbeatPostSearchingMode,
-    postProfileToSearchUserDevices, //// find bussiness
+    postProfileToSearchUserDevices, //// find bussiness 
     selectStaticDeviceToSearchByUserDevice,
     selectProductOfStaticDeviceToSearchByUserDevice,
     postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,

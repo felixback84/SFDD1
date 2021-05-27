@@ -7,35 +7,46 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 // components
 import Header from "../../components/Headers/Header.js";
-import GoogleMap from "./sections/GoogleMap"
 import SkeletonDashboard from "./components/SkeletonDashboard.js";
+import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchingModeOne"
 
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
 import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
 
-// componets
-import MarkerInfoWindowUserDevice from 'views/dashboard/components/modeOne/MarkerInfoWindowUserDevice'
-import MarkerInfoWindowModeOne from 'views/dashboard/components/modeOne/MarkerInfoWindowModeOne';
-// import MarkerInfoWindowModeTwo from 'views/dashboard/components/modeOne/MarkerInfoWindowModeTwo';
-// import MarkerInfoWindowModeThree from 'views/dashboard/components/modeOne/MarkerInfoWindowModeThree';
-// import MarkerInfoWindowModeFour from 'views/dashboard/components/modeOne/MarkerInfoWindowModeFour';
-// Redux stuff
+// components
+import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
+// import SearchEngine from "./components/utils/SearchEngine/SearchEngine"
 
 // styles
 import componentStyles from "assets/theme/views/admin/dashboardOne.js";
+import SearchEngine from './components/utils/SearchEngine/SearchEngine.js';
 const useStyles = componentStyles;
 
-// _
-let _ = require('underscore');
 
 // pick the right marker mix
-const pickerMarkerMix = (searchingmode) => {
+const pickerMarkerMix = (searchingmode,data) => {
+	const classes = data
 	switch(searchingmode){
 		case "modeOne":
 			return(
-				<MarkerInfoWindowModeOne/>
+				<>
+					<Grid container>
+						<Grid item xs={12}>
+							<Card classes={{ root: classes.cardRoot }}>
+								<GoogleMapModeOne/>
+							</Card>
+						</Grid>
+					</Grid>
+					
+					<Grid container>
+						<Grid item xs={12}>
+							{/* charts results*/}
+							<ChartResultsSearchingModeOne/>
+						</Grid>
+					</Grid>
+				</>	
 			)
 		break;	
 		// case "modeTwo":	
@@ -44,7 +55,7 @@ const pickerMarkerMix = (searchingmode) => {
 		// 			coords={coords}
 		// 			top5tag={top5Tag}
 		// 		/>
-		// 	)
+		// 	) 
 		// break;
 		// case "modeThree":	
 		// 	return(
@@ -99,7 +110,7 @@ class Dashboard extends Component {
 		} = this.props
 
 		// dash markup
-		const dashboardMarkUp = ! ui.loading ? (
+		const dashboardMarkUp = !ui.loading ? (
 			<>
 				{/* static bg & mode boxes*/}
 				<Header 
@@ -113,14 +124,8 @@ class Dashboard extends Component {
 					marginTop="-6rem"
 					classes={{ root: classes.containerRoot }}
 				>
-					<Grid container>
-						<Grid item xs={12}>
-							<Card classes={{ root: classes.cardRoot }}>
-								{/* picker mix */}
-								{pickerMarkerMix(searchingMode[0])}
-							</Card>
-						</Grid>
-					</Grid>
+					{/* picker mix */}
+					{pickerMarkerMix(searchingMode[0],classes)}
 				</Container>
 			</>
 		) : (

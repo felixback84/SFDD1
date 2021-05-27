@@ -106,7 +106,7 @@ const Admin = (props) => {
                 imgAlt: "...",
               }}
               dropdown={<NavbarDropdown/>}
-                // input={
+                //input={
                 //   // search box
                 //   <FormControl variant="outlined" fullWidth>
                 //     <InputLabel htmlFor="outlined-adornment-search-responsive">

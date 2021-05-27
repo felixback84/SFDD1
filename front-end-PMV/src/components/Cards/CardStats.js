@@ -73,7 +73,7 @@ function CardStats({ subtitle, title, footer, icon, color }) {
           </Grid>
           {footer ? (
             <Box
-              component="p"
+              component="div"
               fontSize=".875rem"
               color={theme.palette.gray[600]}
               marginTop="1rem"

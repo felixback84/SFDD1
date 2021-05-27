@@ -6,6 +6,8 @@ import { green, yellow, red, pink, blue } from '@material-ui/core/colors';
 // core components
 import CardStats from "../../../../components/Cards/CardStats.js";
 import SearchingModeSwitcherOne from "./SearchingModeSwitcherOne"
+// components
+import SearchEngine from "../utils/SearchEngine/SearchEngine"
 // Redux stuff
 import { connect } from 'react-redux';
 
@@ -59,7 +61,7 @@ const SearchingModeCardModeOne = (props) => {
 				<CardStats
 					subtitle={props.title}
 					title={
-						data.top5Tags.length != 0 ? 
+						data.top5Tags.length !== 0 ? 
 						(data.top5Tags[0].meters.toFixed(2)):(0)
 					} // number of items
 					icon={data.icon}
@@ -73,6 +75,7 @@ const SearchingModeCardModeOne = (props) => {
 								{/* switcher */}
 								<SearchingModeSwitcherOne mode={props.mode}/>
 							</Box>
+							
 							{/* bussines item closer */}
 							<Box
 								component="span"
@@ -82,7 +85,7 @@ const SearchingModeCardModeOne = (props) => {
 								alignItems="center"
 							>
 								The closer bussines to you is: {
-									data.top5Tags.length != 0 ? 
+									data.top5Tags.length !== 0 ? 
 									(data.top5Tags[0].userCredentials.companyName):("")
 								}
 							</Box>
@@ -96,13 +99,23 @@ const SearchingModeCardModeOne = (props) => {
 							>
 								You match with {data.top5Tags.length} bussines
 							</Box>
+							<Box
+								component="div"
+								fontSize=".875rem"
+								marginRight=".5rem"
+								display="flex"
+								alignItems="center"
+							>
+								{/* search engine */}
+								<SearchEngine searchingmode="modeOne"/>
+							</Box>
 						</Fragment>
 					}
-				/>	
+				/>
 			</>
 		)
 	}
-
+ 
 	// data
 	const data = {
 		color:props.thingLiveDataSets.colorValue,

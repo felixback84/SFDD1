@@ -4,6 +4,7 @@ import {
     STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
     GET_EVENTS_FROM_HEARTBEAT_THING,
     SET_HEARTBEAT_SEARCHING_MODE,
+    POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     //POST_INACTIVE_COMMAND_HEARTBEAT_THING 
 } from '../types';
@@ -11,6 +12,7 @@ import {
 // initial state
 const initialState = {
     loading: false,
+    response:"",
     thingLiveDataSets:{
         coords:{}, 
         colorValue:{}, 
@@ -38,12 +40,17 @@ export default function(state = initialState, action){
                 ...state,
                 thingLiveDataSets: action.payload,
                 loading: false,
-                //load: true
             };   
         case SET_HEARTBEAT_SEARCHING_MODE:
             return {
                 ...state,
                 userDevice: action.payload,
+                loading: false
+            };     
+        case POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
+            return {
+                ...state,
+                response:action.payload,
                 loading: false
             };     
         // case POST_ACTIVE_COMMAND_HEARTBEAT_THING:

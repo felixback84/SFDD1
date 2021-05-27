@@ -4,13 +4,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
 // components
-//import SearchingModeCard from '../../views/dashboard/components/SearchingModeCard'
 import SearchingModeCardModeOne from '../../views/dashboard/components/modeOne/SearchingModeCardModeOne'
-import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
-import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
-import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
- 
+// import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
+// import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
+// import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
+import SearchEngine from "../../views/dashboard/components/utils/SearchEngine/SearchEngine"
+
 // icons
 import GroupAdd from "@material-ui/icons/GroupAdd";
 // styles
@@ -31,7 +32,7 @@ const Header = (props) => {
         >
           <div>
             <Grid container>
-              <Grid item xl={3} lg={6} xs={12}>
+              <Grid item xl={3} lg={3} xs={12}>
                 {/* modeOne */}
                 <SearchingModeCardModeOne 
                   title="modeOne"
@@ -39,7 +40,7 @@ const Header = (props) => {
                   mode="modeOne" 
                 /> 
               </Grid>
-              <Grid item xl={3} lg={6} xs={12}>
+              <Grid item xl={3} lg={3} xs={12}>
                 {/* modeTwo */}
                 {/* <SearchingModeCardModeTwo
                   title="modeTwo"
@@ -49,7 +50,7 @@ const Header = (props) => {
 					        idofspecificproduct={props.idofspecificproduct}
                 /> */}
               </Grid>
-              <Grid item xl={3} lg={6} xs={12}>
+              <Grid item xl={3} lg={3} xs={12}>
                 {/* modeThree */}
                 {/* <SearchingModeCardModeThree
                   title="modeThree"
@@ -57,7 +58,7 @@ const Header = (props) => {
                   mode="modeThree"
                 /> */}
               </Grid>
-              <Grid item xl={3} lg={6} xs={12}>
+              <Grid item xl={3} lg={3} xs={12}>
                 {/* modeFour */}
                 {/* <SearchingModeCardModeFour
                   title="modeFour"

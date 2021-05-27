@@ -2,12 +2,13 @@
 import {
     LOADING_UI,
     STOP_LOADING_UI,
-    GET_EVENTS_FROM_HEARTBEAT_THING,
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     //POST_INACTIVE_COMMAND_HEARTBEAT_THING,
     //GET_TOP5_PRODUCTS_AND_MTS_BETWEEN_DEVICES_TO_PRODUCTS,
     LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+    GET_EVENTS_FROM_HEARTBEAT_THING,
     STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+    POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
     //GET_TOP5COORDSMATCHES,
     SET_ERRORS
 } from '../types'; 
@@ -81,6 +82,18 @@ export const heartbeatPostInactiveCommand = (thingId, inactiveValue) => (dispatc
             })
         });
 } 
+
+// post tags selected by user
+export const postTagsProfileToMatch = (objTagsData) => (dispatch) => {
+    axios.post(`/userdevice/profileToSearch`,objTagsData)
+        .then(res => {
+            dispatch({
+                type: POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
+                payload: res.data
+            }) 
+        })
+        .catch(err => console.log(err));
+}
 
 
 

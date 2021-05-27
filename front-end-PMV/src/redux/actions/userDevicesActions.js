@@ -13,10 +13,11 @@ import {
     GET_ACTIVE_USER_DEVICES,
     GET_INACTIVE_USER_DEVICES,
     SET_HEARTBEAT_SEARCHING_MODE,
+    POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
     GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
-    GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT
+    GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
 } from '../types';
 
 // firebase client libs
@@ -31,7 +32,7 @@ export const getUserDevices = () => (dispatch) => {
     dispatch({ type: LOADING_UI });
     dispatch({ type: LOADING_USER_DEVICES });
 
-    axios
+    axios 
         .get(`/userdevices`)
         .then((res) => { 
             dispatch({
@@ -233,4 +234,5 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, docId) => (dispat
         console.log(`Encountered error: ${err}`);
     });
 }
+
 

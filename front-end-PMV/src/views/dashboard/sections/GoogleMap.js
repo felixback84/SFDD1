@@ -3,11 +3,54 @@ import React from 'react';
 import Box from "@material-ui/core/Box";
 // google maps
 import GoogleMapReact from 'google-map-react';
+// components
+import GoogleMapModeOne from '../components/modeOne/GoogleMapModeOne'
 // Redux stuff
 import { connect } from 'react-redux';
 // _
 let _ = require('underscore');
 
+// const handleApiLoaded = () => {
+// 	// pick the right marker mix
+// 	const pickerMarkerMix = (searchingmode) => {
+// 		switch(searchingmode){
+// 			case "modeOne":
+// 				return(
+// 					// <MarkerInfoWindowModeOne/>
+// 					<GoogleMapModeOne/>
+// 				)
+// 			break;	
+// 			// case "modeTwo":	
+// 			// 	return(
+// 			// 		<MarkerInfoWindowModeTwo 
+// 			// 			coords={coords}
+// 			// 			top5tag={top5Tag}
+// 			// 		/>
+// 			// 	) 
+// 			// break;
+// 			// case "modeThree":	
+// 			// 	return(
+// 			// 		<MarkerInfoWindowModeThree 
+// 			// 			coords={coords}
+// 			// 			top5products={top5Products}
+// 			// 		/>
+// 			// 	)
+// 			// break;
+// 			// case "modeFour":	
+// 			// 	return(
+// 			// 		<MarkerInfoWindowModeFour 
+// 			// 			coords={coords}
+// 			// 			top5product={top5Product}
+// 			// 		/>
+// 			// 	)
+// 			// break;
+// 			default:
+// 				return(
+// 					null
+// 				)
+// 		}
+// 	}
+// }
 
 const GoogleMap = ({ children, ...props }) => {
 
@@ -32,9 +75,8 @@ const GoogleMap = ({ children, ...props }) => {
 							// key: process.env.REACT_APP_MAP_KEY,
 							key: 'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'
 						}}
-						// yesIWantToUseGoogleMapApiInternals
-						// onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-						{...props}
+						yesIWantToUseGoogleMapApiInternals
+						onGoogleApiLoaded={props.onGoogleApiLoaded}
 					>
 						{/* picker mix */}
 						{children}
