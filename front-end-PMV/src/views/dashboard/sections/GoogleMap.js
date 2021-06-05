@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 // google maps
 import GoogleMapReact from 'google-map-react';
 // components
-import GoogleMapModeOne from '../components/modeOne/GoogleMapModeOne'
+// import GoogleMapModeOne from '../components/modeOne/GoogleMapModeOne'
 // Redux stuff
 import { connect } from 'react-redux';
 // _
@@ -77,7 +77,7 @@ const GoogleMap = ({ children, ...props }) => {
 						}}
 						yesIWantToUseGoogleMapApiInternals
 						onGoogleApiLoaded={props.onGoogleApiLoaded}
-					>
+					> 
 						{/* picker mix */}
 						{children}
 					</GoogleMapReact>

@@ -33,7 +33,7 @@ const SearchingModeSwitcherOne = (props) => {
 	// effects
 	useEffect(() => {
 		if(mode.modeType === "modeOne"){
-			// obj to pass
+			// obj to pass 
 			const dataSearchingMode = {
 				objSearchingModeData:{
 					searchingMode:[mode.modeType],

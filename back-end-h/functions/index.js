@@ -37,7 +37,7 @@ const {
     getInactiveUserDevices,
     heartbeatPostSearchingMode,
     postProfileToSearchUserDevices, //// find bussiness 
-    selectStaticDeviceToSearchByUserDevice,
+    selectStaticDevicesToSearchByUserDevice,
     selectProductOfStaticDeviceToSearchByUserDevice,
     postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
     postListOfProductsToFind,
@@ -47,7 +47,7 @@ const {
     findStaticsInSpecificMtsRange,
     ////////////////////////////////////////////// meassure modes
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
-    detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice,
+    detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice,
     meassureOfMatchesInProducts,
     meassureOfMatchToEspecificProduct,
     ////////////////////////////////////////////
@@ -143,7 +143,7 @@ app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMod
 // post profile data to search for userDevice
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
 // post to selectStaticDeviceToSearch by userDevice
-app.post('/userdevice/selectStaticDeviceToSearch',FBAuth,selectStaticDeviceToSearchByUserDevice);
+app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
 // post product to Search by userDevice
 app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
 // post coords points from app in userDevice geoCoords collection
@@ -481,7 +481,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         // conditions
                         let searchingMode = doc.data().searchingMode
                         // data to pass
-                        let data = doc.data()
+                        let data = doc.data() 
                         // print
                         console.log(
                             `searchingMode & dataToMeassure: 
@@ -505,8 +505,11 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                         } else if(searchingMode[0] === "modeTwo"){
                             // to specific staticDevice (vendors)
                             // run it meassure GPS for a specific static device pick by the user
-                            await detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice(
-                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            const res = await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            const resfin = await res
+                            console.log(`resfin:${JSON.stringify(resfin)}`)
+                            await detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice(
+                                resfin
                             );
                             // print 
                             console.log("say hello to my little friend from thing modeTwo")

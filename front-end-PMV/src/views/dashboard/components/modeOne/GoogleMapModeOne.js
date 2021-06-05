@@ -17,13 +17,12 @@ import { connect } from 'react-redux';
 // _
 let _ = require('underscore');
 
-
 const handleApiLoaded = (map, maps,{...data}) => {
 	
 	//////////////////////////////////////////////////// userDevices - buyers - users -dynamics
 	const markersDynamicDevices = []
 	const infoWindowsDynamicDevices = [];
-	// badges 
+	//badges 
 	const arrayListBadgeUSerDevice = (data) => {
 		let profileToMatch = data.profileToMatch
 		let arrWithTags = [];
@@ -69,7 +68,6 @@ const handleApiLoaded = (map, maps,{...data}) => {
 			
 		</div>`;
 
-		
 		markersDynamicDevices.push(new maps.Marker({
 			position: {
 				lat: data.coords.lat,
@@ -162,7 +160,15 @@ const handleApiLoaded = (map, maps,{...data}) => {
 	});
 };
 
+// const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
 class GoogleMapModeOne extends Component {
+
+	// state
+	constructor(props) {
+		super(props);
+		this.state= {markers: this.props.coords};   
+	}
 
 	render(){
 		// redux state
@@ -185,17 +191,25 @@ class GoogleMapModeOne extends Component {
 			return(
 				<>
 					<GoogleMap
-						onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps,{
-							// user
-							credentials,
-							profileToMatch,
-							//matchDataResults,
-							coords,
-							// top5Tags
-							top5Tags,})}
+						onGoogleApiLoaded={
+							({ map, maps }) => handleApiLoaded(map, maps,
+								{
+									// user
+									credentials,
+									profileToMatch,
+									//matchDataResults,
+									coords,
+									// top5Tags
+									top5Tags,
+								}
+							)}
 					>
-						{/* picker mix */}
-						{/* {this.children} */}
+						{/* user marker */}
+						{/* <AnyReactComponent
+							lat={coords.lat}
+							lng={coords.lon}
+							txt="hi"
+						/> */}
 					</GoogleMap>
 				</>
 			)

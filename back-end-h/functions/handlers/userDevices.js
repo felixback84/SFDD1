@@ -420,7 +420,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             // push in to arr
             mtsBetweenDevices.push({
                 meters:distanceInMeters,
-                thingId:top5Coords[i].thingId
+                thingId:inWaitAfter.top5Coords[i].thingId
             })
             // return mtsBetweenDevices
             let userDeviceId = inWaitAfter.thingId.split("-").slice(2).toString();
@@ -442,7 +442,6 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
         console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
         return mtsBetweenDevices
     }  
-
     // pass mts distance to top5Coords array in doc
     await checkDistance(dataEnter)
     // import    
@@ -453,65 +452,67 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     await metersRangeMatchColor(mtsBetweenDevices, dataEnter.thingId);
 }
 
-// to meassure between a specific static devices and dynamic
-exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificStaticDevice = async (inWait) => {
-    // dp update part
-    let userDeviceId = inWait.thingId.split("-").slice(2).toString();
-    // var to hold mtsBetweenDevices
-    let mtsBetweenDevices = [];
+// to meassure between a specifics statics devices and dynamic
+exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice = async (inWait) => {
     // data from db after message income
     const dataEnter = inWait;
-    // pick the last item in the arr
-    const id = dataEnter.idOfSpecificUserDevice
+    // print
+    console.log(`inWait: ${JSON.stringify(inWait)}`)
+    // dp update part
+    //let userDeviceId = dataEnter.thingId.split("-").slice(2).toString();
+    let userDeviceId = "CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ"
+    // var to hold mtsBetweenDevices
+    let mtsBetweenDevices = [];
     // init meassure
-    console.log(`id of array to find - id:${id}`)
+    console.log(`staticDevicesCoords: ${dataEnter.staticDevicesCoords}`)
+    // func
     async function checkDistance(args){
-        console.log(`checking checkDistance to specific static Vs dynaic`)
-        // logic to make the meassure part
-        let R = 6371; // Radius of the earth in km
-        let dLat = (args.staticDevice.coords.lat - args.userDevice.coords.lat) * Math.PI / 180;  // Javascript functions in radians
-        let dLon = (args.staticDevice.coords.lon - args.userDevice.coords.lon) * Math.PI / 180; 
-        let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(args.staticDevice.coords.lat * Math.PI / 180) * Math.cos(args.userDevice.coords.lat* Math.PI / 180) * 
-            Math.sin(dLon/2) * Math.sin(dLon/2); 
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        let d = R * c; // Distance in km
-        let distanceInMeters = d * 1000; // Distance in m
+        console.log(`checking checkDistance to specific statics Vs dynamic`)
+        // loop over staics selected to seek
+        for(let i = 0; i < args.staticDevicesCoords.length; i++){
+            // logic to make the meassure part
+            let R = 6371; // Radius of the earth in km
+            let dLat = (args.staticDevicesCoords[i].coords.lat - args.coords.lat) * Math.PI / 180;  // Javascript functions in radians
+            let dLon = (args.staticDevicesCoords[i].coords.lon - args.coords.lon) * Math.PI / 180; 
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(args.staticDevicesCoords[i].coords.lat * Math.PI / 180) * Math.cos(args.coords.lat* Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            let d = R * c; // Distance in km
+            let distanceInMeters = d * 1000; // Distance in m
+            // print
+            console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
+            // push data to mtsBetweenDevices var
+            mtsBetweenDevices.push({
+                meters:distanceInMeters,
+                thingId:args.staticDevicesCoords[i].docId
+            })
+            // db save mts results part
+            const docRef = db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Tags')
+                .doc(args.staticDevicesCoords[i].docId)
+                
+            // update meters
+            await docRef
+                .update({
+                    meters:distanceInMeters
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }    
         // print
-        console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
-        // run it
-        // push data to mtsBetweenDevices var
-        mtsBetweenDevices.push({
-            meters: distanceInMeters
-        })
-        
-        // db save mts results part
-        const docRef = db
-            .doc(`/userDevices/${userDeviceId}`)
-            .collection('top5Tags')
-            .doc(inWait.docId)
-        // update meters
-        await docRef
-            .update({
-                meters:distanceInMeters
-            })
-            .catch(err => {
-                res.status(500, err);
-            })
+        console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
+        return mtsBetweenDevices
     }
-
-    // args to pass it
-    const argz = {
-        userDevice:{
-            coords:inWait.coords
-        },
-        staticDevice:{
-            coords:inWait.staticDeviceCoords
-        }
-    }
+    // import    
+    const {
+        metersRangeMatchColor,
+    } = require('./utilsForThings');
     // run it
-    await checkDistance(argz);
-    await metersRangeMatch(mtsBetweenDevices,dataEnter.thingId);
+    await checkDistance(dataEnter);
+    await metersRangeMatchColor(mtsBetweenDevices,dataEnter.thingId);
 }
 
 // method to make the meassurment with the list of selected products
@@ -1137,7 +1138,9 @@ exports.heartbeatPostSearchingMode = (req,res) => {
 }
 
 // search and mark a specific static devices to posterior meassure
-exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
+exports.selectStaticDevicesToSearchByUserDevice = (req,res) => {
+    // to deal with arr
+    const FieldValue = admin.firestore.FieldValue;
     const selectProfileToSearchData = req.body;
     // userDeviceId 
     const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2);
@@ -1146,13 +1149,14 @@ exports.selectStaticDeviceToSearchByUserDevice = (req,res) => {
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
         .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
-        
+    // update
     infoInLiveDataSets
-        .update({
-            idOfSpecificStaticDevice: selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch
-        })
+        .update({idOfSpecificStaticDevices: FieldValue.arrayUnion(selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch)})
         .then(()=>{
-            res.json("staticDevice Mark")
+            res.json("staticDevice marked")
+        })
+        .catch(err => {
+            res.status(500, err);
         })
 }
 
@@ -1173,5 +1177,7 @@ exports.selectProductOfStaticDeviceToSearchByUserDevice = (req,res) => {
         })
         .then(()=>{
             res.json("staticDevice porduct Mark")
+        }).catch(err => {
+            res.status(500, err);
         })
 }

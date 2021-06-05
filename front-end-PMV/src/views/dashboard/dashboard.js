@@ -125,7 +125,7 @@ class Dashboard extends Component {
 					classes={{ root: classes.containerRoot }}
 				>
 					{/* picker mix */}
-					{pickerMarkerMix(searchingMode[0],classes)}
+					{/* {pickerMarkerMix(searchingMode[0],classes)} */}
 				</Container>
 			</>
 		) : (

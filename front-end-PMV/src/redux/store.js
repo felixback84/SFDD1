@@ -29,7 +29,7 @@ const reducers = combineReducers({
 });
 
 // creation of store and dev redux tools
-const store = createStore(
+const store = createStore( 
     reducers, 
     initialState, 
     compose(

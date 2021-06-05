@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import Container from "@material-ui/core/Container";
+import Switch from '@material-ui/core/Switch';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,7 +20,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 // comonents
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
-
 // Redux stuff
 import { connect } from 'react-redux';
 // styles
@@ -42,8 +41,11 @@ const arrToppersColumns = (classes,data) => {
 	})
 }
 
-const contentRow = (data,classes) => {
+const ContentRow = (props) => {
 
+	// data from father
+	const data = props.data
+	const classes = props.classes
 	// arr to render results
 	const arrayCells = []
 
@@ -51,24 +53,8 @@ const contentRow = (data,classes) => {
 	data.forEach((top5Tag) => {
 		arrayCells.push(
 			<TableRow
-				key={top5Tag.doc.id}
-			>
-
-				{/* seek marker */}
-				<TableCell
-					classes={{
-						root:
-							classes.tableCellRoot +
-							" " +
-							classes.tableCellRootBodyHead,
-					}}
-					component="th"
-					variant="head"
-					scope="row"
-				>
-
-				</TableCell>
-				
+				key={top5Tag.thingId}
+			>	
 				{/* comapany meters range and inicials */}
 				<TableCell
 					classes={{
@@ -167,8 +153,21 @@ const contentRow = (data,classes) => {
 }
 
 class ChartResultsSearchingModeOne extends Component {
-	render() {
+	// state
+	// constructor(props) {
+	// 	super(props);
+	// 	this.state = {
+	// 		top5Tags:[]
+	// 	}
+	// }
 
+	// componentWillReceiveProps(nextProps) {
+    //     if (nextProps.top5Tags) {
+    //         this.setState({ top5Tags: nextProps.top5Tags });
+    //     }
+	// }
+
+	render() {
 		// redux state
 		const {
 			classes,
@@ -198,13 +197,14 @@ class ChartResultsSearchingModeOne extends Component {
 					{/* tags user table header  */}
 					<CardHeader
 						className={classes.cardHeader}
-						// title={()=>{
-						// 	return(
-						// 		<>
-						// 			<TagsMaker data={profileToMatch}/>
-						// 		</>
-						// 	)
-						// }}
+						// error here
+						title={()=>{
+							return(
+								<>
+									<TagsMaker data={profileToMatch}/>
+								</>
+							)
+						}}
 						titleTypographyProps={{
 							component: Box,
 							marginBottom: "0!important",
@@ -227,7 +227,6 @@ class ChartResultsSearchingModeOne extends Component {
 										arrToppersColumns(
 											classes,
 											[
-												'Mark to seek',
 												'Company Name',
 												'Tags offer',
 												'Ask for',
@@ -241,7 +240,13 @@ class ChartResultsSearchingModeOne extends Component {
 							
 							{/* table content */}
 							<TableBody>
-								{loading == false && contentRow(top5Tags,classes)}
+								{
+									loading == false && 
+										<ContentRow 
+											data={top5Tags} 
+											classes={classes}
+										/>
+								}
 							</TableBody>		
 						</Box>	
 					</TableContainer>

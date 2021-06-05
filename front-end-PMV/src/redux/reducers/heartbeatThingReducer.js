@@ -6,7 +6,7 @@ import {
     SET_HEARTBEAT_SEARCHING_MODE,
     POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS
     //POST_ACTIVE_COMMAND_HEARTBEAT_THING,
-    //POST_INACTIVE_COMMAND_HEARTBEAT_THING 
+    //POST_INACTIVE_COMMAND_HEARTBEAT_THING  
 } from '../types';
 
 // initial state
@@ -32,7 +32,7 @@ export default function(state = initialState, action){
         case STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING:
             return{
                 ...state,
-                loading: false
+                loading: false 
             };    
         /////////////////////////////////////////////////// liveDataSets response 
         case GET_EVENTS_FROM_HEARTBEAT_THING:

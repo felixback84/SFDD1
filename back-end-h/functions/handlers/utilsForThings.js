@@ -4,7 +4,6 @@ const { db } = require('../utilities/admin');
 const { 
     sendCommandGPSColor,   
 } = require('./forThingsHeartbeats');
-const { forEach } = require('underscore');
 
 // color and motor in db
 const colorAndMotorInDb = async (thingId,data) => {
@@ -119,11 +118,11 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             top5Coords.push({
                 docId: doc.id,
                 ...doc.data(),
-                
             })
         });
         
         return {
+            // userDevice data
             thingId:doc.thingId,
             coords:doc.coords,
             // arr
@@ -131,19 +130,42 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
         }
 
     } else if(mode === "modeTwo"){
-        // to specific staticDevice (vendors)
-        // db part
-        const tagsRef = db
-            .doc(`/userDevices/${userDeviceId}`)
-            .collection('top5Tags')
-            .doc(doc.idOfSpecificStaticDevice)
-            .get('coords')
-
-        return {
-            thingId:doc.thingId,
-            coords:doc.coords,
-            docId:doc.idOfSpecificStaticDevice,
-            staticDeviceCoords:tagsRef,
+        // to specifics staticDevice (vendors)
+        // var to count items 
+        let itemsPass = 0
+        // var to hold the list
+        let selectedStaticDevicesToSeek = []
+        // loop 
+        for (let i = 0, len = doc.idOfSpecificStaticDevices.length; i < len; i++) {
+            // print
+            console.log(`idOfSpecificStaticDevices:${doc.idOfSpecificStaticDevices[i]}`)
+            // db part
+            const ref = await db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Tags')
+                .where('thingId','==', doc.idOfSpecificStaticDevices[i])
+                .get()
+            // lopp to extract data    
+            for (const doc of ref.docs) {
+                selectedStaticDevicesToSeek.push({
+                    coords:doc.data().coords,
+                    docId:doc.id
+                })
+                // print
+                console.log(`coords middleware: ${JSON.stringify(selectedStaticDevicesToSeek)}`)
+            }
+            // counter increment
+            itemsPass++
+            // checker
+            if(doc.idOfSpecificStaticDevices.length === itemsPass){
+                return{
+                    // userDevice data
+                    thingId:doc.thingId,
+                    coords:doc.coords,
+                    // statics data
+                    staticDevicesCoords:selectedStaticDevicesToSeek,
+                } 
+            }
         }
     } else if(mode === "modeThree"){
         // to selected products
