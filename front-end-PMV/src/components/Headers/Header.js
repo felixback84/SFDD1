@@ -22,7 +22,7 @@ const Header = (props) => {
   // styles
   const classes = useStyles();
   
-  return (
+  return ( 
     <>
       <div className={classes.header}>
         <Container
@@ -38,6 +38,7 @@ const Header = (props) => {
                   title="modeOne"
                   icon={GroupAdd}
                   mode="modeOne" 
+                  thingid={props.thingid}
                 /> 
               </Grid>
               <Grid item xl={3} lg={3} xs={12}>

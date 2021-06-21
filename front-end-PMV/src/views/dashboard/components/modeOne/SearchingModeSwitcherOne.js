@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
+
+// firebase client libs
+import firebase from '../../../../fb/utilities/firebase'; 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch';
 // Redux stuff
-import store from '../../../../redux/store';
 import { connect } from 'react-redux';
-import { 
-	heartbeatPostSearchingMode, 
-	userDeviceTop5TagsSyncData,
-} from '../../../../redux/actions/userDevicesActions';
+import { heartbeatPostSearchingMode } from '../../../../redux/actions/heartbeatUIActions';
+import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncData } from '../../../../redux/actions/userDevicesActions';
 // styles
 import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
 const useStyles = makeStyles(SearchingModeCardStyles);
@@ -17,36 +17,42 @@ const useStyles = makeStyles(SearchingModeCardStyles);
 // switcher
 const SearchingModeSwitcherOne = (props) => {
 	// styles
-	// const classes = useStyles();
+	const classes = useStyles();
 
 	// hook state
 	const [mode, setMode] = useState({
-		checkedA: false,
+		checked: false,
 		modeType: "",
 	});
-
+ 
 	// handleChange switch
 	const handleChange = (event) => {
-		setMode({ modeType:props.mode, [event.target.name]: event.target.checked });
+		setMode({ 
+			modeType:props.mode, 
+			[event.target.name]: event.target.checked
+		});
 	};
 
 	// effects
-	useEffect(() => {
-		if(mode.modeType === "modeOne"){
+	useEffect(() => { 
+		// 
+		if(mode.modeType === "modeOne" && props.loading === false){
 			// obj to pass 
 			const dataSearchingMode = {
 				objSearchingModeData:{
 					searchingMode:[mode.modeType],
-					thingId:props.thingId
+					thingId:props.thingid
 				}
 			}
-			store.dispatch(heartbeatPostSearchingMode(dataSearchingMode));
+			// run static query data
+			props.heartbeatPostSearchingMode(dataSearchingMode)
 		}
-	})
-	// redux action to extract data from db acoord with the search mode
-	useEffect(()=>{
-		if(mode.modeType === "modeOne"){
-			props.userDeviceTop5TagsSyncData(props.thingId)
+		// checker
+		if(props.thingLiveDataSets.searchingMode[0] === "modeOne" && props.loading === false){
+			// static data from top5Tags
+			// props.userDeviceTop5TagsSyncDataStatic(props.thingid)
+			// live data from top5Tags
+			props.userDeviceTop5TagsSyncData(props.thingid)
 		}
 	})
 	
@@ -54,8 +60,8 @@ const SearchingModeSwitcherOne = (props) => {
 		<FormControlLabel
 			control={
 				<Switch
-					name="checkedA"
-					checked={mode.checkedA}
+					name="checked"
+					checked={mode.checked}
 					onChange={handleChange}		
 				/> 
 			}
@@ -65,13 +71,14 @@ const SearchingModeSwitcherOne = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-	//thingId: state.userDevices1.userDevices[0].thingId,
-	thingId:state.heartbeatThing1.thingLiveDataSets.thingId,
-	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	ui:state.ui,
+	loading:state.userDevices1.loading,
+	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
 
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
+	userDeviceTop5TagsSyncDataStatic,	
 	userDeviceTop5TagsSyncData,
 };
 

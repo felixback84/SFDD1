@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from "@material-ui/core/Avatar";
 import { green, yellow, red, pink, blue } from '@material-ui/core/colors';
 // class colorAndMeters
-import ColorAndMeters from "./ColorAndMeters"
+import ColorAndMeters from "./ColorEngine/ColorEngine"
 
 const useStyles = makeStyles((theme) => ({
     root: {

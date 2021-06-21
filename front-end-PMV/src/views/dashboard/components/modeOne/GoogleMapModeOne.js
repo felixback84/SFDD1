@@ -160,8 +160,6 @@ const handleApiLoaded = (map, maps,{...data}) => {
 	});
 };
 
-// const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
 class GoogleMapModeOne extends Component {
 
 	// state
@@ -203,13 +201,7 @@ class GoogleMapModeOne extends Component {
 									top5Tags,
 								}
 							)}
-					>
-						{/* user marker */}
-						{/* <AnyReactComponent
-							lat={coords.lat}
-							lng={coords.lon}
-							txt="hi"
-						/> */}
+					>	
 					</GoogleMap>
 				</>
 			)

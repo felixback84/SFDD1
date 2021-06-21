@@ -17,13 +17,10 @@ import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatU
 
 // components
 import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
-// import SearchEngine from "./components/utils/SearchEngine/SearchEngine"
 
 // styles
 import componentStyles from "assets/theme/views/admin/dashboardOne.js";
-import SearchEngine from './components/utils/SearchEngine/SearchEngine.js';
 const useStyles = componentStyles;
-
 
 // pick the right marker mix
 const pickerMarkerMix = (searchingmode,data) => {
@@ -40,12 +37,12 @@ const pickerMarkerMix = (searchingmode,data) => {
 						</Grid>
 					</Grid>
 					
-					<Grid container>
+					{/* <Grid container>
 						<Grid item xs={12}>
-							{/* charts results*/}
+							// results
 							<ChartResultsSearchingModeOne/>
 						</Grid>
-					</Grid>
+					</Grid> */}
 				</>	
 			)
 		break;	
@@ -86,13 +83,16 @@ class Dashboard extends Component {
 	componentDidMount() {
 		// userDevices redux action
 		this.props.getUserDevices()
+		
 	}
 
+	// get static data from liveDataSets
 	componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
 		if (this.props.userDevices !== prevProps.userDevices) {
 			// liveDataSets & products redux action
-			this.props.heartbeatThingSyncDataWithLiveDB(this.props.userDevices[0].thingId);
+			// this.props.heartbeatThingSyncDataOnce(this.props.userDevices[0].thingId)
+			this.props.heartbeatThingSyncDataWithLiveDB(this.props.userDevices[0].thingId)
 		}
 	}
 
@@ -101,21 +101,25 @@ class Dashboard extends Component {
 		const {
 			classes,
 			ui,
+			loading,
 			thingLiveDataSets:{
 				coords,
 				searchingMode,
-				idOfSpecificStaticDevice,
-				idOfSpecificProduct
+				idOfSpecificStaticDevices,
+				idOfSpecificProduct,
 			}
 		} = this.props
-
+		// print
+		//console.log(`thingId:${this.props.userDevices[0].thingId}`)
+		console.log(`idOfSpecificStaticDevice:${idOfSpecificStaticDevices}`)
 		// dash markup
-		const dashboardMarkUp = !ui.loading ? (
+		const dashboardMarkUp = !ui.loading  ? (
 			<>
 				{/* static bg & mode boxes*/}
 				<Header 
-					idofspecificstaticdevice={idOfSpecificStaticDevice}
+					idofspecificstaticdevice={idOfSpecificStaticDevices}
 					idofspecificproduct={idOfSpecificProduct}
+					thingid={this.props.userDevices[0].thingId}
 				/>
 				{/* Page content */}
 				<Container
@@ -125,7 +129,7 @@ class Dashboard extends Component {
 					classes={{ root: classes.containerRoot }}
 				>
 					{/* picker mix */}
-					{/* {pickerMarkerMix(searchingMode[0],classes)} */}
+					{pickerMarkerMix(searchingMode[0],classes)}
 				</Container>
 			</>
 		) : (
@@ -143,6 +147,7 @@ class Dashboard extends Component {
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	ui: state.ui,
+	loading: state.userDevices1.loading,
 	userDevices: state.userDevices1.userDevices,
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 });
