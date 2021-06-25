@@ -91,9 +91,10 @@ const SearchingModeCardModeOne = (props) => {
  
 	// data
 	const data = {
-		colorValue: props.thingLiveDataSetsListener.colorValue != undefined ?
+		colorValue: props.thingLiveDataSetsListener.colorValue === undefined ?
 			(props.thingLiveDataSets.colorValue):
-				(props.thingLiveDataSetsListener.colorValue),
+			(props.thingLiveDataSetsListener.colorValue),
+		// colorValue:props.thingLiveDataSetsListener.colorValue,
 		icon:props.icon,
 		top5Tags:props.top5Tags,
 		thingLiveDataSets:props.thingLiveDataSets

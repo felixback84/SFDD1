@@ -14,19 +14,17 @@ import {
     // inactive userDevice
     GET_INACTIVE_USER_DEVICES,
     // top5Tags
-    LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS, 
     STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+        // top5Tags
+        GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE, 
+        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE,
     // top5Tag
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
     // top5Products
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
     // top5Product
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT, 
-    
-    
-    // test
-    MTS_UPDATE
 } from '../types';
 
 // firebase client libs
@@ -100,8 +98,7 @@ export const inactiveUserDevice = (userdeviceid) => (dispatch) => {
 // to get data from db for top5Tags (modeOne) --> static data --> disabled
 export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
 
-    // events
-    //dispatch({ type:LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
+    console.log(`init static top5Tags`)
 
     // vars to ask to db do
     const thingIdVal = thingId
@@ -142,7 +139,10 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
 }
 
 // to get data from db for top5Tags (modeOne) --> dynamic data
-export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
+export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
+
+    console.log(`init live top5Tags`)
+
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
@@ -196,9 +196,11 @@ export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
                         console.log(`minVal:${JSON.stringify(arrSort)}`)
                         // dispatch data
                         dispatch({ 
-                            type: GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+                            type: GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE,
                             payload: arrSort
                         });
+                        // events
+                        dispatch({ type:STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE })
                         // reset arr
                         arr = []
                         console.log(`arrEmpty:${arr}`)
@@ -206,22 +208,6 @@ export const userDeviceTop5TagsSyncData = (thingId) => (dispatch) => {
                 }
         })   
 }
-
-
-
-
-
-// meters top5Tags update --> dynamic data with saga (modeOne)
-export const rexSagaReduces = (data) => (dispatch) => {
-    // dispatch
-    dispatch({ 
-        type: MTS_UPDATE,
-        payload: data
-    });
-}
-
-
-
 
 // declarate a function to get data from a specific db for top5Tags (modeTwo)
 export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) => {

@@ -10,13 +10,11 @@ import {
     // inactive command
     POST_INACTIVE_COMMAND_HEARTBEAT_THING,
     // static data
-    LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_ONCE,
-    GET_EVENTS_FROM_HEARTBEAT_THING_ONCE,
-    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_ONCE,
-    // real time
-    LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_IN_REAL_TIME,
-    GET_EVENTS_FROM_HEARTBEAT_THING_IN_REAL_TIME,
-    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_IN_REAL_TIME,
+    GET_EVENTS_FROM_HEARTBEAT_THING,
+    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
+        // live
+        GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
+        STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
     // seraching mode
     SET_HEARTBEAT_SEARCHING_MODE,
     // post tags by user
@@ -29,49 +27,44 @@ import firebase from '../../fb/utilities/firebase';
 import axios from 'axios';
 
 // get once data from liveDataSets (static data)
-// export const heartbeatThingSyncDataOnce = (thingId) => (dispatch) => {
+export const heartbeatThingSyncDataStatic = (thingId) => (dispatch) => {
 
-//     // event redux dispatch
-//     // dispatch({type:LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_ONCE})
+    console.log(`init static heartbeat`)
 
-//     // vars to db
-//     const thingIdVal = thingId
-//     const userDeviceId = thingIdVal.split("-").slice(2)
+    // vars to db
+    const thingIdVal = thingId
+    const userDeviceId = thingIdVal.split("-").slice(2)
 
-//     // db connection
-//     const doc = firebase 
-//         .firestore()
-//         .doc(`/userDevices/${userDeviceId}`) 
-//         .collection('liveDataSets')
-//         .doc(thingId)
+    // db connection
+    const doc = firebase 
+        .firestore()
+        .doc(`/userDevices/${userDeviceId}`) 
+        .collection('liveDataSets')
+        .doc(thingId)
 
-//     return doc
-//         .get()
-//         .then((doc)=>{
-//             const dataSelect = {
-//                 ...doc.data()
-//                 // coords:doc.data().coords,
-// 				// searchingMode:doc.data().searchingMode,
-// 				// idOfSpecificStaticDevice:doc.data().idOfSpecificStaticDevice,
-// 				// idOfSpecificProduct:doc.data().cooridOfSpecificProductds
-//             }
-//             // data dispatch
-//             dispatch({
-//                 type: GET_EVENTS_FROM_HEARTBEAT_THING_ONCE,
-//                 payload: dataSelect
-//             });
-//             // event
-//             dispatch({ type: STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_ONCE });
-//         })
-//         .catch((err)=>{
-//             console.log(err)
-//         })    
-// }
+    return doc
+        .get()
+        .then((doc)=>{
+            const dataSelect = {
+                ...doc.data()
+            }
+            // data dispatch
+            dispatch({
+                type: GET_EVENTS_FROM_HEARTBEAT_THING,
+                payload: dataSelect
+            });
+            // event
+            dispatch({ type: STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING });
+        })
+        .catch((err)=>{
+            console.log(err)
+        })    
+}
 
 // declarate a function to get data from db
-export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
-    // event
-    // dispatch({ type: LOADING_GET_EVENTS_FROM_HEARTBEAT_THING });
+export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
+
+    console.log(`init live heartbeat`)
 
     // vars to ask to db do 
     const thingIdVal = thingId
@@ -82,33 +75,30 @@ export const heartbeatThingSyncDataWithLiveDB = (thingId) => (dispatch) => {
         .firestore()
         .doc(`/userDevices/${userDeviceId}`) 
         .collection('liveDataSets')
-        .doc(thingId)
-        
-    const observer = doc.onSnapshot(docSnapshot => {
-        const resultDB = docSnapshot.data();    
-        // dispatch data
-        dispatch({ 
-            type: GET_EVENTS_FROM_HEARTBEAT_THING_ONCE,
-            payload: resultDB
-        });
-        // event
-        dispatch({ type: STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_ONCE });
-    }, err => {
-        console.log(`Encountered error: ${err}`);
-    });
+        .doc(thingIdVal)
+    
+    // snap
+    const observer = doc
+        .onSnapshot((docSnapshot)=>{
+            // print
+            const resultDB = {
+                coords: docSnapshot.data().coords,
+                colorValue: docSnapshot.data().colorValue,
+                motorSpeed: docSnapshot.data().motorSpeed,
+            }
+            // print
+            console.log(`liveDataSetsDoc: ${JSON.stringify(resultDB)}`)
+            // dispatch data
+            dispatch({ 
+                type: GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
+                payload: resultDB
+            });
+            // event
+            dispatch({ type: STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE})
+        }, err => {
+            console.log(`Encountered error: ${err}`);
+        })
 }
-
-
-
-
-// export const heartbeatThingSyncDataLive = (thingId) => (dispatch) => {
-
-
-
-// }
-
-
-
 
 // function to post active command to things
 export const heartbeatPostActiveCommand = (thingId, activeValue) => (dispatch) => {
@@ -176,18 +166,6 @@ export const postTagsProfileToMatch = (objTagsData) => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-
-
-
-
-// liveDataSets update --> dynamic data with saga
-export const rexSagaReducesOne = (data) => (dispatch) => {
-    // dispatch
-    dispatch({ 
-        type: GET_EVENTS_FROM_HEARTBEAT_THING_IN_REAL_TIME,
-        payload: data
-    });
-}
 
 
 

@@ -6,16 +6,17 @@ import {
     // userDevice 
     GET_USER_DEVICE,
     // top5Tags
-    LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
+        // live 
+        GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE,
+        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE,
     // top5Tag
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
     // top5Products
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
     // top5Product
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
-    MTS_UPDATE
 } from '../types';
 
 // initial state
@@ -68,42 +69,34 @@ export default function(state = initialState, action){
                 loading: false
             };
 
-        // top5Tags
-        // case LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
-        //     return{
-        //         ...state,
-        //         loading: true
-        //     };
+        // static data 
         case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
             return {
                 ...state,
                 top5Tags: action.payload,
                 loading: false 
             };
-        // case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
-        //     return {
-        //         ...state,
-        //         //top5Tags: ()=>(state.top5Tags[0].meters = action.payload),
-        //         top5Tags: action.payload,
-        //         loading: false 
-        //     };
         case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
+            return{
+                ...state,
+                loading: false
+            };    
+
+        // live    
+        case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
+            return {
+                ...state,
+                //top5Tags: ()=>(state.top5Tags[0].meters = action.payload),
+                top5Tags: action.payload,
+                loading: false 
+            };
+        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
             return{
                 ...state,
                 loading: false
             };
 
-            
-
-        // mts update in top5tags
-        case MTS_UPDATE:
-            return{
-                ...state,
-                top5Tags:[action.payload],
-            }
-
-
-
+        
         // top5Tag 
         case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG:
             return {

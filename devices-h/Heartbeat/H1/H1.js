@@ -49,7 +49,7 @@ fs
             // for loop 
             for (let x = 0, ln = obj.length; x < ln; x++) {
                 // timeout pattern
-                timeOut = x * 7500
+                timeOut = x * 3000
                 // check it
                 if(disabledTelemetry === false){
                     // timeout method

@@ -13,7 +13,7 @@ import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchi
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
-import { heartbeatThingSyncDataWithLiveDB } from '../../redux/actions/heartbeatUIActions';
+import { heartbeatThingSyncDataStatic } from '../../redux/actions/heartbeatUIActions';
 
 // components
 import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
@@ -23,8 +23,12 @@ import componentStyles from "assets/theme/views/admin/dashboardOne.js";
 const useStyles = componentStyles;
 
 // pick the right marker mix
-const pickerMarkerMix = (searchingmode,data) => {
+const pickerMarkerMix = (searchingmode,data,coordz) => {
+	// print
+	console.log(`coordz:${JSON.stringify(coordz)}`)
+	// style
 	const classes = data
+	// switcher
 	switch(searchingmode){
 		case "modeOne":
 			return(
@@ -32,7 +36,7 @@ const pickerMarkerMix = (searchingmode,data) => {
 					<Grid container>
 						<Grid item xs={12}>
 							<Card classes={{ root: classes.cardRoot }}>
-								<GoogleMapModeOne/>
+								<GoogleMapModeOne coords={coordz}/>
 							</Card>
 						</Grid>
 					</Grid>
@@ -83,7 +87,6 @@ class Dashboard extends Component {
 	componentDidMount() {
 		// userDevices redux action
 		this.props.getUserDevices()
-		
 	}
 
 	// get static data from liveDataSets
@@ -91,8 +94,7 @@ class Dashboard extends Component {
 		// Typical usage (don't forget to compare props):
 		if (this.props.userDevices !== prevProps.userDevices) {
 			// liveDataSets & products redux action
-			// this.props.heartbeatThingSyncDataOnce(this.props.userDevices[0].thingId)
-			this.props.heartbeatThingSyncDataWithLiveDB(this.props.userDevices[0].thingId)
+			this.props.heartbeatThingSyncDataStatic(this.props.userDevices[0].thingId)
 		}
 	}
 
@@ -102,8 +104,8 @@ class Dashboard extends Component {
 			classes,
 			ui,
 			loading,
+			coords,
 			thingLiveDataSets:{
-				coords,
 				searchingMode,
 				idOfSpecificStaticDevices,
 				idOfSpecificProduct,
@@ -129,7 +131,7 @@ class Dashboard extends Component {
 					classes={{ root: classes.containerRoot }}
 				>
 					{/* picker mix */}
-					{pickerMarkerMix(searchingMode[0],classes)}
+					{pickerMarkerMix(searchingMode[0],classes,coords)}
 				</Container>
 			</>
 		) : (
@@ -150,9 +152,10 @@ const mapStateToProps = (state) => ({
 	loading: state.userDevices1.loading,
 	userDevices: state.userDevices1.userDevices,
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	coords: state.heartbeatThing1.thingLiveDataSetsListener.coords,
 });
 
-export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataWithLiveDB})(withStyles(useStyles)(Dashboard));
+export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataStatic})(withStyles(useStyles)(Dashboard));
 
 
 

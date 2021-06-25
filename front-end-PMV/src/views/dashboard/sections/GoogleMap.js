@@ -10,54 +10,12 @@ import { connect } from 'react-redux';
 // _
 let _ = require('underscore');
 
-// const handleApiLoaded = () => {
-// 	// pick the right marker mix
-// 	const pickerMarkerMix = (searchingmode) => {
-// 		switch(searchingmode){
-// 			case "modeOne":
-// 				return(
-// 					// <MarkerInfoWindowModeOne/>
-// 					<GoogleMapModeOne/>
-// 				)
-// 			break;	
-// 			// case "modeTwo":	
-// 			// 	return(
-// 			// 		<MarkerInfoWindowModeTwo 
-// 			// 			coords={coords}
-// 			// 			top5tag={top5Tag}
-// 			// 		/>
-// 			// 	) 
-// 			// break;
-// 			// case "modeThree":	
-// 			// 	return(
-// 			// 		<MarkerInfoWindowModeThree 
-// 			// 			coords={coords}
-// 			// 			top5products={top5Products}
-// 			// 		/>
-// 			// 	)
-// 			// break;
-// 			// case "modeFour":	
-// 			// 	return(
-// 			// 		<MarkerInfoWindowModeFour 
-// 			// 			coords={coords}
-// 			// 			top5product={top5Product}
-// 			// 		/>
-// 			// 	)
-// 			// break;
-// 			default:
-// 				return(
-// 					null
-// 				)
-// 		}
-// 	}
-// }
-
 const GoogleMap = ({ children, ...props }) => {
 
 	// checker of data available
 	if(props.loading == false){
 		// print
-		console.log(`coords:${JSON.stringify(props.coords)}`)
+		console.log(`coords center:${JSON.stringify(props.coords)}`)
 
 		return(
 			<>
@@ -69,14 +27,16 @@ const GoogleMap = ({ children, ...props }) => {
 					borderRadius=".375rem"
 				>
 					<GoogleMapReact
-						defaultCenter={[props.coords.lat,props.coords.lon]}
+						defaultCenter={[props.coords.lat,props.coords.lon]} // pass coords of current buyer
 						defaultZoom={19}
 						bootstrapURLKeys={{
 							// key: process.env.REACT_APP_MAP_KEY,
 							key: 'AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs'
 						}}
 						yesIWantToUseGoogleMapApiInternals
-						onGoogleApiLoaded={props.onGoogleApiLoaded}
+						onGoogleApiLoaded={
+							props.onGoogleApiLoaded
+						}
 					> 
 						{/* picker mix */}
 						{children}

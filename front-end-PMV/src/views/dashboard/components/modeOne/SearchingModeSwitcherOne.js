@@ -9,7 +9,7 @@ import Switch from '@material-ui/core/Switch';
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatPostSearchingMode } from '../../../../redux/actions/heartbeatUIActions';
-import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncData } from '../../../../redux/actions/userDevicesActions';
+import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncDataLiveDB } from '../../../../redux/actions/userDevicesActions';
 // styles
 import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
 const useStyles = makeStyles(SearchingModeCardStyles);
@@ -47,12 +47,16 @@ const SearchingModeSwitcherOne = (props) => {
 			// run static query data
 			props.heartbeatPostSearchingMode(dataSearchingMode)
 		}
-		// checker
-		if(props.thingLiveDataSets.searchingMode[0] === "modeOne" && props.loading === false){
+		// checker switcher
+		if(
+			props.thingLiveDataSets.searchingMode[0] === "modeOne" 
+			&& props.loading === false 
+			// && mode.checked === true
+		){
 			// static data from top5Tags
-			// props.userDeviceTop5TagsSyncDataStatic(props.thingid)
+			props.userDeviceTop5TagsSyncDataStatic(props.thingid)
 			// live data from top5Tags
-			props.userDeviceTop5TagsSyncData(props.thingid)
+			props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
 		}
 	})
 	
@@ -79,7 +83,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
 	userDeviceTop5TagsSyncDataStatic,	
-	userDeviceTop5TagsSyncData,
+	userDeviceTop5TagsSyncDataLiveDB,
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherOne);
