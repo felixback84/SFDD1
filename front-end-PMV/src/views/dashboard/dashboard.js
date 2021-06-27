@@ -23,7 +23,12 @@ import componentStyles from "assets/theme/views/admin/dashboardOne.js";
 const useStyles = componentStyles;
 
 // pick the right marker mix
-const pickerMarkerMix = (searchingmode,data,coordz) => {
+const pickerMarkerMix = (
+		searchingmode,
+		data,
+		coordz,
+		loading
+	) => {
 	// print
 	console.log(`coordz:${JSON.stringify(coordz)}`)
 	// style
@@ -31,24 +36,26 @@ const pickerMarkerMix = (searchingmode,data,coordz) => {
 	// switcher
 	switch(searchingmode){
 		case "modeOne":
-			return(
-				<>
-					<Grid container>
-						<Grid item xs={12}>
-							<Card classes={{ root: classes.cardRoot }}>
-								<GoogleMapModeOne coords={coordz}/>
-							</Card>
+			if(loading == false){
+				return(
+					<>
+						<Grid container>
+							<Grid item xs={12}>
+								<Card classes={{ root: classes.cardRoot }}>
+									<GoogleMapModeOne coords={coordz}/>
+								</Card>
+							</Grid>
 						</Grid>
-					</Grid>
-					
-					{/* <Grid container>
-						<Grid item xs={12}>
-							// results
-							<ChartResultsSearchingModeOne/>
-						</Grid>
-					</Grid> */}
-				</>	
-			)
+						
+						{/* <Grid container>
+							<Grid item xs={12}>
+								// results
+								<ChartResultsSearchingModeOne/>
+							</Grid>
+						</Grid> */}
+					</>	
+				)
+			}
 		break;	
 		// case "modeTwo":	
 		// 	return(
@@ -103,8 +110,11 @@ class Dashboard extends Component {
 		const {
 			classes,
 			ui,
+			// heartbeat
 			loading,
+			// live data
 			coords,
+			// static data
 			thingLiveDataSets:{
 				searchingMode,
 				idOfSpecificStaticDevices,
@@ -115,7 +125,7 @@ class Dashboard extends Component {
 		//console.log(`thingId:${this.props.userDevices[0].thingId}`)
 		console.log(`idOfSpecificStaticDevice:${idOfSpecificStaticDevices}`)
 		// dash markup
-		const dashboardMarkUp = !ui.loading  ? (
+		const dashboardMarkUp = !ui.loading ? (
 			<>
 				{/* static bg & mode boxes*/}
 				<Header 
@@ -131,7 +141,14 @@ class Dashboard extends Component {
 					classes={{ root: classes.containerRoot }}
 				>
 					{/* picker mix */}
-					{pickerMarkerMix(searchingMode[0],classes,coords)}
+					{
+						pickerMarkerMix(
+							searchingMode[0],
+							classes,
+							coords,
+							loading,
+						)
+					}
 				</Container>
 			</>
 		) : (
@@ -149,8 +166,9 @@ class Dashboard extends Component {
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	ui: state.ui,
-	loading: state.userDevices1.loading,
 	userDevices: state.userDevices1.userDevices,
+	// heartbeat
+	loading: state.heartbeatThing1.loading,
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	coords: state.heartbeatThing1.thingLiveDataSetsListener.coords,
 });
