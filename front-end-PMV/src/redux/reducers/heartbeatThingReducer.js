@@ -32,6 +32,7 @@ const initialState = {
     thingLiveDataSetsListener:{
         colorValue:{},
         coords:{},
+        searchingMode:[]
     },
 }; 
 

@@ -31,12 +31,22 @@ const SearchingModeSwitcherOne = (props) => {
 			modeType:props.mode, 
 			[event.target.name]: event.target.checked
 		});
+		// trigger	
+		//if(mode.checked === true){
+			// static data from top5Tags
+			props.userDeviceTop5TagsSyncDataStatic(props.thingid)
+			// live data from top5Tags
+			props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
+		//}
 	};
 
 	// effects
 	useEffect(() => { 
 		// 
-		if(mode.modeType === "modeOne" && props.loading === false){
+		if(
+			mode.modeType === "modeOne" 
+			&& props.loading === false
+		){
 			// obj to pass 
 			const dataSearchingMode = {
 				objSearchingModeData:{
@@ -46,17 +56,18 @@ const SearchingModeSwitcherOne = (props) => {
 			}
 			// run static query data
 			props.heartbeatPostSearchingMode(dataSearchingMode)
-		}
-		// checker switcher
-		if(
-			props.thingLiveDataSets.searchingMode[0] === "modeOne" 
-			&& props.loading === false 
-			// && mode.checked === true
-		){
-			// static data from top5Tags
-			props.userDeviceTop5TagsSyncDataStatic(props.thingid)
-			// live data from top5Tags
-			props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
+			
+			// checker switcher
+			// if(
+			// 	props.thingLiveDataSets.searchingMode[0] === "modeOne" 
+			// 	// && props.loading === false 
+			// 	&& mode.checked === true
+			// ){
+			// 	// static data from top5Tags
+			// 	props.userDeviceTop5TagsSyncDataStatic(props.thingid)
+			// 	// live data from top5Tags
+			// 	props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
+			// }
 		}
 	})
 	

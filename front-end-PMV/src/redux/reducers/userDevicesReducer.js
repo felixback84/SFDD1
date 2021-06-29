@@ -33,6 +33,8 @@ const initialState = {
     },  
 
     top5Tags:[],
+    top5TagsListener:[],
+
     top5Tag:{},
 
     top5Products:[],
@@ -67,18 +69,18 @@ export default function(state = initialState, action){
                 ...state,
                 userDevice: action.payload,
                 loading: false
-            };
+            }; 
 
         // static data 
         case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
             return {
                 ...state,
                 top5Tags: action.payload,
-                loading: false 
+                //loading: false 
             };
         case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
             return{
-                ...state,
+                ...state, 
                 loading: false
             };    
 
@@ -86,9 +88,8 @@ export default function(state = initialState, action){
         case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
             return {
                 ...state,
-                //top5Tags: ()=>(state.top5Tags[0].meters = action.payload),
-                top5Tags: action.payload,
-                loading: false 
+                top5TagsListener: action.payload,
+                //loading: false 
             };
         case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
             return{

@@ -85,6 +85,7 @@ export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
                 coords: docSnapshot.data().coords,
                 colorValue: docSnapshot.data().colorValue,
                 motorSpeed: docSnapshot.data().motorSpeed,
+                searchingMode: docSnapshot.data().searchingMode,
             }
             // print
             console.log(`liveDataSetsDoc: ${JSON.stringify(resultDB)}`)

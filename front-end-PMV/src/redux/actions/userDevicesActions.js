@@ -122,7 +122,7 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
             listOfTop5Tags.push({
                 ...doc.data()
             })
-        })
+        }) 
         // dispatch
         dispatch({ 
             type: GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
@@ -130,11 +130,11 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
         });
 
         // events
-        dispatch({ type:STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
+        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
         
     })
     .catch((err)=>{
-        console.err(err)
+        console.log(err)
     })
 }
 
@@ -197,15 +197,17 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
                         // dispatch data
                         dispatch({ 
                             type: GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE,
-                            payload: arrSort
+                            payload:arrSort
                         });
                         // events
-                        dispatch({ type:STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE })
+                        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE })
                         // reset arr
                         arr = []
                         console.log(`arrEmpty:${arr}`)
                     }
                 }
+        },err => {
+            console.log(`Encountered error: ${err}`);
         })   
 }
 

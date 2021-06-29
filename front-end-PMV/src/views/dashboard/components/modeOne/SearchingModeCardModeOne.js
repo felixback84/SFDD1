@@ -13,12 +13,11 @@ import { connect } from 'react-redux';
 
 // cards
 const SearchingModeCardModeOne = (props) => {
-	
   	// styles
 	const theme = useTheme();
 	// color class
 	const colorClass = new ColorEngine()
-	// card markup
+	// card markup 
 	const modeCardMarkupOne = (data) => {
 		return (
 			<>
@@ -28,7 +27,9 @@ const SearchingModeCardModeOne = (props) => {
 						data.top5Tags.length != 0 ? 
 						(
 							//with array in reducer
-							data.top5Tags[0].meters.toFixed(2) 
+							data.top5TagsListener.length != 0 ?
+								data.top5TagsListener[0].meters.toFixed(2):
+								data.top5Tags[0].meters.toFixed(2)
 						):(0)
 					} 
 					icon={data.icon}
@@ -91,26 +92,32 @@ const SearchingModeCardModeOne = (props) => {
  
 	// data
 	const data = {
+		// device
+		thingLiveDataSets:props.thingLiveDataSets,
 		colorValue: props.thingLiveDataSetsListener.colorValue === undefined ?
 			(props.thingLiveDataSets.colorValue):
 			(props.thingLiveDataSetsListener.colorValue),
-		// colorValue:props.thingLiveDataSetsListener.colorValue,
+		// icon		
 		icon:props.icon,
+		// top5Tags
+		top5TagsListener:props.top5TagsListener,
 		top5Tags:props.top5Tags,
-		thingLiveDataSets:props.thingLiveDataSets
 	}
 	return(
 		<Fragment>
 			{modeCardMarkupOne(data)}
 		</Fragment>
 	)
-}
+} 
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// device
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	// top5Tags
 	top5Tags: state.userDevices1.top5Tags,
+	top5TagsListener: state.userDevices1.top5TagsListener,
 });
 
 export default connect(mapStateToProps)(SearchingModeCardModeOne);

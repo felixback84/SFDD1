@@ -153,25 +153,13 @@ const ContentRow = (props) => {
 }
 
 class ChartResultsSearchingModeOne extends Component {
-	// state
-	// constructor(props) {
-	// 	super(props);
-	// 	this.state = {
-	// 		top5Tags:[]
-	// 	}
-	// }
-
-	// componentWillReceiveProps(nextProps) {
-    //     if (nextProps.top5Tags) {
-    //         this.setState({ top5Tags: nextProps.top5Tags });
-    //     }
-	// }
-
+	
 	render() {
 		// redux state
 		const {
 			classes,
 			top5Tags,
+			top5TagsListener,
 			loading,
 			thingLiveDataSets:{
 				profileToMatch
@@ -243,7 +231,11 @@ class ChartResultsSearchingModeOne extends Component {
 								{
 									loading == false && 
 										<ContentRow 
-											data={top5Tags} 
+											data={
+												top5TagsListener.length != 0 ?
+													top5TagsListener:
+													top5Tags
+											} 
 											classes={classes}
 										/>
 								}
@@ -258,8 +250,12 @@ class ChartResultsSearchingModeOne extends Component {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// userDevice
 	loading:state.userDevices1.loading,
+	// top5Tags
 	top5Tags:state.userDevices1.top5Tags,
+	top5TagsListener:state.userDevices1.top5TagsListener,
+	// device
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
 

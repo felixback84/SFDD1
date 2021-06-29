@@ -3,8 +3,11 @@ import React, { Component } from 'react';
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Chip from '@material-ui/core/Chip';
+// icons
+import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
 // modules
 import GoogleMap from '../../sections/GoogleMap.js';
+import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbeatUIActions'
@@ -16,23 +19,27 @@ class GoogleMapModeOne extends Component {
 	// api google set method
 	handleApiLoaded = (map, maps,{...data}) => {
 
+		// color class
+		const colorClass = new ColorEngine()
+
 		//////////////////////////////////////////////////// top5Tags - static devices - vendors
 		//var to hold data in arrays to escalate
 		const markersStaticsDevices = [];
 		const infoWindowsStaticsDevices = [];
 		// badges
 		const arrayListBadgeStaticDevices = (data) => {
-		let top5Tags = data.top5Tags
-		let arrWithTags = [];
-		let counter = 0
+			let top5Tags = data.top5Tags
+			let arrWithTags = [];
+			let counter = 0
 
-		top5Tags.forEach((top5Tag)=>{
-			for (let keyPair in top5Tag.matchDataResults) {
-				arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
-			} 
-		})
-			
-		return(
+			// tags loop
+			data.top5Tags.forEach((top5Tag)=>{
+				for (let keyPair in top5Tag.matchDataResults) {
+					arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+				} 
+			})
+				
+			return(
 				<GridContainer>
 					<GridItem xs={12} sm={12} md={12}>
 						{arrWithTags}
@@ -69,10 +76,27 @@ class GoogleMapModeOne extends Component {
 
 		//to static devices list markers
 		data.top5Tags.forEach((top5Tag) => {
+			// colors
+			let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
+			// print
+			console.log(`top5tagsCoords:${JSON.stringify(top5Tag.coords)}`)
+			// marker
 			markersStaticsDevices.push(new maps.Marker({
 				position: {
 					lat: top5Tag.coords.lat,
 					lng: top5Tag.coords.lon,
+				},
+				icon: {
+					path: faDotCircle.icon[4],
+					fillColor: colorBgIcon,
+					fillOpacity: 1,
+					anchor: new maps.Point(
+					  faDotCircle.icon[0] / 2, // width
+					  faDotCircle.icon[1] // height
+					),
+					strokeWeight: 1,
+					strokeColor: colorBgIcon,
+					scale: 0.05,
 				},
 				map,
 		}));
@@ -141,16 +165,33 @@ class GoogleMapModeOne extends Component {
 		let counter = 0
 		let latlng = undefined
 		// unique marker creation and update pos
-		const changeMarkerPosition = (dataCoords) => {
+		const changeMarkerPosition = (dataCoords,colorRGB) => {
+			// color
+			let colorBgIcon = colorClass.rgbToColorHex(colorRGB) // ---> colorValue from liveDataSets
+			// pos
 			latlng = new maps.LatLng(dataCoords.lat, dataCoords.lon)
 			// just one increase
 			counter ++
 			// checker to create only one marker
-			if(counter === 1){
+			if(counter === 1){	
 				// marker unique
 				markerDynamicDevices = new maps.Marker({
 					position:latlng,
-					map,
+					//label: labels[labelIndex++ % labels.length],
+					map, 
+					// icon:image
+					icon: {
+						path: faUserCircle.icon[4],
+						fillColor: colorBgIcon,
+						fillOpacity: 1,
+						anchor: new maps.Point(
+						  faUserCircle.icon[0] / 2, // width
+						  faUserCircle.icon[1] // height
+						),
+						strokeWeight: 1,
+						strokeColor: colorBgIcon,
+						scale: 0.05,
+					},
 				})
 				// clicker marker
 				markerDynamicDevices.addListener('click', () => {
@@ -169,7 +210,7 @@ class GoogleMapModeOne extends Component {
 
 		// polyline
 		let route = new maps.Polyline({
-			path: [],
+			path: [], 
 			geodesic : true,
 			strokeColor: '#FF0000',
 			strokeOpacity: 1.0,
@@ -185,7 +226,7 @@ class GoogleMapModeOne extends Component {
 			// print
 			console.log(`coordz for func: ${JSON.stringify(coords)}`)
 			// run
-			changeMarkerPosition(coords)
+			changeMarkerPosition(coords,data.colorValue)
 			// pass data to path
 			route.getPath().push(latlng)
 		}, 1000)
@@ -204,6 +245,7 @@ class GoogleMapModeOne extends Component {
 			// user
 			credentials,
 			// liveDataSets
+			colorValue,
 			profileToMatch,
 			// top5Tags
 			loading,
@@ -221,9 +263,13 @@ class GoogleMapModeOne extends Component {
 					<GoogleMap
 						onGoogleApiLoaded={
 							({ map, maps }) => this.handleApiLoaded(map, maps,
-								{
+								{	
+									// user
 									credentials,
+									// device
 									profileToMatch,
+									colorValue,
+									// vendors
 									top5Tags,
 								}
 							)
@@ -248,6 +294,7 @@ const mapStateToProps = (state) => ({
 	credentials: state.user.credentials,
 	// liveDataSets
 	profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
+	colorValue: state.heartbeatThing1.thingLiveDataSetsListener.colorValue,
 	// userDevices
 	userDevices: state.userDevices1.userDevices,
 	// top5Tags

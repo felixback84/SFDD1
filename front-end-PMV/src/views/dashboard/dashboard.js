@@ -13,7 +13,7 @@ import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchi
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
-import { heartbeatThingSyncDataStatic } from '../../redux/actions/heartbeatUIActions';
+import { heartbeatThingSyncDataStatic, heartbeatThingSyncDataLiveDB } from '../../redux/actions/heartbeatUIActions';
 
 // components
 import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
@@ -39,6 +39,7 @@ const pickerMarkerMix = (
 			if(loading == false){
 				return(
 					<>
+						{/* map */}
 						<Grid container>
 							<Grid item xs={12}>
 								<Card classes={{ root: classes.cardRoot }}>
@@ -46,13 +47,13 @@ const pickerMarkerMix = (
 								</Card>
 							</Grid>
 						</Grid>
-						
-						{/* <Grid container>
+						{/* chart top5Coords*/}
+						<Grid container>
 							<Grid item xs={12}>
 								// results
 								<ChartResultsSearchingModeOne/>
 							</Grid>
-						</Grid> */}
+						</Grid>
 					</>	
 				)
 			}
@@ -100,26 +101,29 @@ class Dashboard extends Component {
 	componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
 		if (this.props.userDevices !== prevProps.userDevices) {
-			// liveDataSets & products redux action
+			// liveDataSets redux action to static and live data
 			this.props.heartbeatThingSyncDataStatic(this.props.userDevices[0].thingId)
+			this.props.heartbeatThingSyncDataLiveDB(this.props.userDevices[0].thingId)
 		}
 	}
 
 	render(){
 		// redux props
 		const {
-			classes,
+			classes, 
 			ui,
 			// heartbeat
 			loading,
 			// live data
 			coords,
-			// static data
+			searchingMode,
+			// static data device
 			thingLiveDataSets:{
-				searchingMode,
+				//searchingMode,
 				idOfSpecificStaticDevices,
 				idOfSpecificProduct,
-			}
+			},
+			
 		} = this.props
 		// print
 		//console.log(`thingId:${this.props.userDevices[0].thingId}`)
@@ -170,10 +174,11 @@ const mapStateToProps = (state) => ({
 	// heartbeat
 	loading: state.heartbeatThing1.loading,
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	searchingMode: state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
 	coords: state.heartbeatThing1.thingLiveDataSetsListener.coords,
 });
 
-export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataStatic})(withStyles(useStyles)(Dashboard));
+export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataStatic,heartbeatThingSyncDataLiveDB})(withStyles(useStyles)(Dashboard));
 
 
 
