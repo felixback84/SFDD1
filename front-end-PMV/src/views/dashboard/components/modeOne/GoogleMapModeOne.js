@@ -33,7 +33,7 @@ class GoogleMapModeOne extends Component {
 			let counter = 0
 
 			// tags loop
-			data.top5Tags.forEach((top5Tag)=>{
+			top5Tags.forEach((top5Tag)=>{
 				for (let keyPair in top5Tag.matchDataResults) {
 					arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
 				} 
@@ -77,7 +77,7 @@ class GoogleMapModeOne extends Component {
 		//to static devices list markers
 		data.top5Tags.forEach((top5Tag) => {
 			// colors
-			let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
+			// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
 			// print
 			console.log(`top5tagsCoords:${JSON.stringify(top5Tag.coords)}`)
 			// marker
@@ -88,14 +88,14 @@ class GoogleMapModeOne extends Component {
 				},
 				icon: {
 					path: faDotCircle.icon[4],
-					fillColor: colorBgIcon,
+					fillColor: "#c30000",
 					fillOpacity: 1,
 					anchor: new maps.Point(
 					  faDotCircle.icon[0] / 2, // width
 					  faDotCircle.icon[1] // height
 					),
 					strokeWeight: 1,
-					strokeColor: colorBgIcon,
+					strokeColor: "#c30000",
 					scale: 0.05,
 				},
 				map,
@@ -114,7 +114,7 @@ class GoogleMapModeOne extends Component {
 			});
 		});
 
-		//////////////////////////////////////////////////// userDevices - buyers - users -dynamics
+		//////////////////////////////////////////////////// userDevices - buyers - users - dynamics
 		// marker global
 		let markerDynamicDevices = undefined
 		// info window arr
@@ -168,6 +168,8 @@ class GoogleMapModeOne extends Component {
 		const changeMarkerPosition = (dataCoords,colorRGB) => {
 			// color
 			let colorBgIcon = colorClass.rgbToColorHex(colorRGB) // ---> colorValue from liveDataSets
+			// print
+			console.log(`colorHex:${colorBgIcon}`)
 			// pos
 			latlng = new maps.LatLng(dataCoords.lat, dataCoords.lon)
 			// just one increase
@@ -179,7 +181,6 @@ class GoogleMapModeOne extends Component {
 					position:latlng,
 					//label: labels[labelIndex++ % labels.length],
 					map, 
-					// icon:image
 					icon: {
 						path: faUserCircle.icon[4],
 						fillColor: colorBgIcon,
@@ -199,7 +200,22 @@ class GoogleMapModeOne extends Component {
 				})
 			} else if(counter != 0) {
 				// update pos
-				markerDynamicDevices.setPosition(latlng);
+				markerDynamicDevices.setPosition(latlng)
+				// props of the icon
+				const icon = {
+					path: faUserCircle.icon[4],
+					fillColor: colorBgIcon,
+					fillOpacity: 1,
+					anchor: new maps.Point(
+						faUserCircle.icon[0] / 2, // width
+						faUserCircle.icon[1] // height
+					),
+					strokeWeight: 1,
+					strokeColor: colorBgIcon,
+					scale: 0.05,
+				}
+				// update color marker
+				markerDynamicDevices.setIcon(icon)
 			}
 		}
 
@@ -223,10 +239,12 @@ class GoogleMapModeOne extends Component {
 		setInterval(() => {
 			// coords data
 			let coords = this.props.coords
-			// print
-			console.log(`coordz for func: ${JSON.stringify(coords)}`)
+			console.log(`coordz: ${JSON.stringify(coords)}`)
+			// colorValue data
+			let colorIconUser = this.props.colorValue
+			console.log(`colorIconUser: ${JSON.stringify(colorIconUser)}`)
 			// run
-			changeMarkerPosition(coords,data.colorValue)
+			changeMarkerPosition(coords,colorIconUser)
 			// pass data to path
 			route.getPath().push(latlng)
 		}, 1000)
@@ -245,11 +263,11 @@ class GoogleMapModeOne extends Component {
 			// user
 			credentials,
 			// liveDataSets
-			colorValue,
 			profileToMatch,
 			// top5Tags
 			loading,
 			top5Tags,
+			top5TagsListener,
 			matchDataResults,
 		} = this.props
 
@@ -268,9 +286,9 @@ class GoogleMapModeOne extends Component {
 									credentials,
 									// device
 									profileToMatch,
-									colorValue,
 									// vendors
 									top5Tags,
+									top5TagsListener,
 								}
 							)
 						}
@@ -294,12 +312,12 @@ const mapStateToProps = (state) => ({
 	credentials: state.user.credentials,
 	// liveDataSets
 	profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
-	colorValue: state.heartbeatThing1.thingLiveDataSetsListener.colorValue,
 	// userDevices
 	userDevices: state.userDevices1.userDevices,
 	// top5Tags
 	loading: state.userDevices1.loading,
 	top5Tags: state.userDevices1.top5Tags,
+	top5TagsListener: state.userDevices1.top5TagsListener,
 	matchDataResults: state.userDevices1.top5Tags.matchDataResults
 });
 

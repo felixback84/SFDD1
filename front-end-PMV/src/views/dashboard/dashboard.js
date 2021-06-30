@@ -27,6 +27,7 @@ const pickerMarkerMix = (
 		searchingmode,
 		data,
 		coordz,
+		color,
 		loading
 	) => {
 	// print
@@ -43,7 +44,10 @@ const pickerMarkerMix = (
 						<Grid container>
 							<Grid item xs={12}>
 								<Card classes={{ root: classes.cardRoot }}>
-									<GoogleMapModeOne coords={coordz}/>
+									<GoogleMapModeOne 
+										coords={coordz}
+										colorValue={color}
+									/>
 								</Card>
 							</Grid>
 						</Grid>
@@ -116,6 +120,7 @@ class Dashboard extends Component {
 			loading,
 			// live data
 			coords,
+			colorValue,
 			searchingMode,
 			// static data device
 			thingLiveDataSets:{
@@ -150,6 +155,7 @@ class Dashboard extends Component {
 							searchingMode[0],
 							classes,
 							coords,
+							colorValue,
 							loading,
 						)
 					}
@@ -176,6 +182,7 @@ const mapStateToProps = (state) => ({
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	searchingMode: state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
 	coords: state.heartbeatThing1.thingLiveDataSetsListener.coords,
+	colorValue: state.heartbeatThing1.thingLiveDataSetsListener.colorValue,
 });
 
 export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataStatic,heartbeatThingSyncDataLiveDB})(withStyles(useStyles)(Dashboard));

@@ -103,7 +103,7 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
- 
+
     // snapshot
     const dataRef = firebase
         .firestore()
@@ -114,7 +114,7 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
     
     // var to hold list
     let listOfTop5Tags = []
- 
+
     // push data
     const dataArr = dataRef.then((data) => {
         // push in the arr
@@ -175,9 +175,6 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
                 .docChanges()
                 .map((change)=>{
                     if(change.type === 'modified'){
-                        // just meters
-                        // const meters = change.doc.data().meters
-                        // return arr.push(meters)
                         // all data
                         const data = {...change.doc.data()}
                         return arr.push(data)
@@ -188,8 +185,6 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
                 if(querySnapshot.docChanges().length != 0){
                     // check lengths
                     if(arr.length === collectionLength){
-                        // find the lowest value in arr
-                        // const minArr = Math.min(...arr.meters)
                         // sort the arr
                         let arrSort = arr.sort((a, b) => a.meters - b.meters)
                         // print

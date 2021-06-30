@@ -5,7 +5,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import Switch from '@material-ui/core/Switch';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,6 +19,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 // comonents
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
+import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
 // Redux stuff
 import { connect } from 'react-redux';
 // styles
@@ -94,21 +94,10 @@ const ContentRow = (props) => {
 					<TagsMaker data={top5Tag.matchDataResults}/>
 				</TableCell>
 				
-				{/* ask for */}
+				{/* Vendor Details */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
 					<Box paddingTop=".35rem" paddingBottom=".35rem">
-						<Box
-							marginRight="10px"
-							component="i"
-							width=".375rem"
-							height=".375rem"
-							borderRadius="50%"
-							display="inline-block"
-							className={
-								classes.verticalAlignMiddle + " " + classes.bgWarning
-							}
-						></Box>
-						{`${top5Tag.userCredentials.lastname} ${top5Tag.userCredentials.names}`} 
+						<StaticDevicePropertyDetails/>
 					</Box>
 				</TableCell>
 				
@@ -217,7 +206,7 @@ class ChartResultsSearchingModeOne extends Component {
 											[
 												'Company Name',
 												'Tags offer',
-												'Ask for',
+												'View details',
 												'Avatar',
 												'Meters from you'
 											]

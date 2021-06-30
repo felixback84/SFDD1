@@ -81,7 +81,7 @@ export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
     const observer = doc
         .onSnapshot((docSnapshot)=>{
             // print
-            const resultDB = {
+            const resultDB = { 
                 coords: docSnapshot.data().coords,
                 colorValue: docSnapshot.data().colorValue,
                 motorSpeed: docSnapshot.data().motorSpeed,
