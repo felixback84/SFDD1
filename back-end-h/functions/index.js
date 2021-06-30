@@ -72,6 +72,7 @@ const {
     postProfileToSearchStaticDevices,
     postProductsToStaticDevices,
     searchStaticDevicesByCategoriesAndTags,
+    findProductsOfStaticDevices,
 } = require('./handlers/staticDevices');
 
     // things staticHeartbeats in general
@@ -142,7 +143,7 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
 app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
 // post profile data to search for userDevice
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
-// post to selectStaticDeviceToSearch by userDevice
+// post to selectStaticDeviceToSearch by userDevice ---> more than one now
 app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
 // post product to Search by userDevice
 app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
@@ -152,7 +153,7 @@ app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTel
 app.post('/userdevice/postlistofproducts',postListOfProductsToFind) //// remove token
 // to post and find wich statics are close to me by geohash
 app.get('/userdevice/findstatics/lat/:lat/lng/:lng/mts/:mts',findStaticsInSpecificMtsRange)
-// to post and find wich statics are close to me by geohash
+// to post and find wich statics are close to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
     ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
@@ -180,6 +181,8 @@ app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevice
 app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
 // search of static devices products according to the categories and tags it has
 app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
+// find porducts wich offer the vendors
+app.get('/staticdevice/products/:staticDeviceId',FBAuth, findProductsOfStaticDevices)
 
     ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in static heartbeat things

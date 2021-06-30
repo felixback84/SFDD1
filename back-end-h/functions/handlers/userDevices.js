@@ -1181,3 +1181,4 @@ exports.selectProductOfStaticDeviceToSearchByUserDevice = (req,res) => {
             res.status(500, err);
         })
 }
+

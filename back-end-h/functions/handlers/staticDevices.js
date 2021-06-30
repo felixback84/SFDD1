@@ -345,6 +345,52 @@ exports.searchStaticDevicesByCategoriesAndTags = (req, res) => {
         })
 }
 
+// find porducts wich offer the vendors
+exports.findProductsOfStaticDevices = async (req, res) => {
+    // staticDeviceId
+    const staticDeviceId = req.params.staticDeviceId
+    // print
+    console.log({staticDeviceId})
+    // arr with results
+    let arrProducts = []
+
+    const run = async (staticDeviceId,res) => {
+
+        // db part
+        let refDB = await db
+            .collection('products')
+            
+        // db result
+        let result = await refDB
+            .where('staticDeviceProperty','==',staticDeviceId)
+            .get()
+
+        // loop
+        for (product of result.docs) {
+            // print
+            console.log(`id doc: ${product.id}`)
+            // push in the arr
+            arrProducts.push({
+                ...product.data()
+            })
+        }
+        // print
+        console.log(`products of vendors: ${JSON.stringify(arrProducts)}`)
+        // res
+        let responseArr = await arrProducts
+        // send res to client
+        return res.json(responseArr)
+    } 
+
+    // run it & catch it
+    try {
+        await run(staticDeviceId,res)
+    } catch (err) {
+        console.log('Error getting documents', err)
+    }
+}
+
+
 
 
 
