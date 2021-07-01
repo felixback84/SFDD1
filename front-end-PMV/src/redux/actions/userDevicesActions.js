@@ -70,6 +70,9 @@ export const getUserDevice = (userdeviceid) => (dispatch) => {
         .catch((err) => console.log(err));
 }
 
+// get data from specific top5Tag
+
+
 // active userDevice
 export const activeUserDevice = (userdeviceid) => (dispatch) => {
     axios.get(`/userdevices/${userdeviceid}/active`)
@@ -94,8 +97,9 @@ export const inactiveUserDevice = (userdeviceid) => (dispatch) => {
         .catch(err => console.log(err));
 }
 
+///////////////////////////////////// searching modes ////////////////////////////////////
 ///////////////////////////////////////////////////// firebase client connections
-// to get data from db for top5Tags (modeOne) --> static data --> disabled
+// to get data from db for top5Tags (modeOne) --> static data
 export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
 
     console.log(`init static top5Tags`)

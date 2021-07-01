@@ -49,8 +49,7 @@ const {
     detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
     detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice,
     meassureOfMatchesInProducts,
-    meassureOfMatchToEspecificProduct,
-    ////////////////////////////////////////////
+    meassureOfMatchToEspecificProduct,    
 } = require('./handlers/userDevices');
     
     // things heartbeats in general
@@ -58,6 +57,18 @@ const {
         heartbeatPostActiveCommand,
         heartbeatPostInactiveCommand,
     } = require('./handlers/forThingsHeartbeats');
+
+    // dataSets
+    const {
+        postInDataSetsUserDevice,
+        getAllDataSetsUserDevice,
+        getDataSetUserDevice
+    } = require('./handlers/dataSets');
+
+    // top5Tags
+    const {
+        getTop5TagFromUserDevice
+    } = require('./handlers/top5Tags');
 
 // static devices
 const {
@@ -96,13 +107,6 @@ const {
     createUserDeviceInIotCore,
     createStaticDeviceInIotCore
 } = require('./handlers/finalCycleIotGcloud');
-
-// dataSets
-const {
-    postInDataSetsUserDevice,
-    getAllDataSetsUserDevice,
-    getDataSetUserDevice
-} = require('./handlers/dataSets');
 
 // checkouts
 const {  
@@ -155,6 +159,9 @@ app.post('/userdevice/postlistofproducts',postListOfProductsToFind) //// remove 
 app.get('/userdevice/findstatics/lat/:lat/lng/:lng/mts/:mts',findStaticsInSpecificMtsRange)
 // to post and find wich statics are close to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
+
+    //////////////////////////////////////////// top5Tags ///////////////////////////////////////////////////////
+    app.get('/userdevices/:userDeviceId/top5tags/:top5tagId',FBAuth,getTop5TagFromUserDevice)
 
     ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things

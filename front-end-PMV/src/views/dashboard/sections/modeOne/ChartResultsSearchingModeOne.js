@@ -13,9 +13,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
-// @material-ui/lab components
-//import AvatarGroup from '@material-ui/lab/AvatarGroup';
-// import Pagination from "@material-ui/lab/Pagination";
 // comonents
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
@@ -103,18 +100,16 @@ const ContentRow = (props) => {
 				
 				{/* avatar */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
-					{/* <AvatarGroup> */}
-						<Tooltip title="Ryan Tompson" placement="top">
-							<Avatar
-								classes={{ root: classes.avatarRoot }}
-								alt="..."
-								src={
-									require("assets/img/theme/team-1-800x800.jpg")
-										.default
-								}
-							/>
-						</Tooltip>
-					{/* </AvatarGroup> */}
+					<Tooltip title="Ryan Tompson" placement="top">
+						<Avatar
+							classes={{ root: classes.avatarRoot }}
+							alt="..."
+							src={
+								require("assets/img/theme/team-1-800x800.jpg")
+									.default
+							}
+						/>
+					</Tooltip>
 				</TableCell>
 				
 				{/* meters from you */}

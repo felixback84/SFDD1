@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // mui stuff
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
@@ -12,6 +12,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 // redux
 import { connect } from 'react-redux'
+import {  } from '../../../../redux/actions/userDevicesActions'
+import { findProductsOfStaticDevices } from '../../../../redux/actions/staticDevicesActions'
 // styles
 
 // title dialog
@@ -44,19 +46,48 @@ const DialogActions = withStyles((theme) => ({
     },
 }))(MuiDialogActions)
 
-function StaticDevicePropertyDetails(props) {
+
+const StaticDevicePropertyDetails = (props) => {
+
+    // to open
+    const handleClickOpen = () => {
+        props.getTop5Tag(staticDeviceProperty)
+        props.findProductsOfStaticDevices(staticDeviceProperty)
+    }
+
     // redux props
     const {
         classes,
-        
+        top5Tag:{
+            coords:{
+                hash,
+                nameOfPoint,
+                lat,
+                lon
+            },
+            matchDataResults,
+            meters,
+            thingId,
+            userCredentials:{
+                bio,
+                companyName,
+                email,
+                imgUrl,
+                lastname,
+                names,
+                type,
+                userHandle
+            }
+        },
+        products
     } = props
-
+    
     return (
         <>
             {/* open btn */}
-            <Button variant="outlined" onClick={handleClickClose}>See details</Button>
+            <Button variant="outlined" onClick={handleClickOpen}>See details</Button>
             {/* close btn */}
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button variant="outlined" color="primary" onClick={handleClickClose}>
                 Open dialog
             </Button>
             {/* dialog */}
@@ -354,12 +385,11 @@ function StaticDevicePropertyDetails(props) {
             </Dialog>
         </>
     )
-    
-}
+} 
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-
+    top5Tag:state.userDevices1.top5Tag
 })
 
-export default connect(mapStateToProps)(StaticDevicePropertyDetails)
+export default connect(mapStateToProps,{getUserDevice,findProductsOfStaticDevices})(StaticDevicePropertyDetails)

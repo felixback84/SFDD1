@@ -354,7 +354,7 @@ exports.findProductsOfStaticDevices = async (req, res) => {
     // arr with results
     let arrProducts = []
 
-    const run = async (staticDeviceId,res) => {
+    const getProductsArr = async (staticDeviceId,res) => {
 
         // db part
         let refDB = await db
@@ -384,7 +384,7 @@ exports.findProductsOfStaticDevices = async (req, res) => {
 
     // run it & catch it
     try {
-        await run(staticDeviceId,res)
+        await getProductsArr(staticDeviceId,res)
     } catch (err) {
         console.log('Error getting documents', err)
     }
