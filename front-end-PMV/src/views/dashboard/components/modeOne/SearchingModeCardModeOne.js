@@ -112,12 +112,12 @@ const SearchingModeCardModeOne = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-	// device
+	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
 	// top5Tags
-	top5Tags: state.userDevices1.top5Tags,
-	top5TagsListener: state.userDevices1.top5TagsListener,
+	top5Tags: state.top5Tags1.top5Tags,
+	top5TagsListener: state.top5Tags1.top5TagsListener,
 });
 
 export default connect(mapStateToProps)(SearchingModeCardModeOne);

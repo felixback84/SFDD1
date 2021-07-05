@@ -85,10 +85,12 @@ class SearchEngine extends Component {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-    //ui: state.ui,
+    // ui
     staticDevicesTags: state.ui.staticDevicesTags,
+    // userDevices
     userDevices: state.userDevices1.userDevices,
     loading: state.userDevices1.loading,
+    // liveDataSets
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 });
 

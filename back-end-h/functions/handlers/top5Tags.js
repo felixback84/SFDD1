@@ -1,5 +1,7 @@
 // firebase
 const { db } = require('../utilities/admin')
+//_
+const { forEach } = require('underscore');
 
 // get a specific top5Tag
 exports.getTop5TagFromUserDevice = (req,res) => {
@@ -52,3 +54,6 @@ exports.getTop5TagFromUserDevice = (req,res) => {
     //     console.log('Error getting documents', err)
     // }
 }
+
+
+

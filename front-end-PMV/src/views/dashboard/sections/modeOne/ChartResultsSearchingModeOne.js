@@ -94,7 +94,7 @@ const ContentRow = (props) => {
 				{/* Vendor Details */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
 					<Box paddingTop=".35rem" paddingBottom=".35rem">
-						<StaticDevicePropertyDetails/>
+						{/* <StaticDevicePropertyDetails/> */}
 					</Box>
 				</TableCell>
 				
@@ -237,9 +237,9 @@ const mapStateToProps = (state) => ({
 	// userDevice
 	loading:state.userDevices1.loading,
 	// top5Tags
-	top5Tags:state.userDevices1.top5Tags,
-	top5TagsListener:state.userDevices1.top5TagsListener,
-	// device
+	top5Tags:state.top5Tags1.top5Tags,
+	top5TagsListener:state.top5Tags1.top5TagsListener,
+	// liveDataSets
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
 

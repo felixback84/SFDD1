@@ -310,15 +310,15 @@ class GoogleMapModeOne extends Component {
 const mapStateToProps = (state) => ({
 	// user
 	credentials: state.user.credentials,
+	// userDevices
+	loading: state.userDevices1.loading,
+	userDevices: state.userDevices1.userDevices,
 	// liveDataSets
 	profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
-	// userDevices
-	userDevices: state.userDevices1.userDevices,
 	// top5Tags
-	loading: state.userDevices1.loading,
-	top5Tags: state.userDevices1.top5Tags,
-	top5TagsListener: state.userDevices1.top5TagsListener,
-	matchDataResults: state.userDevices1.top5Tags.matchDataResults
+	top5Tags: state.top5Tags1.top5Tags,
+	top5TagsListener: state.top5Tags1.top5TagsListener,
+	matchDataResults: state.top5Tags1.top5Tags.matchDataResults
 });
 
 export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(GoogleMapModeOne)

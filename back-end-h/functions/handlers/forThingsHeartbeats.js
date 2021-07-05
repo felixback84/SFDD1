@@ -1,3 +1,6 @@
+// firebase
+const { db } = require('../utilities/admin');
+
 // send color message to hearbeats
 exports.sendCommandGPSColor = async (colorAndMotorObj,thingId) => {
     // global vars

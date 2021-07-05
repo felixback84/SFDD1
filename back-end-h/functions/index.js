@@ -32,31 +32,31 @@ const {
     getUserDevice,
     //////////////////// to test mode /////////////////
     postInUserDevices,
-    /////////////////////// SETTINGS FROM UX /////////////////////////
+    /////////////////////// SETTINGS FROM UX //////////
     getActiveUserDevices,
     getInactiveUserDevices,
-    heartbeatPostSearchingMode,
-    postProfileToSearchUserDevices, //// find bussiness 
-    selectStaticDevicesToSearchByUserDevice,
-    selectProductOfStaticDeviceToSearchByUserDevice,
-    postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
-    postListOfProductsToFind,
-    //////////////////////////////////////////////////////////// matches
-    detectProfileMatchBetweenUserDevicesAndStaticDevices,
-    findStaticsProductsInSpecificMtsRange,
-    findStaticsInSpecificMtsRange,
-    ////////////////////////////////////////////// meassure modes
-    detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices,
-    detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice,
-    meassureOfMatchesInProducts,
-    meassureOfMatchToEspecificProduct,    
 } = require('./handlers/userDevices');
     
-    // things heartbeats in general
+    // things heartbeats in general ---> commands
     const {
         heartbeatPostActiveCommand,
         heartbeatPostInactiveCommand,
     } = require('./handlers/forThingsHeartbeats');
+
+    // liveDataSets
+    const {
+        heartbeatPostSearchingMode,
+    } = require('./handlers/liveDataSetsUserDevices');
+
+    // top5Tags
+    const {
+        getTop5TagFromUserDevice, // ux
+    } = require('./handlers/top5Tags');
+
+    // top5Products
+    const {
+        
+    } = require ('./handlers/top5Products')
 
     // dataSets
     const {
@@ -65,12 +65,46 @@ const {
         getDataSetUserDevice
     } = require('./handlers/dataSets');
 
-    // top5Tags
-    const {
-        getTop5TagFromUserDevice
-    } = require('./handlers/top5Tags');
+// helpers
+const {
+    // switcher coords income
+    postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus,
+} = require('./handlers/helpers');
 
-// static devices
+    ////////////////////////////////////////////////// searching modes ///////////////////////////////////////
+    // searching modeOne
+    const {
+        postProfileToMatchUserDevices, // top5Tags from ux
+        detectProfileMatchBetweenUserDevicesAndStaticDevices, // match
+        detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices, // meassure modeOne
+    } = require('./handlers/searchingModes/modeOne');
+
+    // searching modeTwo
+    const {
+        selectStaticDevicesToSearchByUserDevice,  // ----> top5Tag ux picker
+        detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice, // meassure modeTwo
+    } = require('./handlers/searchingModes/modeTwo');
+    
+    // searching modeThree
+    const {
+        searchStaticDevicesByCategoriesAndTags, // products searcher
+        postListOfProductsToFind, // ---> top5Products from ux 
+        meassureOfMatchesInProducts, // ----> meassure modeThree
+    } = require('./handlers/searchingModes/modeThree');
+    
+    // searching modeFour
+    const {
+        selectProductOfStaticDeviceToSearchByUserDevice, // ----> top5Products ux picker
+        meassureOfMatchToEspecificProduct, // ----> meassure modeFour
+    } = require('./handlers/searchingModes/modeFour');
+
+    // searching by meters
+    const {
+        findStaticsInSpecificMtsRange, // ----> modeMtsOne
+        findStaticsProductsInSpecificMtsRange, // ----> modeMtsTwo
+    } = require('./handlers/searchingModes/byMeters');
+        
+// static device
 const {
     getAllStaticDevices,
     getStaticDevice,
@@ -79,20 +113,26 @@ const {
     /////////////////////// 
     getActiveStaticDevices,
     getInactiveStaticDevices,
-    postCoordsStaticDevices,
-    postProfileToSearchStaticDevices,
-    postProductsToStaticDevices,
-    searchStaticDevicesByCategoriesAndTags,
-    findProductsOfStaticDevices,
 } = require('./handlers/staticDevices');
 
-    // things staticHeartbeats in general
+    // things staticHeartbeats in general ---> commands
     const {
-        //detectGPSCoordsProximityRangeToStaticHearbeats,
         staticHeartbeatPostActiveCommand,
         staticHeartbeatPostInactiveCommand,
     } = require('./handlers/forThingsStaticsHeartbeats');
-    
+
+    // liveDataSets statics
+    const {
+        postCoordsStaticDevices, // ux staticDevices
+        postProfileToSearchStaticDevices, // ux staticDevices
+    } = require ('./handlers/liveDataSetsStaticDevices')
+
+    // products
+    const {
+        findProductsOfStaticDevices, // UX
+        postProductsToStaticDevices, // ux staticDevices
+    } = require ('./handlers/products')
+
 // devices
 const { 
     getAllDevices,
@@ -141,33 +181,61 @@ app.get('/userdevices/:userDeviceId', FBAuth, getUserDevice);
 app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userDevices
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
-// to post userDevice data to make the initial match
-app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); //// remove token
-// post search mode command in heartbeat things
-app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
-// post profile data to search for userDevice
-app.post('/userdevice/profileToSearch',FBAuth, postProfileToSearchUserDevices);
-// post to selectStaticDeviceToSearch by userDevice ---> more than one now
-app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
-// post product to Search by userDevice
-app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
-// post coords points from app in userDevice geoCoords collection
-app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
-// to post list of products to find his positions and owners
-app.post('/userdevice/postlistofproducts',postListOfProductsToFind) //// remove token
-// to post and find wich statics are close to me by geohash
-app.get('/userdevice/findstatics/lat/:lat/lng/:lng/mts/:mts',findStaticsInSpecificMtsRange)
-// to post and find wich statics are close to me with several filters
-app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
-    //////////////////////////////////////////// top5Tags ///////////////////////////////////////////////////////
-    app.get('/userdevices/:userDeviceId/top5tags/:top5tagId',FBAuth,getTop5TagFromUserDevice)
-
-    ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
+////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things
     app.post('/userdevice/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
     // post inactive command in heartbeat things
     app.post('/userdevice/heartbeat/:thingId/inactive',FBAuth, heartbeatPostInactiveCommand);
+
+    /////////////////////////////////////////// liveDataSets /////////////////////////////////////////////////////////
+    // post search mode command in heartbeat things
+    app.post('/userdevice/heartbeat/searchingmode',FBAuth, heartbeatPostSearchingMode);
+    
+    //////////////////////////////////////////// top5Tags ///////////////////////////////////////////////////////
+    // get a specific top5Tag - ux
+    app.get('/userdevices/:userDeviceId/top5tags/:top5tagId',FBAuth,getTop5TagFromUserDevice)
+
+    /////////////////////////////////////////// top5Products /////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
+    // post dataSets in user device 
+    app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice);
+    // get all dataSets in user device
+    app.get('/user/device/:userDeviceId/datasets', FBAuth, getAllDataSetsUserDevice);
+    // get one dataSets in user device 
+    app.get('/user/device/:userDeviceId/dataset/:dataSetId', FBAuth, getDataSetUserDevice);
+
+////////////////////////////////////////////////// searching modes ///////////////////////////////////////
+/////*** */ utils
+// post coords points from app in userDevice geoCoords collection -----> switcher of coords income
+app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTelemetryFromThingAndUpdateLiveDataSetsPlus);
+
+////*** */ modeOne
+// post profile data to search for userDevice ---> before modeOne
+app.post('/userdevice/profileToSearch',FBAuth, postProfileToMatchUserDevices);
+// to post userDevice data to make the initial match
+app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); 
+
+/////*** */ modeTwo
+// post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
+app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
+
+/////*** */ mode three
+// search of static devices products according to the categories and tags it has
+app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
+// to post list of products to find his positions and owners
+app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
+
+/////*** */ mode four
+// post product to Search by userDevice ---> before modeFour
+app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
+
+/////*** */ bymeters
+// to post and find wich statics are close to me by geohash
+app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)
+// to post and find wich statics products are closer to me with several filters
+app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property
@@ -180,16 +248,6 @@ app.get('/staticdevices/:staticdevice', FBAuth, getStaticDevice);
 app.get('/staticdevices/:staticDeviceId/active', FBAuth, getActiveStaticDevices);
 // get inactive staticDevice
 app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevices);
-// post coords data in staticHearbeat
-app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
-// post profile data in staticHearbeat
-app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
-// post products in statics
-app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
-// search of static devices products according to the categories and tags it has
-app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
-// find porducts wich offer the vendors
-app.get('/staticdevice/products/:staticDeviceId',FBAuth, findProductsOfStaticDevices)
 
     ////////////////////////////////// staticDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in static heartbeat things
@@ -197,6 +255,18 @@ app.get('/staticdevice/products/:staticDeviceId',FBAuth, findProductsOfStaticDev
     // post inactive command in static heartbeat things
     app.post('/staticdevice/staticheartbeat/:thingId/inactive',FBAuth, staticHeartbeatPostInactiveCommand);
     
+    ////////////////////////////////////////////////////// static liveDataSets ///////////////////////////////////////////
+    // post coords data in staticHearbeat
+    app.post('/staticdevice/coords',FBAuth, postCoordsStaticDevices);
+    // post profile data in staticHearbeat
+    app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
+
+    ///////////////////////////////////////// products ////////////////////////////////////////////
+    // find porducts wich offer the vendors
+    app.get('/staticdevice/products/:staticDeviceId',FBAuth, findProductsOfStaticDevices)
+    // post products in statics
+    app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
+
 ////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
 // get all devices
 app.get('/devices', getAllDevices);
@@ -217,14 +287,6 @@ app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
 app.get('/device/:userDeviceId/createDeviceInIotCore', createUserDeviceInIotCore);
 // creation of static device in iot core
 app.get('/device/:staticDeviceId/createStaicDeviceInIotCore', createStaticDeviceInIotCore);
-
-////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
-// post dataSets in user device 
-app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice);
-// get all dataSets in user device
-app.get('/user/device/:userDeviceId/datasets', FBAuth, getAllDataSetsUserDevice);
-// get one dataSets in user device 
-app.get('/user/device/:userDeviceId/dataset/:dataSetId', FBAuth, getDataSetUserDevice);
 
 ////////////////////////////////////////////////// CHECKOUTS ////////////////////////////////////////////////////////
 // post data for checkout device

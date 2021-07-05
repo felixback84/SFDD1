@@ -8,8 +8,7 @@ import {
     SET_USER,
     GET_ACTIVE_USER_DEVICES,
     GET_INACTIVE_USER_DEVICES,
-    GET_ACTIVE_USER_ADVENTURES,
-    GET_INACTIVE_USER_ADVENTURES,
+
     MARK_DEVICE_NOTIFICATIONS_READ
 } from '../types';
 
@@ -103,6 +102,30 @@ const setAuthorizationHeader = (token) => {
     localStorage.setItem('FBIdToken', FBIdToken);
     axios.defaults.headers.common['Authorization'] = FBIdToken;
 };
+
+// active userDevice
+export const activeUserDevice = (userdeviceid) => (dispatch) => {
+    axios.get(`/userdevices/${userdeviceid}/active`)
+        .then(res => {
+            dispatch({
+                type: GET_ACTIVE_USER_DEVICES,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err));
+}
+
+// inactive userDevice
+export const inactiveUserDevice = (userdeviceid) => (dispatch) => {
+    axios.get(`/userdevices/${userdeviceid}/inactive`)
+        .then(res => {
+            dispatch({
+                type: GET_INACTIVE_USER_DEVICES,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err));
+}
 
 // to determine of the notifications was read
 export const markDevicesNotificationsRead = (notificationsIds) => dispatch => {

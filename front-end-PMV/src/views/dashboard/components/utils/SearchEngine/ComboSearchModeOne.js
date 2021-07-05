@@ -300,9 +300,12 @@ function ComboSearchModeOne(props) {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-    ui: state.ui,
-    staticDevicesTags: state.ui.staticDevicesTags,
-    userDevices: state.userDevices1.userDevices,
+	// ui
+	ui: state.ui,
+	staticDevicesTags: state.ui.staticDevicesTags,
+	// userDevices
+	userDevices: state.userDevices1.userDevices,
+	// liveDataSets
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 });
 

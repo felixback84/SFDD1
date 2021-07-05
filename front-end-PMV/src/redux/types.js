@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////// UI reducer types //////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// UI //////////////////////////////////////////////////////////////
 export const SET_ERRORS = 'SET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 
@@ -9,10 +9,10 @@ export const LOADING_GET_TAGS_FROM_DEVICE_CONFIG = 'LOADING_GET_TAGS_FROM_DEVICE
 export const GET_DATA_TAGS_FROM_ALL_STATICS_FOR_SEARCH_BOX_MODEONE = 'GET_DATA_TAGS_FROM_ALL_STATICS_FOR_SEARCH_BOX_MODEONE'
 export const STOP_GET_TAGS_FROM_DEVICE_CONFIG = 'STOP_GET_TAGS_FROM_DEVICE_CONFIG';
 
-//////////////////////////////////////////////////////////////// User reducer types //////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// user //////////////////////////////////////////////////////////////
 export const SET_AUTHENTICATED = 'SET_AUTHENTICATED';
 export const SET_UNAUTHENTICATED = 'SET_UNAUTHENTICATED';
-
+ 
 export const LOADING_USER = 'LOADING_USER';
 export const SET_USER = 'SET_USER'; 
 export const STOP_LOADING_USER = 'LOADING_USER';
@@ -20,9 +20,7 @@ export const STOP_LOADING_USER = 'LOADING_USER';
 export const GET_ACTIVE_USER_DEVICES = 'GET_ACTIVE_USER_DEVICES';
 export const GET_INACTIVE_USER_DEVICES = 'GET_INACTIVE_USER_DEVICES';
 
-export const MARK_DEVICE_NOTIFICATIONS_READ = 'MARK_DEVICE_NOTIFICATIONS_READ';
-
-////////////////////////////////////////////////////////////// userDevices reducers types //////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// userDevices //////////////////////////////////////////////////////////
 export const LOADING_USER_DEVICES = 'LOADING_USER_DEVICES';
 export const GET_USER_DEVICES = 'GET_USER_DEVICES';
 export const STOP_LOADING_USER_DEVICES = 'STOP_LOADING_USER_DEVICES';
@@ -31,45 +29,81 @@ export const LOADING_USER_DEVICE = 'LOADING_USER_DEVICE';
 export const GET_USER_DEVICE = 'GET_USER_DEVICE'; 
 export const STOP_LOADING_USER_DEVICE = 'STOP_LOADING_USER_DEVICE';
 
-// client side fb 
-export const GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS'; 
-export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS';
+    //////////////////////////////////////////////////////// liveDataSets ///////////////////////////////////////////////
+    export const GET_EVENTS_FROM_HEARTBEAT_THING = 'GET_EVENTS_FROM_HEARTBEAT_THING'
+    export const STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING'
+        
+        // live
+        export const GET_EVENTS_FROM_HEARTBEAT_THING_LIVE = 'GET_EVENTS_FROM_HEARTBEAT_THING_LIVE';
+        export const STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE = 'STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE'
 
-    // live
-    export const GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE = 'GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE'
-    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE'
+    /////////////////////////// commands to thing
+    export const POST_ACTIVE_COMMAND_HEARTBEAT_THING = 'POST_ACTIVE_COMMAND_HEARTBEAT_THING';
+    export const POST_INACTIVE_COMMAND_HEARTBEAT_THING = 'POST_INACTIVE_COMMAND_HEARTBEAT_THING';
 
-export const LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG'; 
-export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG'; 
-export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG3'; 
+    // to set the searching mode
+    export const SET_HEARTBEAT_SEARCHING_MODE = 'SET_HEARTBEAT_SEARCHING_MODE'
+    export const POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS = 'POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS'
 
-export const LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
-export const GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
-export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
+    //////////////////////////////////////////////////////////// top5tags /////////////////////////////////////////
+    // ---> mode 1
+    export const GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS'; 
+    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS'
+        // live 
+        export const GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE = 'GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE'
+        export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE'
 
-export const LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
-export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
-export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
+    // ---> mode 2
+    export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG'; 
+    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG'; 
+        
+        // live
+        export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE = 'GET_DATA_FROM_USER_DEVICE_TOP_5_TAG_LIVE'
+        export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAG_LIVE'
 
-//////////////////////////////////////////////////////////////// heartbeat thing reducers types //////////////////////////////////////////////////////////////
-export const POST_ACTIVE_COMMAND_HEARTBEAT_THING = 'POST_ACTIVE_COMMAND_HEARTBEAT_THING';
-export const POST_INACTIVE_COMMAND_HEARTBEAT_THING = 'POST_INACTIVE_COMMAND_HEARTBEAT_THING';
-// to set the searching mode
-export const SET_HEARTBEAT_SEARCHING_MODE = 'SET_HEARTBEAT_SEARCHING_MODE'
+    // ux
+    export const GET_TOP5TAG_UX = 'GET_TOP5TAG_UX'
+    export const STOP_LOADING_GET_TOP5TAG_UX = 'STOP_LOADING_GET_TOP5TAG_UX'
 
-export const POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS = 'POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS'
-// from liveDataSets ---- client side fb
+    ///////////////////////////////////////////////////////////// top5Products ///////////////////////////////////////////////  
+    // ---> search products by category and tags
+    export const GET_PRODUCTS_BY_CATEGORY_AND_TAGS = 'GET_PRODUCTS_BY_CATEGORY_AND_TAGS'
+    export const STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS = 'STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS'
 
-export const GET_EVENTS_FROM_HEARTBEAT_THING = 'GET_EVENTS_FROM_HEARTBEAT_THING'
-export const STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING = 'STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING'
+    // ---> post list of products to find
+    export const POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND = 'POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND'
+    export const STOP_LOADING_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND = 'POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND'
 
-    export const GET_EVENTS_FROM_HEARTBEAT_THING_LIVE = 'GET_EVENTS_FROM_HEARTBEAT_THING_LIVE';
-    export const STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE = 'STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE'
+    // ---> mode 3
+    export const GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
+    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS'; 
+
+        // live
+        export const GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE = 'GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE'
+        export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE'
+
+    // ---> mode 4
+    export const GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
+    export const STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT = 'STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT'
+    
+    //////////////////////////////////////////////////////////////// dataSets //////////////////////////////////////////////////////////////
+    export const LOADING_DATASETS = 'LOADING_DATASETS';
+    export const POST_DATASET = 'POST_DATASET';
+    export const GET_DATASETS = 'GET_DATASETS';
+    export const GET_DATASET = 'GET_DATASET';
+
+    
+/////////////////////////////////////////////////////////////// staticDevices ///////////////////////////////////////////////////////////////   
+
+    /////////////////////////////////////////////////////////////// products ////////////////////////////////////////////////////////////////////
+    // ux
+    export const GET_PRODUCTS_UX = 'GET_PRODUCTS_UX'
+    export const STOP_LOADING_GET_PRODUCTS_UX = 'STOP_LOADING_GET_PRODUCTS_UX'
 
 //////////////////////////////////////////////////////////////// charts  //////////////////////////////////////////////////////////////
 export const GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY = 'GET_DATA_TO_CHART_OF_ACTIVE_TIMES_EACH_DAY';
 
-//////////////////////////////////////////////////////////////// Checkouts reducer types //////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// Checkouts //////////////////////////////////////////////////////////////
 export const SET_SHIPPING_ADDRESS_CHECKOUT = 'SET_SHIPPING_ADDRESS_CHECKOUT';
 export const SET_BILLING_ADDRESS_CHECKOUT = 'SET_BILLING_ADDRESS_CHECKOUT';
 export const SET_CREDIT_CARD = 'SET_CREDIT_CARD';
@@ -78,13 +112,7 @@ export const POST_CHECKOUT = 'POST_CHECKOUT';
 export const GET_CHECKOUTS = 'GET_CHECKOUTS';
 export const GET_CHECKOUT = 'GET_CHECKOUT';
 
-//////////////////////////////////////////////////////////////// DataSets reducer types //////////////////////////////////////////////////////////////
-export const LOADING_DATASETS = 'LOADING_DATASETS';
-export const POST_DATASET = 'POST_DATASET';
-export const GET_DATASETS = 'GET_DATASETS';
-export const GET_DATASET = 'GET_DATASET';
-
-//////////////////////////////////////////////////////////////// Devices reducer types //////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// devices //////////////////////////////////////////////////////////////
 export const LOADING_DEVICES = 'LOADING_DEVICES';
 export const GET_DEVICES = 'GET_DEVICES';
 export const GET_DEVICE = 'GET_DEVICE';
@@ -92,4 +120,5 @@ export const GET_LIKE_DEVICES = 'GET_LIKE_DEVICES';
 export const GET_UNLIKE_DEVICES = 'GET_UNLIKE_DEVICES';
 export const POST_DEVICE_COMMENT = 'POST_DEVICE_COMMENT';
 
-
+////////////////////////////////////////////////////////////////// notifications /////////////////////////////////////////////////////
+export const MARK_DEVICE_NOTIFICATIONS_READ = 'MARK_DEVICE_NOTIFICATIONS_READ';

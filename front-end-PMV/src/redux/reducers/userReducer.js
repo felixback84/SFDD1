@@ -18,7 +18,6 @@ const initialState = {
     loading: false,
     credentials: {}, 
     activeUserDevices: [],
-    activeUserAdventures: [],
     likes: [],
     notifications: []
 }; 

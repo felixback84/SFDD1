@@ -175,7 +175,9 @@ class Dashboard extends Component {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// ui
 	ui: state.ui,
+	// userDevices
 	userDevices: state.userDevices1.userDevices,
 	// heartbeat
 	loading: state.heartbeatThing1.loading,

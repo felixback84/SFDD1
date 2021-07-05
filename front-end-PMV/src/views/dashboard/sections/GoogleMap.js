@@ -56,6 +56,7 @@ const GoogleMap = ({ children, ...props }) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({	
+	// liveDataSets
 	loading:state.heartbeatThing1.loading,
 	coords:state.heartbeatThing1.thingLiveDataSets.coords,
 });

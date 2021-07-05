@@ -9,7 +9,7 @@ import Switch from '@material-ui/core/Switch';
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatPostSearchingMode } from '../../../../redux/actions/heartbeatUIActions';
-import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncDataLiveDB } from '../../../../redux/actions/userDevicesActions';
+import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncDataLiveDB } from '../../../../redux/actions/top5TagsActions';
 // styles
 import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
 const useStyles = makeStyles(SearchingModeCardStyles);
@@ -86,8 +86,11 @@ const SearchingModeSwitcherOne = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// ui
 	ui:state.ui,
+	// userDevices
 	loading:state.userDevices1.loading,
+	// liveDataSets
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
 
