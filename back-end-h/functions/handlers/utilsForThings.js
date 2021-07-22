@@ -167,6 +167,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
                 } 
             }
         }
+
     } else if(mode === "modeThree"){
         // to selected products
         // list with statics
@@ -192,6 +193,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             // arr
             top5Products:top5Products,
         }
+
     } else if(mode === "modeFour"){
         // to specific product
         // db part
@@ -207,6 +209,86 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             docId:doc.idOfSpecificProduct,
             staticDeviceCoords:tagsRef,
         }
+
+    } else if(mode === "modeFive"){
+        // to selected and match with tags             
+        // list with statics
+        let top5Coords = []
+        // db part
+        const tagsRef = db
+            .doc(`/userDevices/${userDeviceId}`)
+            .collection('top5Tags')
+
+        const snapshot = await tagsRef.get();
+
+        // top5Coords became top5Tags
+        snapshot.forEach(doc => {
+            // push data in arr
+            top5Coords.push({
+                docId: doc.id,
+                ...doc.data(),
+            })
+        });
+        
+        return {
+            // userDevice data
+            thingId:doc.thingId,
+            coords:doc.coords,
+            // arr
+            top5Coords,
+        }
     }
+}
+
+// to delete collections to start in a blank collection 
+exports.deleteAllDocsInTop5TagsCollectionOfUserDeviceId = async (db,pathToCollection) => {
+
+    // data to pass
+    let dbConnect = db
+    let path = pathToCollection
+    
+    // to set the process of docs deletion
+    async function deleteCollection(db, collectionPath) {
+        // collection path
+        const collectionRef = db.collection(collectionPath);
+        // query ref
+        const query = collectionRef
+        
+        // promise of deletion process
+        return new Promise((resolve, reject) => {
+            deleteQueryBatch(db, query, resolve).catch(reject);
+        });
+    }
+    
+    // to erase doc of the collection
+    async function deleteQueryBatch(db, query, resolve) {
+        // extract data
+        const snapshot = await query.get();
+        // length data
+        const batchSize = snapshot.size;
+        // check if is empty
+        if (batchSize === 0) {
+            // When there are no documents left, we are done
+            resolve();
+            return;
+        }
+        // Delete documents in a batch
+        const batch = db.batch();
+        // one by one delete
+        snapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+        // finish
+        await batch.commit();
+        // Recurse on the next process tick, to avoid
+        // exploding the stack.
+        process.nextTick(() => {
+            deleteQueryBatch(db, query, resolve);
+        });
+    }
+
+    // run it
+    deleteCollection(dbConnect,path)
+
 }
 

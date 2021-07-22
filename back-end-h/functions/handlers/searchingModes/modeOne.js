@@ -201,9 +201,9 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
-// to meassure distance between devices
+// to meassure distance between devices ----> modeOne
 exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWait) => {
-    const dataEnter = inWait
+    const dataEnter = inWait 
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
     // func

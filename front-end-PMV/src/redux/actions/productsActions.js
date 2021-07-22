@@ -12,23 +12,27 @@ import firebase from '../../fb/utilities/firebase';
 import axios from 'axios';
 
 // get top5Products ux
-export const userDeviceSpecificTop5ProductSyncData = (docId) => (dispatch) => {
+export const userDeviceSpecificTop5ProductsSyncData = (docId) => async (dispatch) => {
 
     // var
-    let staticDeviceId = docId
-    
-    try {
-        const dataTag = await 
-        axios
-            .get(`/staticdevice/products/${staticDeviceId}`)
+    let thingId = docId
+    // print
+    console.log({thingId})
+    // run it
+    //try {
+        const dataTag = await axios
+            .get(`/staticdevice/products/${thingId}`)
+            // res
             const res = await dataTag
+            // print
             console.log({res})
+            // dispatchers
             dispatch({ 
                 type: GET_PRODUCTS_UX,
                 payload: res.data
             })
             dispatch({ type: STOP_LOADING_GET_PRODUCTS_UX })
-    } catch (error) {
-        console.log(error)
-    }
+    // } catch (error) {
+    //     console.log(error)
+    // }
 }

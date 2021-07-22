@@ -1,6 +1,6 @@
 // user actions
 import { 
-
+ 
     // ---> search products by category and tags
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
     STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
@@ -20,6 +20,10 @@ import {
     // top5Product --> mode four
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
     STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
+        
+        // live
+        GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
 
 } from '../types'
 
@@ -33,6 +37,7 @@ const initialState = {
         top5ProductsListener:[],
 
     top5Product:{},
+        top5ProductListener:[],
 };
 
 // function to determine the type of action to set state
@@ -89,7 +94,7 @@ export default function(state = initialState, action){
                     loading: false
                 };      
 
-            case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVES:
+            case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE:
                 return { 
                     ...state,
                     loading: false
@@ -99,7 +104,6 @@ export default function(state = initialState, action){
         case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT:
             return {
                 ...state,
-                onMode:true,
                 top5Product: action.payload,
                 loading: false
             };     
@@ -108,7 +112,21 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 loading: false
-            };    
+            };  
+            
+        // top5Product --> mode four
+        case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
+            return {
+                ...state,
+                top5ProductListener: action.payload,
+                loading: false
+            };     
+
+        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
+            return {
+                ...state,
+                loading: false
+            }; 
 
         default:
             return state; 

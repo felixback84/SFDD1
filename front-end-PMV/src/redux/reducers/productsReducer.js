@@ -9,7 +9,7 @@ const initialState = {
     loading: undefined,
     top5ProductsUx:[],
 };
-
+ 
 // function to determine the type of action to set state
 export default function(state = initialState, action){
     switch(action.type){            

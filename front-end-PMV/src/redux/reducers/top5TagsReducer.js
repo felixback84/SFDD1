@@ -12,7 +12,15 @@ import {
         // live
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
         STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
-    
+
+    // geoHashes & meters
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,  
+    STOP_LOADING_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS, 
+
+    // post top5tags -- creation
+    POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+    STOP_LOADING_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+
     // ux
     GET_TOP5TAG_UX,
     STOP_LOADING_GET_TOP5TAG_UX,
@@ -22,17 +30,28 @@ import {
 const initialState = {
     // events
     loading: undefined,
+
+    // res
+    responses: undefined, 
     
     // mode one
     top5Tags:[],
-    top5TagsListener:[],
+        top5TagsListener:[],
 
     // mode two
     top5Tag:{},
-    top5TagListener:[],
+        top5TagListener:[],
+    
+    // search by geohashes and meters 
+    // top5Tags:[],
+    //     top5TagsListener:[],
     
     // ux
-    top5TagUx:{}
+    top5TagUx:{
+        coords:{},
+        userCredentials:{},
+        matchDataResults:{}
+    }
 }
 
 // function to determine the type of action to set state
@@ -52,19 +71,20 @@ export default function(state = initialState, action){
             loading: false
         };    
 
-    // live    
-    case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
-        return {
-            ...state,
-            top5TagsListener: action.payload,
-            //loading: false 
-        };
-    case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
-        return{
-            ...state,
-            loading: false
-        };
+        // live    
+        case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
+            return {
+                ...state,
+                top5TagsListener: action.payload,
+                //loading: false 
+            };
+        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
+            return{
+                ...state,
+                loading: false
+            };
 
+            
     // top5Tag  ---> mode two
     // static
     case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG:
@@ -80,19 +100,46 @@ export default function(state = initialState, action){
             loading: false
         };
     
-    // live
-    case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE:
-        return {
+        // live
+        case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE:
+            return {
+                ...state,
+                top5TagListener: action.payload,
+                loading: false
+            };
+        
+        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE:
+            return {
+                ...state,
+                loading: false
+            };
+
+
+    // search geoHashes & meters
+    case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:
+        return{
+            top5Tags: action.payload,
+            loadings: false
+        }
+
+    case STOP_LOADING_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:     
+        return{
             ...state,
-            top5TagListener: action.payload,
-            loading: false
-        };
-    
-    case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE:
-        return {
+            loading: false        
+        }
+
+    // post top5tags -- creation
+    case POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:
+        return{
+            responses: action.payload,
+            loadings: false
+    }
+    case STOP_LOADING_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:     
+        return{
             ...state,
-            loading: false
-        };
+            loading: false        
+        }
+
 
     // ux
     case GET_TOP5TAG_UX:

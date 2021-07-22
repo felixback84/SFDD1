@@ -9,11 +9,21 @@ import {
 
     // top5Tag --> mode two
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
-    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,    
+    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,   
         // live
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
         STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
+
+    ///// MTS    
+
+    // seacrh geoHashes & meters
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,  
+    STOP_LOADING_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS, 
     
+    // post top5tags -- creation
+    POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+    STOP_LOADING_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+
     // ux
     GET_TOP5TAG_UX,
     STOP_LOADING_GET_TOP5TAG_UX,
@@ -51,7 +61,8 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
         // push in the arr
         data.forEach((doc)=>{
             listOfTop5Tags.push({
-                ...doc.data()
+                ...doc.data(),
+                top5TagId:doc.id
             })
         }) 
         // dispatch
@@ -62,7 +73,7 @@ export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
 
         // events
         dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS })
-         
+        
     })
     .catch((err)=>{
         console.log(err)
@@ -138,37 +149,45 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
 }
 
 // declarate a function to get data from a specific db for top5Tags (modeTwo) ---- now more than one vendor
-export const userDeviceSpecificTop5TagSyncData = (thingId, docId) => (dispatch) => {
+/// ----> to check
+export const userDeviceSpecificTop5TagSyncData = (thingId, docId,...arrIds) => (dispatch) => {
     // se puede eliminar de la lista total en el mapa los que el usuario seleccione
     // aunque ya hay metodo en servidor que soporta multiples querys
 
+    // arrIds
+    const arrListOfTags = [...arrIds]
+    // arrResults 
+    const arrResults = []
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
-
-    // snapshot
-    const data = firebase.firestore()
+    // loop
+    for(let arrListOfTag in arrListOfTags){
+        // snapshot
+        const data = firebase.firestore()
         .doc(`/userDevices/${userDeviceId}`) 
         .collection('top5Tags')
-        .doc(docId)
+        .where('thingId','==',arrListOfTag) // ---> id doc
         .get()
-    
-    // push data
-    const observer = data.then(doc => {
-        
-        const resultDB = doc.data(); 
-        // dispatch
-        dispatch({ 
-            type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
-            payload: resultDB
-        });
-        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG });
-    }, err => {
-        console.log(`Encountered error: ${err}`);
-    });
+        .then((doc)=>{
+            arrResults.push([
+                ...doc.data()
+            ])
+            return arrResults
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+    // dispatch
+    dispatch({ 
+        type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
+        payload: arrResults
+    })    
+    dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG });
 }
 
-// listen the 
+// listen the top5tag (modeTwo) --> dynamic data
 export const userDeviceTop5TagSyncDataLiveDB = (thingId) => (dispatch) => {
 
     console.log(`init live top5Tag`)
@@ -221,7 +240,6 @@ export const userDeviceTop5TagSyncDataLiveDB = (thingId) => (dispatch) => {
                         console.log(`minVal:${JSON.stringify(arrSort)}`)
                         // dispatch data
                         dispatch({ 
-                            
                             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
                             payload:arrSort
                         });
@@ -237,15 +255,61 @@ export const userDeviceTop5TagSyncDataLiveDB = (thingId) => (dispatch) => {
         })   
 }
 
-// get the products of a specific vendor-static-staticDevice - UX
-export const findSpecificTop5Tag = (userDeviceId,top5tagId) => async (dispatch) => {
+// search by meters & geoHashes
+export const searchByGeohashesAndMetersStaticDevicesProducts = ({coords,meters}) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .get(`/staticdevices/findstatics/lat/${coords.lat}/lng/${coords.lng}/mts/${meters}`)
+            const res = await dataTag
+            console.log({res})
+            dispatch({ 
+                type: GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+                payload: res.data
+            })
+            dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// post top5Tags selected
+export const postListOfTop5TagsInUserDeviceDoc = (dataz) => async (dispatch) => {
+    try {
+        const data = {
+            resultListSearch:{
+                thingId: dataz.thingId,
+                staticDevicesIdsArr: dataz.staticDevicesIdsArr
+            }
+        }
+
+        const dataTag = await 
+            axios
+                .post(`/userdevice/create/top5tags`,data)
+                const res = await dataTag
+                console.log({res})
+                dispatch({ 
+                    type: POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+                    payload: res.data
+                })
+                dispatch({ type: STOP_LOADING_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION })
+    } catch (error) {
+        console.log(error)
+    }
+}
+ 
+// get specific top5Tags - ux
+export const findSpecificTop5Tag = (userDeviceId,top5TagId) => async (dispatch) => {
     
     try {
         const dataTag = await 
         axios
-            .get(`/userdevices/${userDeviceId}/top5tags/${top5tagId}`)
+            .get(`/userdevices/${userDeviceId}/top5tags/${top5TagId}`)
+            // res
             const res = await dataTag
-            console.log({res})
+            // print
+            console.log(`findSpecificTop5Tag res:${JSON.stringify(res)}`)
+            // dispatchers
             dispatch({ 
                 type: GET_TOP5TAG_UX,
                 payload: res.data
@@ -254,8 +318,6 @@ export const findSpecificTop5Tag = (userDeviceId,top5tagId) => async (dispatch) 
     } catch (error) {
         console.log(error)
     }
-
-    
 
         // // .then((res) => {            
         // //     dispatch({ 
@@ -269,5 +331,4 @@ export const findSpecificTop5Tag = (userDeviceId,top5tagId) => async (dispatch) 
         //         payload: err.response.data
         //     })
         // });
-
 }

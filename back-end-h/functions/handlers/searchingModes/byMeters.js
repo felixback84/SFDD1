@@ -1,5 +1,86 @@
 // firebase
 const { db } = require('../../utilities/admin');
+const {
+    deleteAllDocsInTop5TagsCollectionOfUserDeviceId
+} = require('../utilsForThings')
+
+
+// top post staticDevices list results of top5tags search
+exports.postTop5TagsInUserDeviceId = async (req,res) => {
+    // deletion of any old record in top5Tags
+    deleteAllDocsInTop5TagsCollectionOfUserDeviceId(db,'top5Tags')
+    // vars with ids
+    const thingId = req.body.resultListSearch.thingId
+    const staticDevicesIdsArr = req.body.resultListSearch.staticDevicesId
+    // userDeviceId 
+    const userDeviceId = thingId.thingId.split("-").slice(2)
+    // userHandle
+    const userHandle = thingId.split("-").slice(0,1).toString()
+    // counter of records
+    let counter = 0
+    // db part
+    const docRef = db
+        .doc(`/liveDataSets/${userDeviceId}`)
+        .collection('top5Tags')
+
+    // loop over vendors selected
+    for(staticDeviceId in staticDevicesIds){
+        let selectData = undefined
+        // db part to extract statics
+        const docsStaticDevices = db
+            .collection(`liveDataSets`)
+            .doc(staticDeviceId)
+            .get()
+            .then((doc)=>{
+                selectData = {
+                    coords: doc.data().coords,
+                    profileToSearch: doc.data().profileToSearch,
+                    meters: 0,
+                    thingId,
+                }
+            })
+            .then(()=>{
+                const userData = db
+                    .collection('users')
+                    .doc(userHandle)
+                    .get()
+                    .then((doc)=>{
+                        selecData.userCredentials = {
+                            email:doc.data().email,
+                            companyName: doc.data().companyName,
+                            bio: doc.sta().bio,
+                            imgUrl: doc.sta().imgUrl,
+                            lastname: doc.sta().lastname,
+                            names: doc.sta().names,
+                            type: doc.sta().type,
+                            userHandle: doc.sta().userHandle
+                        } 
+                    })
+            })
+            .then(()=>{
+                return docRef.add({
+                        ...selectData
+                    })
+                    .then(() => {
+                        counter ++
+                        // print
+                        console.log(`final data in top5Tags for the userDevice: ${JSON.stringify(selectData)}`);
+                    })            
+                    .catch((err) => {
+                        console.error(err);
+                    }); 
+            })
+            .catch((err) => {
+                console.error(err);
+            }); 
+
+            // res
+            if(staticDevicesIdsArr.length === counter){
+                res.json("selection is now in db")
+            }
+    }
+}
+
 
 // to find wich statics are close to me (dynamic,userDevice) by geohash only for app
 exports.findStaticsInSpecificMtsRange = (req,res) => {
@@ -56,7 +137,6 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
         matchingDocs.forEach((doc)=>{
             // Process the matching documents
             console.log(`doc final:${JSON.stringify(doc.data())}`)
-            // write in db
         })
     })
     .catch(err => {
@@ -64,7 +144,13 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
     })
 }
 
-// get products with geohash
+
+
+
+
+
+
+// get products with geohash & filters
 exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
     // geofire
     const geofire = require('geofire-common');

@@ -94,7 +94,10 @@ const ContentRow = (props) => {
 				{/* Vendor Details */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
 					<Box paddingTop=".35rem" paddingBottom=".35rem">
-						{/* <StaticDevicePropertyDetails/> */}
+						<StaticDevicePropertyDetails
+							top5tagid={top5Tag.top5TagId}
+							thingid={top5Tag.thingId}
+						/>
 					</Box>
 				</TableCell>
 				

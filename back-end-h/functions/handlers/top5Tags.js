@@ -18,7 +18,8 @@ exports.getTop5TagFromUserDevice = (req,res) => {
     .doc(top5TagId)
     .get()
     .then((doc)=>{
-        const data = {...doc.data()}
+        const data = {...doc.data(), top5TagId:doc.id}
+        console.log(`res top5TagId:${JSON.stringify(data.top5TagId)}`)
         res.json(data)
     })
     .catch((err) => {

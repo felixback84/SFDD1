@@ -4,21 +4,23 @@ const { db } = require('../utilities/admin');
 // find porducts wich offer the vendors
 exports.findProductsOfStaticDevices = async (req, res) => {
     // staticDeviceId
-    const staticDeviceId = req.params.staticDeviceId
+    const thingId = req.params.thingId
     // print
-    console.log({staticDeviceId})
+    console.log({thingId})
     // arr with results
     let arrProducts = []
 
-    const getProductsArr = async (staticDeviceId,res) => {
-
+    const getProductsArr = async (thingIdx,res) => {
+        // print
+        console.log(`thingIdx:${thingIdx}`)
         // db part
         let refDB = await db
             .collection('products')
             
         // db result
         let result = await refDB
-            .where('staticDeviceProperty','==',staticDeviceId)
+        // el parametro está mal, se debe pasar algo asi --> bibidise-staticHeartbeat-2WUdDyX4NdeZrBt0deYC
+            .where('staticDeviceProperty','==',thingIdx)
             .get()
 
         // loop
@@ -40,7 +42,7 @@ exports.findProductsOfStaticDevices = async (req, res) => {
 
     // run it & catch it
     try {
-        await getProductsArr(staticDeviceId,res)
+        await getProductsArr(thingId,res)
     } catch (err) {
         console.log('Error getting documents', err)
     }

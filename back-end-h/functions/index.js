@@ -79,29 +79,38 @@ const {
         detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices, // meassure modeOne
     } = require('./handlers/searchingModes/modeOne');
 
-    // searching modeTwo
-    const {
-        selectStaticDevicesToSearchByUserDevice,  // ----> top5Tag ux picker
-        detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice, // meassure modeTwo
-    } = require('./handlers/searchingModes/modeTwo');
+        // searching modeTwo
+        const {
+            selectStaticDevicesToSearchByUserDevice,  // ----> top5Tag ux picker
+            detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice, // meassure modeTwo
+        } = require('./handlers/searchingModes/modeTwo');
     
     // searching modeThree
     const {
-        searchStaticDevicesByCategoriesAndTags, // products searcher
+        // es cosa de escoger cual es el buscador
+        searchStaticDevicesByCategoriesAndTags, // products searcher 
+        // findStaticsProductsInSpecificMtsRange, ------> better search
+
         postListOfProductsToFind, // ---> top5Products from ux 
         meassureOfMatchesInProducts, // ----> meassure modeThree
     } = require('./handlers/searchingModes/modeThree');
     
-    // searching modeFour
-    const {
-        selectProductOfStaticDeviceToSearchByUserDevice, // ----> top5Products ux picker
-        meassureOfMatchToEspecificProduct, // ----> meassure modeFour
-    } = require('./handlers/searchingModes/modeFour');
+        // searching modeFour
+        const {
+            // se debe seleccionar del anterior modo la lista de devices
+            selectProductOfStaticDeviceToSearchByUserDevice, // ----> top5Products ux picker
+            meassureOfMatchToEspecificProduct, // ----> meassure modeFour ----> to check
+        } = require('./handlers/searchingModes/modeFour');
 
     // searching by meters
     const {
+        // tags
         findStaticsInSpecificMtsRange, // ----> modeMtsOne
+        postTop5TagsInUserDeviceId,
+
+        // products
         findStaticsProductsInSpecificMtsRange, // ----> modeMtsTwo
+        // postListOfProductsToFind, // ---> already exists in modeThree
     } = require('./handlers/searchingModes/byMeters');
         
 // static device
@@ -234,6 +243,9 @@ app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,se
 /////*** */ bymeters
 // to post and find wich statics are close to me by geohash
 app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)
+// top post staticDevices list results of search
+app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId)
+
 // to post and find wich statics products are closer to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
@@ -263,7 +275,7 @@ app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevi
 
     ///////////////////////////////////////// products ////////////////////////////////////////////
     // find porducts wich offer the vendors
-    app.get('/staticdevice/products/:staticDeviceId',FBAuth, findProductsOfStaticDevices)
+    app.get('/staticdevice/products/:thingId',FBAuth, findProductsOfStaticDevices)
     // post products in statics
     app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
 
@@ -596,9 +608,23 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             // to specific product  
                             meassureOfMatchToEspecificProduct(
                                 await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
-                            )
+                            ) // ---> make capable of meassure in more than one product
                             // print 
                             console.log("say hello to my little friend from thing modeFour")
+                        } else if (searchingMode[0] === "modeFive"){
+                            // run it meassure GPS coords for the userDevice and all the matches statics
+                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            );
+                            // print 
+                            console.log("say hello to my little friend from thing modeFive")
+                        } else if (searchingMode[0] === "modeSix"){
+                            // to specific product  
+                            meassureOfMatchesInProducts(
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            ) 
+                            // print 
+                            console.log("say hello to my little friend from thing modeSix")
                         }
                     })
                     .catch((err) => {

@@ -20,6 +20,12 @@ import {
     // top5Product --> mode four
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
     STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT,
+
+        // live
+        GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE,
+
+    //      
     
 } from '../types'; 
 
@@ -68,7 +74,8 @@ export const postListOfProductsOfStaticDevicesToFind = (data) => (dispatch) => {
     }
 }
 
-// declarate a function to get data from db for top5Products (modeThree)
+// declarate a function to get data from db for top5Products (modeThree) --> static data
+// data of selected products
 export const userDeviceTop5ProductsSyncData = (thingId) => (dispatch) => {
     
     // vars to ask to db do
@@ -112,7 +119,7 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
     // print init
-    console.log(`hi from init of top5Tags listener`)
+    console.log(`hi from init of top5Productss listener`)
     // var to hold the length of doc in collection
     let collectionLength = 0
     // arr
@@ -171,19 +178,36 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
         })   
 }
 
-// declarate a function to get data from a specifics one db for top5Products (modeFour)
-export const userDeviceSpecificTop5ProductSyncData = (thingId, docId) => (dispatch) => {
+// declarate a function to get data from a specifics one db for top5Products (modeFour) --> static data
+// --> to check
+export const userDeviceSpecificTop5ProductSyncData = (thingId, docId, [...arrIds]) => (dispatch) => {
 
+    // arrIds
+    const arrListOfTags = [...arrIds]
+    // arrResults 
+    const arrResults = []
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
 
-    // snapshot
-    const data = firebase.firestore()
-        .doc(`/userDevices/${userDeviceId}`) 
-        .collection('top5Products')
-        .doc(docId)
-        .get()
+    // loop
+    for(arrListOfTag in arrListOfTags){
+        // snapshot
+        const data = firebase.firestore()
+            .doc(`/userDevices/${userDeviceId}`) 
+            .collection('top5Products')
+            .where('thingId','==',arrListOfTag) // ---> id doc
+            .get()
+            .then((doc)=>{
+                arrResults.push([
+                    ...doc.data()
+                ])
+                return arrResults
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+    }
     
     // push data
     const observer = data.then(doc => {
@@ -197,5 +221,73 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, docId) => (dispat
     }, err => {
         console.log(`Encountered error: ${err}`);
     });
+}
+
+// declarate a function to get data from a specifics one db for top5Products (modeFour) --> dynamic data
+export const userDeviceSpecificTop5ProductSyncData = () => (dispatch) => {
+
+    console.log(`init live top5Product`)
+
+    // vars to ask to db do
+    const thingIdVal = thingId
+    const userDeviceId = thingIdVal.split("-").slice(2);
+    // print init
+    console.log(`hi from init of top5Tag listener`)
+    // var to hold the length of doc in collection
+    let collectionLength = 0
+    // arr
+    let arr = []
+    // ref db
+    const dataRef = firebase
+        .firestore()
+        .doc(`/userDevices/${userDeviceId}`) 
+        .collection('top5Products')
+        //.orderBy('meters','asc')
+
+    // length of doc in collection
+    const findLength = dataRef.get().then(snap => {
+        return collectionLength = snap.size
+    });
+    console.log(`size:${collectionLength}`)
+
+    // snapshot
+    const snap = dataRef
+        .onSnapshot((querySnapshot)=>{
+            // print
+            console.log(`snapshot`)
+            // snap
+            const tagsMeters = querySnapshot
+                .docChanges()
+                .map((change)=>{
+                    if(change.type === 'modified'){
+                        // all data
+                        const data = {...change.doc.data()}
+                        return arr.push(data)
+                    }
+                })
+
+                // checker if something change
+                if(querySnapshot.docChanges().length != 0){
+                    // check lengths
+                    if(arr.length === collectionLength){
+                        // sort the arr
+                        let arrSort = arr.sort((a, b) => a.meters - b.meters)
+                        // print
+                        console.log(`minVal:${JSON.stringify(arrSort)}`)
+                        // dispatch data
+                        dispatch({ 
+                            type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+                            payload:arrSort
+                        });
+                        // events
+                        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE })
+                        // reset arr
+                        arr = []
+                        console.log(`arrEmpty:${arr}`)
+                    }
+                }
+        },err => {
+            console.log(`Encountered error: ${err}`);
+        }) 
 }
 
