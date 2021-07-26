@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React  from 'react'
 // mui stuff
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles'
+import Avatar from "@material-ui/core/Avatar";
 import Container from '@material-ui/core/Container'
 import { Grid, Divider } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
@@ -9,31 +10,32 @@ import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MuiDialogContent from '@material-ui/core/DialogContent'
-import MuiDialogActions from '@material-ui/core/DialogActions'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import Box from "@material-ui/core/Box"
-import Tooltip from "@material-ui/core/Tooltip"
-// MUI pro
-import GridContainer from "components/Grid/GridContainer.js"
-import GridItem from "components/Grid/GridItem.js"
-import CardBody from "components/Card/CardBody.js"
-import CardFooter from "components/Card/CardFooter.js"
-
+import { Tooltip } from '@material-ui/core';
 // nodejs library that concatenates classes
 import classNames from "classnames"
 // icons
 import LocationOn from '@material-ui/icons/LocationOn'
-import School from '@material-ui/icons/School'
-import Favorite from '@material-ui/icons/Favorite'
+// social icons
+import TwitterIcon from '@material-ui/icons/Twitter'
+import LinkedInIcon from '@material-ui/icons/LinkedIn'
+import YouTubeIcon from '@material-ui/icons/YouTube'
+import InstagramIcon from '@material-ui/icons/Instagram'
+
+// components
+import ProductsByTop5Tag from './ProductsByTop5Tag'
+import TagsMaker from '../../components/utils/TagsMaker'
+
 // redux
 import { connect } from 'react-redux'
 import { findSpecificTop5Tag } from '../../../../redux/actions/top5TagsActions'
 import { userDeviceSpecificTop5ProductsSyncData } from '../../../../redux/actions/productsActions'
 // styles
-import componentStyles from "assets/theme/views/admin/StaticDevicePropertyDetails.js";
-const useStyles = makeStyles(componentStyles);
+import componentStyles from "assets/theme/views/admin/staticDevicePropertyDetails.js"
+const useStyles = makeStyles(componentStyles)
 
 const styles = (theme) => ({
     root: {
@@ -70,14 +72,6 @@ const DialogContent = withStyles((theme) => ({
     },
 }))(MuiDialogContent)
 
-// actions bar dialog
-const DialogActions = withStyles((theme) => ({
-    root: {
-        margin: 0,
-        padding: theme.spacing(1),
-    },
-}))(MuiDialogActions)
-
 
 const StaticDevicePropertyDetails = (props) => {
 
@@ -93,7 +87,6 @@ const StaticDevicePropertyDetails = (props) => {
     const top5TagId = props.top5tagid
     const thingId = props.thingid
 
-    
     // to open
     const handleClickOpen = () => {
         // print
@@ -108,60 +101,6 @@ const StaticDevicePropertyDetails = (props) => {
     // to close
     const handleClickClose = () => {
         setOpen(false)
-    }
-
-    // map arrProducts
-    const arrProducts = (arrProductsVendors) => {
-        arrProductsVendors.map((arrProductVendorsItem)=>{
-            // print
-            console.log(`arrProductVendorsItem: ${JSON.stringify(arrProductVendorsItem)}`)
-            
-            return(
-                <GridContainer>
-                    <GridItem sm={6} md={3}>
-                        <Card product>
-                            <CardHeader image>
-                                <a href="#pablo">
-                                    <img src={'image'} alt="cardProduct" />
-                                </a>
-                            </CardHeader>
-                            <CardBody>
-                                <h6
-                                    className={classNames(
-                                        classes.cardCategory,
-                                        classes.textRose
-                                    )}
-                                >
-                                    Trending
-                                </h6>
-                                <h4 className={classes.cardTitle}>Dolce & Gabbana</h4>
-                                <div className={classes.cardDescription}>
-                                    Dolce & Gabbana{"'"}s {"'"}Greta{"'"} tote has been
-                                    crafted in Italy from hard-wearing red textured-leather.
-                                </div>
-                            </CardBody>
-                            <CardFooter className={classes.justifyContentBetween}>
-                                <div className={classes.price}>
-                                    <h4>$1,459</h4>
-                                </div>
-                                <div className={classes.stats}>
-                                    <Tooltip
-                                        id="tooltip-top"
-                                        title="Save to Wishlist"
-                                        placement="top"
-                                        classes={{ tooltip: classes.tooltip }}
-                                    >
-                                        <Button justIcon color="rose" simple>
-                                            <Favorite />
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                            </CardFooter>
-                        </Card>
-                    </GridItem>
-                </GridContainer>
-            )
-        })
     }
 
     // redux props
@@ -188,7 +127,6 @@ const StaticDevicePropertyDetails = (props) => {
                 userHandle
             }
         },
-        //products
     } = props
     
     return (
@@ -197,17 +135,32 @@ const StaticDevicePropertyDetails = (props) => {
             <Button variant="outlined" onClick={handleClickOpen}>See details</Button>
             {/* dialog */}
             <Dialog onClose={handleClickClose} aria-labelledby="customized-dialog-title" open={open}>
-                {/* title bar */}
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    fontSize="1rem"
+                >
+                    <Box
+                        component={Typography}
+                        variant="h5"
+                        marginTop="0.5rem!important"
+                    >
+                        Tags: 
+                    </Box>
+                </Box>
+                {/* title tags bar */}
                 <DialogTitle id="customized-dialog-title" onClose={handleClickClose}>
-                    Modal title
+                    <TagsMaker data={matchDataResults}/>
                 </DialogTitle>
+
                 {/* content */}
                 <DialogContent dividers>
-                    <Container
+                    {/* <Container
                         maxWidth={false}
                         component={Box}
                         classes={{ root: classes.containerRoot }}
-                    >
+                    > */}
                         <Grid container>
                             <Grid
                                 item
@@ -226,9 +179,7 @@ const StaticDevicePropertyDetails = (props) => {
                                             <Box position="relative">
                                                 <Box
                                                     component="img"
-                                                    src={
-                                                        require("assets/img/theme/team-4-800x800.jpg").default
-                                                    }
+                                                    src={imgUrl}
                                                     alt="..."
                                                     maxWidth="180px"
                                                     borderRadius="50%"
@@ -255,14 +206,14 @@ const StaticDevicePropertyDetails = (props) => {
                                                         size="small"
                                                         classes={{ root: classes.buttonRootInfo }}
                                                         >
-                                                            Connect
+                                                            {meters}
                                                         </Button>
                                                         <Button
                                                         variant="contained"
                                                         size="small"
                                                         classes={{ root: classes.buttonRootDark }}
                                                         >
-                                                            Message
+                                                            {hash}
                                                         </Button>
                                                     </Box>
                                                 }
@@ -360,13 +311,10 @@ const StaticDevicePropertyDetails = (props) => {
                                                     </Grid>
 
                                                     <Grid item xs={12}>
-                                                        {/* name & location */} {/* tags */}
+                                                        {/* companyName */} 
                                                         <Box textAlign="center">
                                                             <Typography variant="h3">
-                                                                Jessica Jones
-                                                                <Box component="span" fontWeight="300">
-                                                                    , 27
-                                                                </Box>
+                                                                {companyName}
                                                             </Typography>
                                                             <Box
                                                                 component={Typography}
@@ -381,36 +329,10 @@ const StaticDevicePropertyDetails = (props) => {
                                                                     width="1.25rem!important"
                                                                     height="1.25rem!important"
                                                                 ></Box>
-                                                                Bucharest, Romania
+                                                                Location: Bogotá D.C, Colombia
                                                             </Box>
 
-                                                            {/* mini profile */}
-                                                            <Box
-                                                                component={Typography}
-                                                                variant="h5"
-                                                                marginTop="3rem!important"
-                                                            >
-                                                                Solution Manager - Creative Tim Officer
-                                                            </Box>
-                                                            <Box
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
-                                                                fontSize="1rem"
-                                                            >
-                                                                <Box
-                                                                    component={School}
-                                                                    width="1.25rem!important"
-                                                                    height="1.25rem!important"
-                                                                    marginRight=".5rem"
-                                                                ></Box>
-                                                                University of Computer Science
-                                                            </Box>
-                                                            <Box
-                                                                component={Divider}
-                                                                marginTop="1.5rem!important"
-                                                                marginBottom="1.5rem!important"
-                                                            ></Box>
+                                                            {/* bio */}
                                                             <Box
                                                                 component="p"
                                                                 fontWeight="300"
@@ -418,10 +340,86 @@ const StaticDevicePropertyDetails = (props) => {
                                                                 marginBottom="1rem"
                                                                 fontSize="1rem"
                                                             >
-                                                                Ryan — the name taken by Melbourne-raised, Brooklyn-based
-                                                                Nick Murphy — writes, performs and records all of his own
-                                                                music.
+                                                                {bio}
                                                             </Box>
+
+                                                            {/* social links */}
+                                                            <Box
+                                                                component={Divider}
+                                                                marginTop="1.5rem!important"
+                                                                marginBottom="1.5rem!important"
+                                                            ></Box>
+                                                            <Box
+                                                                component={TwitterIcon}
+                                                                width="1.5rem!important"
+                                                                height="1.5rem!important"
+                                                            ></Box>
+                                                            <Box
+                                                                component={LinkedInIcon}
+                                                                width="1.5rem!important"
+                                                                height="1.5rem!important"
+                                                            ></Box>
+                                                            <Box
+                                                                component={YouTubeIcon}
+                                                                width="1.5rem!important"
+                                                                height="1.5rem!important"
+                                                            ></Box>
+                                                            <Box
+                                                                component={InstagramIcon}
+                                                                width="1.5rem!important"
+                                                                height="1.5rem!important"
+                                                            ></Box>
+
+                                                            {/* mini profile */}
+                                                            <Box
+                                                                component={Divider}
+                                                                marginTop="1.5rem!important"
+                                                                marginBottom="1.5rem!important"
+                                                            ></Box>
+
+                                                            <Box
+                                                                component={Typography}
+                                                                variant="h3"
+                                                                marginTop="3rem!important"
+                                                            >
+                                                                Ask for: 
+                                                            </Box>
+
+                                                            {/* avatar */}
+                                                            <Avatar
+                                                                classes={{ root: classes.avatarLarge }}
+                                                                alt="..."
+                                                                src={
+                                                                    require("assets/img/theme/team-1-800x800.jpg")
+                                                                        .default
+                                                                }
+                                                            />
+
+                                                            {/* names */}
+                                                            <Box
+                                                                component={Typography}
+                                                                variant="h5"
+                                                                marginTop="3rem!important"
+                                                            >
+                                                                {`${names} ${lastname}`} 
+                                                            </Box>
+
+                                                            {/* role */}
+                                                            <Box
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
+                                                                fontSize="1rem"
+                                                            >
+                                                                Sales Agent
+                                                            </Box>
+
+                                                            <Box
+                                                                component={Divider}
+                                                                marginTop="1.5rem!important"
+                                                                marginBottom="1.5rem!important"
+                                                            ></Box>
+
                                                         </Box>
                                                     </Grid>
                                                 </Grid>
@@ -430,23 +428,20 @@ const StaticDevicePropertyDetails = (props) => {
                                             {/* products */}
                                             <div className={classes.relatedProducts}>
                                                 <h3 className={classNames(classes.title, classes.textCenter)}>
-                                                    You may also be interested in:
+                                                    Their products:
                                                 </h3>
-                                                {arrProducts(props.top5ProductsUx)}
+                                                {/* arr Products */}
+                                                <ProductsByTop5Tag 
+                                                    top5productsux={props.top5ProductsUx}
+                                                />
                                             </div>    
                                         </Grid>
                                     </Box>
                                 </Card>
                             </Grid>
                         </Grid>
-                    </Container>    
+                    {/* </Container>     */}
                 </DialogContent>
-                {/* actions bar */}
-                <DialogActions>
-                    <Button autoFocus onClick={handleClickClose} color="primary">
-                        Save changes
-                    </Button>
-                </DialogActions>
             </Dialog>
         </>
     )

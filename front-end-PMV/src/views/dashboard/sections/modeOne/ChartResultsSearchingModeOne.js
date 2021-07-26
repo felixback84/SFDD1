@@ -172,14 +172,9 @@ class ChartResultsSearchingModeOne extends Component {
 					{/* tags user table header  */}
 					<CardHeader
 						className={classes.cardHeader}
-						// error here
-						title={()=>{
-							return(
-								<>
-									<TagsMaker data={profileToMatch}/>
-								</>
-							)
-						}}
+						title={
+							<TagsMaker data={profileToMatch}/>
+						}
 						titleTypographyProps={{
 							component: Box,
 							marginBottom: "0!important",

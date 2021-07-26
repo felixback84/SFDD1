@@ -7,7 +7,7 @@ import {
   roseCardHeader,
   blackColor,
   hexToRgb
-} from "assets/jss/material-kit-pro-react.js";
+} from "assets/theme/material-kit-pro-react.js";
 
 const cardHeaderStyle = {
   cardHeader: {
