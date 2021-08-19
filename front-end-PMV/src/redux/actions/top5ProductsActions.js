@@ -3,27 +3,27 @@ import {
 
     // ---> search products by category and tags
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
-    STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
+    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
 
     // ---> post list of products to find
     POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
-    STOP_LOADING_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
+    STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
     
     // top5Products --> mode three
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
-    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
+    STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
 
         // live
         GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
-        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
+        STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
 
     // top5Product --> mode four
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
-    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT,
+    STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT,
 
         // live
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
-        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE,
+        STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE,
 
     //      
     
@@ -48,7 +48,7 @@ export const searchProductsByCategoryAndTags = (data) => (dispatch) => {
                 type: GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
                 payload: res.data
             })
-            dispatch({ type: STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS })
+            dispatch({ type: STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS })
     } catch (error) {
         console.log(error)
     }
@@ -68,7 +68,7 @@ export const postListOfProductsOfStaticDevicesToFind = (data) => (dispatch) => {
                 type: POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
                 payload: res.data
             })
-            dispatch({ type: STOP_LOADING_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND })
+            dispatch({ type: STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND })
     } catch (error) {
         console.log(error)
     }
@@ -104,7 +104,7 @@ export const userDeviceTop5ProductsSyncData = (thingId) => (dispatch) => {
             type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
             payload: listOfTop5Products
         });
-        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS });
+        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS });
     }, err => {
         console.log(`Encountered error: ${err}`);
     });
@@ -167,7 +167,7 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
                             payload:arrSort
                         });
                         // events
-                        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE })
+                        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE })
                         // reset arr
                         arr = []
                         console.log(`arrEmpty:${arr}`)
@@ -217,7 +217,7 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, docId, [...arrIds
             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
             payload: resultDB
         });
-        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT });
+        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT });
     }, err => {
         console.log(`Encountered error: ${err}`);
     });
@@ -280,7 +280,7 @@ export const userDeviceSpecificTop5ProductSyncData = () => (dispatch) => {
                             payload:arrSort
                         });
                         // events
-                        dispatch({ type: STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE })
+                        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCT_LIVE })
                         // reset arr
                         arr = []
                         console.log(`arrEmpty:${arr}`)

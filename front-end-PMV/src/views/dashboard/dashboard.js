@@ -8,15 +8,21 @@ import Grid from "@material-ui/core/Grid";
 // components
 import Header from "../../components/Headers/Header.js";
 import SkeletonDashboard from "./components/SkeletonDashboard.js";
+import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
+import GoogleMapModeTwo from './components/modeTwo/GoogleMapModeTwo'
+// modeOne
 import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchingModeOne"
+// modeTwo
+import ChartResultsSearchingModeTwo from "./sections/modeTwo/ChartResultsSearchingModeTwo"
+import ChartResultsSelectedItemsSearchingModeTwo from "./sections/modeTwo/ChartResultsSelectedItemsSearchingModeTwo"
 
 // Redux stuff
 import { connect } from 'react-redux';
 import { getUserDevices } from '../../redux/actions/userDevicesActions';
-import { heartbeatThingSyncDataStatic, heartbeatThingSyncDataLiveDB } from '../../redux/actions/heartbeatUIActions';
-
-// components
-import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
+import { 
+	heartbeatThingSyncDataStatic, 
+	heartbeatThingSyncDataLiveDB
+} from '../../redux/actions/heartbeatUIActions';
 
 // styles
 import componentStyles from "assets/theme/views/admin/dashboardOne.js";
@@ -54,7 +60,7 @@ const pickerMarkerMix = (
 						{/* chart top5Coords*/}
 						<Grid container>
 							<Grid item xs={12}>
-								// results
+								{/* results */}
 								<ChartResultsSearchingModeOne/>
 							</Grid>
 						</Grid>
@@ -62,14 +68,39 @@ const pickerMarkerMix = (
 				)
 			}
 		break;	
-		// case "modeTwo":	
-		// 	return(
-		// 		<MarkerInfoWindowModeTwo 
-		// 			coords={coords}
-		// 			top5tag={top5Tag}
-		// 		/>
-		// 	) 
-		// break;
+		case "modeTwo":	
+		if(loading == false){
+			return(
+				<>
+					{/* map */}
+					<Grid container>
+						<Grid item xs={12}>
+							<Card classes={{ root: classes.cardRoot }}>
+								<GoogleMapModeTwo 
+									coords={coordz}
+									colorValue={color}
+								/>
+							</Card>
+						</Grid>
+					</Grid>
+					{/* chart top5Coord specifics filter*/}
+					<Grid container>
+						<Grid item xs={12}>
+							{/* results */}
+							<ChartResultsSelectedItemsSearchingModeTwo/>
+						</Grid>
+					</Grid>
+					{/* chart all top5Coords*/}
+					<Grid container>
+						<Grid item xs={12}>
+							{/* results */}
+							<ChartResultsSearchingModeTwo/>
+						</Grid>
+					</Grid>
+				</>	
+			)
+		}
+		break;
 		// case "modeThree":	
 		// 	return(
 		// 		<MarkerInfoWindowModeThree 

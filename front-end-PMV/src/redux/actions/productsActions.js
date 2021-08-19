@@ -2,7 +2,7 @@
 import {
 
     GET_PRODUCTS_UX,
-    STOP_LOADING_GET_PRODUCTS_UX,
+    STOP_GET_PRODUCTS_UX,
     
 } from '../types'; 
 
@@ -31,7 +31,7 @@ export const userDeviceSpecificTop5ProductsSyncData = (docId) => async (dispatch
                 type: GET_PRODUCTS_UX,
                 payload: res.data
             })
-            dispatch({ type: STOP_LOADING_GET_PRODUCTS_UX })
+            dispatch({ type: STOP_GET_PRODUCTS_UX })
     // } catch (error) {
     //     console.log(error)
     // }

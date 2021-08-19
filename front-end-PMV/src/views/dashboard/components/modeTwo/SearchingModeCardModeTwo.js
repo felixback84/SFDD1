@@ -1,88 +1,119 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 // @material-ui/core components
 import { useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Grid from '@material-ui/core/Grid';
 // core components
 import CardStats from "../../../../components/Cards/CardStats.js";
 import SearchingModeSwitcherTwo from "./SearchingModeSwitcherTwo"
+// components
+// import SearchEngine from "../utils/SearchEngine/SearchEngine"
+import ColorEngine from "../utils/ColorEngine/ColorEngine"
 // Redux stuff
 import { connect } from 'react-redux';
 
 // cards
 const SearchingModeCardModeTwo = (props) => {
-  // styles
+  	// styles
 	const theme = useTheme();
-	// card markup
+	// color class
+	const colorClass = new ColorEngine()
+	// card markup 
 	const modeCardMarkupTwo = (data) => {
 		return (
 			<>
 				<CardStats
 					subtitle={props.title}
-					title="350,897" // number of items
-					icon={props.icon}
-					//color={dacolor} // color from liveDataSets
+					title={
+						data.top5Tag.length != 0 ? 
+						(
+							//with array in reducer
+							data.top5TagListener.length != 0 ?
+								data.top5TagListener[0].meters.toFixed(2):
+								data.top5Tag[0].meters.toFixed(2)
+						):(0)
+					} 
+					icon={data.icon}
+					color={
+						colorClass.colorPicker(data.colorValue)
+					} 
 					footer={
-						<>
-							{/* card footer */}
+						<Fragment>
+							{/* switcher */}
+							<Box
+								marginLeft=".5rem"
+								marginBottom=".5rem"
+								component="span">
+								<SearchingModeSwitcherTwo
+									mode={props.mode} 
+									thingid={props.thingid}
+									// idofspecificstaticdevices={
+									// 	// data.thingLiveDataSetsListener.idOfSpecificStaticDevices.length == 0 ?
+									// 	// 	data.thingLiveDataSets.idOfSpecificStaticDevices :
+									// 			data.thingLiveDataSetsListener.idOfSpecificStaticDevices 
+									// }
+								/>
+							</Box>
+							{/* bussines item closer */}
 							<Box
 								component="span"
 								fontSize=".875rem"
-								color={theme.palette.success.main}
 								marginRight=".5rem"
 								display="flex"
 								alignItems="center"
 							>
-								{/* <Grid container>
-									<Grid item xl={3} lg={6} xs={12}> */}
-										{/* distances in meters to the next one item */}
-										<Box
-											width="1.5rem!important"
-											height="1.5rem!important"
-										>
-											{"3.48 Mts"} 
-										</Box>
-									{/* </Grid>
-									<Grid item xl={3} lg={6} xs={12}> */}
-										{/* switcher */}
-										<Box component="span" whiteSpace="nowrap">
-											<SearchingModeSwitcherTwo
-												mode={props.mode}
-												idofspecificstaticdevice={props.idofspecificstaticdevice}
-											/>
-										</Box>
-									{/* </Grid>
-								</Grid> */}
+								The closer bussines to you is: {
+									data.top5Tag.length !== 0 ? 
+									(data.top5Tag[0].userCredentials.companyName):("")
+								}
 							</Box>
-							{/* data of the closer item */}
-							<Box component="span" whiteSpace="nowrap">
-								Since last month 
+							{/* # of bussines searching */}
+							<Box
+								component="span"
+								fontSize=".875rem"
+								marginRight=".5rem"
+								display="flex"
+								alignItems="center"
+							>
+								{/* number of items */}
+								You match with {data.top5Tag.length} bussines
 							</Box>
-						</>
+						</Fragment>
 					}
-				/>		
+				/>
 			</>
 		)
 	}
-
+ 
 	// data
 	const data = {
-		color:props.thingLiveDataSets.colorValue,
+		// device
+		thingLiveDataSets:props.thingLiveDataSets,
+		thingLiveDataSetsListener:props.thingLiveDataSetsListener,
+		colorValue:props.thingLiveDataSetsListener.colorValue === undefined ?
+			(props.thingLiveDataSets.colorValue):
+			(props.thingLiveDataSetsListener.colorValue),
+		// icon		
 		icon:props.icon,
+		// top5Tags
 		top5Tag:props.top5Tag,
-		thingLiveDataSets:props.thingLiveDataSets
+		top5TagListener:props.top5TagListener,
 	}
 	return(
-		<>
+		<Fragment>
 			{modeCardMarkupTwo(data)}
-		</>
+		</Fragment>
 	)
-}
+} 
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
-	top5Tag: state.userDevices1.top5Tag,
+	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	// top5Tags
+	top5Tag: state.top5Tags1.top5Tag,
+	top5TagListener: state.top5Tags1.top5TagListener,
+	//top5TagArr: state.top5Tags.top5TagArr
 });
 
 export default connect(mapStateToProps)(SearchingModeCardModeTwo);

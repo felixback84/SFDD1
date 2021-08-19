@@ -1,13 +1,18 @@
 // firebase
-const { db } = require('../../utilities/admin');
+const { admin, db } = require('../../utilities/admin');
 
-// search and mark a specific static devices to posterior meassure
+// update list of statics to find in liveDataSets
 exports.selectStaticDevicesToSearchByUserDevice = (req,res) => {
     // to deal with arr
     const FieldValue = admin.firestore.FieldValue;
     const selectProfileToSearchData = req.body;
     // userDeviceId 
-    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2);
+    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2)
+    // obj to update arr
+    const newTop5Tag = [{
+        thingIdToSearch:selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch,
+        top5TagDocId:selectProfileToSearchData.objSelectProfileToSearch.top5TagDocId
+    }]
     // db part
     let infoInLiveDataSets = db
         .doc(`/userDevices/${userDeviceId}`)
@@ -15,9 +20,43 @@ exports.selectStaticDevicesToSearchByUserDevice = (req,res) => {
         .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
     // update
     infoInLiveDataSets
-        .update({idOfSpecificStaticDevices: FieldValue.arrayUnion(selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch)})
+        .update({
+            //idOfSpecificStaticDevices: FieldValue.arrayUnion(selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch)
+            idOfSpecificStaticDevices: FieldValue.arrayUnion(...newTop5Tag)
+        })
         .then(()=>{
             res.json("staticDevice marked")
+        })
+        .catch(err => {
+            res.status(500, err);
+        })
+}
+
+// erase item list of statics to find in liveDataSets
+exports.deSelectStaticDevicesToSearchByUserDevice = (req,res) => {
+    // to deal with arr
+    const FieldValue = admin.firestore.FieldValue;
+    const selectProfileToSearchData = req.body;
+    // userDeviceId 
+    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2)
+    // obj to update arr
+    const newTop5Tag = [{
+        thingIdToSearch:selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch,
+        top5TagDocId:selectProfileToSearchData.objSelectProfileToSearch.top5TagDocId
+    }]
+    // db part
+    let infoInLiveDataSets = db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('liveDataSets')
+        .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
+    // update
+    infoInLiveDataSets
+        .update({
+            //idOfSpecificStaticDevices: FieldValue.arrayRemove(selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch)
+            idOfSpecificStaticDevices: FieldValue.arrayRemove(...newTop5Tag)
+        })
+        .then(()=>{
+            res.json("staticDevice unmarked")
         })
         .catch(err => {
             res.status(500, err);
@@ -31,8 +70,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice = asyn
     // print
     console.log(`inWait: ${JSON.stringify(inWait)}`)
     // dp update part
-    //let userDeviceId = dataEnter.thingId.split("-").slice(2).toString();
-    let userDeviceId = "CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ"
+    let userDeviceId = dataEnter.thingId.split("-").slice(2).toString()
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
     // init meassure
@@ -60,11 +98,8 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice = asyn
                 thingId:args.staticDevicesCoords[i].docId
             })
             // db save mts results part
-            const docRef = db
-                .doc(`/userDevices/${userDeviceId}`)
-                .collection('top5Tags')
-                .doc(args.staticDevicesCoords[i].docId)
-                
+            const docRef = await db
+                .doc(`/userDevices/${userDeviceId}/top5Tags/${args.staticDevicesCoords[i].docId}`)
             // update meters
             await docRef
                 .update({

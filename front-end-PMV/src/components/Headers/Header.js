@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 // components
 import SearchingModeCardModeOne from '../../views/dashboard/components/modeOne/SearchingModeCardModeOne'
-// import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
+import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
 // import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
 // import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
 import SearchEngine from "../../views/dashboard/components/utils/SearchEngine/SearchEngine"
@@ -43,13 +43,14 @@ const Header = (props) => {
               </Grid>
               <Grid item xl={3} lg={3} xs={12}>
                 {/* modeTwo */}
-                {/* <SearchingModeCardModeTwo
+                <SearchingModeCardModeTwo
                   title="modeTwo"
                   icon={GroupAdd}
                   mode="modeTwo"
-                  idofspecificstaticdevice={props.idofspecificstaticdevice}
-					        idofspecificproduct={props.idofspecificproduct}
-                /> */}
+                  thingid={props.thingid}
+                  // idofspecificstaticdevice={props.idofspecificstaticdevice}
+					        // idofspecificproduct={props.idofspecificproduct}
+                />
               </Grid>
               <Grid item xl={3} lg={3} xs={12}>
                 {/* modeThree */}

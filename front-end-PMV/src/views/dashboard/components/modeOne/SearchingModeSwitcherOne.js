@@ -57,17 +57,6 @@ const SearchingModeSwitcherOne = (props) => {
 			// run static query data
 			props.heartbeatPostSearchingMode(dataSearchingMode)
 			
-			// checker switcher
-			// if(
-			// 	props.thingLiveDataSets.searchingMode[0] === "modeOne" 
-			// 	// && props.loading === false 
-			// 	&& mode.checked === true
-			// ){
-			// 	// static data from top5Tags
-			// 	props.userDeviceTop5TagsSyncDataStatic(props.thingid)
-			// 	// live data from top5Tags
-			// 	props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
-			// }
 		}
 	})
 	

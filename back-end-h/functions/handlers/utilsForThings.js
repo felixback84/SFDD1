@@ -138,12 +138,12 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
         // loop 
         for (let i = 0, len = doc.idOfSpecificStaticDevices.length; i < len; i++) {
             // print
-            console.log(`idOfSpecificStaticDevices:${doc.idOfSpecificStaticDevices[i]}`)
+            console.log(`idOfSpecificStaticDevices:${doc.idOfSpecificStaticDevices[i].thingIdToSearch}`)
             // db part
             const ref = await db
                 .doc(`/userDevices/${userDeviceId}`)
                 .collection('top5Tags')
-                .where('thingId','==', doc.idOfSpecificStaticDevices[i])
+                .where('thingId','==', doc.idOfSpecificStaticDevices[i].thingIdToSearch)
                 .get()
             // lopp to extract data    
             for (const doc of ref.docs) {

@@ -132,7 +132,12 @@ const StaticDevicePropertyDetails = (props) => {
     return (
         <>
             {/* open btn */}
-            <Button variant="outlined" onClick={handleClickOpen}>See details</Button>
+            <Button 
+                variant="outlined" 
+                onClick={handleClickOpen}
+            >
+                See details
+            </Button>
             {/* dialog */}
             <Dialog onClose={handleClickClose} aria-labelledby="customized-dialog-title" open={open}>
                 <Box

@@ -82,6 +82,7 @@ const {
         // searching modeTwo
         const {
             selectStaticDevicesToSearchByUserDevice,  // ----> top5Tag ux picker
+            deSelectStaticDevicesToSearchByUserDevice, // ----> top5Tag ux picker to eliminate
             detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice, // meassure modeTwo
         } = require('./handlers/searchingModes/modeTwo');
     
@@ -229,6 +230,8 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
 /////*** */ modeTwo
 // post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
 app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
+// post to unselectStaticDeviceToSearch by userDevice 
+app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevicesToSearchByUserDevice);
 
 /////*** */ mode three
 // search of static devices products according to the categories and tags it has

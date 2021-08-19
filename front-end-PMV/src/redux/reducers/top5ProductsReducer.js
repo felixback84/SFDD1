@@ -3,27 +3,27 @@ import {
  
     // ---> search products by category and tags
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
-    STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
+    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
 
     // ---> post list of products to find
     POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
-    STOP_LOADING_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
+    STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
 
     // top5Products --> mode Three
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
-    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
+    STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
 
         // live
         GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
-        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
+        STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
 
     // top5Product --> mode four
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
-    STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
+    STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
         
         // live
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
-        STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+        STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
 
 } from '../types'
 
@@ -52,7 +52,7 @@ export default function(state = initialState, action){
                 loading: false
             }; 
 
-        case STOP_LOADING_GET_PRODUCTS_BY_CATEGORY_AND_TAGS:
+        case STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS:
             return {
                 ...state,
                 loading: false
@@ -66,7 +66,7 @@ export default function(state = initialState, action){
                 loading: false
             }; 
 
-        case STOP_LOADING_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND:
+        case STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND:
             return {
                 ...state,
                 loading: false
@@ -80,7 +80,7 @@ export default function(state = initialState, action){
                 loading: false
             };      
 
-        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS:
+        case STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS:
             return { 
                 ...state,
                 loading: false
@@ -94,7 +94,7 @@ export default function(state = initialState, action){
                     loading: false
                 };      
 
-            case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE:
+            case STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE:
                 return { 
                     ...state,
                     loading: false
@@ -108,7 +108,7 @@ export default function(state = initialState, action){
                 loading: false
             };     
 
-        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT:
+        case STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT:
             return {
                 ...state,
                 loading: false
@@ -122,7 +122,7 @@ export default function(state = initialState, action){
                 loading: false
             };     
 
-        case STOP_LOADING_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
+        case STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
             return {
                 ...state,
                 loading: false

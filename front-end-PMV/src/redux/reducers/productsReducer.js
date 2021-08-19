@@ -1,7 +1,7 @@
 // user actions
 import { 
     GET_PRODUCTS_UX,
-    STOP_LOADING_GET_PRODUCTS_UX,
+    STOP_GET_PRODUCTS_UX,
 } from '../types'
 
 // initial state
@@ -21,7 +21,7 @@ export default function(state = initialState, action){
                 loading: false
             };     
         // top5Product
-        case STOP_LOADING_GET_PRODUCTS_UX:
+        case STOP_GET_PRODUCTS_UX:
             return {
                 ...state,
                 loading: false

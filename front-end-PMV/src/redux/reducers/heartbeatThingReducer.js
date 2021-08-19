@@ -1,45 +1,61 @@
 // user actions
-import {
+import { 
+
+    // ** db interaction
+    // static data
+    GET_EVENTS_FROM_HEARTBEAT_THING,
+    STOP_GET_EVENTS_FROM_HEARTBEAT_THING,
+        // real time
+        GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
+        STOP_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
+    // searching mode
+    SET_HEARTBEAT_SEARCHING_MODE, 
+    STOP_SET_HEARTBEAT_SEARCHING_MODE, 
+    // post tags by user
+    POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
+    STOP_POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
+    // post item in list of specifics static devices to search by user devices
+    POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    STOP_POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    // update (erase - unselect) item in list of specifics static devices to search by user devices
+    DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    STOP_DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    
+    // ** thing interaction
     // active command
     POST_ACTIVE_COMMAND_HEARTBEAT_THING,
     // inactive command
-    POST_INACTIVE_COMMAND_HEARTBEAT_THING, 
-    // static data
-    GET_EVENTS_FROM_HEARTBEAT_THING,
-    STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING,
-        // real time
-        GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
-        STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE,
-    // searching mode
-    SET_HEARTBEAT_SEARCHING_MODE, 
-    // post tags by user
-    POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
+    POST_INACTIVE_COMMAND_HEARTBEAT_THING,
 } from '../types';
  
 // initial state
 const initialState = {
-    loading: undefined,
+    // state of data
+    loading:undefined,
+    // server response
+    responses:undefined,
     // static data
     thingLiveDataSets:{
         searchingMode:[],
         colorValue:{},
         coords:{},
-        idOfSpecificStaticDevices:[],
+        idOfSpecificStaticDevices:[{}],
         profileToMatch:[],
         searchingMode:[]
     },
-    // live data
-    thingLiveDataSetsListener:{
-        colorValue:{},
-        coords:{},
-        searchingMode:[]
-    },
+        // live data
+        thingLiveDataSetsListener:{
+            colorValue:{},
+            coords:{},
+            searchingMode:[],
+            idOfSpecificStaticDevices:[{}]
+        },
 }; 
 
 // function to determine the type of action to set state
 export default function(state = initialState, action){
     switch(action.type){
-
+        // ** db intearction
         // static data
         case GET_EVENTS_FROM_HEARTBEAT_THING:
             return{
@@ -47,50 +63,38 @@ export default function(state = initialState, action){
                 thingLiveDataSets: action.payload,
                 loading: false
             };
-        case STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING:
+        case STOP_GET_EVENTS_FROM_HEARTBEAT_THING:
             return{
                 ...state, 
                 loading: false
             };
 
-        // live
-        case GET_EVENTS_FROM_HEARTBEAT_THING_LIVE:
-            return{
-                ...state,
-                thingLiveDataSetsListener: action.payload,
-                loading: false,
-            };
-        case STOP_LOADING_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE:
-            return{
-                ...state,
-                loading: false 
-            };    
+            // live
+            case GET_EVENTS_FROM_HEARTBEAT_THING_LIVE:
+                return{
+                    ...state,
+                    thingLiveDataSetsListener: action.payload,
+                    // loading: false,
+                };
+            case STOP_GET_EVENTS_FROM_HEARTBEAT_THING_LIVE:
+                return{
+                    ...state,
+                    loading: false 
+                };    
 
-        /////////////////////////////////////////////////// liveDataSets response 
-
-        // active commmand
-        case POST_ACTIVE_COMMAND_HEARTBEAT_THING:
-            return{
-                thing:{
-                    response: action.payload
-                }
-            };    
-            
-        // innactive command
-        case POST_INACTIVE_COMMAND_HEARTBEAT_THING:
-            return{
-                thing:{
-                    response: action.payload
-                }
-            };
-        
-        // seraching mode ---> without response from server yet
+        // searching mode ---> without response from server yet
         case SET_HEARTBEAT_SEARCHING_MODE:
             return {
                 ...state,
-                thingLiveDataSets:{
-                    searchingMode:[action.payload]
-                }, 
+                responses:action.payload,
+                // thingLiveDataSets:{
+                //     searchingMode:[action.payload]
+                // }, 
+                loading: false
+            };     
+        case STOP_SET_HEARTBEAT_SEARCHING_MODE:
+            return {
+                ...state,
                 loading: false
             };     
         
@@ -98,9 +102,57 @@ export default function(state = initialState, action){
         case POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
             return {
                 ...state,
-                response:action.payload,
+                responses:action.payload,
                 loading: false
             };     
+        case STOP_POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
+            return {
+                ...state,
+                loading: false
+            };   
+
+        // post item in list of specifics static devices to search by user devices
+        case POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                responses:action.payload,
+                loading: false
+            }; 
+        case STOP_POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                loading: false
+            }; 
+
+        // update (erase - unselect) item in list of specifics static devices to search by user devices
+        case DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                responses:action.payload,
+                loading: false
+            };
+        case STOP_DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                loading: false
+            };
+
+        // ** thing interaction 
+        // active commmand
+        case POST_ACTIVE_COMMAND_HEARTBEAT_THING:
+            return{
+                thing:{
+                    responses: action.payload
+                }
+            };    
+            
+        // innactive command
+        case POST_INACTIVE_COMMAND_HEARTBEAT_THING:
+            return{
+                thing:{
+                    responses: action.payload
+                }
+            };
         default:
             return state;
     }
