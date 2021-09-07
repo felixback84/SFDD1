@@ -2,11 +2,11 @@
 const { db } = require('../utilities/admin');
 // thing commands
 const { 
-    sendCommandGPSColor,   
+    sendCommandGPSAndQualityOfMatchColorAndMotorSpeed,  
 } = require('./forThingsHeartbeats');
 
 // color and motor in db
-const colorAndMotorInDb = async (thingId,data) => {
+const colorAndMotorAndQualityMatchInDb = async (thingId,data) => {
     // userDeviceId
     let userDeviceId = thingId.split("-").slice(2).toString();
     // print
@@ -18,7 +18,8 @@ const colorAndMotorInDb = async (thingId,data) => {
         .doc(thingId)
         .update({
             colorValue:data.colorValue,
-            motorSpeed: data.motorSpeed
+            motorSpeed: data.motorSpeed,
+            matchQuality: data.matchQuality
         })
         .catch(err => {
             res.status(500, err);
@@ -37,64 +38,69 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
     for(let i = 0; i < arrSort.length; i++){
         // check ranges
         if(arrSort[i].meters >= 0 && arrSort[i].meters <= 5){
-            let colorAndMotorValuesToThingResponse = {
+            let colorsAndMotorValuesToThingResponse = {
                 colorValue:{r:76,g:175,b:80}, 
                 colorName:"green", 
-                motorSpeed: 100
+                motorSpeed: 100,
+                matchQuality:arrSort[i].matchQuality
             }
             console.log("hi from meters range match: 0-5");
             // color & motor in db
-            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
+            await colorAndMotorAndQualityMatchInDb(thingId,colorsAndMotorValuesToThingResponse);
             // command to thing
-            await sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
+            await sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 5.1 && arrSort[i].meters <= 10){
-            let colorAndMotorValuesToThingResponse = {
+            let colorsAndMotorValuesToThingResponse = {
                 colorValue:{r:255,g:235,b:59}, 
                 colorName:"yellow", 
-                motorSpeed: 75
+                motorSpeed: 75,
+                matchQuality:arrSort[i].matchQuality
             }
             console.log("hi from meters range match: 5-10");
             // color & motor in db
-            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
+            await colorAndMotorAndQualityMatchInDb(thingId,colorsAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
+            sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 10.1 && arrSort[i].meters <= 15){
-            let colorAndMotorValuesToThingResponse = {
+            let colorsAndMotorValuesToThingResponse = {
                 colorValue:{r:244,g:67,b:54}, 
                 colorName:"red", 
-                motorSpeed: 50
+                motorSpeed: 50,
+                matchQuality:arrSort[i].matchQuality
             }
             console.log("hi from meters range match: 10-15");
             // color & motor in db
-            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
+            await colorAndMotorAndQualityMatchInDb(thingId,colorsAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
+            sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 15.1 && arrSort[i].meters <= 20){
-            let colorAndMotorValuesToThingResponse = {
+            let colorsAndMotorValuesToThingResponse = {
                 colorValue:{r:233,g:30,b:99}, 
                 colorName:"fucsia", 
-                motorSpeed: 25
+                motorSpeed: 25,
+                matchQuality:arrSort[i].matchQuality
             }
             console.log("hi from meters range match: 15-20");
             // color & motor in db
-            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
+            await colorAndMotorAndQualityMatchInDb(thingId,colorsAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
+            sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 20.1 && arrSort[i].meters <= 25){
-            let colorAndMotorValuesToThingResponse = {
+            let colorsAndMotorValuesToThingResponse = {
                 colorValue:{r:33,g:150,b:243}, 
                 colorName:"blue", 
-                motorSpeed: 5
+                motorSpeed: 5,
+                matchQuality:arrSort[i].matchQuality
             }
             console.log("hi from meters range match: 20-25");
             // color & motor in db
-            await colorAndMotorInDb(thingId,colorAndMotorValuesToThingResponse);
+            await colorAndMotorAndQualityMatchInDb(thingId,colorsAndMotorValuesToThingResponse);
             // command to thing
-            sendCommandGPSColor(colorAndMotorValuesToThingResponse,thingId);
+            sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         }  
     }

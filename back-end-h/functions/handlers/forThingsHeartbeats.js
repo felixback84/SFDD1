@@ -2,7 +2,7 @@
 const { db } = require('../utilities/admin');
 
 // send color message to hearbeats
-exports.sendCommandGPSColor = async (colorAndMotorObj,thingId) => {
+exports.sendCommandGPSAndQualityOfMatchColorAndMotorSpeed = async (colorAndMotorObj,thingId) => {
     // global vars
     const cloudRegion = 'us-central1';
     const deviceId = thingId;

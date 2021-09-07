@@ -41,6 +41,7 @@ fs
         let batteryLife = 100;
         // changes
         let colorValue = {r:0,g:0,b:0};
+        let matchQuality = {r:0,g:0,b:0};
         let motorSpeed = undefined;
         // timeout
         let timeOut = undefined
@@ -179,8 +180,10 @@ fs
                 } else if(messageToObj.disabledTelemetry){
                     disabledTelemetry = messageToObj.disabledTelemetry
                 } else if(messageToObj.colorValue && messageToObj.motorSpeed){
-                    colorValue = messageToObj.colorValue;
+                    // just this values because come front the backend & dont need go back 
+                    colorValue = messageToObj.colorValue
                     motorSpeed = messageToObj.motorSpeed
+                    matchQuality = messageToObj.matchQuality
                 }
                 // publish messages when the command arrives
                 // publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);

@@ -235,7 +235,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('top5Tagz') // test collection
+                        .collection('top5Tags') // test collection
                         .add({ ...dataToSave })
                         .then(() => {
                             // print
@@ -263,7 +263,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
 exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWait) => {
     const dataEnter = inWait 
     // var to hold mtsBetweenDevices
-    let mtsBetweenDevices = [];
+    let mtsAndSomeDataBetweenDevices = [];
     // func 
     async function checkDistance(inWaitAfter){
         console.log(`checking checkDistance for all tag matches`)
@@ -284,12 +284,12 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             // print
             console.log(`distanceInMeters to each comparasion: ${distanceInMeters}`);
             // push in to arr
-            mtsBetweenDevices.push({
+            mtsAndSomeDataBetweenDevices.push({
                 meters:distanceInMeters,
                 thingId:inWaitAfter.top5Coords[i].thingId,
                 matchQuality:inWaitAfter.top5Coords[i].matchQuality,
             })
-            // return mtsBetweenDevices
+            // return mtsAndSomeDataBetweenDevices
             let userDeviceId = inWaitAfter.thingId.split("-").slice(2).toString();
             // db save mts results part
             const docRef = db
@@ -299,15 +299,15 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             // update meters
             await docRef
                 .update({
-                    meters:distanceInMeters
+                    meters:distanceInMeters,
                 })
                 .catch(err => {
                     res.status(500, err);
                 })
         }  
         // print
-        console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
-        return mtsBetweenDevices
+        console.log(`Unorder yet mtsAndSomeDataBetweenDevices: ${JSON.stringify(mtsAndSomeDataBetweenDevices)}`)
+        return mtsAndSomeDataBetweenDevices
     }  
     // pass mts distance to top5Coords array in doc
     await checkDistance(dataEnter)
@@ -316,5 +316,5 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
         metersRangeMatchColor,
     } = require('../utilsForThings');    
     // run it
-    await metersRangeMatchColor(mtsBetweenDevices, dataEnter.thingId);
+    await metersRangeMatchColor(mtsAndSomeDataBetweenDevices, dataEnter.thingId);
 }
