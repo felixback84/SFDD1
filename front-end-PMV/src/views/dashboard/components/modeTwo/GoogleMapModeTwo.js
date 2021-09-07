@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-// mui core components
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
-import Chip from '@material-ui/core/Chip';
-// icons
+// font awesome
 import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
 // modules
 import GoogleMap from '../../sections/GoogleMap.js';
 import ColorEngine from '../utils/ColorEngine/ColorEngine'
+// components
+import MarkersStaticsDevicesSelectedByUserDevice from './MarkersStaticsDevicesSelectedByUserDevice'
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbeatUIActions'
-// _
-let _ = require('underscore');
 
 class GoogleMapModeTwo extends Component {
 
@@ -38,34 +34,37 @@ class GoogleMapModeTwo extends Component {
         console.log({dataTags})
 
 		//////////////////////////////////////////////////// top5Tags - static devices - vendors
-		//var to hold data in arrays to escalate
+		// var to hold data in arrays to escalate
 		const markersStaticsDevices = [];
 		const infoWindowsStaticsDevices = [];
+		
 		// badges ----> without use
-		const arrayListBadgeStaticDevices = (data) => {
-			let top5Tags = data.top5Tags
-			let arrWithTags = [];
-			let counter = 0
+		// const arrayListBadgeStaticDevices = (data) => {
+		// 	let top5Tags = data.top5Tags
+		// 	let arrWithTags = [];
+		// 	let counter = 0
 
-			// tags loop
-			top5Tags.forEach((top5Tag)=>{
-				for (let keyPair in top5Tag.matchDataResults) {
-					arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
-				} 
-			})
+		// 	// tags loop
+		// 	top5Tags.forEach((top5Tag)=>{
+		// 		for (let keyPair in top5Tag.matchDataResults) {
+		// 			arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+		// 		} 
+		// 	})
 				
-			return(
-				<GridContainer>
-					<GridItem xs={12} sm={12} md={12}>
-						{arrWithTags}
-					</GridItem>
-				</GridContainer>
-			)
-            //print
-            // console.log(`arrayListBadgeStaticDevices:${arrayListBadgeStaticDevices(data.top5Tags)}`)
-		}
+		// 	return(
+		// 		<GridContainer>
+		// 			<GridItem xs={12} sm={12} md={12}>
+		// 				{arrWithTags}
+		// 			</GridItem>
+		// 		</GridContainer>
+		// 	)
+        //     //print
+        //     // console.log(`arrayListBadgeStaticDevices:${arrayListBadgeStaticDevices(data.top5Tags)}`)
+		// }
 		
 		//data infoWindow
+		
+		// infoWindow
 		const getInfoWindowStringStaticDevice = (data) => `
 		<div>
 			<div style="font-size: 16px;">
@@ -94,33 +93,34 @@ class GoogleMapModeTwo extends Component {
 			// colors
 			// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
 			// print
-			console.log(`top5tagsCoords:${JSON.stringify(top5Tag.coords)}`)
+			console.log(`top5TagsCoordsMarkers:${JSON.stringify(top5Tag.coords)}`)
 			// marker
 			markersStaticsDevices.push(new maps.Marker({
 				position: {
 					lat: top5Tag.coords.lat,
 					lng: top5Tag.coords.lon,
 				},
-				icon: {
+				icon: {	
 					path: faDotCircle.icon[4],
 					fillColor: "#c30000",
 					fillOpacity: 1,
 					anchor: new maps.Point(
-					  faDotCircle.icon[0] / 2, // width
-					  faDotCircle.icon[1] // height
+						faDotCircle.icon[0] / 2, // width
+						faDotCircle.icon[1] // height
 					),
 					strokeWeight: 1,
 					strokeColor: "#c30000",
 					scale: 0.05,
 				},
 				map,
-		}));
+			}))
 
-		// info win
-		infoWindowsStaticsDevices.push(new maps.InfoWindow({
+			// info win
+			infoWindowsStaticsDevices.push(new maps.InfoWindow({
 				content: getInfoWindowStringStaticDevice(top5Tag.userCredentials),
-			}));
-		});
+			}))
+		})	
+
 
 		// clicker
 		markersStaticsDevices.forEach((marker, i) => {
@@ -137,21 +137,21 @@ class GoogleMapModeTwo extends Component {
 		let infoWindowsDynamicDevices = undefined
 
 		// badges  ----> without use
-		const arrayListBadgeUSerDevice = (data) => {
-			let profileToMatch = data.profileToMatch
-			let arrWithTags = [];
-			let counter = 0
-			for (let keyPair in profileToMatch) {
-				arrWithTags.push(profileToMatch[keyPair].map((item)=><Chip label={item} key={counter++}/>))
-			}  
-			return(
-				<GridContainer>
-					<GridItem xs={12} sm={12} md={12}>
-						{arrWithTags}
-					</GridItem>
-				</GridContainer>
-			)
-		}
+		// const arrayListBadgeUSerDevice = (data) => {
+		// 	let profileToMatch = data.profileToMatch
+		// 	let arrWithTags = [];
+		// 	let counter = 0
+		// 	for (let keyPair in profileToMatch) {
+		// 		arrWithTags.push(profileToMatch[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+		// 	}  
+		// 	return(
+		// 		<GridContainer>
+		// 			<GridItem xs={12} sm={12} md={12}>
+		// 				{arrWithTags}
+		// 			</GridItem>
+		// 		</GridContainer>
+		// 	)
+		// }
 		
 		// data infoWindow
 		const getInfoWindowStringUserDevice = (data) => `
@@ -265,7 +265,7 @@ class GoogleMapModeTwo extends Component {
 			route.getPath().push(latlng)
 		}, 1000)
 	}
-	
+
 	// redux action
 	componentDidMount(){
 		// live data from heartbeat
@@ -274,6 +274,7 @@ class GoogleMapModeTwo extends Component {
 	}
 
 	render(){
+
 		// redux state
 		const {
 			// user
@@ -299,39 +300,41 @@ class GoogleMapModeTwo extends Component {
             // check array length o pass right data
             if(this.props.idOfSpecificStaticDevices.length == 0){
                 // data to pass
-                hiData = {	
-                    // user
-                    credentials,
-                    // device
-                    profileToMatch,
-                    // vendors
-                    top5Tags,
-                    top5TagsListener,
-                }
+				hiData = {	
+					// user
+					credentials,
+					// device
+					profileToMatch,
+					// vendors
+					top5Tags,
+					top5TagsListener,
+				}
                 // print 
-                console.log({hiData})
+                console.log(`hiData: ${JSON.stringify(hiData)}`)
             } else if(this.props.idOfSpecificStaticDevices.length != 0){
                 // data to pass
-                hiData = {	
-                    // user
-                    credentials,
-                    // device
-                    profileToMatch,
-                    // vendors
-                    top5Tag,
-                    top5TagListener,
-                }
+				hiData = {	
+					// user
+					credentials,
+					// device
+					profileToMatch,
+					// vendors
+					top5Tag,
+					top5TagListener,
+				}
                 // print 
-                console.log({hiData})
+                console.log(`hiData: ${JSON.stringify(hiData)}`)
             }
 			
 			return(
 				<>
 					<GoogleMap
-						onGoogleApiLoaded={
-							({ map, maps }) => this.handleApiLoaded(map, maps, hiData)
-						}
+						// onGoogleApiLoaded={
+						// 	({ map, maps }) => this.handleApiLoaded(map, maps, hiData)
+						// }
 					>	
+						{/* icon list vendors */}
+						<MarkersStaticsDevicesSelectedByUserDevice/>
 					</GoogleMap>
 				</>
 			)
@@ -350,12 +353,13 @@ const mapStateToProps = (state) => ({
 	// user
 	credentials: state.user.credentials,
 	// userDevices
-	loading: state.userDevices1.loading,
+	// loading: state.userDevices1.loading,
 	userDevices: state.userDevices1.userDevices,
 	// liveDataSets
     profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
     idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
 	// top5Tags
+	loading: state.top5Tags1.loading,
 	top5Tags: state.top5Tags1.top5Tags,
 	top5TagsListener: state.top5Tags1.top5TagsListener,
     top5Tag: state.top5Tags1.top5Tag,

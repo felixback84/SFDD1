@@ -69,37 +69,37 @@ const pickerMarkerMix = (
 			}
 		break;	
 		case "modeTwo":	
-		if(loading == false){
-			return(
-				<>
-					{/* map */}
-					<Grid container>
-						<Grid item xs={12}>
-							<Card classes={{ root: classes.cardRoot }}>
-								<GoogleMapModeTwo 
-									coords={coordz}
-									colorValue={color}
-								/>
-							</Card>
+			if(loading == false){
+				return(
+					<>
+						{/* map */}
+						<Grid container>
+							<Grid item xs={12}>
+								<Card classes={{ root: classes.cardRoot }}>
+									<GoogleMapModeTwo 
+										coords={coordz}
+										colorValue={color}
+									/>
+								</Card>
+							</Grid>
 						</Grid>
-					</Grid>
-					{/* chart top5Coord specifics filter*/}
-					<Grid container>
-						<Grid item xs={12}>
-							{/* results */}
-							<ChartResultsSelectedItemsSearchingModeTwo/>
+						{/* chart top5Coord specifics filter*/}
+						<Grid container>
+							<Grid item xs={12}>
+								{/* results */}
+								<ChartResultsSelectedItemsSearchingModeTwo/>
+							</Grid>
 						</Grid>
-					</Grid>
-					{/* chart all top5Coords*/}
-					<Grid container>
-						<Grid item xs={12}>
-							{/* results */}
-							<ChartResultsSearchingModeTwo/>
+						{/* chart all top5Coords*/}
+						<Grid container>
+							<Grid item xs={12}>
+								{/* results */}
+								<ChartResultsSearchingModeTwo/>
+							</Grid>
 						</Grid>
-					</Grid>
-				</>	
-			)
-		}
+					</>	
+				)
+			}
 		break;
 		// case "modeThree":	
 		// 	return(

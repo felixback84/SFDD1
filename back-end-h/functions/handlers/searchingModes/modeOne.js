@@ -39,6 +39,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     let arraysToCheck = [];
     // var to hold data
     let outputList = [];
+    
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -59,55 +60,112 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`); 
                 // quantity of objects & [{...},{...}
         })
-        .then(()=>{
+        .then(async()=>{
             // underscore
             let _ = require('underscore');
+            
             // loop the results on the array
             for(let i = 0; i < profilesInLiveDataSets.length; i++){
+
+                // counter global of tags 
+                let counterFinalTagsDynamics = 0
                 // var to hold coincidences
-                let coincidences = {};
+                let coincidences = {}
+
                 // func to check the match
-                function checkProfilesStaicsVsDynamics(args){
+                const checkProfilesStaicsVsDynamics = async (args) => {
                     // obj to extract key names
-                    let keyNames = args.dynamics;
+                    let keyNames = args.dynamics
+
                     // loop
-                    for (let key in keyNames) {
-                        if (keyNames.hasOwnProperty(key)) {
+                    for(let key in keyNames){
+                        // counter init
+                        let countPerProp = 0
+                        // checker
+                        if(keyNames.hasOwnProperty(key)) {
                             // print
-                            console.log(`to compare --> statics: ${args.statics[key]} & dynamic: ${args.dynamics[key]}`)
+                            console.log(`to compare --> statics: ${args.statics[key]} 
+                                & dynamic: ${args.dynamics[key]}`
+                            )
                             // passing the keys
-                            let statics = args.statics[key];
-                            let dynamics = args.dynamics[key];
+                            let statics = args.statics[key]
+                            let dynamics = args.dynamics[key]
+                            // counter for dynamics tags
+                            countPerProp += dynamics.length
+                            counterFinalTagsDynamics += countPerProp
+                            // print
+                            console.log({counterFinalTagsDynamics})
                             // isntersector
                             let intersection = _.intersection(statics, dynamics)
                             // check if is empty
                             if(intersection.length != 0){
                                 // pass data to var obj
-                                coincidences[key] = intersection;
+                                coincidences[key] = intersection
                                 // print
                                 console.log(`coincidences: ${JSON.stringify(coincidences)}`)
                             }
                         }
                     }
                     // return data results
-                    return coincidences;
+                    return coincidences
+                }
+
+                // counter tags
+                const counterCoincidenceTagsWithStatics = async (objWithTags) => {
+                    // global counter
+                    let countFinal = 0
+                    // loop to count
+                    for(let coincidenceKey in objWithTags){
+                        // counter init
+                        let countPerProp = 0
+                        // check if are not empty props
+                        if(objWithTags.hasOwnProperty(coincidenceKey)){ 
+                            // check length of c/u props
+                            countPerProp += coincidences[coincidenceKey].length
+                            // count all props lengths
+                            countFinal += countPerProp
+                            // print
+                            console.log({countPerProp})
+                        }
+                    }
+                    // print
+                    console.log({countFinal})
+                    return countFinal
                 }
 
                 // data to pass 
                 let argz = {
+                    // from db
                     statics: profilesInLiveDataSets[i].profileToSearch,
+                    // from ux input in user session
                     dynamics: objProfileDataOfDynamic.profileToMatch,
                 };
-                
+
                 // check it, run it & push it
-                let matchDataResults = checkProfilesStaicsVsDynamics(argz);
-                if(Object.entries(matchDataResults).length !== 0){
+                let matchDataResults = await checkProfilesStaicsVsDynamics(argz)
+                let matchDataResultsAndQualityOfMatch = await counterCoincidenceTagsWithStatics(matchDataResults)
+
+                // ** quality match metric
+                // import
+                const {
+                    findMatchValueQuality,
+                } = require('../utilsForThings')
+
+                // run it
+                let resultsQualityMatch = await findMatchValueQuality(
+                    counterFinalTagsDynamics,
+                    matchDataResultsAndQualityOfMatch
+                )
+
+                // check if exits any coincidences
+                if(Object.entries(matchDataResults).length != 0){
                     arraysToCheck.push({
-                        matchDataResults: matchDataResults,
+                        matchDataResults,
                         coords: profilesInLiveDataSets[i].coords,
                         thingId: profilesInLiveDataSets[i].thingId,
-                        meters:0
-                    });
+                        meters:0,
+                        matchQuality: resultsQualityMatch
+                    })
                 }
             }
         })
@@ -172,18 +230,18 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             })
             .then(()=>{
                 // func to save data of top5Coords in liveDataSets of dynamics
-                function savaDataOfDynamicDeviceOnLiveDataSetsDoc(dataToSave){
+                const savaDataOfDynamicDeviceOnLiveDataSetsDoc = (dataToSave) => {
                     // userDeviceId 
-                    const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2);
+                    const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('top5Tags')
+                        .collection('top5Tagz') // test collection
                         .add({ ...dataToSave })
                         .then(() => {
                             // print
-                            console.log(`final response to the user: ${dataToSave}`);
+                            console.log(`final response to the user: ${dataToSave}`)
                             // res
-                            //res.json("matches now in db");
+                            res.json("matches now in db");
                         })            
                         .catch((err) => {
                             console.error(err);
@@ -191,7 +249,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 }
                 // run it
                 arraysToCheck.forEach((arrayToCheck)=>{
-                    savaDataOfDynamicDeviceOnLiveDataSetsDoc(arrayToCheck);
+                    savaDataOfDynamicDeviceOnLiveDataSetsDoc(arrayToCheck)
                 })
             })
             .catch(err => {
@@ -206,7 +264,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     const dataEnter = inWait 
     // var to hold mtsBetweenDevices
     let mtsBetweenDevices = [];
-    // func
+    // func 
     async function checkDistance(inWaitAfter){
         console.log(`checking checkDistance for all tag matches`)
         // print
@@ -228,7 +286,8 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
             // push in to arr
             mtsBetweenDevices.push({
                 meters:distanceInMeters,
-                thingId:inWaitAfter.top5Coords[i].thingId
+                thingId:inWaitAfter.top5Coords[i].thingId,
+                matchQuality:inWaitAfter.top5Coords[i].matchQuality,
             })
             // return mtsBetweenDevices
             let userDeviceId = inWaitAfter.thingId.split("-").slice(2).toString();
@@ -253,7 +312,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     // pass mts distance to top5Coords array in doc
     await checkDistance(dataEnter)
     // import    
-    const {
+    const { 
         metersRangeMatchColor,
     } = require('../utilsForThings');    
     // run it

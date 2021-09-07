@@ -99,10 +99,10 @@ class GoogleMapModeOne extends Component {
 					scale: 0.05,
 				},
 				map,
-		}));
+			}));
 
-		// info win
-		infoWindowsStaticsDevices.push(new maps.InfoWindow({
+			// info win
+			infoWindowsStaticsDevices.push(new maps.InfoWindow({
 				content: getInfoWindowStringStaticDevice(top5Tag.userCredentials),
 			}));
 		});
