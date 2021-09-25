@@ -78,7 +78,7 @@ const pickerMarkerMix = (
 								<Card classes={{ root: classes.cardRoot }}>
 									<GoogleMapModeTwo 
 										coords={coordz}
-										colorValue={color}
+										colorValue={color} 
 									/>
 								</Card>
 							</Grid>

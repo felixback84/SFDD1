@@ -12,6 +12,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 // components
 import ContentRowChartResultsSelectedItems from "../../components/modeTwo/ContentRowChartResultsSelectedItems"
+import ContentRowChartResultsSelectedItemsLive from "../../components/modeTwo/ContentRowChartResultsSelectedItemsLive"
 // Redux stuff
 import { connect } from 'react-redux';
 // styles
@@ -38,37 +39,13 @@ const arrToppersColumns = (classes,data) => {
 // parent-main component
 class ChartResultsSelectedItemsSearchingModeTwo extends Component {
 
-	// filter in top5Tags the select ones statics
-	// filterArrToTheListOfSelectOnes(arr,ids){
-	// 	// print
-	// 	console.log(`hi filter of selected ones: ${JSON.stringify(arr)} - ${JSON.stringify(ids)}`)
-	// 	// vars
-	// 	let arrFinal = []
-	// 	let arrAll = arr
-	// 	// loop
-	// 	ids.map((id)=>{
-	// 		// filter
-	// 		arrAll.filter((arrItem)=>{
-	// 			// checker
-	// 			if (arrItem.thingId === id.thingId && ids.length != 0){
-	// 				arrFinal.push({...arrItem})
-	// 				return arrFinal
-	// 			} else if (ids.length === 0){
-	// 				return arrAll[0]
-	// 			} 
-	// 		})
-	// 	})
-	// 	// print
-	// 	console.log({arrFinal})
-	// }
-
 	render() {
 		// redux state
 		const {
 			classes,
 			// ** top5Tags
 			// top5Tag,
-			// top5TagListener,
+			top5TagListener,
 			loading,
 			top5Tags,
 			// top5TagsListener,
@@ -124,14 +101,21 @@ class ChartResultsSelectedItemsSearchingModeTwo extends Component {
 							{/* table content */}
 							<TableBody>
 								{
-									loading === false && 
-										<ContentRowChartResultsSelectedItems 
-											data={
-												top5Tags
-											} 
-											// idofspecificstaticdevices={idOfSpecificStaticDevices}
-											classes={classes}
-										/>
+									loading === false && top5TagListener.length === 0 ? 
+										<>
+											<ContentRowChartResultsSelectedItems 
+												data={
+													top5Tags
+												} 
+												// idofspecificstaticdevices={idOfSpecificStaticDevices}
+												classes={classes}
+											/>
+										</> :
+										<>
+											<ContentRowChartResultsSelectedItemsLive
+												lengthVendorsSelected={this.props.thingLiveDataSetsListener.idOfSpecificStaticDevices.length}
+											/>
+										</>
 								}
 							</TableBody>		
 						</Box>	
@@ -152,10 +136,10 @@ const mapStateToProps = (state) => ({
 	top5Tags:state.top5Tags1.top5Tags,
 	// top5TagsListener:state.top5Tags1.top5TagsListener,
 	// top5Tag:state.top5Tags1.top5Tag,
-    // top5TagListener:state.top5Tags1.top5TagListener,
+    top5TagListener:state.top5Tags1.top5TagListener,
 	// liveDataSets
 	// thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
-    thingLiveDataSetsListener:state.heartbeatThing1.thingLiveDataSetsListener
+	thingLiveDataSetsListener:state.heartbeatThing1.thingLiveDataSetsListener
 });
 
 export default connect(mapStateToProps)(withStyles(componentStyles)(ChartResultsSelectedItemsSearchingModeTwo));

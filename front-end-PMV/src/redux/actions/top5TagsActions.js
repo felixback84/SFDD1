@@ -95,7 +95,7 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
     // var to hold the length of doc in collection
     let collectionLength = 0
     // arr
-    let arr = []
+    let arr = [] 
     // ref db
     const dataRef = firebase
         .firestore()
@@ -103,7 +103,7 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
         .collection('top5Tags')
         //.orderBy('meters','asc')
 
-    // length of doc in collection
+    // length of doc in collection ---> se debe hayar la longitud del array con onSnapshot
     const findLength = dataRef
         .get()
         .then((snap) => {
@@ -196,146 +196,99 @@ export const userDeviceSpecificTop5TagSyncDataStatic = (thingId, arrIds) => (dis
 // listen the top5tag (modeTwo) --> dynamic data
 export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => async (dispatch) => {
 
-    // print
-    console.log(`init top5Tag listener`)
-
-    // _
-    let _ = require('underscore');
-
-    // vars to ask to db do
+    // vars to ask to db document
     const thingIdVal = thingId
-    const userDeviceId = thingIdVal.split("-").slice(2);
-    // print init
-    console.log(`hi from init of top5Tag listener`)
-    // var to hold the length of doc in collection
-    let collectionLength = 0
-    // arrs
-    let arr1 = []
-    let arr2 = []
+    const idsVendors = arrIds
+    const userDeviceId = thingIdVal.split("-").slice(2)
 
-    // 
-    let uniqueList = []
+    // print init
+    console.log(
+        `hi from init of top5Tag listener: idsVendors 
+        - ${JSON.stringify(idsVendors)} -- thingIdVal - ${thingIdVal}`
+    )
+    // arrs
+    let arrToFilter = []
+    let arrResultFilter = [] 
     
-    // update just the changes in all the list created for the modeOne
     // ref db
-    const dataRef = firebase
+    const dataRef = await firebase
         .firestore()
         .doc(`/userDevices/${userDeviceId}`) 
         .collection('top5Tags')
         //.orderBy('meters','asc')
 
-    // length of doc in collection
-    // const findLengthOfCollection = 
-    //     dataRef
-    //         .get()
-    //         .then(snap => {
-    //             collectionLength = snap.size
-    //         })
-    //         .catch((err)=>{
-    //             console.log(err)
-    //         })
-    // // print        
-    // console.log(`size:${collectionLength}`)
+    // get the right docs
+    const docToTrack = await dataRef
+        .get() 
+    
+    // create arr to filter    
+    docToTrack
+        .forEach((doc)=>{
+            arrToFilter.push({...doc.data()})
+        })
+    
+    // filter with select ones
+    arrToFilter.filter((doc)=>{
+        idsVendors.forEach((idVendor)=>{
+            if(doc.thingId === idVendor.thingIdToSearch){
+                arrResultFilter.push(doc)
+                // return arrResultFilter 
+            }
+        })
+    })
+    
+    // print
+    // console.log(`arrResultFilter:${JSON.stringify(arrResultFilter)}`)
 
-    // push all docs 
-    // const snapAllDocs = 
-    //     await dataRef
-    //         .get()
-    //         .then((data) => {
-    //             data.forEach((doc)=>{
-    //                 arr1.push({
-    //                     ...doc.data()
-    //                 })
-    //                 // print
-    //                 console.log({arr1})
-    //                 return arr1
-    //             })
-    //         })
-    //         .catch((err)=>{
-    //             console.log(err)
-    //         })
+    // dispatchers
+    // dispatch({ 
+    //     type:GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
+    //     payload:arrResultFilter
+    // })
+    // // events
+    // dispatch({ type:STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
 
-    // push snapshot of docs with changes & clear copies
+    // update just the changes in all the list created for the modeOne
     const snapOnlyWithChanges = await dataRef
         .onSnapshot((querySnapshot)=>{
-            // print
-            console.log(`snapshot`)
             // snap
-            const tagsMeters = querySnapshot
+            querySnapshot
                 .docChanges()
-                .map((change)=>{
+                .forEach((change)=>{
+                    // check if exists changes
                     if(change.type === 'modified'){
-                        // all data
-                        const data = {
-                            ...change.doc.data()
+                        const customFilter = (arr,searchValue) => {
+                            // loop
+                            arr.forEach((item, index) => {
+                                if(item.thingId === searchValue.doc.data().thingId){
+                                    // data to replace
+                                    const data = {
+                                        ...change.doc.data()
+                                    }
+                                    // replace data in the right index
+                                    // print
+                                    console.log(`to reducer: ${JSON.stringify(arrResultFilter)}`)
+                                    // dispatchers
+                                    dispatch({ 
+                                        type:GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
+                                        payload:arrResultFilter[index] = data
+                                    })
+                                    // events
+                                    dispatch({ type:STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
+                                } else {
+                                    return
+                                }
+                            })
                         }
-                        // push changes ones
-                        arr2.push(data)
-                        // print
-                        console.log(`arr2:${JSON.stringify(arr2)}`)
-                        
-                    } 
-                })
-
-                const myPromise = new Promise((resolve, reject) => {
-                    resolve(arr2)
-                    return arr2
-                    
-                }).then((data)=>{
-                    // print
-                    console.log('order begin')
-                    // sort the arr
-                    // let arrSort = arr2.sort((a, b) => a.meters - b.meters)
-                    // print
-                    // console.log(`minVal:${JSON.stringify(arrSort)}`)
-                    // dispatch data
-                    dispatch({ 
-                        type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
-                        payload:data
-                    });
-                    // events
-                    dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
-                    // reset arr
-                    arr2 = []
-                    console.log(`arr2:${data}`)
-                })
-
-                
-                        
-
-                //
-                // Promise.all(arr2).then((data)=>{
-                    // checker if something change
-                    // if(data.docChanges().length != 0){
-                        // check lengths
-                        //if(uniqueList.length === collectionLength){
-                            // // print
-                            // console.log('order begin')
-                            // // sort the arr
-                            // // let arrSort = arr2.sort((a, b) => a.meters - b.meters)
-                            // // print
-                            // // console.log(`minVal:${JSON.stringify(arrSort)}`)
-                            // // dispatch data
-                            // dispatch({ 
-                            //     type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
-                            //     payload:data
-                            // });
-                            // // events
-                            // dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
-                            // // reset arr
-                            // arr1 = []
-                            // arr2 = []
-                            // console.log({arr1},{arr2})
-                        //}
-                    // }
-                // })
-        },err => {
-            console.log(`Encountered error: ${err}`);
-        }) 
+                        // run it
+                        customFilter(arrResultFilter,change)   
+                    }
+                }) 
+            },(err)=>{
+                console.log(`Encountered error: ${err}`)
+            }
+        )
 }
-
-
-
 
 // search by meters & geoHashes
 export const searchByGeohashesAndMetersStaticDevicesProducts = ({coords,meters}) => async (dispatch) => {

@@ -19,76 +19,55 @@ import { connect } from 'react-redux';
 // styles
 import componentStyles from "assets/theme/views/admin/tables.js";
 
-// table content component (child)
-class ContentRowChartResultsSelectedItems extends Component {
+class ContentRowChartResultsSelectedItemsLive extends Component {
 
     // state
     constructor(props) {
         super(props)
         this.state = {
-            arrCells: [],
+            arrCellsLive: []
         }
     }
-
+    
     componentWillReceiveProps(nextProps){
-        if(nextProps.idOfSpecificStaticDevices){
-            // promise
-            const myPromiseStatic = new Promise((resolve, reject) => {
-                // var to arr
-                let arrFinal = []
+        if(nextProps.top5TagListener){
+            // set state
+            // this.setState({ arrCellsLive: this.props.top5TagListener })
+            // var to arr
+            let arrFinalLive = []
 
-                // print
-                console.log(`hi filter of selected ones: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
-
-                // check if none static is selected
-                if(this.props.idOfSpecificStaticDevices.length === 0){
-                    arrFinal.push({...this.props.data[0]})
-                } else if(this.props.idOfSpecificStaticDevices.length != 0) {
-                    // loop over selection
-                    this.props.idOfSpecificStaticDevices.map((id)=>{
-                        // data static or live
-                        const tagz = this.props.data
-                        // filter
-                        tagz.filter((arrItem)=>{
-                            // checker
-                            if(arrItem.thingId === id.thingIdToSearch
-                                // && ids.length != 0
-                            ){
-                                arrFinal.push({ ...arrItem,})
-                            } 
-                        })	
+            // top5Tag live promise
+            const myPromiseLive = new Promise((resolve, reject)=>{
+                console.log(`state comparasion: ${this.props.top5TagListener.length === this.props.lengthVendorsSelected}`)
+                if(this.props.top5TagListener.length === this.props.lengthVendorsSelected){
+                    this.props.top5TagListener.map((top5Tag)=>{
+                        arrFinalLive.push({...top5Tag})
                     })
-                }
-                // print
-                console.log(`arrFinal: ${JSON.stringify(arrFinal)}`)
-                // promise resolve
-                resolve(arrFinal)
-            })
-
-            // list of data for table
-            myPromiseStatic
-                .then((data)=>{
                     // print
-                    console.log(`top5Tag data after filter: ${JSON.stringify(data)}`) 
-                    // set state
-                    this.setState({ arrCells: data })
-                })
-                .catch((err) => console.log('There was an error:' + err)) 
+                    console.log(`arrFinalLive: ${JSON.stringify(arrFinalLive)}`)
+                    // promise resolve
+                    resolve(arrFinalLive)
+                }
+            })  
+            
+            // live list of data for table
+            myPromiseLive
+                .then((data)=>{
+                    this.setState({ arrCellsLive: data })
+                })  
+                .catch((err) => console.log('There was an error:' + err))
         }
     }
 
-    render(){
-        
+    render() {
         // styles
         const classes = this.props.classes
-        
-        // paint cells
+
         return(
             <>
                 {/* loop over top5Tags */}
                 {
-                    this.state.arrCells.map((top5Tag) => (
-                        // push it on arr
+                    this.state.arrCellsLive.map((top5Tag) => (
                         <TableRow
                             key={top5Tag.thingId}
                         >	
@@ -181,21 +160,24 @@ class ContentRowChartResultsSelectedItems extends Component {
                                 </Box>
                             </TableCell>
                         </TableRow>
+                        
                     ))
                 }
             </>
         )
-    }			
+    }	
 }
+
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	// top5Tags
 	// loading:state.top5Tags1.loading,
-	// top5TagListener:state.top5Tags1.top5TagListener,
+	top5TagListener:state.top5Tags1.top5TagListener,
     // thingLiveDataSetsListener:state.heartbeatThing1.thingLiveDataSetsListener
     idOfSpecificStaticDevices:state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices
 });
 
-export default connect(mapStateToProps)(withStyles(componentStyles)(ContentRowChartResultsSelectedItems));
-// export default (withStyles(componentStyles)(ContentRowChartResultsSelectedItems))
+export default connect(mapStateToProps)(withStyles(componentStyles)(ContentRowChartResultsSelectedItemsLive));
+
+

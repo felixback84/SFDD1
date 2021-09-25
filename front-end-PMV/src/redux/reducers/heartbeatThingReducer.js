@@ -36,7 +36,7 @@ const initialState = {
     responses:undefined,
     // static data
     thingLiveDataSets:{
-        searchingMode:[],
+        searchingMode:[], 
         colorValue:{},
         coords:{},
         idOfSpecificStaticDevices:[{}],

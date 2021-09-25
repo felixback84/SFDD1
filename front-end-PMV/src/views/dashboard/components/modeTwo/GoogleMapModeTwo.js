@@ -5,7 +5,7 @@ import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
 import GoogleMap from '../../sections/GoogleMap.js';
 import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // components
-import MarkersStaticsDevicesSelectedByUserDevice from './MarkersStaticsDevicesSelectedByUserDevice'
+
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbeatUIActions'
@@ -33,102 +33,105 @@ class GoogleMapModeTwo extends Component {
         // print
         console.log({dataTags})
 
-		//////////////////////////////////////////////////// top5Tags - static devices - vendors
-		// var to hold data in arrays to escalate
-		const markersStaticsDevices = [];
-		const infoWindowsStaticsDevices = [];
+		// //////////////////////////////////////////////////// top5Tags - static devices - vendors
+		// // var to hold data in arrays to escalate
+		// const markersStaticsDevices = [];
+		// const infoWindowsStaticsDevices = [];
 		
-		// badges ----> without use
-		// const arrayListBadgeStaticDevices = (data) => {
-		// 	let top5Tags = data.top5Tags
-		// 	let arrWithTags = [];
-		// 	let counter = 0
+		// // badges ----> without use
+		// // const arrayListBadgeStaticDevices = (data) => {
+		// // 	let top5Tags = data.top5Tags
+		// // 	let arrWithTags = [];
+		// // 	let counter = 0
 
-		// 	// tags loop
-		// 	top5Tags.forEach((top5Tag)=>{
-		// 		for (let keyPair in top5Tag.matchDataResults) {
-		// 			arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
-		// 		} 
-		// 	})
+		// // 	// tags loop
+		// // 	top5Tags.forEach((top5Tag)=>{
+		// // 		for (let keyPair in top5Tag.matchDataResults) {
+		// // 			arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+		// // 		} 
+		// // 	})
 				
-		// 	return(
-		// 		<GridContainer>
-		// 			<GridItem xs={12} sm={12} md={12}>
-		// 				{arrWithTags}
-		// 			</GridItem>
-		// 		</GridContainer>
-		// 	)
-        //     //print
-        //     // console.log(`arrayListBadgeStaticDevices:${arrayListBadgeStaticDevices(data.top5Tags)}`)
-		// }
+		// // 	return(
+		// // 		<GridContainer>
+		// // 			<GridItem xs={12} sm={12} md={12}>
+		// // 				{arrWithTags}
+		// // 			</GridItem>
+		// // 		</GridContainer>
+		// // 	)
+        // //     //print
+        // //     // console.log(`arrayListBadgeStaticDevices:${arrayListBadgeStaticDevices(data.top5Tags)}`)
+		// // }
 		
-		//data infoWindow
+		// //data infoWindow
 		
-		// infoWindow
-		const getInfoWindowStringStaticDevice = (data) => `
-		<div>
-			<div style="font-size: 16px;">
-				${data.bio}
-			</div>
-			<div style="font-size: 14px;">
-				<span style="color: grey;">
-				${data.email}
-				</span>
-				<span style="color: orange;">${String.fromCharCode(9733).repeat(Math.floor(data.rating))}</span><span style="color: lightgrey;">${String.fromCharCode(9733).repeat(5 - Math.floor(data.rating))}</span>
-			</div>
-			<div style="font-size: 14px; color: grey;">
-				${data.names} ${data.lastName}
-			</div>
-			<div style="font-size: 14px; color: grey;">
-				${data.type}
-			</div> 
-			<div style="font-size: 14px; color: green;">
-				${true ? 'Open' : 'Closed'}
-				${data.userHandle}
-			</div>
-		</div>`
+		// // infoWindow
+		// const getInfoWindowStringStaticDevice = (data) => `
+		// <div>
+		// 	<div style="font-size: 16px;">
+		// 		${data.bio}
+		// 	</div>
+		// 	<div style="font-size: 14px;">
+		// 		<span style="color: grey;">
+		// 		${data.email}
+		// 		</span>
+		// 		<span style="color: orange;">
+				// 	${String.fromCharCode(9733).repeat(Math.floor(data.rating))}
+				// </span>
+				// <span style="color: lightgrey;">
+				// 	${String.fromCharCode(9733).repeat(5 - Math.floor(data.rating))}
+				// </span>
+		// 	</div>
+		// 	<div style="font-size: 14px; color: grey;">
+		// 		${data.names} ${data.lastName}
+		// 	</div>
+		// 	<div style="font-size: 14px; color: grey;">
+		// 		${data.type}
+		// 	</div> 
+		// 	<div style="font-size: 14px; color: green;">
+		// 		${true ? 'Open' : 'Closed'}
+		// 		${data.userHandle}
+		// 	</div>
+		// </div>`
 
-		//to static devices list markers
-		dataTags.forEach((top5Tag) => {
-			// colors
-			// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
-			// print
-			console.log(`top5TagsCoordsMarkers:${JSON.stringify(top5Tag.coords)}`)
-			// marker
-			markersStaticsDevices.push(new maps.Marker({
-				position: {
-					lat: top5Tag.coords.lat,
-					lng: top5Tag.coords.lon,
-				},
-				icon: {	
-					path: faDotCircle.icon[4],
-					fillColor: "#c30000",
-					fillOpacity: 1,
-					anchor: new maps.Point(
-						faDotCircle.icon[0] / 2, // width
-						faDotCircle.icon[1] // height
-					),
-					strokeWeight: 1,
-					strokeColor: "#c30000",
-					scale: 0.05,
-				},
-				map,
-			}))
+		// //to static devices list markers
+		// dataTags.forEach((top5Tag) => {
+		// 	// colors
+		// 	// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
+		// 	// print
+		// 	console.log(`top5TagsCoordsMarkers:${JSON.stringify(top5Tag.coords)}`)
+		// 	// marker
+		// 	markersStaticsDevices.push(new maps.Marker({
+		// 		position: {
+		// 			lat: top5Tag.coords.lat,
+		// 			lng: top5Tag.coords.lon,
+		// 		},
+		// 		icon: {	
+		// 			path: faDotCircle.icon[4],
+		// 			fillColor: "#c30000",
+		// 			fillOpacity: 1,
+		// 			anchor: new maps.Point(
+		// 				faDotCircle.icon[0] / 2, // width
+		// 				faDotCircle.icon[1] // height
+		// 			),
+		// 			strokeWeight: 1,
+		// 			strokeColor: "#c30000",
+		// 			scale: 0.05,
+		// 		},
+		// 		map,
+		// 	}))
 
-			// info win
-			infoWindowsStaticsDevices.push(new maps.InfoWindow({
-				content: getInfoWindowStringStaticDevice(top5Tag.userCredentials),
-			}))
-		})	
+		// 	// info win
+		// 	infoWindowsStaticsDevices.push(new maps.InfoWindow({
+		// 		content: getInfoWindowStringStaticDevice(top5Tag.userCredentials),
+		// 	}))
+		// })	
 
-
-		// clicker
-		markersStaticsDevices.forEach((marker, i) => {
-			marker.addListener('click', () => {
-				infoWindowsStaticsDevices[i].open(map, marker);
-			});
-		});
-
+		// // clicker
+		// markersStaticsDevices.forEach((marker, i) => {
+		// 	marker.addListener('click', () => {
+		// 		infoWindowsStaticsDevices[i].open(map, marker);
+		// 	});
+		// });
 
 		//////////////////////////////////////////////////// userDevices - buyers - users - dynamics
 		// marker global
@@ -161,9 +164,14 @@ class GoogleMapModeTwo extends Component {
 				</div>
 				<div style="font-size: 14px;">
 					<span style="color: grey;">
-					${data.email}
+						${data.email}
 					</span>
-					<span style="color: orange;">${String.fromCharCode(9733).repeat(Math.floor(data.rating))}</span><span style="color: lightgrey;">${String.fromCharCode(9733).repeat(5 - Math.floor(data.rating))}</span>
+					<span style="color: orange;">
+						${String.fromCharCode(9733).repeat(Math.floor(data.rating))}
+					</span>
+					<span style="color: lightgrey;">
+						${String.fromCharCode(9733).repeat(5 - Math.floor(data.rating))}
+					</span>
 				</div>
 				<div style="font-size: 14px; color: grey;">
 					${data.names} ${data.lastName}
@@ -189,7 +197,7 @@ class GoogleMapModeTwo extends Component {
 			// pos
 			latlng = new maps.LatLng(dataCoords.lat, dataCoords.lon)
 			// just one increase
-			counter ++
+			counter ++ 
 			// checker to create only one marker
 			if(counter === 1){	
 				// marker unique
@@ -321,7 +329,7 @@ class GoogleMapModeTwo extends Component {
 					// vendors
 					top5Tag,
 					top5TagListener,
-				}
+				} 
                 // print 
                 console.log(`hiData: ${JSON.stringify(hiData)}`)
             }
@@ -329,13 +337,10 @@ class GoogleMapModeTwo extends Component {
 			return(
 				<>
 					<GoogleMap
-						// onGoogleApiLoaded={
-						// 	({ map, maps }) => this.handleApiLoaded(map, maps, hiData)
-						// }
-					>	
-						{/* icon list vendors */}
-						<MarkersStaticsDevicesSelectedByUserDevice/>
-					</GoogleMap>
+						onGoogleApiLoaded={
+							({ map, maps }) => this.handleApiLoaded(map, maps, hiData)
+						}
+					/>
 				</>
 			)
 		} else {

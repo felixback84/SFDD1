@@ -82,7 +82,7 @@ export default function(state = initialState, action){
                 ...state,
                 top5TagsListener: action.payload,
                 //loading: false 
-            };
+            }; 
         case STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS_LIVE:
             return{
                 ...state,

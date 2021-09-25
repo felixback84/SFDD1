@@ -1,91 +1,85 @@
-import React, { Component } from 'react';
+import React from 'react';
 // font awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas, faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
-// Redux stuff
-import { connect } from 'react-redux';
+// mui icons
+import Icon from '@material-ui/core/Icon';
 
-class MarkersStaticsDevicesSelectedByUserDevice extends Component {
+// InfoWindow component
+const InfoWindow = (props) => {
+    // props
+    const { dataVendor } = props
+    // style
+    const infoWindowStyle = {
+        position: 'relative',
+        bottom: 150,
+        left: '-45px',
+        width: 220,
+        backgroundColor: 'white',
+        boxShadow: '0 2px 7px 1px rgba(0, 0, 0, 0.3)',
+        padding: 10,
+        fontSize: 14,
+        zIndex: 100,
+    };
 
-    // state
-    constructor(props) {
-        super(props)
-        this.state = {
-			arrMarkers: []
-        }
-    }
-
-    // filter of top5Tags
-	componentWillReceiveProps(nextProps){
-		// checker of changes in data
-        if(nextProps.idOfSpecificStaticDevices){
-            // promise
-            const myPromise = new Promise((resolve, reject) => {
-                // var to arr
-                let arrFinal = []
-
-                // print
-                console.log(`hi filter of selected ones to markers: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
-
-                // check if none static is selected
-                if(this.props.idOfSpecificStaticDevices.length === 0){
-                    arrFinal.push({...this.props.top5Tags[0]})
-                } else if(this.props.idOfSpecificStaticDevices.length != 0) {
-                    // loop over selection
-                    this.props.idOfSpecificStaticDevices.map((id)=>{
-                        // filter
-                        this.props.top5Tags.filter((arrItem)=>{
-                            // checker
-                            if(arrItem.thingId === id.thingIdToSearch
-                                    // && ids.length != 0
-                                ){
-                                    arrFinal.push({...arrItem})
-                                } 
-                        })	
-                    })
-                }
-                // print
-                console.log(`arrFinalMarkers: ${JSON.stringify(arrFinal)}`)
-                // promise resolve
-                resolve(arrFinal)
-            })
-
-            // list of data for table
-            return myPromise
-                .then((data)=>{
-                    // print
-                    console.log(`top5Tag data after filter to markers: ${JSON.stringify(data)}`)
-                    // set state
-					this.setState({ 
-						arrMarkers:data
-                    })
-                })
-                .catch((err) => console.log('There was an error:' + err)) 
-        }
-    }
-	
-	render(){
-        { 
-            return this.state.arrMarkers.map((item)=>(
-                <>
-                    <FontAwesomeIcon 
-                        icon={faDotCircle} 
-                        key={item.coords.nameOfPoint}
-                        lat={item.coords.lat}
-                        lng={item.coords.lon}
-                    />
-                </>
-            ))
-        }
-    }
+    return (
+        <div style={infoWindowStyle}>
+            <div style={{ fontSize: 16 }}>
+                {dataVendor.userCredentials.companyName}
+            </div>
+            <img 
+                src={dataVendor.userCredentials.imgUrl} 
+                style={{ width: "200px", height:"200px" }}
+            />
+            {/* <div style={{ fontSize: 14 }}>
+            <span style={{ color: 'grey' }}>
+                {place.rating}
+                {' '}
+            </span>
+            <span style={{ color: 'orange' }}>
+                {String.fromCharCode(9733).repeat(Math.floor(place.rating))}
+            </span>
+            <span style={{ color: 'lightgrey' }}>
+                {String.fromCharCode(9733).repeat(5 - Math.floor(place.rating))}
+            </span>
+            </div>
+            <div style={{ fontSize: 14, color: 'grey' }}>
+                {place.types[0]}
+            </div>
+            <div style={{ fontSize: 14, color: 'grey' }}>
+            {'$'.repeat(place.price_level)}
+            </div>
+            <div style={{ fontSize: 14, color: 'green' }}>
+                {place.opening_hours.open_now ? 'Open' : 'Closed'}
+            </div> */}
+        </div>
+    )
 }
-// connect to global state in redux
-const mapStateToProps = (state) => ({
-    idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
-	// top5Tags
-	loading: state.top5Tags1.loading,
-	top5Tags: state.top5Tags1.top5Tags,
-});
 
-export default connect(mapStateToProps)(MarkersStaticsDevicesSelectedByUserDevice)
+export default function MarkersStaticsDevicesSelectedByUserDevice(props) {
+
+    // style
+    const markerStyle = {
+        border: '1px solid white',
+        borderRadius: '50%',
+        height: 20,
+        width: 20,
+        backgroundColor: props.show ? 'red' : 'blue',
+        cursor: 'pointer',
+        zIndex: 10,
+    }
+
+    return (
+        <>
+            <div 
+                style={markerStyle} 
+                //className="fa fa-plus-circle" 
+                //color="primary"
+            />
+            {
+                props.show && <InfoWindow dataVendor={props.data} />
+            }
+        </>
+    )
+}
