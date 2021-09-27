@@ -166,7 +166,8 @@ export const selectStaticDevicesToSearch = (data) => (dispatch) => {
                 type: STOP_POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS
             }) 
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
+        return true
 }
 
 // to DELETE in liveDataSets one item of the list of staticDevices - vendors - statics to find

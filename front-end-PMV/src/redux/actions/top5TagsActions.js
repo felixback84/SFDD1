@@ -266,12 +266,13 @@ export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => asyn
                                         ...change.doc.data()
                                     }
                                     // replace data in the right index
+                                    arrResultFilter[index] = data
                                     // print
                                     console.log(`to reducer: ${JSON.stringify(arrResultFilter)}`)
                                     // dispatchers
                                     dispatch({ 
                                         type:GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
-                                        payload:arrResultFilter[index] = data
+                                        payload:arrResultFilter
                                     })
                                     // events
                                     dispatch({ type:STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
