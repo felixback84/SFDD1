@@ -2,7 +2,7 @@
 const { db } = require('../../utilities/admin');
 
 // search of static devices according to the categories and tags it has
-exports.searchStaticDevicesByCategoriesAndTags = (req, res) => {
+exports.searchStaticDevicesProductsByCategoriesAndTags = (req, res) => {
     // var to hold results
     let resultsOfProductsInDB = []
     // db part

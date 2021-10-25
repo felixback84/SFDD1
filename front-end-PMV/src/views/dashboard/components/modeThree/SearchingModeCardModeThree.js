@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 // @material-ui/core components
 import { useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -6,13 +6,16 @@ import Grid from '@material-ui/core/Grid';
 // core components
 import CardStats from "../../../../components/Cards/CardStats.js";
 import SearchingModeSwitcherThree from "./SearchingModeSwitcherThree"
+// components
+import SearchEngine from "../utils/SearchEngine/SearchEngine"
+import ColorEngine from "../utils/ColorEngine/ColorEngine"
 // Redux stuff
 import { connect } from 'react-redux';
 
 // cards
 const SearchingModeCardModeThree = (props) => {
-  // styles
-	const theme = useTheme();
+  	// styles
+	const theme = useTheme()
 	// card markup
 	const modeCardMarkupThree = (data) => {
 		return (
@@ -23,41 +26,53 @@ const SearchingModeCardModeThree = (props) => {
 					icon={props.icon}
 					//color={color} // color from liveDataSets
 					footer={
-						<>
-							{/* card footer */}
+						<Fragment>
+							<Box
+								marginLeft=".5rem"
+								marginBottom=".5rem"
+								component="span">
+								{/* switcher */}
+								<SearchingModeSwitcherThree 
+									mode={props.mode} 
+									thingid={props.thingid}
+								/>
+							</Box>
+							
+							{/* bussines item closer */}
 							<Box
 								component="span"
 								fontSize=".875rem"
-								color={theme.palette.success.main}
 								marginRight=".5rem"
 								display="flex"
 								alignItems="center"
 							>
-								{/* <Grid container>
-									<Grid item xl={3} lg={6} xs={12}> */}
-										{/* distances in meters to the next one item */}
-										<Box
-											width="1.5rem!important"
-											height="1.5rem!important"
-										>
-											{"3.48 Mts"} 
-										</Box>
-									{/* </Grid>
-									<Grid item xl={3} lg={6} xs={12}> */}
-										{/* switcher */}
-										<Box component="span" whiteSpace="nowrap">
-											<SearchingModeSwitcherThree
-												mode={props.mode}
-											/>
-										</Box>
-									{/* </Grid>
-								</Grid> */}
+								The closer bussines to you is: {
+									data.top5Tags.length !== 0 ? 
+									(data.top5Tags[0].userCredentials.companyName):("")
+								}
 							</Box>
-							{/* data of the closer item */}
-							<Box component="span" whiteSpace="nowrap">
-								Since last month 
+							{/* # of bussines searching */}
+							<Box
+								component="span"
+								fontSize=".875rem"
+								marginRight=".5rem"
+								display="flex"
+								alignItems="center"
+							>
+								{/* number of items */}
+								You match with {data.top5Tags.length} bussines
 							</Box>
-						</>
+							<Box
+								component="div"
+								fontSize=".875rem"
+								marginRight=".5rem"
+								display="flex"
+								alignItems="center"
+							>
+								{/* search engine */}
+								<SearchEngine searchingmode="modeThree"/>
+							</Box>
+						</Fragment>
 					}
 				/>		
 			</>
@@ -66,10 +81,16 @@ const SearchingModeCardModeThree = (props) => {
 
 	// data
 	const data = {
-		color:props.thingLiveDataSets.colorValue,
+		// device
+		thingLiveDataSets:props.thingLiveDataSets,
+		colorValue: props.thingLiveDataSetsListener.colorValue === undefined ?
+			(props.thingLiveDataSets.colorValue):
+			(props.thingLiveDataSetsListener.colorValue),
+		// icon		
 		icon:props.icon,
-		top5Products:props.top5Products,
-		thingLiveDataSets:props.thingLiveDataSets
+		// top5Tags
+		top5TagsListener:props.top5TagsListener,
+		top5Tags:props.top5Tags,
 	}
 	return(
 		<>
@@ -80,8 +101,12 @@ const SearchingModeCardModeThree = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
-	top5Products: state.userDevices1.top5Products,
+	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	// top5Tags
+	top5Tags: state.top5Tags1.top5Tags,
+	top5TagsListener: state.top5Tags1.top5TagsListener,
 });
 
 export default connect(mapStateToProps)(SearchingModeCardModeThree);

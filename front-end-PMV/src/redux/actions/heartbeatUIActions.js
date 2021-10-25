@@ -134,7 +134,7 @@ export const heartbeatPostSearchingMode = (objSearchingModeData) => (dispatch) =
                 type: STOP_SET_HEARTBEAT_SEARCHING_MODE,
             }) 
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err)); 
 }
 
 // post tags selected by user

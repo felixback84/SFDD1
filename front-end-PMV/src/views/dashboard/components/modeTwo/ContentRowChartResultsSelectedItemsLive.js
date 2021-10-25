@@ -159,15 +159,13 @@ class ContentRowChartResultsSelectedItemsLive extends Component {
                                     </Box>
                                 </Box>
                             </TableCell>
-                        </TableRow>
-                        
+                        </TableRow>  
                     ))
                 }
             </>
         )
     }	
 }
-
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({

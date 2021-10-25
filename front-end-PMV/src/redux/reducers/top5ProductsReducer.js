@@ -6,7 +6,7 @@ import {
     STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
 
     // ---> post list of products to find
-    POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
+    POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND, 
     STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
 
     // top5Products --> mode Three

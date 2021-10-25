@@ -69,7 +69,7 @@ const SearchingModeCardModeOne = (props) => {
 								marginRight=".5rem"
 								display="flex"
 								alignItems="center"
-							>
+							> 
 								{/* number of items */}
 								You match with {data.top5Tags.length} bussines
 							</Box>

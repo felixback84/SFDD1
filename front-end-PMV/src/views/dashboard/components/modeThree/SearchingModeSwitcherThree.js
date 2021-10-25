@@ -8,8 +8,8 @@ import store from '../../../../redux/store';
 import { connect } from 'react-redux';
 import { 
 	heartbeatPostSearchingMode,
-	userDeviceSpecificTop5ProductSyncData,
-} from '../../../../redux/actions/userDevicesActions';
+	// userDeviceSpecificTop5ProductSyncData,
+} from '../../../../redux/actions/heartbeatUIActions';
 // styles
 import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
 const useStyles = makeStyles(SearchingModeCardStyles);
@@ -17,9 +17,9 @@ const useStyles = makeStyles(SearchingModeCardStyles);
 // switcher
 const SearchingModeSwitcherThree = (props) => {
 	// styles
-	const classes = useStyles();
+	const classes = useStyles()
 	// hook state
-	const [mode, setMode] = useState("");
+	const [mode, setMode] = useState("")
 	// effects
 	useEffect(() => {
 		if(mode === "modeThree"){
@@ -30,16 +30,16 @@ const SearchingModeSwitcherThree = (props) => {
 					thingId:props.thingId
 				}
 			}
-			store.dispatch(heartbeatPostSearchingMode(dataSearchingMode));
+			store.dispatch(heartbeatPostSearchingMode(dataSearchingMode))
 		}
 	})
 	// redux action to extract data from db acoord with the search mode
-	useEffect(()=>{
-		if(mode === "modeThree"){
-			props.userDeviceSpecificTop5ProductSyncData(props.thingId)
-		}
-	})
-	 
+	// useEffect(()=>{
+	// 	if(mode === "modeThree"){
+	// 		props.userDeviceSpecificTop5ProductSyncData(props.thingId)
+	// 	}
+	// })
+	
 	return(
 		<FormControlLabel
 			control={
@@ -73,7 +73,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
-	userDeviceSpecificTop5ProductSyncData,
+	//userDeviceSpecificTop5ProductSyncData,
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherThree);

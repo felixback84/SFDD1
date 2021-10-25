@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // components
 import ComboSearchModeOne from "./ComboSearchModeOne"
-import Box from "@material-ui/core/Box";
+import ComboSearchModeThree from "./ComboSearchModeThree"
 // Redux stuff
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
@@ -14,23 +14,15 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
                 <ComboSearchModeOne 
                     staticDevicesTags={tagsList} 
                 />
+            ) 
+        break;
+        case "modeThree":
+            return( 
+                <ComboSearchModeThree
+                    staticDevicesTags={tagsList}
+                />
             )
         break;
-        // case "modeTwo":
-        //     return(
-        //         <ComboSearchModeTwo/>
-        //     )
-        // break;
-        // case "modeOne":
-        //     return( 
-        //         <ComboSearchModeThree/>
-        //     )
-        // break;
-        // case "modeOne":
-        //     return(
-        //         <ComboSearchModeFour/>
-        //     )
-        // break;
         default:
 			return(
 				null
@@ -48,20 +40,17 @@ class SearchEngine extends Component {
                 if(this.props.loading === false && this.props.userDevices.length > 0){
                     // var to hold name of device
                     const composeStaticDeviceName = "static" + this.props.userDevices[0].device.nameOfDevice
-                    // print
-                    console.log(`composeStaticDeviceName:${composeStaticDeviceName}`)
                     // get all available tags
-                    return this.props.getTagsFromDeviceConfig(composeStaticDeviceName)
+                    return this.props.getTagsFromDeviceConfig(composeStaticDeviceName) 
                 }
             break;
-            case "modeTwo":
-                return "modeTwo"
-            break;
             case "modeThree":
-                return "modeThree"
-            break;
-            case "modeFour":
-                return "modeFour"
+                if(this.props.loading === false && this.props.userDevices.length > 0){
+                    // var to hold name of device
+                    const composeStaticDeviceName = "static" + this.props.userDevices[0].device.nameOfDevice
+                    // get all available tags
+                    return this.props.getTagsFromDeviceConfig(composeStaticDeviceName) 
+                }
             break;
             default:
                 return null

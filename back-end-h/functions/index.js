@@ -89,7 +89,7 @@ const {
     // searching modeThree
     const {
         // es cosa de escoger cual es el buscador
-        searchStaticDevicesByCategoriesAndTags, // products searcher 
+        searchStaticDevicesProductsByCategoriesAndTags, // products searcher 
         // findStaticsProductsInSpecificMtsRange, ------> better search
 
         postListOfProductsToFind, // ---> top5Products from ux 
@@ -235,7 +235,7 @@ app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevice
 
 /////*** */ mode three
 // search of static devices products according to the categories and tags it has
-app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesByCategoriesAndTags)
+app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 // to post list of products to find his positions and owners
 app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
 

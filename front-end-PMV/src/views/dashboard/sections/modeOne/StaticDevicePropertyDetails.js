@@ -123,7 +123,7 @@ const StaticDevicePropertyDetails = (props) => {
                 imgUrl,
                 lastname,
                 names,
-                type,
+                type, 
                 userHandle
             }
         },
