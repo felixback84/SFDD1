@@ -3,6 +3,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormGroup from '@material-ui/core/FormGroup';
+import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -83,35 +84,6 @@ function getStyles(name, statePath, theme) {
     };
 }
 
-// // var
-// let arrConcat = []
-
-// // tags from db
-// const selectorTagsList = (data) => {
-//     // print
-//     console.log(`data:${JSON.stringify(data)}`)
-// 	// loop
-// 	for(let key in data){
-// 		// checker
-// 		if(data.hasOwnProperty(key)){
-// 			// concat arr
-// 			data[categorySelected]
-// 		}
-// 	}		
-// 	// loop
-// 	return arrConcat.map((tagCategoryItem)=>{
-// 		return(
-// 			<MenuItem 
-// 				key={tagCategoryItem} 
-// 				value={tagCategoryItem} 
-// 				// style={getStyles(tagCategoryItem,statePath,theme)}
-// 			>
-// 				{tagCategoryItem}
-// 			</MenuItem>
-// 		)
-// 	})
-// }
-
 const ComboSearchModeThree = (props) => {
     // styles
     const classes = useStyles()
@@ -124,8 +96,8 @@ const ComboSearchModeThree = (props) => {
 	}
 
     // state of field & checkbox
-    const [tagsSelected, setTags] = React.useState()
-    const [categorySelected, setCategory] = React.useState()
+    const [categorySelected, setCategory] = React.useState("")
+    const [tagsSelected, setTags] = React.useState({luckyNumbers:[],dcHeros:[],pets:[],fruits:[]})
     const [filteredData, setFilteredData] = React.useState()
 	
     // handle change for tags
@@ -133,7 +105,7 @@ const ComboSearchModeThree = (props) => {
         setTags(
             event.target.value
         )
-    }
+    } 
 
     // send data event
     const handleSubmit = (event) => {
@@ -151,29 +123,59 @@ const ComboSearchModeThree = (props) => {
 	const handleChangeCheckbox = (event) => {
 		setCategory(
             event.target.value
-        )
+		)
+		// print
+		console.log(`tagsSelected:${{tagsSelected}}`)
 	}
 
 	// categorie checkboxes
 	const keysToCheckBoxes = (keyNames) => {
+
+		// arr to categories
+		let arrCheckBoxesToCategories = []
+		
 		// loop
 		for(let key in keyNames){
 			// checker
 			if(keyNames.hasOwnProperty(key)){
-				return(
-					<FormControlLabel
-						value={categorySelected}
-						control={
-							<Checkbox
-								onChange={handleChangeCheckbox}
-							/>
-						}
-						label={key}
-						labelPlacement="start"
-					/>
-				)
+				arrCheckBoxesToCategories.push(key)
 			}
-		}	
+		}
+
+		// push
+		return arrCheckBoxesToCategories.map((keyCategorie)=>{
+			return(
+				<FormControlLabel
+					value={keyCategorie}
+					control={
+						<Checkbox
+							onChange={handleChangeCheckbox}
+						/>
+					}
+					label={keyCategorie}
+					labelPlacement="start"
+				/>
+			)
+		})
+	}
+
+	// tags from db
+	const selectorTagsList = (data)=>{
+		let tg = data
+		// print
+		// console.log(`data fields tags:${JSON.stringify(tg)}`)
+		// loop
+		return tg.map((tagCategoryItem)=>{
+			return(
+				<MenuItem 
+					key={tagCategoryItem} 
+					value={tagCategoryItem} 
+					// style={getStyles(tagCategoryItem,statePath,theme)}
+				>
+					{tagCategoryItem}
+				</MenuItem>
+			)
+		})
 	}
 
 	// active input
@@ -190,6 +192,42 @@ const ComboSearchModeThree = (props) => {
 			// hook state
 			setFilteredData(newFilter)
 		}
+	}
+
+	// category selected field
+	const field = (categorySelected) => {
+		return categorySelected != "" && 
+		(
+			<Select
+				name={categorySelected}
+				labelId={categorySelected}
+				id={categorySelected}
+				multiple
+				value={tagsSelected[categorySelected]}
+				onChange={handleChangeTags}
+				// active input
+				input={
+					<Input 
+						id={`select-mutiple-chip`} 
+						//onChange={handleFilter}
+					/>
+				}
+				renderValue={
+					(selected) => (
+						<div className={classes.chips}>
+							{selected.map((value) => (
+								<Chip key={value} label={value} className={classes.chip} />
+							))}
+						</div>
+					)
+				}
+				MenuProps={MenuProps}
+			>
+				{/* all tags of selected key to init*/}
+				{selectorTagsList(props.staticDevicesTags[categorySelected])}
+				{/* {filteredData} */}
+			</Select>
+		)
 	}
 	
     return(
@@ -212,38 +250,13 @@ const ComboSearchModeThree = (props) => {
 								<FormGroup aria-label="position" row>
 									{keysToCheckBoxes(props.staticDevicesTags)}
 								</FormGroup>
-							    {/* field tags */}
-								<InputLabel id={`mutiple-chip-label`}>Tags</InputLabel>
-								<Select
-									name="tags"
-									labelId={`mutiple-chip-label`}
-									id={`mutiple-chip`}
-									multiple
-									value={tagsSelected}
-									onChange={handleChangeTags}
-									// active input
-									input={
-										<Input 
-											id={`select-mutiple-chip`} 
-											onChange={handleFilter}
-										/>
-									}
-									renderValue={
-										(selected) => (
-											<div className={classes.chips}>
-												{selected.map((value) => (
-													<Chip key={value} label={value} className={classes.chip} />
-												))}
-											</div>
-										)
-									}
-									MenuProps={MenuProps}
-								>
-									{/* all tags of all keys to init*/}
-									{/* {selectorTagsList(props.staticDevicesTags)} */}
-									{filteredData}
-								</Select>
+								
+							    {/* field tag label*/}
+								<InputLabel id={`mutiple-chip-label`}>{`Tags in ${categorySelected}`}</InputLabel>
+								{/* {field of category selected} */}
+								{field(categorySelected)}
 							</FormControl>
+
 							{/* btn */}
 							<Button 
 								className={classes.button}

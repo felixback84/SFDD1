@@ -299,7 +299,7 @@ class GoogleMapModeOne extends Component {
 		} else {
 			return(
 				<>
-					<p>...wait for coords</p>
+					<p>...wait for coords from modeOne</p>
 				</>
 			)
 		}

@@ -5,61 +5,70 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch';
 // Redux stuff
 import store from '../../../../redux/store';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'; 	
 import { 
 	heartbeatPostSearchingMode,
-	// userDeviceSpecificTop5ProductSyncData,
 } from '../../../../redux/actions/heartbeatUIActions';
+import {
+	userDeviceTop5ProductsSyncDataStatic,
+	//userDeviceTop5ProductsSyncDataLiveDB
+} from '../../../../redux/actions/top5ProductsActions'
 // styles
-import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
-const useStyles = makeStyles(SearchingModeCardStyles);
+import searchingModeCardStyles from "assets/theme/views/admin/searchingModeCard"
+const useStyles = makeStyles(searchingModeCardStyles);
 
 // switcher
 const SearchingModeSwitcherThree = (props) => {
 	// styles
 	const classes = useStyles()
+	
 	// hook state
-	const [mode, setMode] = useState("")
+	const [mode, setMode] = useState({
+		checked: false,
+		modeType: "",
+	})
+
+	// handleChange switch
+	const handleChange = (event) => {
+		setMode({ 
+			modeType:props.mode, 
+			[event.target.name]: event.target.checked
+		});
+
+		const thindId = props.thingId
+		// trigger	
+		//if(mode.checked === true){
+			// static data from top5Tags
+			props.userDeviceTop5ProductsSyncDataStatic(thindId)
+			// live data from top5Tags
+			// props.userDeviceTop5ProductsSyncDataLiveDB(thindId)
+		//}
+	};
+ 
 	// effects
 	useEffect(() => {
-		if(mode === "modeThree"){
+		if(mode.modeType == "modeThree"){
 			// obj to pass
 			const dataSearchingMode = {
 				objSearchingModeData:{
-					searchingMode:[mode],
+					searchingMode:[mode.modeType],
 					thingId:props.thingId
 				}
 			}
+			// redux action
 			store.dispatch(heartbeatPostSearchingMode(dataSearchingMode))
 		}
 	})
-	// redux action to extract data from db acoord with the search mode
-	// useEffect(()=>{
-	// 	if(mode === "modeThree"){
-	// 		props.userDeviceSpecificTop5ProductSyncData(props.thingId)
-	// 	}
-	// })
 	
 	return(
 		<FormControlLabel
 			control={
 				<Switch
-					checked={props.thingLiveDataSets.onMode}
-					onChange={() => setMode(props.mode)}
-					value="checkedB"
-					classes={{
-						switchBase: classes.switchBase,
-						checked: classes.switchChecked,
-						thumb: classes.switchIcon,
-						track: classes.switchBar
-					}}
+					name="checked"
+					checked={mode.checked}
+					onChange={handleChange}	
 				/>
 			}
-			classes={{
-				label: classes.label,
-				root: classes.labelRoot
-			}}
-			label="Toggle is off"
 		/>
 	)
 }
@@ -73,7 +82,8 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
-	//userDeviceSpecificTop5ProductSyncData,
+	userDeviceTop5ProductsSyncDataStatic,
+	//userDeviceTop5ProductsSyncDataLiveDB
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherThree);

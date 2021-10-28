@@ -1,21 +1,23 @@
 import React from 'react'
-// mui
+// nodejs library that concatenates classes
+import classNames from "classnames"
+// mui stuff
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import MobileStepper from '@material-ui/core/MobileStepper'
 import Button from '@material-ui/core/Button'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
-import SwipeableViews from 'react-swipeable-views'
-import { autoPlay } from 'react-swipeable-views-utils'
+import { Tooltip } from '@material-ui/core'
+// mui kit pro
 import GridContainer from "components/Grid/GridContainer.js"
 import GridItem from "components/Grid/GridItem.js"
 import Card from 'components/Card/Card.js'
 import CardHeader from 'components/Card/CardHeader.js'
 import CardBody from "components/Card/CardBody.js"
 import CardFooter from "components/Card/CardFooter.js"
-import { Tooltip } from '@material-ui/core'
-// nodejs library that concatenates classes
-import classNames from "classnames"
+// plugin
+import SwipeableViews from 'react-swipeable-views'
+import { autoPlay } from 'react-swipeable-views-utils'
 // icons
 import Favorite from '@material-ui/icons/Favorite'
 // styles

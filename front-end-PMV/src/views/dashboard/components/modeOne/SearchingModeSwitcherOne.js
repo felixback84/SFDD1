@@ -11,8 +11,8 @@ import { connect } from 'react-redux';
 import { heartbeatPostSearchingMode } from '../../../../redux/actions/heartbeatUIActions';
 import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncDataLiveDB } from '../../../../redux/actions/top5TagsActions';
 // styles
-import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
-const useStyles = makeStyles(SearchingModeCardStyles);
+import searchingModeCardStyles from "assets/theme/views/admin/searchingModeCard"
+const useStyles = makeStyles(searchingModeCardStyles);
 
 // switcher
 const SearchingModeSwitcherOne = (props) => {

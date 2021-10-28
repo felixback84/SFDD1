@@ -49,7 +49,7 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 responses: action.payload,
-                loading: false
+                //loading: false
             }; 
 
         case STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS:
@@ -77,7 +77,7 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 top5Products: action.payload,
-                loading: false
+                //loading: false
             };      
 
         case STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS:

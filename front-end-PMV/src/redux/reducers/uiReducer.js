@@ -11,7 +11,8 @@ import {
     STOP_LOADING_UI
 } from '../types';
 
-const test = (obj) => {
+// to create dynamic keys from the model data of the device in use
+const createKeys = (obj) => {
     let resultKeys = {}
     for(let item in obj){
         if(obj.hasOwnProperty(item)){
@@ -65,7 +66,7 @@ export default function(state = initialState, action){
         case GET_DATA_TAGS_FROM_ALL_STATICS_FOR_SEARCH_BOX_MODEONE:
             return{
                 ...state,
-                staticDevicesTags:test(action.payload),
+                staticDevicesTags:createKeys(action.payload),
                 //loading:false
             }
         case STOP_GET_TAGS_FROM_DEVICE_CONFIG:

@@ -16,15 +16,27 @@ import { connect } from 'react-redux';
 const SearchingModeCardModeThree = (props) => {
   	// styles
 	const theme = useTheme()
+	// color class
+	const colorClass = new ColorEngine()
 	// card markup
 	const modeCardMarkupThree = (data) => {
-		return (
+		return ( 
 			<>
 				<CardStats
 					subtitle={props.title}
-					title="350,897" // number of items
+					title={
+						data.top5Products.length != 0 ? 
+						(
+							//with array in reducer
+							data.top5ProductsListener.length != 0 ?
+								data.top5ProductsListener[0].meters.toFixed(2):
+								data.top5Products[0].meters.toFixed(2)
+						):(0)
+					} // dstance to the closer
 					icon={props.icon}
-					//color={color} // color from liveDataSets
+					color={
+						colorClass.colorPicker(data.colorValue)
+					} // color from liveDataSets
 					footer={
 						<Fragment>
 							<Box
@@ -46,9 +58,9 @@ const SearchingModeCardModeThree = (props) => {
 								display="flex"
 								alignItems="center"
 							>
-								The closer bussines to you is: {
-									data.top5Tags.length !== 0 ? 
-									(data.top5Tags[0].userCredentials.companyName):("")
+								The closer porduct to you is: {
+									data.top5Products.length !== 0 ? 
+									(data.top5Products[0].meters.toFixed(2)):("")
 								}
 							</Box>
 							{/* # of bussines searching */}
@@ -60,7 +72,7 @@ const SearchingModeCardModeThree = (props) => {
 								alignItems="center"
 							>
 								{/* number of items */}
-								You match with {data.top5Tags.length} bussines
+								You match with {data.top5Products.length} products
 							</Box>
 							<Box
 								component="div"
@@ -89,11 +101,11 @@ const SearchingModeCardModeThree = (props) => {
 		// icon		
 		icon:props.icon,
 		// top5Tags
-		top5TagsListener:props.top5TagsListener,
-		top5Tags:props.top5Tags,
+		top5Products:props.top5Products,
+		top5ProductsListener:props.top5ProductsListener,
 	}
 	return(
-		<>
+		<> 
 			{modeCardMarkupThree(data)}
 		</>
 	)
@@ -104,9 +116,10 @@ const mapStateToProps = (state) => ({
 	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
-	// top5Tags
-	top5Tags: state.top5Tags1.top5Tags,
-	top5TagsListener: state.top5Tags1.top5TagsListener,
+	// top5Products
+	top5Products: state.top5Products1.top5Products,
+	top5ProductsListener: state.top5Products1.top5ProductsListener,
+
 });
 
 export default connect(mapStateToProps)(SearchingModeCardModeThree);

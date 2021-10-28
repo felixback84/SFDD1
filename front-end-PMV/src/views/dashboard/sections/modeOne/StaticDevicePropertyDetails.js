@@ -1,8 +1,9 @@
 import React  from 'react'
+// nodejs library that concatenates classes
+import classNames from "classnames"
 // mui stuff
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles'
 import Avatar from "@material-ui/core/Avatar";
-import Container from '@material-ui/core/Container'
 import { Grid, Divider } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import { CardHeader, CardContent } from '@material-ui/core'
@@ -14,9 +15,6 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import Box from "@material-ui/core/Box"
-import { Tooltip } from '@material-ui/core';
-// nodejs library that concatenates classes
-import classNames from "classnames"
 // icons
 import LocationOn from '@material-ui/icons/LocationOn'
 // social icons
@@ -24,11 +22,9 @@ import TwitterIcon from '@material-ui/icons/Twitter'
 import LinkedInIcon from '@material-ui/icons/LinkedIn'
 import YouTubeIcon from '@material-ui/icons/YouTube'
 import InstagramIcon from '@material-ui/icons/Instagram'
-
 // components
 import ProductsByTop5Tag from './ProductsByTop5Tag'
 import TagsMaker from '../../components/utils/TagsMaker'
-
 // redux
 import { connect } from 'react-redux'
 import { findSpecificTop5Tag } from '../../../../redux/actions/top5TagsActions'

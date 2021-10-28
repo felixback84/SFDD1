@@ -5,7 +5,6 @@ import Box from "@material-ui/core/Box"
 import GoogleMapReact from 'google-map-react'
 // components
 import MarkersStaticsDevicesSelectedByUserDevice from '../components/modeTwo/MarkersStaticsDevicesSelectedByUserDevice'
-// import GoogleMapModeOne from '../components/modeOne/GoogleMapModeOne'
 // Redux stuff
 import { connect } from 'react-redux';
 // _
@@ -139,7 +138,7 @@ class GoogleMap extends Component {
 							}
 						> 
 							{/* arr of markers selected by the user */}
-							{arrMarkersSelected(this.state.arrMarkers)}
+							{this.props.searchingMode[0] === "modeTwo" && arrMarkersSelected(this.state.arrMarkers)}
 						</GoogleMapReact>
 					</Box>
 				</>
@@ -159,10 +158,10 @@ const mapStateToProps = (state) => ({
 	idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
 	// liveDataSets
 	loading:state.heartbeatThing1.loading,
+	searchingMode:state.heartbeatThing1.thingLiveDataSets.searchingMode,
 	coords:state.heartbeatThing1.thingLiveDataSets.coords,
 	// top5Tags
-	loading: state.top5Tags1.loading,
 	top5Tags: state.top5Tags1.top5Tags,
-});
+})
 
 export default connect(mapStateToProps)(GoogleMap);

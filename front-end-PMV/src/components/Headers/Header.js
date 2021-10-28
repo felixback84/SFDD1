@@ -51,11 +51,11 @@ const Header = (props) => {
               </Grid>
               <Grid item xl={3} lg={3} xs={12}>
                 {/* modeThree */}
-                {/* <SearchingModeCardModeThree
+                <SearchingModeCardModeThree
                   title="modeThree"
                   icon={GroupAdd}
                   mode="modeThree"
-                /> */}
+                />
               </Grid>
               <Grid item xl={3} lg={3} xs={12}>
                 {/* modeFour */}

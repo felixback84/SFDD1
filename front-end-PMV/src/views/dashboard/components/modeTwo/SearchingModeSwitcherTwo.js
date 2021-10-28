@@ -16,8 +16,8 @@ import {
 			userDeviceSpecificTop5TagSyncDataLiveDB,
 		} from '../../../../redux/actions/top5TagsActions';
 // styles
-import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
-const useStyles = makeStyles(SearchingModeCardStyles);
+import searchingModeCardStyles from "assets/theme/views/admin/searchingModeCard"
+const useStyles = makeStyles(searchingModeCardStyles);
 
 // switcher
 const SearchingModeSwitcherOne = (props) => {

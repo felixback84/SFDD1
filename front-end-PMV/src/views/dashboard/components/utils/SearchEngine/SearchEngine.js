@@ -5,7 +5,7 @@ import ComboSearchModeThree from "./ComboSearchModeThree"
 // Redux stuff
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
-
+ 
 const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
     switch(searchingMode){
         case "modeOne":

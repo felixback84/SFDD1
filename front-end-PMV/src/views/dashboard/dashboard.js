@@ -10,11 +10,14 @@ import Header from "../../components/Headers/Header.js";
 import SkeletonDashboard from "./components/SkeletonDashboard.js";
 import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
 import GoogleMapModeTwo from './components/modeTwo/GoogleMapModeTwo'
+import GoogleMapModeThree from './components/modeThree/GoogleMapModeThree'
 // modeOne
 import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
 import ChartResultsSearchingModeTwo from "./sections/modeTwo/ChartResultsSearchingModeTwo"
 import ChartResultsSelectedItemsSearchingModeTwo from "./sections/modeTwo/ChartResultsSelectedItemsSearchingModeTwo"
+// modeThree
+import ProductsResultsSearchingModeThree from "./sections/modeThree/ProductsResultsSearchingModeThree"
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -101,14 +104,35 @@ const pickerMarkerMix = (
 				)
 			}
 		break;
-		// case "modeThree":	
-		// 	return(
-		// 		<MarkerInfoWindowModeThree 
-		// 			coords={coords}
-		// 			top5products={top5Products}
-		// 		/>
-		// 	)
-		// break;
+		case "modeThree":	
+			if(loading == false){
+				console.log("modeThree")
+				return(
+					<>
+						{/* map */}
+						<Grid container>
+							<Grid item xs={12}>
+								<Card classes={{ root: classes.cardRoot }}>
+									<GoogleMapModeThree
+										coords={coordz}
+										colorValue={color} 
+									/>
+								</Card>
+							</Grid>
+						</Grid>
+						{/* top5Products result*/}
+						<Grid container>
+							<Grid item xs={12}>
+								<Card classes={{ root: classes.cardRoot }}>
+									{/* results */}
+									<ProductsResultsSearchingModeThree/>
+								</Card>
+							</Grid>
+						</Grid>
+					</>	
+				)
+			}
+		break;
 		// case "modeFour":	
 		// 	return(
 		// 		<MarkerInfoWindowModeFour 
@@ -165,7 +189,7 @@ class Dashboard extends Component {
 		//console.log(`thingId:${this.props.userDevices[0].thingId}`)
 		console.log(`idOfSpecificStaticDevice:${idOfSpecificStaticDevices}`)
 		// dash markup
-		const dashboardMarkUp = !ui.loading ? (
+		const dashboardMarkUp = ! ui.loading ? (
 			<>
 				{/* static bg & mode boxes*/}
 				<Header 
