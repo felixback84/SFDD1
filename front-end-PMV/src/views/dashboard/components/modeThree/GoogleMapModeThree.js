@@ -12,14 +12,15 @@ import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbea
 
 
 class GoogleMapModeThree extends Component {
-
     // api google set method
 	handleApiLoaded = (map, maps,{...data}) => {
         // print
         console.log(`api Gmaps init modeThree`)
             
         // color class
-        const colorClass = new ColorEngine()
+		const colorClass = new ColorEngine()
+		// coords data dynamic user pos
+		let coords = this.props.coords
 
         //////////////////////////////////////////////////// top5Products - static devices - vendors
 		//var to hold data in arrays to escalate
@@ -51,7 +52,7 @@ class GoogleMapModeThree extends Component {
 		</div>`
 
 		//to static devices products list markers
-		data.top5Products.forEach((top5Product) => {
+		data.top5Products.forEach((top5Product,i) => {
 			// colors
 			// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
 			// print
@@ -67,32 +68,89 @@ class GoogleMapModeThree extends Component {
 					fillColor: "#c30000",
 					fillOpacity: 1,
 					anchor: new maps.Point(
-					  faDotCircle.icon[0] / 2, // width
-					  faDotCircle.icon[1] // height
+					  	faDotCircle.icon[0] / 2, // width
+						faDotCircle.icon[1] / 2// height
 					),
 					strokeWeight: 1,
 					strokeColor: "#c30000",
 					scale: 0.05,
 				},
 				map,
-			}));
+			}))
 
 			// info win
 			infoWindowsStaticsDevicesProducts.push(new maps.InfoWindow({
 				content: getInfoWindowStringStaticDevice(top5Product.products),
-			}));
-		});
+			}))
 
-		// clicker
-		markersStaticsDevicesProducts.forEach((marker, i) => {
-			marker.addListener('click', () => {
-				infoWindowsStaticsDevicesProducts[i].open(map, marker);
-			});
-        });
-        
+			// run it
+			// directions service
+			const calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
+				console.log("init directions")
+				directionsService
+					.route({
+						origin:{
+							lat:coords.lat,
+							lng:coords.lon
+						},
+						destination:{
+							lat:top5Product.coords.lat,
+							lng:top5Product.coords.lon
+						},
+						travelMode:maps.TravelMode.WALKING,
+					})
+					.then((response) => {
+						console.log("success")
+						directionsRenderer.setDirections(response)
+						let directionsData = response.routes[0].legs[0]
+						// if (!directionsData) {
+						// 	window.alert('Directions request failed');
+						// 	return;
+						// } else {
+						// 	window.alert('Directions request succses');
+						// }
+					})
+					.catch((e) => console.log("Directions request failed no response"))	 
+		}
 
+			// init map with directions
+			const initMapService = () => {
+				// directions logic
+				const directionsService = new maps.DirectionsService()
+				const directionsRenderer = new maps.DirectionsRenderer()
+				directionsRenderer.setMap(map)
+				// run it
+				calculateAndDisplayRoute(directionsService,directionsRenderer)
+			}
+			// run it
+			initMapService()
+			//** distance matrix gmaps
+			// vars with coords
+			const userDevicePos = {
+				lat: coords.lat, 
+				lng: coords.lon
+			}
+			const staticDevicePos = {
+				lat: top5Product.coords.lat, 
+				lng: top5Product.coords.lon
+			}
 
-
+			// Draw a line showing the straight distance between the markers
+			let line = new maps.Polyline(
+				{
+					path: [userDevicePos, staticDevicePos], 
+					map: map
+				}
+			)
+			// clicker to open mini infoWindow
+			markersStaticsDevicesProducts.forEach((marker, i) => {
+				// event pass
+				marker.addListener('click', () => {
+					infoWindowsStaticsDevicesProducts[i].open(map, marker);
+				})
+			})
+		})
+	
         //////////////////////////////////////////////////// userDevices - buyers - users - dynamics
 		// marker global
 		let markerDynamicDevices = undefined
@@ -148,8 +206,8 @@ class GoogleMapModeThree extends Component {
 						fillColor: colorBgIcon,
 						fillOpacity: 1,
 						anchor: new maps.Point(
-						  faUserCircle.icon[0] / 2, // width
-						  faUserCircle.icon[1] // height
+						  	faUserCircle.icon[0] / 2, // width
+							faUserCircle.icon[1] / 2// height
 						),
 						strokeWeight: 1,
 						strokeColor: colorBgIcon,
@@ -199,8 +257,7 @@ class GoogleMapModeThree extends Component {
 		
 		// interval trigger
 		setInterval(() => {
-			// coords data
-			let coords = this.props.coords
+			// print
 			console.log(`coordz modeThree: ${JSON.stringify(coords)}`)
 			// colorValue data
 			let colorIconUser = this.props.colorValue
@@ -229,7 +286,6 @@ class GoogleMapModeThree extends Component {
             top5Products,
             //top5ProductsListener
         } = this.props
-
         
         // checker of data available
 		if(loading === false){
@@ -279,4 +335,3 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(GoogleMapModeThree)
-

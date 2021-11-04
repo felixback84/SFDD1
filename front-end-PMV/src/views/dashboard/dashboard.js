@@ -123,7 +123,7 @@ const pickerMarkerMix = (
 						{/* top5Products result*/}
 						<Grid container>
 							<Grid item xs={12}>
-								<Card classes={{ root: classes.cardRoot }}>
+								<Card classes={{ root: classes.cardRoot }} style={{padding:"10px"}}>
 									{/* results */}
 									<ProductsResultsSearchingModeThree/>
 								</Card>
