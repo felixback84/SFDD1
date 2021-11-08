@@ -89,7 +89,9 @@ const {
     // searching modeThree
     const {
         // es cosa de escoger cual es el buscador
-        searchStaticDevicesProductsByCategoriesAndTags, // products searcher 
+        //searchStaticDevicesProductsByCategoryAndTag, // products searcher to one category and one tag
+        searchStaticDevicesProductsByCategoryAndTags, // products searcher category and tags
+        searchStaticDevicesProductsByCategoriesAndTags, // products searcher categories and tags ---> not yet
         // findStaticsProductsInSpecificMtsRange, ------> better search
 
         postListOfProductsToFind, // ---> top5Products from ux 
@@ -234,8 +236,12 @@ app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToS
 app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevicesToSearchByUserDevice);
 
 /////*** */ mode three
-// search of static devices products according to the categories and tags it has
-app.get('/staticdevice/products/category/:category/tags/:tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
+// search of static devices products according to one category and one tag it has
+//app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
+// search of static devices products according to one category and tags it has
+app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProductsByCategoryAndTags)
+// search of static devices products according to one categories and tags it has ---> not yet
+app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 // to post list of products to find his positions and owners
 app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
 

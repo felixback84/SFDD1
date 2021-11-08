@@ -120,7 +120,7 @@ const pickerMarkerMix = (
 								</Card>
 							</Grid>
 						</Grid>
-						{/* top5Products result*/}
+						{/* top5Products result */}
 						<Grid container>
 							<Grid item xs={12}>
 								<Card classes={{ root: classes.cardRoot }} style={{padding:"10px"}}>

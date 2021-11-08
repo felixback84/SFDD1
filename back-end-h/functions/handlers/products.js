@@ -53,19 +53,39 @@ exports.postProductsToStaticDevices = (req, res) => {
     // product data var
     const productData = req.body.productData
     // geofire
-    const geofire = require('geofire-common');
+    const geofire = require('geofire-common')
+    
+    // extract keys & values
+    let outputTaxonomy = (obj) =>  {
+        let arrKeys = []
+        let arrValues = []
+        // loop
+        Object
+            .entries(obj.taxonomy)
+            .map(([key, value]) => {
+                //({key,value})
+                arrKeys.push(key)
+                arrValues.push(value)
+            })
+        // print
+        console.log(`outputTaxonomy:${JSON.stringify(arrKeys)}-${JSON.stringify(arrValues)}`)
+        return{arrKeys,arrValues}
+    }
+
     // obj
     const productDataToPost = {
         name:productData.name,
-        tags:productData.tags,
-        category:productData.category,
+        tags:outputTaxonomy(productData).arrValues,
+        categories:outputTaxonomy(productData).arrKeys,
         staticDeviceProperty:productData.staticDeviceProperty,
         description:productData.description,
         familyOfDevices:productData.familyOfDevices,
         imgUrl:productData.imgUrl,
         price:productData.price,
         createdAt:new Date().toISOString(),
+        // this fields depends of if what search products for it location
         geoHash:geofire.geohashForLocation([productData.coords.lat,productData.coords.lon]),
+        taxonomy:taxonomy.category,
     }
     // db part
     db

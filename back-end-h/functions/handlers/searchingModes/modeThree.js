@@ -1,43 +1,141 @@
 // firebase
 const { db } = require('../../utilities/admin');
 
-// search of static devices according to the categories and tags it has
-exports.searchStaticDevicesProductsByCategoriesAndTags = (req, res) => {
+// search of static devices according to one category and tags it has ---> dont work by now
+// exports.searchStaticDevicesProductsByCategoryAndTag = (req, res) => {
+
+//     // var to hold results
+//     let resultsOfProductsInDB = []
+//     // db part
+//     db
+//     .collection('products')
+//     .where('categories','array-contains',req.params.category)
+//     .where('tags','array-contains',req.params.tag)
+//     .get()
+//     .then((data)=>{
+//         // chack if exists data
+//         if (data.empty) {
+//             return res.status(400).json({ error: 'This product dosen´t exists' });
+//         } else {
+//             data.forEach((doc)=>{
+//                 // push data to an array
+//                 resultsOfProductsInDB.push({
+//                     name:doc.data().name,
+//                     tags:doc.data().tags,
+//                     category:doc.data().category,
+//                     staticDeviceProperty:doc.data().staticDeviceProperty,
+//                     description:doc.data().description,
+//                     familyOfDevices:doc.data().familyOfDevices,
+//                     imgUrl:doc.data().imgUrl,
+//                     price:doc.data().price,
+//                     createdAt:doc.data().createdAt,
+//                     productId:doc.id,
+//                     taxonomy:doc.data().taxonomy
+//                 })
+//             })
+//             // res
+//             return res.json(resultsOfProductsInDB);
+//         }
+//     })
+//     .catch(err => {
+//         res.status(500, err);
+//     })
+// }
+
+// search of static devices according to one category and multiple tags it has
+exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
+    // /
+    let _ = require('underscore')
+    // data from client
+    let dataProductToSearch = req.body.dataProductToSearch
+    // print
+    console.log({dataProductToSearch})
     // var to hold results
     let resultsOfProductsInDB = []
     // db part
-    db
-        .collection('products')
-        .where('category','==',req.params.category)
-        .where('tags','==',req.params.tags)
-        .get()
-        .then((data)=>{
-            // chack if exists data
-            if (data.empty) {
-                return res.status(400).json({ error: 'This product dosen´t exists' });
-            } else {
-                data.forEach((doc)=>{
-                    // push data to an array
+    let docs = await db
+    .collection('products')
+    .where('categories','array-contains',dataProductToSearch.categories)
+    .get()
+    .then((data)=>{
+        // chack if exists data
+        if (data.empty) {
+            return res.status(400).json({ error: 'Any product in this category' });
+        } else {
+            data.forEach((doc)=>{   
+                // loop
+                if(_.intersection(doc.data().tags,dataProductToSearch.tags).length != 0){
                     resultsOfProductsInDB.push({
                         name:doc.data().name,
                         tags:doc.data().tags,
-                        category:doc.data().category,
+                        categories:doc.data().categories,
                         staticDeviceProperty:doc.data().staticDeviceProperty,
                         description:doc.data().description,
                         familyOfDevices:doc.data().familyOfDevices,
                         imgUrl:doc.data().imgUrl,
                         price:doc.data().price,
                         createdAt:doc.data().createdAt,
-                        productId:doc.id
+                        productId:doc.id,
+                        taxonomy:doc.data().taxonomy
                     })
-                })
-                // res
-                return res.json(resultsOfProductsInDB);
-            }
-        })
-        .catch(err => {
-            res.status(500, err);
-        })
+                } else {
+                    console.log("error in filter of tags")
+                } 
+            })
+            // res
+            return res.json(resultsOfProductsInDB);
+        }
+    })
+    .catch(err => {
+        res.status(500, err);
+    })
+}
+
+// search of static devices according to multiple categories and multiple tags it has
+exports.searchStaticDevicesProductsByCategoriesAndTags = async (req, res) => {
+    // /
+    let _ = require('underscore')
+    // data from client
+    let dataProductToSearch = req.body.dataProductToSearch
+    // print
+    console.log({dataProductToSearch})
+    // var to hold results
+    let resultsOfProductsInDB = []
+    // db part
+    let docs = await db
+    .collection('products')
+    .get()
+    .then((data)=>{
+        // chack if exists data
+        if (data.empty) {
+            return res.status(400).json({ error: 'Any product in this category' });
+        } else {
+            data.forEach((doc)=>{   
+                if(_.isEqual(doc.data().taxonomy,dataProductToSearch.taxonomy)){
+                    resultsOfProductsInDB.push({
+                        name:doc.data().name,
+                        tags:doc.data().tags,
+                        categories:doc.data().categories,
+                        staticDeviceProperty:doc.data().staticDeviceProperty,
+                        description:doc.data().description,
+                        familyOfDevices:doc.data().familyOfDevices,
+                        imgUrl:doc.data().imgUrl,
+                        price:doc.data().price,
+                        createdAt:doc.data().createdAt,
+                        productId:doc.id,
+                        taxonomy:doc.data().taxonomy
+                    })
+                } else {
+                    console.log("error in filter of tags")
+                }
+            })
+            // res
+            return res.json(resultsOfProductsInDB);
+        }
+    })
+    .catch(err => {
+        res.status(500, err);
+    })
 }
 
 // post list of products in top5Products
@@ -66,13 +164,15 @@ exports.postListOfProductsToFind = async (req, res) => {
                         name:doc.data().name,
                         tags:doc.data().tags,
                         category:doc.data().category,
+                        // geoHash:doc.data().geoHash,
                         staticDeviceProperty:doc.data().staticDeviceProperty,
                         description:doc.data().description,
                         familyOfDevices:doc.data().familyOfDevices,
                         imgUrl:doc.data().imgUrl,
                         price:doc.data().price,
                         createdAt:doc.data().createdAt,
-                        productId:doc.id
+                        productId:doc.id,
+                        taxonomy:doc.data().taxonomy,
                     })
                     // print
                     // console.log(`resultsOfMatchOfProducts:${resultsOfMatchOfProducts}`)  

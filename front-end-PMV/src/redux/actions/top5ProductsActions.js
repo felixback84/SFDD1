@@ -36,7 +36,7 @@ import axios from 'axios';
 export const searchStaticDevicesProductsByCategoriesAndTags = (data) => async (dispatch) => {
     // var
     let dataIn = data
-    
+    // run it
     try {
         let dataTag = axios
             .get(`/staticdevice/products/category/${dataIn.category}/tags/${dataIn.tag}`)
