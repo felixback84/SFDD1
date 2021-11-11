@@ -21,7 +21,7 @@ const SearchingModeCardModeThree = (props) => {
 	// card markup
 	const modeCardMarkupThree = (data) => {
 		return ( 
-			<>
+			<> 
 				<CardStats
 					subtitle={props.title}
 					title={
@@ -83,7 +83,7 @@ const SearchingModeCardModeThree = (props) => {
 							>
 								{/* search engine */}
 								<SearchEngine searchingmode="modeThree"/>
-							</Box>
+							</Box> 
 						</Fragment>
 					}
 				/>		

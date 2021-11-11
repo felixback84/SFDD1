@@ -1,19 +1,8 @@
 import React, { Component } from 'react'
 import { withStyles } from "@material-ui/core/styles"
-// nodejs library that concatenates classes
-// import classNames from "classnames";
 // mui stuff
 import GridContainer from "components/Grid/GridContainer.js"
 import GridItem from "components/Grid/GridItem.js"
-// import Button from "../../../../components/CustomButtons/Button.js"
-// import Card from "components/Card/Card.js"
-// import CardHeader from "components/Card/CardHeader.js"
-// import CardBody from "components/Card/CardBody.js"
-// import CardFooter from "components/Card/CardFooter"
-// import Tooltip from "@material-ui/core/Tooltip"
-// mui icons
-// import Favorite from "@material-ui/icons/Favorite"
-
 import { styled } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -24,6 +13,8 @@ import Collapse from '@material-ui/core/Collapse'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import { red } from '@material-ui/core/colors'
+import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
 // icons MUI
 import IconButton from '@mui/material/IconButton'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -59,7 +50,7 @@ class ProductsResultsSearchingModeThree extends Component {
     // event to expand
     handleExpandClick = (e,key) => {
         let exp = false
-        this.setState(
+        this.setState( 
             // expanded:true
             // !expanded
             {expanded:{
@@ -69,6 +60,21 @@ class ProductsResultsSearchingModeThree extends Component {
         )
         // print
         console.log(`expand products state: ${JSON.stringify(this.state)}`)
+    }
+
+    // make of the taxo an ux
+    taxoToListOfCategoriesAndTags(taxo){
+        // vars to hold keys and values
+        let arrOfKeys = Object.keys(taxo)
+        let arrOfValues = Object.values(taxo)
+        // loop
+        return arrOfKeys.map((key,i)=>{
+            return(
+                <>
+                    <p>{key}:<span>{arrOfValues[i]}</span></p>
+                </>
+            )
+        })
     }
 
     // create the list of nodes
@@ -86,37 +92,43 @@ class ProductsResultsSearchingModeThree extends Component {
                         <Card sx={{ maxWidth: 345 }}>
                             <CardHeader
                                 avatar={
-                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                    {Math.round(arrTop5Product.meters * 10) / 10}
-                                </Avatar>
+                                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                        {Math.round(arrTop5Product.meters * 10) / 10}
+                                    </Avatar>
                                 }
                                 action={
-                                <IconButton aria-label="settings">
-                                    <MoreVertIcon />
-                                </IconButton>
+                                    <IconButton aria-label="settings">
+                                        <MoreVertIcon/>
+                                    </IconButton>
                                 }
                                 title={arrTop5Product.products.name}
-                                subheader={`${arrTop5Product.products.category}: ${arrTop5Product.products.tags}`}
+                                // taxonomy
+                                subheader={
+                                    //this.taxoToListOfCategoriesAndTags(arrTop5Product.products.taxonomy)
+                                    <Chip label={`$${arrTop5Product.products.price}`}/>
+                                }
                             />
+                            {/* product image */}
                             <CardMedia
                                 component="img"
                                 height="194"
                                 image={arrTop5Product.products.imgUrl}
-                                alt="Paella dish"
+                                alt={arrTop5Product.products.name}
                             />
                             <CardContent>
+                                {/* product description */}
                                 <Typography variant="body2" color="text.secondary">
-                                    This impressive paella is a perfect party dish and a fun meal to cook
-                                    together with your guests. Add 1 cup of frozen peas along with the mussels,
-                                    if you like.
+                                    {arrTop5Product.products.description}
                                 </Typography>
+                                {/* product price */}
+                                <Chip label={arrTop5Product.products.price}/>
                             </CardContent>
                             <CardActions disableSpacing>
                                 <IconButton aria-label="add to favorites">
-                                    <FavoriteIcon />
+                                    <FavoriteIcon/>
                                 </IconButton>
                                 <IconButton aria-label="share">
-                                    <ShareIcon />
+                                    <ShareIcon/>
                                 </IconButton>
                                 <ExpandMore
                                     name={i}
@@ -134,31 +146,22 @@ class ProductsResultsSearchingModeThree extends Component {
                                 timeout="auto" 
                                 unmountOnExit
                             >
+                                {/* content of collapser */}
                                 <CardContent>
-                                    <Typography paragraph>Method:</Typography>
+                                    {/* tags */}
+                                    <Stack direction="row" spacing={1}>
+                                        <Typography paragraph>
+                                            Tags in this product:
+                                        </Typography>
+                                        {
+                                            arrTop5Product.products.tags.map((tag)=>(
+                                                <Chip label={tag} variant="outlined"/>
+                                            ))
+                                        }
+                                    </Stack>
+                                    {/* description */}
                                     <Typography paragraph>
-                                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                                        aside for 10 minutes.
-                                    </Typography>
-                                    <Typography paragraph>
-                                        Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                                        medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                                        occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                                        large plate and set aside, leaving chicken and chorizo in the pan. Add
-                                        pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                                        stirring often until thickened and fragrant, about 10 minutes. Add
-                                        saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                                    </Typography>
-                                    <Typography paragraph>
-                                        Add rice and stir very gently to distribute. Top with artichokes and
-                                        peppers, and cook without stirring, until most of the liquid is absorbed,
-                                        15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                                        mussels, tucking them down into the rice, and cook again without
-                                        stirring, until mussels have opened and rice is just tender, 5 to 7
-                                        minutes more. (Discard any mussels that don’t open.)
-                                    </Typography>
-                                    <Typography>
-                                        Set aside off of the heat to let rest for 10 minutes, and then serve.
+                                        {arrTop5Product.products.description}
                                     </Typography>
                                 </CardContent>
                             </Collapse>
@@ -198,7 +201,8 @@ class ProductsResultsSearchingModeThree extends Component {
 const mapStateToProps = (state) => ({
     // top5Products
     loading: state.top5Products1.loading,
-    top5Products:state.top5Products1.top5Products
+    top5Products:state.top5Products1.top5Products,
+    top5ProductsListener:state.top5Products1.top5ProductsListener
 });
 
 export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSearchingModeThree))

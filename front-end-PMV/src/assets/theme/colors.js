@@ -1,3 +1,5 @@
+import { dangerBoxShadow } from "./material-kit-pro-react";
+
 const themeColors = {
   white: {
     main: "#FFFFFF",

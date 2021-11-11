@@ -144,7 +144,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 // check it, run it & push it
                 let matchDataResults = await checkProfilesStaicsVsDynamics(argz)
                 let matchDataResultsAndQualityOfMatch = await counterCoincidenceTagsWithStatics(matchDataResults)
-
+ 
                 // ** quality match metric
                 // import
                 const {

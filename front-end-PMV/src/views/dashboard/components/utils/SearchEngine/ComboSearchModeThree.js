@@ -95,16 +95,31 @@ const ComboSearchModeThree = (props) => {
 		setOpen(!open)
 	}
 
-    // state of field & checkbox
+	// to create dynamic keys from the model data of the device in use
+	const createKeys = (obj) => {
+		let resultKeys = {}
+		for(let item in obj){
+			if(obj.hasOwnProperty(item)){
+				resultKeys[item] = []
+			}
+		}
+		// console.log(`result:${JSON.stringify(resultKeys)}`)
+		return resultKeys
+	}
+
+    // state of field & checkboxes
     const [categorySelected, setCategory] = React.useState("")
-    const [tagsSelected, setTags] = React.useState({luckyNumbers:[],dcHeros:[],pets:[],fruits:[]})
+	const [tagsSelected, setTags] = React.useState({})
     const [filteredData, setFilteredData] = React.useState()
 	
     // handle change for tags
     const handleChangeTags = (event) => {
-        setTags(
-            event.target.value
-        )
+        setTags({
+			...tagsSelected,
+			[event.target.name]:event.target.value
+		})
+		// print
+		// console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
     } 
 
     // send data event
@@ -113,7 +128,8 @@ const ComboSearchModeThree = (props) => {
 		// obj to pass
 		const objData = {
 			category:categorySelected,
-			tag:tagsSelected
+			// send only the keys (arr) with data
+			tag:tagsSelected[categorySelected]
 		}
         // redux action to send data to server
 		props.searchStaticDevicesProductsByCategoriesAndTags(objData)
@@ -121,19 +137,20 @@ const ComboSearchModeThree = (props) => {
 
 	// handle change for categories
 	const handleChangeCheckbox = (event) => {
+		// create empty arrs to hold tags
+		setTags(createKeys(props.staticDevicesTags))
+		// set category
 		setCategory(
             event.target.value
 		)
 		// print
-		console.log(`tagsSelected:${{tagsSelected}}`)
+		// console.log({categorySelected})
 	}
 
 	// categorie checkboxes
 	const keysToCheckBoxes = (keyNames) => {
-
 		// arr to categories
 		let arrCheckBoxesToCategories = []
-		
 		// loop
 		for(let key in keyNames){
 			// checker
@@ -141,7 +158,6 @@ const ComboSearchModeThree = (props) => {
 				arrCheckBoxesToCategories.push(key)
 			}
 		}
-
 		// push
 		return arrCheckBoxesToCategories.map((keyCategorie)=>{
 			return(
@@ -243,17 +259,19 @@ const ComboSearchModeThree = (props) => {
 
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<form noValidate onSubmit={handleSubmit}>
+						<form 
+							noValidate 
+							onSubmit={handleSubmit}
+						>
                             <FormControl>
                                 {/* checkboxes categories*/}
                                 <FormLabel component="legend">Categories</FormLabel>
 								<FormGroup aria-label="position" row>
 									{keysToCheckBoxes(props.staticDevicesTags)}
 								</FormGroup>
-								
-							    {/* field tag label*/}
+								{/* field tag label*/}
 								<InputLabel id={`mutiple-chip-label`}>{`Tags in ${categorySelected}`}</InputLabel>
-								{/* {field of category selected} */}
+								{/* field of category selected */}
 								{field(categorySelected)}
 							</FormControl>
 

@@ -228,7 +228,7 @@ app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTel
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToMatchUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); 
-
+ 
 /////*** */ modeTwo
 // post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
 app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
