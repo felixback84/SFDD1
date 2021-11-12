@@ -15,6 +15,7 @@ const {
     signup,  
     login,
     addUserDetails,
+    addCompanyDetails,
     uploadUserImage,
     getAuthenticatedUser,
     ///////// notifications
@@ -77,6 +78,8 @@ const {
         postProfileToMatchUserDevices, // top5Tags from ux
         detectProfileMatchBetweenUserDevicesAndStaticDevices, // match
         detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices, // meassure modeOne
+
+        test
     } = require('./handlers/searchingModes/modeOne');
 
         // searching modeTwo
@@ -175,6 +178,8 @@ app.post('/signup', signup);
 app.post('/login', login);
 // add user details
 app.post('/user', FBAuth, addUserDetails);
+// add user details
+app.post('/user/companyDetails', FBAuth, addCompanyDetails);
 // post image of user
 app.post('/user/image', FBAuth, uploadUserImage);
 // get all own user data (auth)
@@ -194,7 +199,7 @@ app.get('/userdevices/:userDeviceId/active', FBAuth, getActiveUserDevices);
 // get inactive userDevices
 app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 
-////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
+    ////////////////////////////////// userDevice heartbeat thing routes /////////////////////////////////////////////////
     // post active command in heartbeat things
     app.post('/userdevice/heartbeat/:thingId/active',FBAuth, heartbeatPostActiveCommand);
     // post inactive command in heartbeat things
@@ -228,12 +233,16 @@ app.post('/userdevice/postGeoCoords',FBAuth,postGeoCoordsUserDeviceAppAndStopTel
 app.post('/userdevice/profileToSearch',FBAuth, postProfileToMatchUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); 
+
+
+
+app.get('/test/:id',test)
  
-/////*** */ modeTwo
-// post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
-app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
-// post to unselectStaticDeviceToSearch by userDevice 
-app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevicesToSearchByUserDevice);
+    /////*** */ modeTwo
+    // post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
+    app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
+    // post to unselectStaticDeviceToSearch by userDevice 
+    app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevicesToSearchByUserDevice);
 
 /////*** */ mode three
 // search of static devices products according to one category and one tag it has
@@ -245,9 +254,9 @@ app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesPro
 // to post list of products to find his positions and owners
 app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
 
-/////*** */ mode four
-// post product to Search by userDevice ---> before modeFour
-app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
+    /////*** */ mode four
+    // post product to Search by userDevice ---> before modeFour
+    app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
 
 /////*** */ bymeters
 // to post and find wich statics are close to me by geohash
@@ -424,7 +433,7 @@ exports.createUserDeviceInIotCoreAndDocumentInLiveDataCollection = functions.fir
         // run it
         initUserDevicesIotCore(userDeviceId);   
         
-        /////////////////////////////////////////////////////////////// create liveData doc in collection //////////////////////////////////
+        /////////////////////////////////////////////////////////////// create liveDataSets doc in collection //////////////////////////////////
         db
             .doc(`/userDevices/${userDeviceId}`)
             .collection('liveDataSets')

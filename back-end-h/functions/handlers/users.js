@@ -109,18 +109,36 @@ exports.login = (req,res) => {
 // Add user details 
 exports.addUserDetails = (req, res) => {
     
-    let userDetails = reduceUserDetails(req.body);
+    let userDetails = reduceUserDetails(req.body)
     
     db.doc(`/users/${req.user.userHandle}`)
         .update(userDetails)
         .then(() => {
-            return res.json({ message: 'Details added successfully' });
+            return res.json({ message: 'Details added successfully' })
         })
         .catch((err) => {
             console.error(err);
-            return res.status(500).json({ error: err.code });
-        });
+            return res.status(500).json({ error: err.code })
+        })
 };
+
+// add corportaive details just for statics-vendors
+exports.addCompanyDetails = (req,res) => {
+    // company data with validation
+    //let companyDetails = reduceUserDetails(req.body)
+    let companyDetails = req.body
+    // db part
+    db.doc(`/users/${req.user.userHandle}`)
+        .collection('companyData')
+        .add(companyDetails)
+        .then(() => {
+            return res.json({ message: 'Details added successfully' })
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code })
+        })
+}
 
 // upload user image
 exports.uploadUserImage = (req, res) => {

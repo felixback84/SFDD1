@@ -34,12 +34,12 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     // profile of dynamic
     let objProfileDataOfDynamic = req.body.objProfileDataOfDynamic
     // var to hold coors object in an array of the rest
-    let profilesInLiveDataSets = [];
+    let profilesInLiveDataSets = []
     // hold var
-    let arraysToCheck = [];
+    let arraysToCheck = []
     // var to hold data
-    let outputList = [];
-    
+    let outputListOne = []
+    let outputListTwo = []
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -57,26 +57,22 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             })
             // print
             console.log(`Number of statics with data in db (profilesInLiveDataSets): ${profilesInLiveDataSets.length} & 
-                Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`); 
+                Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`)
                 // quantity of objects & [{...},{...}
         })
         .then(async()=>{
             // underscore
-            let _ = require('underscore');
-            
+            let _ = require('underscore')
             // loop the results on the array
             for(let i = 0; i < profilesInLiveDataSets.length; i++){
-
                 // counter global of tags 
                 let counterFinalTagsDynamics = 0
                 // var to hold coincidences
                 let coincidences = {}
-
                 // func to check the match
                 const checkProfilesStaicsVsDynamics = async (args) => {
                     // obj to extract key names
                     let keyNames = args.dynamics
-
                     // loop
                     for(let key in keyNames){
                         // counter init
@@ -109,7 +105,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     // return data results
                     return coincidences
                 }
-
                 // counter tags
                 const counterCoincidenceTagsWithStatics = async (objWithTags) => {
                     // global counter
@@ -132,7 +127,6 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     console.log({countFinal})
                     return countFinal
                 }
-
                 // data to pass 
                 let argz = {
                     // from db
@@ -140,23 +134,19 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     // from ux input in user session
                     dynamics: objProfileDataOfDynamic.profileToMatch,
                 };
-
                 // check it, run it & push it
                 let matchDataResults = await checkProfilesStaicsVsDynamics(argz)
                 let matchDataResultsAndQualityOfMatch = await counterCoincidenceTagsWithStatics(matchDataResults)
- 
                 // ** quality match metric
                 // import
                 const {
                     findMatchValueQuality,
                 } = require('../utilsForThings')
-
                 // run it
                 let resultsQualityMatch = await findMatchValueQuality(
                     counterFinalTagsDynamics,
                     matchDataResultsAndQualityOfMatch
                 )
-
                 // check if exits any coincidences
                 if(Object.entries(matchDataResults).length != 0){
                     arraysToCheck.push({
@@ -169,14 +159,15 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 }
             }
         })
+        // ** userCredentials
         .then(()=>{
-            const promises = [];
+            const promises = []
             // loop
-            arraysToCheck.forEach(function(arrayToCheck) {
+            arraysToCheck.forEach((arrayToCheck)=>{
                 // print item
-                console.log("Current item: " + arrayToCheck);
+                console.log("Current item: " + arrayToCheck)
                 // extract userHandle
-                const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString();
+                const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
                 // db connection
                 let promise = db
                     .collection("users")
@@ -185,10 +176,10 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     .then(snapshot => {
                         // check if exists
                         if (snapshot.empty) {
-                            console.log('No matching documents.');
+                            console.log('No matching documents.')
                         } else {
                             snapshot.forEach(doc => {
-                                outputList.push({
+                                outputListOne.push({
                                     userHandle:doc.data().userHandle,
                                     type:doc.data().type,
                                     email:doc.data().email,
@@ -197,37 +188,97 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                                     companyName:doc.data().companyName,
                                     imgUrl:doc.data().imgUrl,
                                     bio:doc.data().bio,
-                                });
-                            });
-                            return;
+                                })
+                            })
+                            return
                         }
                     })
                     .catch(err => {
-                        console.log('Error getting documents', err);
-                    });
-                promises.push(promise);
+                        console.log('Error getting documents', err)
+                    })
+                promises.push(promise)
             }) 
             Promise.all(promises).then(() => {
-                //res.send(JSON.stringify(outputList));
-                return outputList
+                return outputListOne
             })
             .then(()=>{
                 // var to hold userHandle
                 let userHandle = "";
                 arraysToCheck.forEach((arrayToCheck)=>{
                     // userHandle
-                    userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString();
+                    userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
                     // second obj loop
-                    outputList.forEach((outputItem)=>{
+                    outputListOne.forEach((outputItem)=>{
                         if(userHandle == outputItem.userHandle){
                             arrayToCheck.userCredentials = outputItem
                         }
                     })
                 })
                 // print
-                console.log(`arraysToCheck after push user credentials: ${JSON.stringify(arraysToCheck)}`);
+                console.log(`arraysToCheck after push user credentials: ${JSON.stringify(arraysToCheck)}`)
                 return arraysToCheck
             })
+            .catch(err => {
+                res.status(500, err)
+            })
+        })
+        // ** companyData
+        .then(()=>{
+            const promises = []
+            // loop
+            arraysToCheck.forEach((arrayToCheck)=>{
+                // print item
+                console.log("Current item: " + arrayToCheck)
+                // extract userHandle
+                const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
+                // db connection
+                let promise = db
+                    .collection(`/users/${userHandle}/companyData`)
+                    .get()
+                    .then(snapshot => {
+                        // check if exists
+                        if (snapshot.empty) {
+                            console.log('No matching documents.')
+                        } else {
+                            snapshot.forEach(doc => {
+                                outputListTwo.push({
+                                    companyName:doc.data().companyName,
+                                    localPicUrl:doc.data().localPicUrl,
+                                })
+                            })
+                            return
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Error getting documents', err)
+                    })
+                promises.push(promise)
+            })
+            Promise.all(promises).then(() => {
+                return outputListTwo
+            })
+            .then(()=>{
+                // var to hold userHandle
+                let companyName = ""
+                // loop
+                arraysToCheck.forEach((arrayToCheck)=>{
+                    // userHandle
+                    companyName = arrayToCheck.userCredentials.companyName
+                    // second obj loop
+                    outputListTwo.forEach((outputItem)=>{
+                        if(companyName == outputItem.companyName){
+                            console.log("hi sun")
+                            arrayToCheck.companyData = outputItem
+                        }else{
+                            console.log("hi moon")
+                        }
+                    })
+                })
+                // print
+                console.log(`arraysToCheck after push company data: ${JSON.stringify(arraysToCheck)}`)
+                return arraysToCheck
+            })
+            // save data
             .then(()=>{
                 // func to save data of top5Coords in liveDataSets of dynamics
                 const savaDataOfDynamicDeviceOnLiveDataSetsDoc = (dataToSave) => {
@@ -235,17 +286,17 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('top5Tags') // test collection
+                        .collection('top5Tagz') // test collection
                         .add({ ...dataToSave })
                         .then(() => {
                             // print
                             console.log(`final response to the user: ${dataToSave}`)
                             // res
-                            res.json("matches now in db");
+                            // res.json("matches now in db");
                         })            
                         .catch((err) => {
-                            console.error(err);
-                        });                
+                            console.error(err)
+                        })          
                 }
                 // run it
                 arraysToCheck.forEach((arrayToCheck)=>{
@@ -253,8 +304,15 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 })
             })
             .catch(err => {
-                res.status(500, err);
+                res.status(500, err)
             })
+        })
+        .then(()=>{
+            //res
+            res.json("matches now in db")
+        })
+        .catch(err => {
+            res.status(500, err)
         })
 }
 
@@ -317,4 +375,38 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     } = require('../utilsForThings');    
     // run it
     await metersRangeMatchColor(mtsAndSomeDataBetweenDevices, dataEnter.thingId);
+}
+
+
+exports.test = async (req,res) => {
+    let idUserHandle= req.params.id
+    // extract userHandle
+    const userHandle = idUserHandle
+    let outputListTwo = []
+    // db
+    let promise = db
+        //.collection("users")
+        // .where('userHandle','==',userHandle)
+        .collection(`/users/${userHandle}/companyData`)
+        //.collection('companyData')
+        .get()
+        .then(snapshot => {
+            // check if exists
+            if (snapshot.empty) {
+                console.log('No matching documents.')
+            } else {
+                snapshot.forEach(doc => {
+                    outputListTwo.push({
+                        companyName:doc.data().companyName,
+                        pic:doc.data().pic,
+                    })
+                })
+                //return
+            }
+            console.log(JSON.stringify(outputListTwo))
+            res.json(outputListTwo)
+        })
+        .catch(err => {
+            console.log('Error getting documents', err)
+        })
 }
