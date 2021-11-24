@@ -1,13 +1,15 @@
 // firebase
-const functions = require('firebase-functions');
-const { db } = require('./utilities/admin');
+const functions = require('firebase-functions')
+const { db } = require('./utilities/admin')
 // express    
-const app = require('express')();
+const app = require('express')()
 // middleware for auth
-const FBAuth = require('./utilities/fbAuth');
+const FBAuth = require('./utilities/fbAuth')
+// middleware for coords of statics
+const CoordsOfStatics = require('./utilities/coordsOfStatics')
 //cors
-const cors = require('cors');
-app.use(cors({ origin: true }));
+const cors = require('cors')
+app.use(cors({ origin: true }))
 
 ////////////////////////////////////////// HANDLERS //////////////////////////////////////////////////
 // users
@@ -190,6 +192,10 @@ app.post('/notifications', FBAuth, markDevicesNotificationsRead);
 ////////////////////////////////////////////////// USERDEVICES ////////////////////////////////////////////////////////
 // *************************** just to test an easily create an userDevice property
 app.post('/userdevices/:deviceId/create', FBAuth, postInUserDevices)
+// to make tests in general
+app.get('/test/:id',test)
+// ***************************
+
 // get userDevices
 app.get('/userdevices', FBAuth, getAllUserDevices); 
 // get one userDevice 
@@ -234,10 +240,6 @@ app.post('/userdevice/profileToSearch',FBAuth, postProfileToMatchUserDevices);
 // to post userDevice data to make the initial match
 app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevicesAndStaticDevices); 
 
-
-
-app.get('/test/:id',test)
- 
     /////*** */ modeTwo
     // post to selectStaticDeviceToSearch by userDevice ---> more than one now - before modeTwo
     app.post('/userdevice/selectStaticDevicesToSearch',FBAuth,selectStaticDevicesToSearchByUserDevice);
@@ -295,7 +297,7 @@ app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevi
     // find porducts wich offer the vendors
     app.get('/staticdevice/products/:thingId',FBAuth, findProductsOfStaticDevices)
     // post products in statics
-    app.post('/staticdevice/postproducts',FBAuth,postProductsToStaticDevices)
+    app.post('/staticdevice/thingId/:thingId/postproducts',FBAuth,CoordsOfStatics,postProductsToStaticDevices)
 
 ////////////////////////////////////////////////// DEVICES ////////////////////////////////////////////////////////
 // get all devices

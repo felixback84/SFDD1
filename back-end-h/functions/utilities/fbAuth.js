@@ -1,14 +1,14 @@
-const { admin, db } = require('./admin');
+const { admin, db } = require('./admin')
 
 // middleware to auth private routes
 module.exports = (req,res,next) => {
-    let idToken;
+    let idToken
     // check if there is a token in the req, or stop the logic
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
-        idToken = req.headers.authorization.split('Bearer ')[1];
+        idToken = req.headers.authorization.split('Bearer ')[1]
     } else {
-        console.error('No token found');
-        return res.status(403).json({ Token: 'Body must not be empty' });
+        console.error('No token found')
+        return res.status(403).json({ Token: 'Body must not be empty' })
     }
 
     // check if the token in the request is provide for us
@@ -16,23 +16,24 @@ module.exports = (req,res,next) => {
         .auth()
         .verifyIdToken(idToken)
         .then(decodedToken => {
-            req.user = decodedToken;
-            console.log(decodedToken); //mirar que devuelve
-            return db.collection('users')
+            req.user = decodedToken
+            console.log(decodedToken) 
+            return db
+                .collection('users')
                 .where('userId', '==', req.user.uid)
                 .limit(1)
-                .get();
+                .get()
         })
         .then((data) => {
-            req.user.userHandle = data.docs[0].data().userHandle;
-            req.user.imgUrl = data.docs[0].data().imgUrl;
-            // req.user.bio = data.docs[0].data().bio;
-            // req.user.names = data.docs[0].data().names;
-            // req.user.lastname = data.docs[0].data().lastname;
-            return next();
+            req.user.userHandle = data.docs[0].data().userHandle
+            req.user.imgUrl = data.docs[0].data().imgUrl
+            // req.user.bio = data.docs[0].data().bio
+            // req.user.names = data.docs[0].data().names
+            // req.user.lastname = data.docs[0].data().lastname
+            return next()
         })
         .catch((err) => {
-            console.error('Error while verifying token ', err);
-            return res.status(403).json(err);
+            console.error('Error while verifying token ', err)
+            return res.status(403).json(err)
         })
 }

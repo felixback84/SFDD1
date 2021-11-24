@@ -130,11 +130,11 @@ exports.searchStaticDevicesProductsByCategoriesAndTags = async (req, res) => {
                 }
             })
             // res
-            return res.json(resultsOfProductsInDB);
+            return res.json(resultsOfProductsInDB)
         }
     })
     .catch(err => {
-        res.status(500, err);
+        res.status(500, err)
     })
 }
 
@@ -142,176 +142,144 @@ exports.searchStaticDevicesProductsByCategoriesAndTags = async (req, res) => {
 exports.postListOfProductsToFind = async (req, res) => {
     // receive list of products
     let listOfProducts = req.body.listOfProducts
-    // var to hold results for products
-    let resultsOfMatchOfProducts = []
-    // var to hold coords of statics
-    let resultOfCoords = []
-    // to hold the order obj
-    let arrWithCoordsKeysInOrder = []
-    // var to hold all
-    let allData = []
     // userDeviceId
     let userDeviceId = req.body.userDeviceId
+
+    // var to hold results for products
+    let resultsOfMatchOfProducts = []
     // find those products on the collection 
-    const toMakelistOfProducts = async () => {
-        for(let i = 0; i < listOfProducts.length; i++){
+    const toMakelistOfProducts = async (listOfProductsFromClient) => {
+        // loop
+        for(let i = 0; i < listOfProductsFromClient.length; i++){
             // dp liveDataSets part
-            db
-                .doc(`/products/${listOfProducts[i].productsId}`)
+            await db
+                .doc(`/products/${listOfProductsFromClient[i].productsId}`)
                 .get()
                 .then((doc)=>{
                     resultsOfMatchOfProducts.push({
-                        name:doc.data().name,
-                        tags:doc.data().tags,
-                        category:doc.data().category,
-                        // geoHash:doc.data().geoHash,
-                        staticDeviceProperty:doc.data().staticDeviceProperty,
-                        description:doc.data().description,
-                        familyOfDevices:doc.data().familyOfDevices,
-                        imgUrl:doc.data().imgUrl,
-                        price:doc.data().price,
-                        createdAt:doc.data().createdAt,
-                        productId:doc.id,
-                        taxonomy:doc.data().taxonomy,
-                    })
-                    // print
-                    // console.log(`resultsOfMatchOfProducts:${resultsOfMatchOfProducts}`)  
-                    return resultsOfMatchOfProducts
+                        product:{
+                            name:doc.data().name,
+                            tags:doc.data().tags,
+                            categories:doc.data().categories,
+                            coords:doc.data().coords,
+                            staticDeviceProperty:doc.data().staticDeviceProperty,
+                            description:doc.data().description,
+                            familyOfDevices:doc.data().familyOfDevices,
+                            imgUrl:doc.data().imgUrl,
+                            price:doc.data().price,
+                            createdAt:doc.data().createdAt,
+                            productId:doc.id,
+                            taxonomy:doc.data().taxonomy,
+                            companyName:doc.data().companyName,
+                        }
+                    })  
                 })
                 .catch(err => {
-                    res.status(500, err);
+                    res.status(500, err)
                 })
-        }     
+        }   
+        // print
+        console.log(`resultsOfMatchOfProducts:${JSON.stringify(resultsOfMatchOfProducts)}`)
+        return resultsOfMatchOfProducts
     }   
-    // run it
-    await toMakelistOfProducts()
-    
-    // coords of vendors
-    const toMakelistOfCoords = async () => {
-        // arr for promise
-        const searchPromises = [];
+
+    // extract companyData
+    const extractCompanyData = async (listOfProducts) => {
+        // vars
+        const outputList = []
+        const promises = []
         // loop
-        for(let i = 0; i < listOfProducts.length; i++){
-            // staticDeviceId means id of property
-            const staticDeviceId = listOfProducts[i].staticDeviceProperty.split("-").slice(2).toString();
-            // dp liveDataSets part
-            let searchPromise = db
-                .doc(`/staticDevices/${staticDeviceId}`)
-                .collection('liveDataSets')
-                .doc(listOfProducts[i].staticDeviceProperty)
+        listOfProducts.forEach((productItem)=>{
+            // print item
+            console.log("Current item: " + productItem)
+            // extract userHandle
+            const userHandle = productItem.product.staticDeviceProperty.split("-").slice(0,1).toString()
+            // db connection
+            let promise = db
+                .collection(`/users/${userHandle}/companyData`)
                 .get()
-                .then((doc)=>{
-                    // make a list in db with the coincidences like top5Coords
-                    resultOfCoords.push({
-                        coords:doc.data().coords,
-                        thingId:doc.data().thingId
-                    })
+                .then(snapshot => {
+                    // check if exists
+                    if (snapshot.empty) {
+                        console.log('No matching documents.')
+                    } else {
+                        snapshot.forEach(doc => {
+                            outputList.push({
+                                companyName:doc.data().companyName,
+                                localPicUrl:doc.data().localPicUrl,
+                            })
+                        })
+                        return
+                    }
                 })
                 .catch(err => {
-                    res.status(500, err);
+                    console.log('Error getting documents', err)
                 })
-                // push promise list
-                searchPromises.push(searchPromise);
-        }
-        // promise
+                // promise push
+                promises.push(promise)
+        })
+
         Promise
-            .all(searchPromises)
-            .then(()=>{
-                // print
-                console.log(`resultOfCoords:${JSON.stringify(resultOfCoords)}`)
-                // return raw data from db & map the unorder obj
-                return resultOfCoords
+            .all(promises)
+            .then(() => {
+                return outputList
             })
-            .then(async(data)=>{
-                // map the unorder obj
-                data.map((resultOfCoord)=>{
-                    // vars
-                    let sortedCoordsKeys = {} 
-                    let keysOfCoords = []
-                    // loop to extract keys
-                    for (key in resultOfCoord.coords) {
-                        if (resultOfCoord.coords.hasOwnProperty(key)) {
-                            keysOfCoords.push(key);
+            .then(()=>{
+                // var to hold userHandle
+                let companyName = ""
+                // loop
+                listOfProducts.forEach((productItem)=>{
+                    // userHandle
+                    companyName = productItem.product.companyName
+                    // second obj loop
+                    outputList.forEach((outputItem)=>{
+                        // check to push in the right item
+                        if(companyName === outputItem.companyName){
+                            console.log("hi sun")
+                            // passing the rest of data to the final obj
+                            productItem.companyData = outputItem
+                            productItem.meters = 0
+                            productItem.thingId = productItem.product.staticDeviceProperty
+                        }else{
+                            console.log("hi moon")
                         }
-                    }
-                    // print
-                    console.log(`sort a:${keysOfCoords.sort()}`)
-                    // loop to make obj in order
-                    for (key = 0; key < keysOfCoords.length; key++) {
-                        sortedCoordsKeys[keysOfCoords[key]] = resultOfCoord.coords[keysOfCoords[key]];
-                    }
-                    // to push the the final list
-                    arrWithCoordsKeysInOrder.push({
-                        coords:sortedCoordsKeys,
-                        thingId:resultOfCoord.thingId
                     })
-                    // return sorted obj
-                    return arrWithCoordsKeysInOrder;
                 })
                 // print
-                console.log(`arrWithCoordsKeysInOrder:${JSON.stringify(arrWithCoordsKeysInOrder)}`)
+                console.log(`resultsOfMatchOfProducts after push company data: ${JSON.stringify(resultsOfMatchOfProducts)}`)
+                return resultsOfMatchOfProducts
             })
-            .then(()=>{
-                //to eliminate duplicates of coords
-                const removeDuplicates = async (arr) => {
+            .then(async (data)=>{
+                // DB save
+                //const savaDataInDB = (allData) => {
                     // print
-                    // console.log(`hi from duplicate: ${JSON.stringify(arr)}`)
-                    // to string
-                    const jsonObject = arr.map(JSON.stringify);
-                    // find repeats
-                    const uniqueSet = new Set(jsonObject);
-                    // write arr
-                    const uniqueArray = Array.from(uniqueSet).map(JSON.parse); 
-                    //print
-                    console.log(`uniqueArray:${JSON.stringify(uniqueArray)}`)   
-                    // return arr
-                    return uniqueArray
-                }
-                //run it & hold it to remove duplicates in coords
-                let listUniqueObjCoords = removeDuplicates(arrWithCoordsKeysInOrder)
-                // return result
-                return listUniqueObjCoords
-            })    
-            .then((data)=>{
-                // to find equals and create obj with the specific data
-                const findEqual = (resultOfCoord) => {
-                    resultsOfMatchOfProducts.forEach((item) => {
-                        if(resultOfCoord.thingId === item.staticDeviceProperty){
-                            allData.push({
-                                coords:resultOfCoord.coords,
-                                products:item,
-                                thingId:resultOfCoord.thingId,
-                                meters:0
+                    console.log(`Pre DB: ${JSON.stringify(data)}`)
+                    // loop
+                    data.forEach(async (item)=>{
+                        // print
+                        console.log(`Pre DB Item: ${JSON.stringify(item)}`)
+                        // db conection
+                        await db
+                            .collection(`/userDevices/${userDeviceId}/top5Productz`)
+                            .add({
+                                ...item     
                             })
-                            return allData
-                        }
-                    })    
-                    // print
-                    console.log(`allData:${JSON.stringify(allData)}`)
-                }
-                // run find method to establish a relation between the two arrays (coords & products)
-                data.find(findEqual)
-            }) 
-            .then(()=>{
-                allData.forEach((item)=>{
-                    console.log('hi')
-                    db
-                    .doc(`/userDevices/${userDeviceId}`)
-                    .collection('top5Products')
-                    .add({
-                        ...item
-                    })
-                    .catch(err => {
-                        res.status(500, err);
-                    })
-                })  
+                            .catch(err => {
+                                res.status(500, err)
+                            })
+                    }) 
+                //} 
+                //await savaDataInDB(data)
             })
             .catch(err => {
-                res.status(500, err);
+                res.status(500, err)
             })
-    }
-    // run it to begin
-    await toMakelistOfCoords()
+    }  
+    // run it
+    const pass = await toMakelistOfProducts(listOfProducts)
+    const resp = await pass
+    const pass1 = await extractCompanyData(await resp)
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
@@ -370,7 +338,7 @@ exports.meassureOfMatchesInProducts = async (inWait) => {
     // import    
     const {
         metersRangeMatchColor,
-    } = require('./utilsForThings');    
+    } = require('./utilsForThings');   
     // run it
-    await metersRangeMatchColor(mtsBetweenDevicesToProducts, dataEnter.thingId);
+    await metersRangeMatchColor(mtsBetweenDevicesToProducts, dataEnter.thingId)
 }

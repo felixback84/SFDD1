@@ -266,6 +266,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     companyName = arrayToCheck.userCredentials.companyName
                     // second obj loop
                     outputListTwo.forEach((outputItem)=>{
+                        // check to push in the right item
                         if(companyName == outputItem.companyName){
                             console.log("hi sun")
                             arrayToCheck.companyData = outputItem

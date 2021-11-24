@@ -49,12 +49,11 @@ exports.findProductsOfStaticDevices = async (req, res) => {
 }
 
 // post products in statics
-exports.postProductsToStaticDevices = (req, res) => {
+exports.postProductsToStaticDevices = async (req, res) => {
     // product data var
     const productData = req.body.productData
     // geofire
     const geofire = require('geofire-common')
-    
     // extract keys & values
     let outputTaxonomy = (obj) =>  {
         let arrKeys = []
@@ -62,40 +61,79 @@ exports.postProductsToStaticDevices = (req, res) => {
         // loop
         Object
             .entries(obj.taxonomy)
-            .map(([key, value]) => {
-                //({key,value})
+            .map(([key,value]) => { 
                 arrKeys.push(key)
                 arrValues.push(value)
             })
         // print
         console.log(`outputTaxonomy:${JSON.stringify(arrKeys)}-${JSON.stringify(arrValues)}`)
-        return{arrKeys,arrValues}
+        return {
+            arrKeys,
+            arrValues
+        }
     }
-
-    // obj
-    const productDataToPost = {
-        name:productData.name,
-        tags:outputTaxonomy(productData).arrValues,
-        categories:outputTaxonomy(productData).arrKeys,
-        staticDeviceProperty:productData.staticDeviceProperty,
-        description:productData.description,
-        familyOfDevices:productData.familyOfDevices,
-        imgUrl:productData.imgUrl,
-        price:productData.price,
-        createdAt:new Date().toISOString(),
-        // this fields depends of if what search products for it location
-        geoHash:geofire.geohashForLocation([productData.coords.lat,productData.coords.lon]),
-        taxonomy:taxonomy.category,
-    }
-    // db part
-    db
-        .collection('products')
-        .add(productDataToPost)
-        .then(()=>{
-            return res.json(productDataToPost);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        }); 
+    
+    // extract companyData
+    const extractCompanyData = async (idProperty) => {
+        // vars
+        const outputList = []
+        // extract userHandle
+        const userHandle = idProperty.split("-").slice(0,1).toString()
+        // db connection
+        db
+            .collection(`/users/${userHandle}/companyData`)
+            .get()
+            .then((snapshot) => {
+                // check if exists
+                if (snapshot.empty) {
+                    console.log('No matching documents.')
+                } else {
+                    snapshot.forEach((doc) => {
+                        outputList.push({
+                            companyName:doc.data().companyName,
+                            localPicUrl:doc.data().localPicUrl,
+                        })
+                    })
+                    // print
+                    console.log(`outputList:${JSON.stringify(outputList)}`)
+                    return outputList
+                }  
+            })
+            .then((data)=>{
+                // obj
+                const productDataToPost = {
+                    name:productData.name,
+                    tags:outputTaxonomy(productData).arrValues, // error here
+                    categories:outputTaxonomy(productData).arrKeys,
+                    staticDeviceProperty:productData.staticDeviceProperty,
+                    description:productData.description,
+                    familyOfDevices:productData.familyOfDevices,
+                    imgUrl:productData.imgUrl,
+                    price:productData.price,
+                    createdAt:new Date().toISOString(),
+                    // this fields depends of if what search products for it location
+                    companyName:data[0].companyName,
+                    coords:res.locals.coordsData.coords,
+                    taxonomy:productData.taxonomy,
+                }
+                // print
+                console.log(`productDataToPost:${JSON.stringify(productDataToPost)}`)
+                // db save part
+                db
+                    .collection('products')
+                    .add({...productDataToPost})
+                    .then(()=>{
+                        return res.json(productDataToPost)
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: err.code })
+                    })
+            })
+            .catch(err => {
+                console.log('Error getting documents', err)
+            })
+    }  
+    // run it
+    await extractCompanyData(productData.staticDeviceProperty)
 }

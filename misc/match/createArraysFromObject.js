@@ -12,7 +12,7 @@ let outputTaxonomy = (obj) =>  {
     // loop
     Object
         .entries(obj.taxonomy)
-        .map(([key, value],i) => {
+        .map(([key, value]) => {
             //({key,value})
             arrKeys.push(key)
             arrValues.push(value)
