@@ -144,7 +144,8 @@ exports.postListOfProductsToFind = async (req, res) => {
     let listOfProducts = req.body.listOfProducts
     // userDeviceId
     let userDeviceId = req.body.userDeviceId
-
+    // coords of products
+    let coords = {}
     // var to hold results for products
     let resultsOfMatchOfProducts = []
     // find those products on the collection 
@@ -155,13 +156,14 @@ exports.postListOfProductsToFind = async (req, res) => {
             await db
                 .doc(`/products/${listOfProductsFromClient[i].productsId}`)
                 .get()
-                .then((doc)=>{
+                .then((doc)=>{                    
+                    // push on arr
                     resultsOfMatchOfProducts.push({
+                        coords:doc.data().coords,
                         product:{
                             name:doc.data().name,
                             tags:doc.data().tags,
                             categories:doc.data().categories,
-                            coords:doc.data().coords,
                             staticDeviceProperty:doc.data().staticDeviceProperty,
                             description:doc.data().description,
                             familyOfDevices:doc.data().familyOfDevices,
@@ -251,25 +253,19 @@ exports.postListOfProductsToFind = async (req, res) => {
             })
             .then(async (data)=>{
                 // DB save
-                //const savaDataInDB = (allData) => {
+                data.forEach(async (item)=>{
                     // print
-                    console.log(`Pre DB: ${JSON.stringify(data)}`)
-                    // loop
-                    data.forEach(async (item)=>{
-                        // print
-                        console.log(`Pre DB Item: ${JSON.stringify(item)}`)
-                        // db conection
-                        await db
-                            .collection(`/userDevices/${userDeviceId}/top5Productz`)
-                            .add({
-                                ...item     
-                            })
-                            .catch(err => {
-                                res.status(500, err)
-                            })
-                    }) 
-                //} 
-                //await savaDataInDB(data)
+                    console.log(`Pre DB Item: ${JSON.stringify(item)}`)
+                    // db conection
+                    await db
+                        .collection(`/userDevices/${userDeviceId}/top5Products`)
+                        .add({
+                            ...item     
+                        })
+                        .catch(err => {
+                            res.status(500, err)
+                        })
+                }) 
             })
             .catch(err => {
                 res.status(500, err)
@@ -279,7 +275,6 @@ exports.postListOfProductsToFind = async (req, res) => {
     const pass = await toMakelistOfProducts(listOfProducts)
     const resp = await pass
     const pass1 = await extractCompanyData(await resp)
-    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
@@ -292,7 +287,7 @@ exports.meassureOfMatchesInProducts = async (inWait) => {
     let mtsBetweenDevicesToProducts = [];
     // func
     async function checkDistance(inWaitAfter){
-        console.log(`checking checkDistance for all porduct selections`)
+        console.log(`checking checkDistance for all product selections`)
         // loop
         for(let i = 0; i < inWaitAfter.top5Products.length; i++){
             // print

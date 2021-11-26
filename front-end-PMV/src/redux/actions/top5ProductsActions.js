@@ -109,73 +109,73 @@ export const userDeviceTop5ProductsSyncDataStatic = (thingId) => (dispatch) => {
 }
 
 // to get data from db for top5Products (modeThree) --> dynamic data
-// export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
+export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
     
-//     // print
-//     console.log(`init live top5Products`)
+    // print
+    console.log(`init live top5Products`)
 
-//     // vars to ask to db do
-//     const thingIdVal = thingId
-//     const userDeviceId = thingIdVal.split("-").slice(2);
-//     // print init
-//     console.log(`hi from init of top5Productss listener`)
-//     // var to hold the length of doc in collection
-//     let collectionLength = 0
-//     // arr
-//     let arr = []
-//     // ref db
-//     const dataRef = firebase
-//         .firestore()
-//         .doc(`/userDevices/${userDeviceId}`) 
-//         .collection('top5Products')
-//         //.orderBy('meters','asc')
+    // vars to ask to db do
+    const thingIdVal = thingId
+    const userDeviceId = thingIdVal.split("-").slice(2);
+    // print init
+    console.log(`hi from init of top5Productss listener`)
+    // var to hold the length of doc in collection
+    let collectionLength = 0
+    // arr
+    let arr = []
+    // ref db
+    const dataRef = firebase
+        .firestore()
+        .doc(`/userDevices/${userDeviceId}`) 
+        .collection('top5Products')
+        //.orderBy('meters','asc')
 
-//     // length of doc in collection
-//     const findLength = dataRef.get().then(snap => {
-//         return collectionLength = snap.size
-//     });
-//     console.log(`size:${collectionLength}`)
+    // length of doc in collection
+    const findLength = dataRef.get().then(snap => {
+        return collectionLength = snap.size
+    });
+    console.log(`size:${collectionLength}`)
  
-//     // snapshot
-//     const snap = dataRef
-//         .onSnapshot((querySnapshot)=>{
-//             // print
-//             console.log(`snapshot products`)
-//             // snap
-//             const tagsMeters = querySnapshot
-//                 .docChanges()
-//                 .map((change)=>{
-//                     if(change.type === 'modified'){
-//                         // all data
-//                         const data = {...change.doc.data()}
-//                         return arr.push(data)
-//                     }
-//                 })
+    // snapshot
+    const snap = dataRef
+        .onSnapshot((querySnapshot)=>{
+            // print
+            console.log(`snapshot products`)
+            // snap
+            const tagsMeters = querySnapshot
+                .docChanges()
+                .map((change)=>{
+                    if(change.type === 'modified'){
+                        // all data
+                        const data = {...change.doc.data()}
+                        return arr.push(data)
+                    }
+                })
 
-//                 // checker if something change
-//                 if(querySnapshot.docChanges().length != 0){
-//                     // check lengths
-//                     if(arr.length === collectionLength){
-//                         // sort the arr
-//                         let arrSort = arr.sort((a, b) => a.meters - b.meters)
-//                         // print
-//                         console.log(`minVal:${JSON.stringify(arrSort)}`)
-//                         // dispatch data
-//                         dispatch({ 
-//                             type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
-//                             payload:arrSort
-//                         });
-//                         // events
-//                         dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE })
-//                         // reset arr
-//                         arr = []
-//                         console.log(`arrEmpty:${arr}`)
-//                     }
-//                 }
-//         },err => {
-//             console.log(`Encountered error: ${err}`);
-//         })   
-// }
+                // checker if something change
+                if(querySnapshot.docChanges().length != 0){
+                    // check lengths
+                    if(arr.length === collectionLength){
+                        // sort the arr
+                        let arrSort = arr.sort((a, b) => a.meters - b.meters)
+                        // print
+                        console.log(`minVal:${JSON.stringify(arrSort)}`)
+                        // dispatch data
+                        dispatch({ 
+                            type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
+                            payload:arrSort
+                        });
+                        // events
+                        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE })
+                        // reset arr
+                        arr = []
+                        console.log(`arrEmpty:${arr}`)
+                    }
+                }
+        },err => {
+            console.log(`Encountered error: ${err}`);
+        })   
+}
 
 // declarate a function to get data from a specifics one db for top5Products (modeFour) --> static data
 // --> to check

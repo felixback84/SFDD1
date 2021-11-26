@@ -17,6 +17,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
 import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
+// color engine
+import ColorEngine from "../../components/utils/ColorEngine/ColorEngine"
 // Redux stuff
 import { connect } from 'react-redux';
 // styles
@@ -39,7 +41,8 @@ const arrToppersColumns = (classes,data) => {
 }
 
 const ContentRow = (props) => {
-
+	// color
+	let color = new ColorEngine
 	// data from father
 	const data = props.data
 	const classes = props.classes
@@ -51,6 +54,11 @@ const ContentRow = (props) => {
 		arrayCells.push(
 			<TableRow
 				key={top5Tag.thingId}
+				style={
+					{
+						backgroundColor:color.colorPicker(top5Tag.matchQuality)
+					}
+				}
 			>	
 				{/* comapany meters range and inicials */}
 				<TableCell

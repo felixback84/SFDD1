@@ -237,17 +237,6 @@ export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => asyn
         })
     })
     
-    // print
-    // console.log(`arrResultFilter:${JSON.stringify(arrResultFilter)}`)
-
-    // dispatchers
-    // dispatch({ 
-    //     type:GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
-    //     payload:arrResultFilter
-    // })
-    // // events
-    // dispatch({ type:STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE })
-
     // update just the changes in all the list created for the modeOne
     const snapOnlyWithChanges = await dataRef
         .onSnapshot((querySnapshot)=>{

@@ -52,7 +52,8 @@ const initialState = {
     top5TagUx:{
         coords:{},
         userCredentials:{},
-        matchDataResults:{}
+        matchDataResults:{},
+        companyData:{}
     },
 
     // ux flow data

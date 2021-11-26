@@ -287,7 +287,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('top5Tagz') // test collection
+                        .collection('top5Tags') // test collection
                         .add({ ...dataToSave })
                         .then(() => {
                             // print

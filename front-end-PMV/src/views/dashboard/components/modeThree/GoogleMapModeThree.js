@@ -80,7 +80,7 @@ class GoogleMapModeThree extends Component {
 
 			// info win
 			infoWindowsStaticsDevicesProducts.push(new maps.InfoWindow({
-				content: getInfoWindowStringStaticDevice(top5Product.products),
+				content: getInfoWindowStringStaticDevice(top5Product.product),
 			}))
 
 			// run it

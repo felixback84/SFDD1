@@ -15,12 +15,16 @@ import Typography from '@material-ui/core/Typography'
 import { red } from '@material-ui/core/colors'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import Box from "@material-ui/core/Box"
+import LinearProgress from "@material-ui/core/LinearProgress"
 // icons MUI
 import IconButton from '@mui/material/IconButton'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import ShareIcon from '@mui/icons-material/Share'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
+// components
+import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 
 // Redux stuff
 import { connect } from 'react-redux'
@@ -92,8 +96,12 @@ class ProductsResultsSearchingModeThree extends Component {
                         <Card sx={{ maxWidth: 345 }}>
                             <CardHeader
                                 avatar={
+                                    // companyName
                                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                        {Math.round(arrTop5Product.meters * 10) / 10}
+                                        <ColorMtsAvatar
+                                            meters={arrTop5Product.meters} 
+                                            companyname={arrTop5Product.companyData.companyName}
+                                        />
                                     </Avatar>
                                 }
                                 action={
@@ -101,28 +109,48 @@ class ProductsResultsSearchingModeThree extends Component {
                                         <MoreVertIcon/>
                                     </IconButton>
                                 }
-                                title={arrTop5Product.products.name}
-                                // taxonomy
+                                title={arrTop5Product.product.name}
+                                // price
                                 subheader={
-                                    //this.taxoToListOfCategoriesAndTags(arrTop5Product.products.taxonomy)
-                                    <Chip label={`$${arrTop5Product.products.price}`}/>
+                                    <Chip label={`$${arrTop5Product.product.price}`}/>
                                 }
                             />
                             {/* product image */}
                             <CardMedia
                                 component="img"
                                 height="194"
-                                image={arrTop5Product.products.imgUrl}
-                                alt={arrTop5Product.products.name}
-                            />
+                                image={arrTop5Product.product.imgUrl}
+                                alt={arrTop5Product.product.name}
+                            /> 
                             <CardContent>
+                                {/* meters bar*/}
+                                <Box display="flex" alignItems="center">
+                                    <Box component="span" marginRight=".5rem">
+                                        {arrTop5Product.meters.toFixed(2)} Meters
+                                    </Box>
+                                    <Box width="100%">
+                                        <LinearProgress
+                                            variant="determinate"
+                                            value={arrTop5Product.meters}
+                                            classes={{
+                                                root: classes.linearProgressRoot,
+                                                bar: classes.bgGradientError,
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                                {/* tags */}
+                                {
+                                    arrTop5Product.product.tags.map((tag)=>(
+                                        <Chip label={tag} variant="outlined"/>
+                                    ))
+                                }
                                 {/* product description */}
                                 <Typography variant="body2" color="text.secondary">
-                                    {arrTop5Product.products.description}
+                                    {arrTop5Product.product.description}
                                 </Typography>
-                                {/* product price */}
-                                <Chip label={arrTop5Product.products.price}/>
                             </CardContent>
+                            {/* actions */}
                             <CardActions disableSpacing>
                                 <IconButton aria-label="add to favorites">
                                     <FavoriteIcon/>
@@ -153,15 +181,11 @@ class ProductsResultsSearchingModeThree extends Component {
                                         <Typography paragraph>
                                             Tags in this product:
                                         </Typography>
-                                        {
-                                            arrTop5Product.products.tags.map((tag)=>(
-                                                <Chip label={tag} variant="outlined"/>
-                                            ))
-                                        }
+                                        {this.taxoToListOfCategoriesAndTags(arrTop5Product.product.taxonomy)}
                                     </Stack>
                                     {/* description */}
                                     <Typography paragraph>
-                                        {arrTop5Product.products.description}
+                                        {arrTop5Product.product.description}
                                     </Typography>
                                 </CardContent>
                             </Collapse>
@@ -179,8 +203,12 @@ class ProductsResultsSearchingModeThree extends Component {
             classes,
             // products
             loading,
-            top5Products
+            top5Products,
+            top5ProductsListener
         } = this.props
+
+        // data to pass
+        const dataOfTop5ProductsToPass = top5ProductsListener.length != 0 ? top5ProductsListener : top5Products
 
         return (
             <>
@@ -188,7 +216,7 @@ class ProductsResultsSearchingModeThree extends Component {
                     {/* arr of products */}
                     {
                         loading != true ?
-                            this.arrTop5Products(top5Products,classes) :
+                            this.arrTop5Products(dataOfTop5ProductsToPass,classes) :
                                 <p>...loading products</p>
                     }
                 </GridContainer>

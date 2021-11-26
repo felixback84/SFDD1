@@ -184,7 +184,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             .collection('top5Products')
 
         const snapshot = await tagsRef.get();
-
+ 
         snapshot.forEach(doc => {
             // push data in arr
             top5Products.push({
@@ -295,59 +295,55 @@ exports.deleteAllDocsInTop5TagsCollectionOfUserDeviceId = async (db,pathToCollec
 
     // run it
     deleteCollection(dbConnect,path)
-}
+} 
 
 // to divide values and get the closer to zero - find the quality of match
 exports.findMatchValueQuality = async (a,b) => {
-    // val default  
-    // let resultRaw = 0
-    // listOne.forEach((item,i)=>{
-        //const divider = (a,b) => {
-            let resultRaw = a / b
-            let resultRounded = Math.round(resultRaw)
-        //}
-        // divider(item,listTwo[i])
-        // print
-        console.log(`raw:${resultRaw} - rounded:${resultRounded}`)
-        
-        // the match could be the number closer to zero
-        switch(resultRounded){
-            case 1:
-                console.log(`one - green:${resultRounded}`)
-                return(
-                    {r:76,g:175,b:80}
-                )
-                break
-            case 2:
-                console.log(`two - yellow:${resultRounded}`)
-                return(
-                    {r:255,g:235,b:59}
-                )
-                break
-            case 3:
-                console.log(`three - red:${resultRounded}`)
-                return(
-                    {r:244,g:67,b:54}
-                )
-                break  
-            case 4:
-                console.log(`four - fucsia:${resultRounded}`)
-                return(
-                    {r:233,g:30,b:99}
-                )
-                break
-            case 5:
-                console.log(`five - blue:${resultRounded}`)
-                return(
-                    {r:33,g:150,b:243}
-                )
-                break
-            default:    
-                console.log("none value")  
-                return(
-                    "none value"
-                )
-        }
-    //})
+
+    // math
+    let resultRaw = a / b
+    let resultRounded = Math.round(resultRaw)
+    
+    // print
+    console.log(`raw:${resultRaw} - rounded:${resultRounded}`)
+    
+    // the match could be the number closer to zero
+    switch(resultRounded){
+        case 1 | 2:
+            console.log(`one - green:${resultRounded}`)
+            return(
+                {r:76,g:175,b:80}
+            )
+            break
+        case 3 | 4:
+            console.log(`two - yellow:${resultRounded}`)
+            return(
+                {r:255,g:235,b:59}
+            )
+            break
+        case 5 | 6:
+            console.log(`three - red:${resultRounded}`)
+            return(
+                {r:244,g:67,b:54}
+            )
+            break  
+        case 7 | 8:
+            console.log(`four - fucsia:${resultRounded}`)
+            return(
+                {r:233,g:30,b:99}
+            )
+            break
+        case 9 :
+            console.log(`five - blue:${resultRounded}`)
+            return(
+                {r:33,g:150,b:243}
+            )
+            break
+        default:    
+            console.log("none value")  
+            return(
+                {r:0,g:0,b:0}
+            )
+    }
 }
 

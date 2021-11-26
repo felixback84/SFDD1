@@ -120,6 +120,11 @@ const {
         findStaticsProductsInSpecificMtsRange, // ----> modeMtsTwo
         // postListOfProductsToFind, // ---> already exists in modeThree
     } = require('./handlers/searchingModes/byMeters');
+
+    // searching by price
+    const {
+        
+    } = require('./handlers/searchingModes/byPrice');
         
 // static device
 const {
@@ -268,6 +273,9 @@ app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId)
 
 // to post and find wich statics products are closer to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
+
+/////**** */ byPrice
+app.get(,,)
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property
@@ -614,7 +622,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             console.log(`resfin:${JSON.stringify(resfin)}`)
                             await detectGPSCoordsProximityRangeForUserDeviceVsSpecificsStaticDevice(
                                 resfin
-                            );
+                            )
                             // print 
                             console.log("say hello to my little friend from thing modeTwo")
                         }  else if(searchingMode[0] === "modeThree"){

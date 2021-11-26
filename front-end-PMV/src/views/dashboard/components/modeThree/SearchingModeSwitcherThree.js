@@ -11,7 +11,7 @@ import {
 } from '../../../../redux/actions/heartbeatUIActions';
 import {
 	userDeviceTop5ProductsSyncDataStatic,
-	//userDeviceTop5ProductsSyncDataLiveDB
+	userDeviceTop5ProductsSyncDataLiveDB
 } from '../../../../redux/actions/top5ProductsActions'
 // styles
 import searchingModeCardStyles from "assets/theme/views/admin/searchingModeCard"
@@ -41,7 +41,7 @@ const SearchingModeSwitcherThree = (props) => {
 			// static data from top5Tags
 			props.userDeviceTop5ProductsSyncDataStatic(thindId)
 			// live data from top5Tags
-			// props.userDeviceTop5ProductsSyncDataLiveDB(thindId)
+			props.userDeviceTop5ProductsSyncDataLiveDB(thindId)
 		//}
 	};
  
@@ -83,7 +83,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
 	userDeviceTop5ProductsSyncDataStatic,
-	//userDeviceTop5ProductsSyncDataLiveDB
+	userDeviceTop5ProductsSyncDataLiveDB
 };
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherThree);
