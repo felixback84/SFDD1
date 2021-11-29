@@ -123,7 +123,7 @@ const {
 
     // searching by price
     const {
-        
+        findStaticsProductsInSpecificPriceRange
     } = require('./handlers/searchingModes/byPrice');
         
 // static device
@@ -275,7 +275,7 @@ app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId)
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 
 /////**** */ byPrice
-app.get(,,)
+app.get('/userdevice/:userDeviceId/products/category/:category/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsInSpecificPriceRange)
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property

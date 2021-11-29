@@ -4,7 +4,6 @@ const {
     deleteAllDocsInTop5TagsCollectionOfUserDeviceId
 } = require('../utilsForThings')
 
-
 // top post staticDevices list results of top5tags search
 exports.postTop5TagsInUserDeviceId = async (req,res) => {
     // deletion of any old record in top5Tags
@@ -143,12 +142,6 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
         console.log(err)
     })
 }
-
-
-
-
-
-
 
 // get products with geohash & filters
 exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
