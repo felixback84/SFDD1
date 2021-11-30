@@ -124,7 +124,8 @@ const {
     // searching by price
     const {
         findStaticsProductsWithCategoryInSpecificPriceRange,
-        findStaticsProductsWithTagInSpecificPriceRange
+        findStaticsProductsWithTagInSpecificPriceRange,
+        postListOfProductsToFindByPriceRange
     } = require('./handlers/searchingModes/byPrice');
         
 // static device
@@ -257,7 +258,7 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
 //app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
 // search of static devices products according to one category and tags it has
 app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProductsByCategoryAndTags)
-// search of static devices products according to one categories and tags it has ---> not yet
+// search of static devices products according to multiple categories and tags it has ---> not yet
 app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 // to post list of products to find his positions and owners
 app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
@@ -280,6 +281,8 @@ app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mt
 app.get('/userdevice/:userDeviceId/products/category/:category/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithCategoryInSpecificPriceRange)
 // get products in one tag with a specific price range
 app.get('/userdevice/:userDeviceId/products/tag/:tag/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithTagInSpecificPriceRange)
+// to post list of products to find his positions and owners
+app.post('/userdevice/postProductsByPriceRange/',FBAuth,postListOfProductsToFindByPriceRange)
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property

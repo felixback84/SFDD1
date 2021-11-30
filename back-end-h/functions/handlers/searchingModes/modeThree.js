@@ -144,8 +144,6 @@ exports.postListOfProductsToFind = async (req, res) => {
     let listOfProducts = req.body.listOfProducts
     // userDeviceId
     let userDeviceId = req.body.userDeviceId
-    // coords of products
-    let coords = {}
     // var to hold results for products
     let resultsOfMatchOfProducts = []
     // find those products on the collection 
@@ -186,7 +184,7 @@ exports.postListOfProductsToFind = async (req, res) => {
     }   
 
     // extract companyData
-    const extractCompanyData = async (listOfProducts) => {
+    const extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products = async (listOfProducts) => {
         // vars
         const outputList = []
         const promises = []
@@ -220,7 +218,7 @@ exports.postListOfProductsToFind = async (req, res) => {
                 // promise push
                 promises.push(promise)
         })
-
+        // promise with data
         Promise
             .all(promises)
             .then(() => {
@@ -271,10 +269,11 @@ exports.postListOfProductsToFind = async (req, res) => {
                 res.status(500, err)
             })
     }  
+
     // run it
     const pass = await toMakelistOfProducts(listOfProducts)
     const resp = await pass
-    const pass1 = await extractCompanyData(await resp)
+    const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
