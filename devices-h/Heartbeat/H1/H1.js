@@ -40,8 +40,8 @@ fs
         let connectionStatus = true;
         let batteryLife = 100;
         // changes
-        let colorValue = {r:0,g:0,b:0};
-        let matchQuality = {r:0,g:0,b:0};
+        let colorValue = {r:0,g:0,b:0,name:""};
+        let matchQuality = {r:0,g:0,b:0,name:""};
         let motorSpeed = undefined;
         // timeout
         let timeOut = undefined

@@ -36,7 +36,7 @@ const SearchingModeCardModeOne = (props) => {
 					color={
 						colorClass.colorPicker(data.colorValue)
 					} 
-					footer={
+					footer={ 
 						<Fragment>
 							<Box
 								marginLeft=".5rem"

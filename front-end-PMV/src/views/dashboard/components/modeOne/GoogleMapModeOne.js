@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // mui core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Chip from '@material-ui/core/Chip';
+import Chip from '@material-ui/core/Chip'; 
 // icons
 import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
 // modules

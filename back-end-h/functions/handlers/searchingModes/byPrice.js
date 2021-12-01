@@ -314,7 +314,7 @@ exports.postListOfProductsToFindByPriceRange = (req,res) => {
         console.log(`Pre DB Item: ${JSON.stringify(item)}`)
         // db conection
         await db
-            .collection(`/userDevices/${userDeviceId}/top5Prices`)
+            .collection(`/userDevices/${userDeviceId}/top5Products`)
             .add({
                 ...item     
             })

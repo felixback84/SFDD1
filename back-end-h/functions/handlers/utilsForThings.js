@@ -38,9 +38,10 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
     for(let i = 0; i < arrSort.length; i++){
         // check ranges
         if(arrSort[i].meters >= 0 && arrSort[i].meters <= 5){
+            let colorName = "green"
             let colorsAndMotorValuesToThingResponse = {
-                colorValue:{r:76,g:175,b:80}, 
-                colorName:"green", 
+                colorName,
+                colorValue:{r:76,g:175,b:80,name:colorName}, 
                 motorSpeed: 100,
                 matchQuality:arrSort[i].matchQuality
             }
@@ -51,9 +52,10 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
             await sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 5.1 && arrSort[i].meters <= 10){
+            let colorName = "yellow"
             let colorsAndMotorValuesToThingResponse = {
-                colorValue:{r:255,g:235,b:59}, 
-                colorName:"yellow", 
+                colorName, 
+                colorValue:{r:255,g:235,b:59,name:colorName}, 
                 motorSpeed: 75,
                 matchQuality:arrSort[i].matchQuality
             }
@@ -64,9 +66,10 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
             sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 10.1 && arrSort[i].meters <= 15){
+            let colorName = "red"
             let colorsAndMotorValuesToThingResponse = {
-                colorValue:{r:244,g:67,b:54}, 
-                colorName:"red", 
+                colorName,
+                colorValue:{r:244,g:67,b:54,name:colorName}, 
                 motorSpeed: 50,
                 matchQuality:arrSort[i].matchQuality
             }
@@ -77,9 +80,10 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
             sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 15.1 && arrSort[i].meters <= 20){
+            let colorName = "pink"
             let colorsAndMotorValuesToThingResponse = {
-                colorValue:{r:233,g:30,b:99}, 
-                colorName:"fucsia", 
+                colorName, 
+                colorValue:{r:233,g:30,b:99,name:colorName}, 
                 motorSpeed: 25,
                 matchQuality:arrSort[i].matchQuality
             }
@@ -90,9 +94,10 @@ exports.metersRangeMatchColor = async (metersArr,thingId) => {
             sendCommandGPSAndQualityOfMatchColorAndMotorSpeed(colorsAndMotorValuesToThingResponse,thingId);
             return
         } else if (arrSort[i].meters >= 20.1 && arrSort[i].meters <= 25){
+            let colorName = "blue"
             let colorsAndMotorValuesToThingResponse = {
-                colorValue:{r:33,g:150,b:243}, 
-                colorName:"blue", 
+                colorName, 
+                colorValue:{r:33,g:150,b:243,name:colorName}, 
                 motorSpeed: 5,
                 matchQuality:arrSort[i].matchQuality
             }
@@ -345,7 +350,7 @@ exports.findMatchValueQuality = async (a,b) => {
                 r:233,
                 g:30,
                 b:99,
-                name:"fucsia"
+                name:"pink"
             }
         )
     }else if(resultRounded === 9){

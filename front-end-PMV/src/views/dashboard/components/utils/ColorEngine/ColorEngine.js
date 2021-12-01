@@ -14,41 +14,46 @@ export default class ColorEngine {
     colorMuiMix(meters){
         // check ranges
         if(meters >= 0 && meters <= 5){
+            let colorName = "green"
             let colorObj = {
-                colorValue:{r:76,g:175,b:80}, 
-                colorName:"green", 
-                colorMix:green[500],
+                colorName, 
+                colorValue:{r:76,g:175,b:80,name:colorName}, 
+                colorMix: green[500],
             }
             console.log("hi from meters range match: 0-5");
             return colorObj.colorMix
         } else if (meters >= 5.1 && meters <= 10){
+            let colorName = "yellow"
             let colorObj = {
-                colorValue:{r:255,g:235,b:59}, 
-                colorName:"yellow", 
+                colorName, 
+                colorValue:{r:255,g:235,b:59,name:colorName}, 
                 colorMix: yellow[500]
             }
             console.log("hi from meters range match: 5-10");
             return colorObj.colorMix
         } else if (meters >= 10.1 && meters <= 15){
+            let colorName = "red"
             let colorObj = {
-                colorValue:{r:244,g:67,b:54}, 
-                colorName:"red", 
+                colorName, 
+                colorValue:{r:244,g:67,b:54,name:colorName}, 
                 colorMix: red[500],
             }
             console.log("hi from meters range match: 10-15");
             return colorObj.colorMix
         } else if (meters >= 15.1 && meters <= 20){
+            let colorName = "pink"
             let colorObj = {
-                colorValue:{r:233,g:30,b:99}, 
-                colorName:"fucsia", 
+                colorName, 
+                colorValue:{r:233,g:30,b:99,name:colorName}, 
                 colorMix: pink[500],
             }
             console.log("hi from meters range match: 15-20");
             return colorObj.colorMix
         } else if (meters >= 20.1 && meters <= 25){
+            let colorName = "blue"
             let colorObj = {
-                colorValue:{r:33,g:150,b:243}, 
-                colorName:"blue", 
+                colorName, 
+                colorValue:{r:33,g:150,b:243,name:colorName}, 
                 colorMix: blue[500]
             }
             console.log("hi from meters range match: 20-25");
@@ -60,45 +65,50 @@ export default class ColorEngine {
     metersToColorHex(meters){
         // check ranges
         if(meters >= 0 && meters <= 5){
+            let colorName = "green"
             let colorObj = {
-                colorValue:{r:76,g:175,b:80}, 
-                colorName:"green", 
+                colorName, 
+                colorValue:{r:76,g:175,b:80,name:colorName}, 
                 colorMix:green[500],
                 hex:"#4CAF50"
             }
             console.log("hi from meters range match: 0-5");
             return colorObj.hex
         } else if (meters >= 5.1 && meters <= 10){
+            let colorName = "yellow"
             let colorObj = {
-                colorValue:{r:255,g:235,b:59}, 
-                colorName:"yellow", 
+                colorName, 
+                colorValue:{r:255,g:235,b:59,name:colorName}, 
                 colorMix: yellow[500],
                 hex:"#FFEB3B"
             }
             console.log("hi from meters range match: 5-10");
             return colorObj.hex
         } else if (meters >= 10.1 && meters <= 15){
+            let colorName = "red"
             let colorObj = {
-                colorValue:{r:244,g:67,b:54}, 
-                colorName:"red", 
+                colorName, 
+                colorValue:{r:244,g:67,b:54,name:colorName}, 
                 colorMix:red[500],
                 hex:"#F44336"
             }
             console.log("hi from meters range match: 10-15");
             return colorObj.hex
         } else if (meters >= 15.1 && meters <= 20){
+            let colorName = "pink"
             let colorObj = {
-                colorValue:{r:233,g:30,b:99}, 
-                colorName:"fucsia", 
+                colorName, 
+                colorValue:{r:233,g:30,b:99,name:colorName}, 
                 colorMix: pink[500],
                 hex:"#E91E5A"
             }
             console.log("hi from meters range match: 15-20");
             return colorObj.hex
         } else if (meters >= 20.1 && meters <= 25){
+            let colorName = "blue"
             let colorObj = {
-                colorValue:{r:33,g:150,b:243}, 
-                colorName:"blue", 
+                colorName, 
+                colorValue:{r:33,g:150,b:243,name:colorName}, 
                 colorMix: blue[500],
                 hex:"#2196F3"
             }
@@ -112,11 +122,11 @@ export default class ColorEngine {
     
         // color obj to compare
         const colorsDB = {
-            green:{r:76,g:175,b:80},
-            yellow:{r:255,g:235,b:59},
-            red:{r:244,g:67,b:54},
-            pink:{r:233,g:30,b:99},
-            blue:{r:33,g:150,b:243},
+            green:{r:76,g:175,b:80,name:"green"},
+            yellow:{r:255,g:235,b:59,name:"yellow"},
+            red:{r:244,g:67,b:54,name:"red"},
+            pink:{r:233,g:30,b:99,name:"pink"},
+            blue:{r:33,g:150,b:243,name:"blue"},
         }
     
         // colors backs
@@ -152,11 +162,11 @@ export default class ColorEngine {
     
         // color obj to compare
         const colorsDB = {
-            green:{r:76,g:175,b:80},
-            yellow:{r:255,g:235,b:59},
-            red:{r:244,g:67,b:54},
-            pink:{r:233,g:30,b:99},
-            blue:{r:33,g:150,b:243},
+            green:{r:76,g:175,b:80,name:"green"},
+            yellow:{r:255,g:235,b:59,name:"yellow"},
+            red:{r:244,g:67,b:54,name:"red"},
+            pink:{r:233,g:30,b:99,name:"pink"},
+            blue:{r:33,g:150,b:243,name:"blue"},
         }
     
         // colors backs

@@ -266,7 +266,7 @@ app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before m
     /////*** */ mode four
     // post product to Search by userDevice ---> before modeFour
     app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
-
+ 
 /////*** */ bymeters
 // to post and find wich statics are close to me by geohash
 app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)
