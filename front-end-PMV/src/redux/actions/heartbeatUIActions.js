@@ -68,11 +68,15 @@ export const heartbeatThingSyncDataStatic = (thingId) => (dispatch) => {
                 payload: dataSelect
             });
             // event
-            dispatch({ type: STOP_GET_EVENTS_FROM_HEARTBEAT_THING });
+            dispatch({ type: STOP_GET_EVENTS_FROM_HEARTBEAT_THING })
+
+            
         })
         .catch((err)=>{
             console.log(err)
-        })    
+        })   
+        
+        
 }
 
 // declarate a function to get data from db

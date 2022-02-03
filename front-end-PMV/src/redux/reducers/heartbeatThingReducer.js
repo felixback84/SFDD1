@@ -61,7 +61,7 @@ export default function(state = initialState, action){
             return{
                 ...state, 
                 thingLiveDataSets: action.payload,
-                loading: false
+                // loading: false
             };
         case STOP_GET_EVENTS_FROM_HEARTBEAT_THING:
             return{

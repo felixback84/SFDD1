@@ -1,152 +1,24 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment, useState } from 'react'
 // @material-ui/core components
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles"
+//  mui
+import Box from "@material-ui/core/Box"
+import Container from "@material-ui/core/Container"
 // components
-import Header from "../../components/Headers/Header.js";
-import SkeletonDashboard from "./components/SkeletonDashboard.js";
-import GoogleMapModeOne from './components/modeOne/GoogleMapModeOne'
-import GoogleMapModeTwo from './components/modeTwo/GoogleMapModeTwo'
-import GoogleMapModeThree from './components/modeThree/GoogleMapModeThree'
-// modeOne
-import ChartResultsSearchingModeOne from "./sections/modeOne/ChartResultsSearchingModeOne"
-// modeTwo
-import ChartResultsSearchingModeTwo from "./sections/modeTwo/ChartResultsSearchingModeTwo"
-import ChartResultsSelectedItemsSearchingModeTwo from "./sections/modeTwo/ChartResultsSelectedItemsSearchingModeTwo"
-// modeThree
-import ProductsResultsSearchingModeThree from "./sections/modeThree/ProductsResultsSearchingModeThree"
-
+import Header from "../../components/Headers/Header.js"
+import PickerMarkerMix from "./components/utils/PickerMarkerMix"
+import SkeletonDashboard from "./components/SkeletonDashboard.js"
 // Redux stuff
-import { connect } from 'react-redux';
-import { getUserDevices } from '../../redux/actions/userDevicesActions';
+import { connect } from 'react-redux'
+import { getUserDevices } from '../../redux/actions/userDevicesActions'
 import { 
 	heartbeatThingSyncDataStatic, 
 	heartbeatThingSyncDataLiveDB
-} from '../../redux/actions/heartbeatUIActions';
-
+} from '../../redux/actions/heartbeatUIActions'
 // styles
-import componentStyles from "assets/theme/views/admin/dashboardOne.js";
-const useStyles = componentStyles;
+import componentStyles from "assets/theme/views/admin/dashboardOne.js"
+const useStyles = componentStyles
 
-// pick the right marker mix
-const pickerMarkerMix = (
-		searchingmode,
-		data,
-		coordz,
-		color,
-		loading
-	) => {
-	// print
-	console.log(`coordz:${JSON.stringify(coordz)}`)
-	// style
-	const classes = data
-	// switcher
-	switch(searchingmode){
-		case "modeOne":
-			if(loading == false){
-				return(
-					<>
-						{/* map */}
-						<Grid container>
-							<Grid item xs={12}>
-								<Card classes={{ root: classes.cardRoot }}>
-									<GoogleMapModeOne 
-										coords={coordz}
-										colorValue={color}
-									/>
-								</Card>
-							</Grid>
-						</Grid>
-						{/* chart top5Coords*/}
-						<Grid container>
-							<Grid item xs={12}>
-								{/* results */}
-								<ChartResultsSearchingModeOne/>
-							</Grid>
-						</Grid>
-					</>	
-				)
-			}
-		break;	
-		case "modeTwo":	
-			if(loading == false){
-				return(
-					<>
-						{/* map */}
-						<Grid container>
-							<Grid item xs={12}>
-								<Card classes={{ root: classes.cardRoot }}>
-									<GoogleMapModeTwo 
-										coords={coordz}
-										colorValue={color} 
-									/>
-								</Card>
-							</Grid>
-						</Grid>
-						{/* chart top5Coord specifics filter*/}
-						<Grid container>
-							<Grid item xs={12}>
-								{/* results */}
-								<ChartResultsSelectedItemsSearchingModeTwo/>
-							</Grid>
-						</Grid>
-						{/* chart all top5Coords*/}
-						<Grid container>
-							<Grid item xs={12}>
-								{/* results */}
-								<ChartResultsSearchingModeTwo/>
-							</Grid>
-						</Grid>
-					</>	
-				)
-			}
-		break;
-		case "modeThree":	
-			if(loading == false){
-				console.log("modeThree")
-				return(
-					<>
-						{/* map */}
-						<Grid container>
-							<Grid item xs={12}>
-								<Card classes={{ root: classes.cardRoot }}>
-									<GoogleMapModeThree
-										coords={coordz}
-										colorValue={color} 
-									/>
-								</Card>
-							</Grid>
-						</Grid>
-						{/* top5Products result */}
-						<Grid container>
-							<Grid item xs={12}>
-								<Card classes={{ root: classes.cardRoot }} style={{padding:"10px"}}>
-									{/* results */}
-									<ProductsResultsSearchingModeThree/>
-								</Card>
-							</Grid>
-						</Grid>
-					</>	
-				)
-			}
-		break;
-		// case "modeFour":	
-		// 	return(
-		// 		<MarkerInfoWindowModeFour 
-		// 			coords={coords}
-		// 			top5product={top5Product}
-		// 		/>
-		// 	)
-		// break;
-		default:
-			return(
-				null
-			)
-	}
-}
 
 class Dashboard extends Component {
 
@@ -205,15 +77,17 @@ class Dashboard extends Component {
 					classes={{ root: classes.containerRoot }}
 				>
 					{/* picker mix */}
-					{
-						pickerMarkerMix(
-							searchingMode[0],
-							classes,
-							coords,
-							colorValue,
-							loading,
-						)
-					}
+					<PickerMarkerMix
+						data={
+							{
+								searchingMode:searchingMode[0],
+								classes,
+								coords,
+								colorValue,
+								loading
+							}
+						}
+					/>
 				</Container>
 			</>
 		) : (

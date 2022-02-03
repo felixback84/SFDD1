@@ -1,31 +1,54 @@
-import React, { Component } from 'react';
-// font awesome
-import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
+import React, { Component, Fragment } from 'react'
+// mui core components
+import GridContainer from "components/Grid/GridContainer.js"
+import GridItem from "components/Grid/GridItem.js"
+import Chip from '@material-ui/core/Chip' 
+// icons
+import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons"
 // modules
-import GoogleMap from '../utils/GoogleMap.js';
+import GoogleMap from '../../sections/GoogleMap.js'
 import ColorEngine from '../utils/ColorEngine/ColorEngine'
-// components
-
 // Redux stuff
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbeatUIActions'
+// _
+let _ = require('underscore') 
 
+class GoogleMapModeOne extends Component {
 
-class GoogleMapModeThree extends Component {
-    // api google set method
+	// api google set method
 	handleApiLoaded = (map, maps,{...data}) => {
-        // print
-        console.log(`api Gmaps init modeThree`)
-            
-        // color class
-		const colorClass = new ColorEngine()
-		// coords data dynamic user pos
-		let coords = this.props.coords
 
-        //////////////////////////////////////////////////// top5Products - static devices - vendors
+		// color class
+		const colorClass = new ColorEngine()
+		
+		//////////////////////////////////////////////////// top5Tags - static devices - vendors
 		//var to hold data in arrays to escalate
-		const markersStaticsDevicesProducts = [];
-		const infoWindowsStaticsDevicesProducts = [];
+		const markersStaticsDevices = [];
+		const infoWindowsStaticsDevices = [];
+		// badges
+		const arrayListBadgeStaticDevices = (data) => {
+			let top5Tags = data.top5Tags
+			let arrWithTags = [];
+			let counter = 0
+
+			// tags loop
+			top5Tags.forEach((top5Tag)=>{
+				for (let keyPair in top5Tag.matchDataResults) {
+					arrWithTags.push(top5Tag[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+				} 
+			})
+				
+			return(
+				<GridContainer>
+					<GridItem xs={12} sm={12} md={12}>
+						{arrWithTags}
+					</GridItem>
+				</GridContainer>
+			)
+		}
+		//print
+		// console.log(`arrayListBadgeStaticDevices:${arrayListBadgeStaticDevices(data.top5Tags)}`)
 		
 		//data infoWindow
 		const getInfoWindowStringStaticDevice = (data) => `
@@ -51,113 +74,69 @@ class GoogleMapModeThree extends Component {
 			</div>
 		</div>`
 
-		//to static devices products list markers
-		data.top5Products.forEach((top5Product,i) => {
+		// to static devices list markers
+		data.top5Tags.forEach((top5Tag) => {
 			// colors
-			// let colorBgIcon = colorClass.metersToColorHex(top5Tag.meters)
+			let colorBgIcon = colorClass.rgbToColorHex(top5Tag.matchQuality)
 			// print
-			console.log(`top5ProductsCoords:${JSON.stringify(top5Product.coords)}`)
+			console.log(`top5tagsCoords:${JSON.stringify(top5Tag.coords)}`)
 			// marker
-			markersStaticsDevicesProducts.push(new maps.Marker({
+			markersStaticsDevices.push(new maps.Marker({
 				position: {
-					lat:top5Product.coords.lat,
-					lng:top5Product.coords.lon,
+					lat: top5Tag.coords.lat,
+					lng: top5Tag.coords.lon,
 				},
 				icon: {
 					path: faDotCircle.icon[4],
-					fillColor: "#c30000",
+					fillColor: colorBgIcon,
 					fillOpacity: 1,
 					anchor: new maps.Point(
-					  	faDotCircle.icon[0] / 2, // width
-						faDotCircle.icon[1] / 2// height
+					  faDotCircle.icon[0] / 2, // width
+					  faDotCircle.icon[1] // height
 					),
 					strokeWeight: 1,
-					strokeColor: "#c30000",
+					strokeColor: colorBgIcon,
 					scale: 0.05,
 				},
 				map,
-			}))
+			}));
 
 			// info win
-			infoWindowsStaticsDevicesProducts.push(new maps.InfoWindow({
-				content: getInfoWindowStringStaticDevice(top5Product.product),
-			}))
+			infoWindowsStaticsDevices.push(new maps.InfoWindow({
+				content: getInfoWindowStringStaticDevice(top5Tag.userCredentials),
+			}));
+		});
 
-			// run it
-			// directions service
-			const calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
-				console.log("init directions")
-				directionsService
-					.route({
-						origin:{
-							lat:coords.lat,
-							lng:coords.lon
-						},
-						destination:{
-							lat:top5Product.coords.lat,
-							lng:top5Product.coords.lon
-						},
-						travelMode:maps.TravelMode.WALKING,
-					})
-					.then((response) => { 
-						console.log("success")
-						directionsRenderer.setDirections(response)
-						let directionsData = response.routes[0].legs[0]
-						// if (!directionsData) {
-						// 	window.alert('Directions request failed');
-						// 	return;
-						// } else {
-						// 	window.alert('Directions request succses');
-						// }
-					})
-					.catch((e) => console.log("Directions request failed no response"))	 
-			}
-
-			// init map with directions
-			const initMapService = () => {
-				// directions logic
-				const directionsService = new maps.DirectionsService()
-				const directionsRenderer = new maps.DirectionsRenderer()
-				directionsRenderer.setMap(map)
-				// run it
-				calculateAndDisplayRoute(directionsService,directionsRenderer)
-			}
-			
-			// run it
-			initMapService()
-			//** distance matrix gmaps
-			// vars with coords
-			const userDevicePos = {
-				lat: coords.lat, 
-				lng: coords.lon
-			}
-			const staticDevicePos = {
-				lat: top5Product.coords.lat, 
-				lng: top5Product.coords.lon
-			}
-
-			// Draw a line showing the straight distance between the markers
-			let line = new maps.Polyline(
-				{
-					path: [userDevicePos, staticDevicePos], 
-					map: map
-				}
-			)
-			// clicker to open mini infoWindow
-			markersStaticsDevicesProducts.forEach((marker, i) => {
-				// event pass
-				marker.addListener('click', () => {
-					infoWindowsStaticsDevicesProducts[i].open(map, marker);
-				})
+		// clicker
+		markersStaticsDevices.forEach((marker, i) => {
+			marker.addListener('click', () => {
+				infoWindowsStaticsDevices[i].open(map, marker);
 			})
 		})
-	
-        //////////////////////////////////////////////////// userDevices - buyers - users - dynamics
+
+		//////////////////////////////////////////////////// userDevices - buyers - users - dynamics
 		// marker global
 		let markerDynamicDevices = undefined
 		// info window arr
 		let infoWindowsDynamicDevices = undefined
 
+		// badges  ----> without use
+		const arrayListBadgeUSerDevice = (data) => {
+			let profileToMatch = data.profileToMatch
+			let arrWithTags = [];
+			let counter = 0
+			for (let keyPair in profileToMatch) {
+				arrWithTags.push(profileToMatch[keyPair].map((item)=><Chip label={item} key={counter++}/>))
+			}  
+			return(
+				<GridContainer>
+					<GridItem xs={12} sm={12} md={12}>
+						{arrWithTags}
+					</GridItem>
+				</GridContainer>
+			)
+		}
+		
 		// data infoWindow
 		const getInfoWindowStringUserDevice = (data) => `
 			<div>
@@ -207,8 +186,8 @@ class GoogleMapModeThree extends Component {
 						fillColor: colorBgIcon,
 						fillOpacity: 1,
 						anchor: new maps.Point(
-						  	faUserCircle.icon[0] / 2, // width
-							faUserCircle.icon[1] / 2// height
+						  faUserCircle.icon[0] / 2, // width
+						  faUserCircle.icon[1] // height
 						),
 						strokeWeight: 1,
 						strokeColor: colorBgIcon,
@@ -260,8 +239,7 @@ class GoogleMapModeThree extends Component {
 		setInterval(() => {
 			// coords data
 			let coords = this.props.coords
-			// print
-			console.log(`coordz modeThree: ${JSON.stringify(coords)}`)
+			console.log(`coordz: ${JSON.stringify(coords)}`)
 			// colorValue data
 			let colorIconUser = this.props.colorValue
 			console.log(`colorIconUser: ${JSON.stringify(colorIconUser)}`)
@@ -270,33 +248,34 @@ class GoogleMapModeThree extends Component {
 			// pass data to path
 			route.getPath().push(latlng)
 		}, 1000)
-    }
-
-    // redux action
+	}
+	
+	// redux action
 	componentDidMount(){
 		// live data from heartbeat
 		this.props.heartbeatThingSyncDataLiveDB(this.props.userDevices[0].thingId)
 		// coords points from user path
 	}
 
-    render() {
-        // redux state
+	render(){
+		// redux state
 		const {
 			// user
 			credentials,
-            // top5Products
+			// liveDataSets
+			profileToMatch,
+			// top5Tags
 			loading,
-            top5Products,
-            //top5ProductsListener
-        } = this.props
-        
-        // checker of data available
-		if(loading === false){
-            
+			top5Tags,
+			top5TagsListener,
+			matchDataResults,
+		} = this.props
+
+		// checker of data available
+		if(loading == false){
 			// print
-			console.log(`position buyer live in products: ${JSON.stringify(this.props.coords)}`)
-            console.log(`products: ${JSON.stringify(top5Products)}`)
-            
+			console.log(`position buyer live: ${JSON.stringify(this.props.coords)}`)
+			
 			return(
 				<>
 					<GoogleMap
@@ -305,9 +284,11 @@ class GoogleMapModeThree extends Component {
 								{	
 									// user
 									credentials,
-                                    // products
-                                    top5Products,
-                                    //top5ProductsListener
+									// device
+									profileToMatch,
+									// vendors
+									top5Tags,
+									top5TagsListener,
 								}
 							)
 						}
@@ -318,23 +299,26 @@ class GoogleMapModeThree extends Component {
 		} else {
 			return(
 				<>
-					<p>...wait for coords from modeThree</p>
+					<p>...wait for coords from modeOne</p>
 				</>
 			)
 		}
-    }
-} 
+	}
+}
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	// user
 	credentials: state.user.credentials,
 	// userDevices
+	loading: state.userDevices1.loading,
 	userDevices: state.userDevices1.userDevices,
-    // top5Products
-    loading:state.top5Products1.loading,
-    top5Products: state.top5Products1.top5Products,
-    // top5ProductsListener: state.top5Products1.top5ProductsListener
-})
+	// liveDataSets
+	profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
+	// top5Tags
+	top5Tags: state.top5Tags1.top5Tags,
+	top5TagsListener: state.top5Tags1.top5TagsListener,
+	matchDataResults: state.top5Tags1.top5Tags.matchDataResults
+});
 
-export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(GoogleMapModeThree)
+export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(GoogleMapModeOne)

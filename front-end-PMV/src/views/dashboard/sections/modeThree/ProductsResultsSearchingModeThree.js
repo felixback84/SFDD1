@@ -103,7 +103,7 @@ class ProductsResultsSearchingModeThree extends Component {
                                             companyname={arrTop5Product.companyData.companyName}
                                         />
                                     </Avatar>
-                                }
+                                } 
                                 action={
                                     <IconButton aria-label="settings">
                                         <MoreVertIcon/>

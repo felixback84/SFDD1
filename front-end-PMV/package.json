@@ -49,6 +49,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-slick": "^0.28.0",
+    "react-streetview": "^1.1.1",
     "react-swipeable-views": "0.13.9",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",
