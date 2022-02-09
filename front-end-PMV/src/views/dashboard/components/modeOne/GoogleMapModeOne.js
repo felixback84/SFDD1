@@ -4,6 +4,7 @@ import { faUserCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons"
 // components
 import GoogleMap from '../utils/GoogleMap'
 import MarkerDynamicModeOne from './MarkerDynamicModeOne'
+import MarkerStaticsModeOne from './MarkerStaticsModeOne'
 // modules
 import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // Redux stuff
@@ -45,13 +46,8 @@ class GoogleMapModeOne extends Component {
 			matchDataResults,
 		} = this.props 
 
-		// marker global
-		// let markerDynamicDevices = {}
-		// let counter = 0
-	
 		// checker of data available
 		if(loading === false){
-			// let je = false
 			return(
 				<>
 					<GoogleMap
@@ -59,11 +55,18 @@ class GoogleMapModeOne extends Component {
 						onMapLoad={
 							(map)=>{
 								return(
-									<MarkerDynamicModeOne
-										map={map}
-										colorvalue={this.props.colorvalue}
-										coordz={this.props.coordz}
-									/>
+									<>
+										<MarkerDynamicModeOne
+											map={map}
+											colorvalue={this.props.colorValue}
+											coordz={this.props.coordz}
+										/>
+										<MarkerStaticsModeOne
+											map={map}
+											colorvalue={this.props.colorValue}
+											coordz={this.props.coordz}
+										/>
+									</>
 								)
 							}
 						}	

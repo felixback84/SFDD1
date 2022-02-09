@@ -5,31 +5,9 @@ import StreetViewModeTwo from './StreetViewModeTwo'
 // Redux stuff
 import { connect } from 'react-redux'
 
-const Wrapper = (props) => {
-    // api google set method
-	React.useEffect(() => {
-		// gmaps
-		let google = window.google
-		// node
-		let map = mapRef.current
-		// geolocation dynamic user
-		const myLatlng = new google.maps.LatLng(
-			props.coords.lat, 
-			props.coords.lon
-		)
-		// map options
-		const mapOptions = {
-			zoom: 19,
-			center: myLatlng,
-		}
-		// map instance
-        map = new google.maps.Map(map, mapOptions)
-    })   
-}
-
 const GMapsServicesModeTwo = (props) => {
 
-    // check 
+    // check  
     if(props.checked === true){
         return(
             <StreetViewModeTwo 

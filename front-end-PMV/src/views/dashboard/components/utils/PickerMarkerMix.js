@@ -5,7 +5,7 @@ import Card from "@material-ui/core/Card"
 import Grid from "@material-ui/core/Grid"
 // components
 import GMapsServicesModeOne from '../../components/modeOne/GMapsServicesModeOne'
-//import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
+import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
 // import GoogleMapModeTwo from '../modeTwo/GoogleMapModeTwo'
 // import GoogleMapModeThree from '../modeThree/GoogleMapModeThree'
 // modeOne
@@ -72,48 +72,48 @@ const PickerMarkerMix = ({data}) => {
                 )
             }
         break;	
-        // case "modeTwo":	
-        //     if(data.loading == false){
-        //         return(
-        //             <>
-        //                 {/* map */}
-        //                 <Grid container>
-        //                     <Grid item xs={12}>
-        //                         <Card classes={{ root: data.classes.cardRoot }}>
-        //                             {/* toogle */}
-        //                             <Switch 
-        //                                 size="small" 
-        //                                 name="checked"
-        //                                 checked={mode.checked}
-        //                                 onChange={handleChange}
-        //                             />
-        //                             {/* GMaps Services */}
-        //                             <GMapsServicesModeTwo
-        //                                 checked={mode.checked}
-        //                                 coords={data.coords}
-        //                                 colorvalue={data.colorValue}
-        //                             />
-        //                         </Card>
-        //                     </Grid>
-        //                 </Grid>
-        //                 {/* chart top5Coord specifics filter*/}
-        //                 <Grid container>
-        //                     <Grid item xs={12}>
-        //                         {/* results */}
-        //                         <ChartResultsSelectedItemsSearchingModeTwo/>
-        //                     </Grid>
-        //                 </Grid>
-        //                 {/* chart all top5Coords*/}
-        //                 <Grid container>
-        //                     <Grid item xs={12}>
-        //                         {/* results */}
-        //                         <ChartResultsSearchingModeTwo/>
-        //                     </Grid>
-        //                 </Grid>
-        //             </>	
-        //         )
-        //     }
-        // break;
+        case "modeTwo":	
+            if(data.loading == false){
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch 
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* GMaps Services */}
+                                    <GMapsServicesModeTwo
+                                        checked={mode.checked}
+                                        coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        {/* chart top5Coord specifics filter*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ChartResultsSelectedItemsSearchingModeTwo/>
+                            </Grid>
+                        </Grid>
+                        {/* chart all top5Coords*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ChartResultsSearchingModeTwo/>
+                            </Grid>
+                        </Grid>
+                    </>	
+                )
+            }
+        break;
         // case "modeThree":	
         //     if(data.loading == false){
         //         console.log("modeThree")

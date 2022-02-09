@@ -40,7 +40,7 @@ class GoogleMap extends Component {
 	// 	if (!window.google) {
 	// 		let s = document.createElement('script')
 	// 		s.type = 'text/javascript'
-	// 		s.src = `https://maps.google.com/maps/api/js?key=AIzaSyB_Qh44zgo6KY-McoJGXHI5E3dn5HIUBPs`
+	// 		s.src = `3`
 	// 		let x = document.getElementsByTagName('script')[0]
 	// 		x.parentNode.insertBefore(s, x)
 	// 		//We cannot access google.maps until it's finished loading
@@ -54,7 +54,7 @@ class GoogleMap extends Component {
 	}
 
 	render(){
-		const val = this.props.onMapLoad(this.state.GMap)
+		const markers = this.props.onMapLoad(this.state.GMap)
 		return (
 			<div 
 				style={
@@ -66,9 +66,7 @@ class GoogleMap extends Component {
 				id={this.props.id} 
 			>
 				{/* buyer marker */}
-				{/* {this.props.onMapLoad(this.state.GMap)} */}
-				{val}
-				{/* {this.props.onMapLoadUpdate(this.state.GMap,val)} */}
+				{markers}
 			</div>
 		)
 	}				

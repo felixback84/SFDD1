@@ -9,7 +9,7 @@ import { string } from 'prop-types'
 // _
 let _ = require('underscore')
 
-class MarkerDynamicModeOne extends Component {
+class MarkerDynamicModeTwo extends Component {
 
     // state
 	constructor(props) {
@@ -80,7 +80,7 @@ class MarkerDynamicModeOne extends Component {
     
         // check data
         if(coordz.lon != undefined){
-            //console.log("initPosition")
+            console.log("initPosition")
             const latlng = new window.google.maps.LatLng(
                 coordz.lat, 
                 coordz.lon
@@ -100,10 +100,10 @@ class MarkerDynamicModeOne extends Component {
             marker.addListener('click', () => {
                 infoWindowsDynamicDevices.open(map, marker)
             })
+            console.log("endInitPosition")
             return marker
-            //console.log("endInitPosition")
         } else if (coords.lon != undefined) {
-            //console.log("upPosition")
+            console.log("upPosition")
             const uplatlng = new window.google.maps.LatLng(
                 coords.lat, 
                 coords.lon
@@ -112,8 +112,8 @@ class MarkerDynamicModeOne extends Component {
             // update color marker
             markerInit.setIcon(icon) 
             // pass data to path
+            console.log("endUpPosition")
             return marker
-            // console.log("endUpPosition")
         } 
     }   
 
@@ -126,30 +126,32 @@ class MarkerDynamicModeOne extends Component {
         // )
 
         // check the counter to set or update the marker
-        if(_.isEqual(nextProps.coords,this.props.coordz) === true){
-            const markerInit = this.comp(
-                this.props.coordz,
-                this.props.map,
-                this.props.credentials,
-                // dynamic data
-                {},
-                {},
-            )
-            // set state
-            this.setState({markerDynamicDevice:markerInit})
-            // console.log("to init marker")
-        }
-        
-        else if(_.isEqual(nextProps.coords,this.props.coordz) === false){
-            const markerSeq = this.comp(
-                {},
-                this.props.map,
-                this.props.credentials,
-                // dynamic data
-                nextProps.coords,
-                this.state.markerDynamicDevice, 
-            )
-            // console.log("to update marker")
+        if(this.props.coordz.lat != undefined){
+            if(_.isEqual(nextProps.coords,this.props.coordz) === true){
+                const markerInit = this.comp(
+                    this.props.coordz,
+                    this.props.map,
+                    this.props.credentials,
+                    // dynamic data
+                    {},
+                    {},
+                )
+                // set state
+                this.setState({markerDynamicDevice:markerInit})
+                console.log("to init marker")
+            }
+            
+            else if(_.isEqual(nextProps.coords,this.props.coordz) === false){
+                const markerSeq = this.comp(
+                    {},
+                    this.props.map,
+                    this.props.credentials,
+                    // dynamic data
+                    nextProps.coords,
+                    this.state.markerDynamicDevice, 
+                )
+                console.log("to update marker")
+            }
         }
     }
 
@@ -177,4 +179,4 @@ const mapStateToProps = (state) => ({
 	matchDataResults: state.top5Tags1.top5Tags.matchDataResults
 });
 
-export default connect(mapStateToProps)(MarkerDynamicModeOne)
+export default connect(mapStateToProps)(MarkerDynamicModeTwo)
