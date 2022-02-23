@@ -3,7 +3,7 @@ import {
  
     // ---> search products by category and tags
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
-    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
+    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS, 
 
     // ---> post list of products to find
     POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND, 
@@ -38,6 +38,9 @@ const initialState = {
 
     top5Product:{},
         top5ProductListener:[],
+
+    // top5Products UI
+    top5ProductsUI:[]
 };
 
 // function to determine the type of action to set state
@@ -48,7 +51,8 @@ export default function(state = initialState, action){
         case GET_PRODUCTS_BY_CATEGORY_AND_TAGS:
             return {
                 ...state,
-                responses: action.payload,
+                // responses: action.payload,
+                top5ProductsUI: action.payload,
                 //loading: false
             }; 
 

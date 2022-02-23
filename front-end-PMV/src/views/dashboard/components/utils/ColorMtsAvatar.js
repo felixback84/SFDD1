@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ColorMtsAvatar(props) {
+const ColorMtsAvatar = (props) => {
     // styles
     const classes = useStyles()
     // short name
     const companyNameBadge = props.companyname
     let companyNameShort = companyNameBadge.substring(0, 2)
-    console.log(`short name: ${companyNameShort}`)
+    // console.log(`short name: ${companyNameShort}`)
     // instance
     const inst = new ColorAndMeters 
     const colorMuiMix = inst.colorMuiMix(props.meters)
@@ -45,3 +45,5 @@ export default function ColorMtsAvatar(props) {
         </>
     )
 }
+
+export default ColorMtsAvatar

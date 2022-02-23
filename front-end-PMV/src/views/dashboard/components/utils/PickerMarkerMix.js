@@ -6,18 +6,20 @@ import Grid from "@material-ui/core/Grid"
 // components
 import GMapsServicesModeOne from '../../components/modeOne/GMapsServicesModeOne'
 import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
-// import GoogleMapModeTwo from '../modeTwo/GoogleMapModeTwo'
-// import GoogleMapModeThree from '../modeThree/GoogleMapModeThree'
+import GoogleMapModeThree from '../modeThree/GoogleMapModeThree'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
 import ChartResultsSearchingModeTwo from "../../sections/modeTwo/ChartResultsSearchingModeTwo"
 import ChartResultsSelectedItemsSearchingModeTwo from "../../sections/modeTwo/ChartResultsSelectedItemsSearchingModeTwo"
 // modeThree
-// import ProductsResultsSearchingModeThree from "../../sections/modeThree/ProductsResultsSearchingModeThree"
+import ProductsResultsSearchingModeThree from "../../sections/modeThree/ProductsResultsSearchingModeThree"
+import ProductsResultsTempSearchingModeThree from "../../sections/modeThree/ProductsResultsSearchingModeThree"
+// Redux stuff
+import {connect} from 'react-redux'
 
 // pick the right marker mix
-const PickerMarkerMix = ({data}) => {
+const PickerMarkerMix = ({data,props}) => {
 
     // print
     console.log(`coordz:${JSON.stringify(data.coordz)}`)
@@ -114,38 +116,51 @@ const PickerMarkerMix = ({data}) => {
                 )
             }
         break;
-        // case "modeThree":	
-        //     if(data.loading == false){
-        //         console.log("modeThree")
-        //         return(
-        //             <>
-        //                 {/* map */}
-        //                 <Grid container>
-        //                     <Grid item xs={12}>
-        //                         <Card classes={{ root: data.classes.cardRoot }}>
-        //                             <GoogleMapModeThree
-        //                                 coords={data.coordz}
-        //                                 colorValue={data.color} 
-        //                             />
-        //                         </Card>
-        //                     </Grid>
-        //                 </Grid>
-        //                 {/* top5Products result */}
-        //                 <Grid container>
-        //                     <Grid item xs={12}>
-        //                         <Card 
-        //                             classes={{ root: data.classes.cardRoot }} 
-        //                             style={{padding:"10px"}}
-        //                         >
-        //                             {/* results */}
-        //                             <ProductsResultsSearchingModeThree/>
-        //                         </Card>
-        //                     </Grid>
-        //                 </Grid>
-        //             </>	
-        //         )
-        //     }
-        // break;
+        case "modeThree":	
+            if(data.loading == false){
+                console.log("modeThree")   
+                const {
+                    top5Products,
+                    top5ProductsUI
+                } = props
+
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch 
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GoogleMapModeThree
+                                        coords={data.coords}
+                                        colorValue={data.color} 
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        {/* top5Products result */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card 
+                                    classes={{ root: data.classes.cardRoot }} 
+                                    style={{padding:"10px"}}
+                                >
+                                    {/* results */}
+                                    <ProductsResultsTempSearchingModeThree/>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </>	
+                )
+            }
+        break;
         // case "modeFour":	
         // 	return(
         // 		<MarkerInfoWindowModeFour 
@@ -161,4 +176,14 @@ const PickerMarkerMix = ({data}) => {
     }
 }
 
-export default PickerMarkerMix
+// connect to global state in redux
+const mapStateToProps = (state) => ({
+    // top5Products 
+    loading: state.top5Products1.loading,
+    top5Products:state.top5Products1.top5Products,
+    top5ProductsListener:state.top5Products1.top5ProductsListener,
+    top5ProductsUI:state.top5Products1.top5ProductsUI
+})
+
+export default connect(mapStateToProps)(PickerMarkerMix)
+    

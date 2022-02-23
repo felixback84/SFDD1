@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 // components
 import ComboSearchModeOne from "./ComboSearchModeOne"
 import ComboSearchModeThree from "./ComboSearchModeThree"
+import ProductsResultsTempSearchingModeThree from "../../../../dashboard/sections/modeThree/ProductsResultsTempSearchingModeThree"
 // Redux stuff
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
- 
+
+
 const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
     switch(searchingMode){
         case "modeOne":
@@ -18,10 +20,14 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
         break;
         case "modeThree":
             return( 
-                <ComboSearchModeThree
-                    staticDevicesTags={tagsList}
-                />
-            )
+                <>
+                    {/* fileds */}
+                    <ComboSearchModeThree
+                        staticDevicesTags={tagsList}
+                    />
+                    
+                </>
+            )   
         break;
         default:
 			return(

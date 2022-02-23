@@ -10,19 +10,9 @@ import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // Redux stuff
 import { connect } from 'react-redux'
 import { heartbeatThingSyncDataLiveDB } from '../../../../redux/actions/heartbeatUIActions'
-// _
-let _ = require('underscore')
+
 
 class GoogleMapModeTwo extends Component {
-
-	// state
-	constructor(props) {
-		super(props)
-		this.state = {
-			map:{},
-			counter:false
-		}
-	}
 
 	// redux action
 	componentDidMount(){
@@ -64,12 +54,12 @@ class GoogleMapModeTwo extends Component {
 										<MarkerStaticsModeTwo
 											map={map}
 											colorvalue={this.props.colorValue}
-											coordz={this.props.coordz}
+											coordz={this.props.coords}
 										/>
 									</>
 								)
 							}
-						}	
+						}	 
 					>
 					</GoogleMap>		
 				</>
@@ -94,7 +84,7 @@ const mapStateToProps = (state) => ({
 	loading:state.heartbeatThing1.loading,
 	profileToMatch: state.heartbeatThing1.thingLiveDataSets.profileToMatch,
 	searchingMode:state.heartbeatThing1.thingLiveDataSets.searchingMode,
-	coords:state.heartbeatThing1.thingLiveDataSets.coords,
+	// coords:state.heartbeatThing1.thingLiveDataSets.coords,
     idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
 	// top5Tags
 	loading: state.top5Tags1.loading,

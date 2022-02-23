@@ -16,6 +16,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
+import Grid from '@material-ui/core/Grid';
 // icons
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -23,7 +24,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 // Redux stuff
 import {connect} from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
-import {searchStaticDevicesProductsByCategoriesAndTags} from "../../../../../redux/actions/top5ProductsActions"
+import {searchStaticDevicesProductsByCategoryAndTags} from "../../../../../redux/actions/top5ProductsActions"
 
 // add styles
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 	button: {
         margin: theme.spacing(0.25),
         minWidth: "100%",
-        maxWidth: 600,
+        borderRadius: 0
     },
     chips: {
         display: 'flex',
@@ -60,6 +61,10 @@ const useStyles = makeStyles((theme) => ({
     noLabel: {
         marginTop: theme.spacing(3),
 	},
+	field: {
+		minWidth: "100%",
+		marginBottom: theme.spacing(1)
+	}
 }));
 
 // menu props
@@ -110,7 +115,8 @@ const ComboSearchModeThree = (props) => {
     // state of field & checkboxes
     const [categorySelected, setCategory] = React.useState("")
 	const [tagsSelected, setTags] = React.useState({})
-    const [filteredData, setFilteredData] = React.useState()
+	const [selectState, setSelectState] = React.useState(false)
+    // const [filteredData, setFilteredData] = React.useState()
 	
     // handle change for tags
     const handleChangeTags = (event) => {
@@ -123,16 +129,19 @@ const ComboSearchModeThree = (props) => {
     } 
 
     // send data event
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
 		event.preventDefault()
 		// obj to pass
-		const objData = {
-			category:categorySelected,
-			// send only the keys (arr) with data
-			tag:tagsSelected[categorySelected]
+		const dataToSend = {
+			dataProductToSearch:{
+				categories:categorySelected,
+				// send only the keys (arr) with data
+				tags:tagsSelected[categorySelected]
+			}
 		}
+		console.log({dataToSend})
         // redux action to send data to server
-		props.searchStaticDevicesProductsByCategoriesAndTags(objData)
+		await props.searchStaticDevicesProductsByCategoryAndTags(dataToSend)
 	}
 
 	// handle change for categories
@@ -195,22 +204,23 @@ const ComboSearchModeThree = (props) => {
 	}
 
 	// active input
-	const handleFilter = (event) => {
-		const searchWord = event.target.value
-		const newFilter = props.staticDevicesTags[categorySelected].filter((value)=>{ 
-			return value.toLowerCase().includes(searchWord.toLowerCase()) // title needs to be the key name
-		})
-		// checker of use of field
-		if(searchWord === ""){
-			// hook state
-			setFilteredData([])
-		} else {
-			// hook state
-			setFilteredData(newFilter)
-		}
-	}
+	// const handleFilter = (event) => {
+	// 	const searchWord = event.target.value
+	// 	const newFilter = props.staticDevicesTags[categorySelected].filter((value)=>{ 
+	// 		return value.toLowerCase().includes(searchWord.toLowerCase()) // title needs to be the key name
+	// 	})
+	// 	// checker of use of field
+	// 	if(searchWord === ""){
+	// 		// hook state
+	// 		setFilteredData([])
+	// 	} else {
+	// 		// hook state
+	// 		setFilteredData(newFilter)
+	// 	}
+	// }
 
 	// category selected field
+	
 	const field = (categorySelected) => {
 		return categorySelected != "" && 
 		(
@@ -226,6 +236,7 @@ const ComboSearchModeThree = (props) => {
 					<Input 
 						id={`select-mutiple-chip`} 
 						//onChange={handleFilter}
+						className={classes.field}
 					/>
 				}
 				renderValue={
@@ -253,7 +264,7 @@ const ComboSearchModeThree = (props) => {
 				aria-labelledby="nested-list-subheader"
 			>
 				<ListItem button onClick={handleClick}>
-                    <ListItemText primary="Category Shop Search" />
+                    <ListItemText/>
                         {open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 
@@ -263,37 +274,41 @@ const ComboSearchModeThree = (props) => {
 							noValidate 
 							onSubmit={handleSubmit}
 						>
-                            <FormControl>
-                                {/* checkboxes categories*/}
-                                <FormLabel component="legend">Categories</FormLabel>
-								<FormGroup aria-label="position" row>
-									{keysToCheckBoxes(props.staticDevicesTags)}
-								</FormGroup>
-								{/* field tag label*/}
-								<InputLabel id={`mutiple-chip-label`}>{`Tags in ${categorySelected}`}</InputLabel>
-								{/* field of category selected */}
-								{field(categorySelected)}
-							</FormControl>
-
-							{/* btn */}
-							<Button 
-								className={classes.button}
-								type="submit" 
-								variant="contained" 
-								color="primary" 
-								variant="outlined"
-								disabled={props.loading}>
-									Buscar
-									{props.loading && (
-										<CircularProgress 
-											size={30} 
-											className={classes.progress} 
-										/>
-									)}
-							</Button>
+							<Grid container >
+								<Grid item xs={12}>
+									{/* <Item>xs=8</Item> */}
+									<FormGroup aria-label="position" row>
+										{keysToCheckBoxes(props.staticDevicesTags)}
+									</FormGroup>
+								</Grid>	
+								<Grid item xs={12}>
+									{field(categorySelected)}
+								</Grid>
+								<Grid item xs={12}>
+									{/* btn */}
+									<Button 
+										size="large"
+										className={classes.button}
+										type="submit" 
+										variant="contained" 
+										color="primary" 
+										disabled={props.loading}>
+											Search
+											{props.loading && (
+												<CircularProgress 
+													size={30} 
+													className={classes.progress} 
+												/>
+											)}
+									</Button>
+								</Grid>
+							</Grid>
 						</form>
 					</List>
 				</Collapse>
+
+				{/* list of temp products */}
+				{/* {props.selectState} */}
 			</List>                 
         </>
     )
@@ -307,8 +322,11 @@ const mapStateToProps = (state) => ({
 	// userDevices
 	userDevices: state.userDevices1.userDevices,
 	// liveDataSets
-    thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	// top5Products
+	loading:state.top5Products1.loading,
+	top5ProductsUI: state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoriesAndTags})(ComboSearchModeThree)
+export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoryAndTags})(ComboSearchModeThree)
     

@@ -227,10 +227,11 @@ class ProductsResultsSearchingModeThree extends Component {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-    // top5Products
+    // top5Products 
     loading: state.top5Products1.loading,
     top5Products:state.top5Products1.top5Products,
-    top5ProductsListener:state.top5Products1.top5ProductsListener
+    top5ProductsListener:state.top5Products1.top5ProductsListener,
+    top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
 export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSearchingModeThree))

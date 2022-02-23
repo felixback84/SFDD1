@@ -25,22 +25,23 @@ import {
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
         STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
     
-} from '../types'; 
+} from '../types'
 
 // firebase client libs
-import firebase from '../../fb/utilities/firebase'; 
+import firebase from '../../fb/utilities/firebase'
 // axios 
-import axios from 'axios';
+import axios from 'axios'
 
 // ---> search products by category and tags
-export const searchStaticDevicesProductsByCategoriesAndTags = (data) => async (dispatch) => {
+export const searchStaticDevicesProductsByCategoryAndTags = (data) => async (dispatch) => {
     // var
-    let dataIn = data
+    let dataIn = await data
+    console.log({dataIn})
     // run it
     try {
-        let dataTag = axios
-            .get(`/staticdevice/products/category/${dataIn.category}/tags/${dataIn.tag}`)
-        const res = await dataTag
+        let dataByCategoryAndTags = await axios
+            .post(`/staticdevice/products/category/tags/`,dataIn)
+        const res = await dataByCategoryAndTags 
         console.log({res})
         dispatch({ 
             type: GET_PRODUCTS_BY_CATEGORY_AND_TAGS,

@@ -76,14 +76,15 @@ exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
                         price:doc.data().price,
                         createdAt:doc.data().createdAt,
                         productId:doc.id,
-                        taxonomy:doc.data().taxonomy
+                        taxonomy:doc.data().taxonomy,
+                        companyName:doc.data().companyName
                     })
                 } else {
                     console.log("error in filter of tags")
                 } 
             })
             // res
-            return res.json(resultsOfProductsInDB);
+            return res.json(resultsOfProductsInDB)
         }
     })
     .catch(err => {
@@ -123,7 +124,8 @@ exports.searchStaticDevicesProductsByCategoriesAndTags = async (req, res) => {
                         price:doc.data().price,
                         createdAt:doc.data().createdAt,
                         productId:doc.id,
-                        taxonomy:doc.data().taxonomy
+                        taxonomy:doc.data().taxonomy,
+                        companyName:doc.data().companyName
                     })
                 } else {
                     console.log("error in filter of tags")
@@ -275,6 +277,124 @@ exports.postListOfProductsToFind = async (req, res) => {
     const resp = await pass
     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
 }
+
+
+// post list of products in top5Products one by one
+exports.postListOfProductsToFindOneByOne = async (req, res) => {
+    // receive list of products
+    let productId = req.body.listOfProducts[0].productsId
+    // userDeviceId
+    let userDeviceId = req.body.userDeviceId
+    // var to hold results for product pick
+    let resultDataOfSelectedOfProduct = {}
+
+    // find those products on the collection 
+    const toExtractDataOfSelectedProduct = async (productId) => {
+        // dp liveDataSets part
+        let result = await db
+            .doc(`/products/${productId}`)
+            .get()
+            .then((doc)=>{                    
+                // pass data to var
+                resultDataOfSelectedOfProduct = {
+                    coords:doc.data().coords,
+                    product:{
+                        name:doc.data().name,
+                        tags:doc.data().tags,
+                        categories:doc.data().categories,
+                        staticDeviceProperty:doc.data().staticDeviceProperty,
+                        description:doc.data().description,
+                        familyOfDevices:doc.data().familyOfDevices,
+                        imgUrl:doc.data().imgUrl,
+                        price:doc.data().price,
+                        createdAt:doc.data().createdAt,
+                        productId:doc.id,
+                        taxonomy:doc.data().taxonomy,
+                        companyName:doc.data().companyName,
+                    }
+                }
+                // console.log({resultDataOfSelectedOfProduct})
+                // return resultDataOfSelectedOfProduct
+            })
+            .catch(err => {
+                res.status(500, err)
+            })
+    }
+
+    // extract companyData
+    const extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products = async (productData) => {
+        // vars
+        let outputObjFromCompanyData = {}
+        
+        // extract userHandle
+        const userHandle = productData.product.staticDeviceProperty.split("-").slice(0,1).toString()
+        // db connection
+        db
+            .collection(`/users/${userHandle}/companyData`)
+            .get()
+            .then(snapshot => {
+                // check if exists
+                if (snapshot.empty) {
+                    console.log('No matching documents.')
+                } else {
+                    snapshot.forEach(doc => {
+                        outputObjFromCompanyData = {
+                            companyName:doc.data().companyName,
+                            localPicUrl:doc.data().localPicUrl,
+                        }
+                    })
+                    // return
+                }
+            })
+            .then(()=>{
+                // userHandle
+                let companyName = productData.product.companyName
+                // check to push in the right item
+                if(companyName === outputObjFromCompanyData.companyName){
+                    console.log("hi sun")
+                    // passing the rest of data to the final obj
+                    productData.companyData = outputObjFromCompanyData
+                    productData.meters = 0
+                    productData.thingId = productData.product.staticDeviceProperty
+                }else{
+                    console.log("hi moon")
+                }
+                // print
+                console.log(`resultDataOfSelectedOfProduct after push company data: ${JSON.stringify(resultDataOfSelectedOfProduct)}`)
+                return resultDataOfSelectedOfProduct
+            })
+            .then(async (data)=>{
+                // db conection
+                await db
+                    .collection(`/userDevices/${userDeviceId}/top5Products`)
+                    .add({
+                        ...data    
+                    })
+                    .catch(err => {
+                        res.status(500, err)
+                    })
+            })
+            .catch(err => {
+                console.log('Error getting documents', err)
+            })
+    }   
+    
+    // run it
+    // const pass = await toExtractDataOfSelectedProduct(productId).then(async (resultDataOfSelectedOfProduct)=>{
+
+    //     const resp = resultDataOfSelectedOfProduct
+    //     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
+    // })
+    // .catch(err => {
+    //     console.log('Error getting documents', err)
+    // })
+    
+    const pass = await toExtractDataOfSelectedProduct(productId)
+    const resp = pass
+    const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(resultDataOfSelectedOfProduct != {} && resultDataOfSelectedOfProduct)
+    
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
 // method to make the meassurment with the list of selected products

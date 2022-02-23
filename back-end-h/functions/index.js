@@ -99,7 +99,8 @@ const {
         searchStaticDevicesProductsByCategoriesAndTags, // products searcher categories and tags ---> not yet
         // findStaticsProductsInSpecificMtsRange, ------> better search
 
-        postListOfProductsToFind, // ---> top5Products from ux 
+        postListOfProductsToFindOneByOne,
+        //postListOfProductsToFind, // ---> top5Products from ux 
         meassureOfMatchesInProducts, // ----> meassure modeThree
     } = require('./handlers/searchingModes/modeThree');
     
@@ -253,7 +254,7 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
     // post to unselectStaticDeviceToSearch by userDevice 
     app.post('/userdevice/deSelectStaticDevicesToSearch',FBAuth,deSelectStaticDevicesToSearchByUserDevice);
 
-/////*** */ mode three
+/////*** */ mode three 
 // search of static devices products according to one category and one tag it has
 //app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
 // search of static devices products according to one category and tags it has
@@ -261,7 +262,8 @@ app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProdu
 // search of static devices products according to multiple categories and tags it has ---> not yet
 app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 // to post list of products to find his positions and owners
-app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
+// app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
+app.post('/userdevice/postlistofproducts', postListOfProductsToFindOneByOne) // before modeThree
 
     /////*** */ mode four
     // post product to Search by userDevice ---> before modeFour

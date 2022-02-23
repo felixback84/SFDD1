@@ -50,6 +50,7 @@ class Dashboard extends Component {
 			colorValue,
 			searchingMode,
 			// static data device
+			coordz,
 			thingLiveDataSets:{
 				//searchingMode,
 				idOfSpecificStaticDevices,
@@ -82,6 +83,7 @@ class Dashboard extends Component {
 							{
 								searchingMode:searchingMode[0],
 								classes,
+								coordz,
 								coords,
 								colorValue,
 								loading
@@ -112,6 +114,7 @@ const mapStateToProps = (state) => ({
 	loading: state.heartbeatThing1.loading,
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	searchingMode: state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
+	coordz: state.heartbeatThing1.thingLiveDataSets.coords,
 	coords: state.heartbeatThing1.thingLiveDataSetsListener.coords,
 	colorValue: state.heartbeatThing1.thingLiveDataSetsListener.colorValue,
 });

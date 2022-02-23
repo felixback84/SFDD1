@@ -1,12 +1,16 @@
 //types of actions
 import { 
+
+    // search fields modeOne
     LOADING_GET_TAGS_FROM_DEVICE_CONFIG,
-    
     GET_DATA_TAGS_FROM_ALL_STATICS_FOR_SEARCH_BOX_MODEONE,
     STOP_GET_TAGS_FROM_DEVICE_CONFIG,
     
+    // errors from server
     SET_ERRORS,   
-    CLEAR_ERRORS,  
+    CLEAR_ERRORS, 
+    
+    // UI state
     LOADING_UI, 
     STOP_LOADING_UI
 } from '../types';

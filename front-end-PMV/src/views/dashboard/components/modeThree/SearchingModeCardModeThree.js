@@ -3,12 +3,15 @@ import React, { Fragment } from 'react'
 import { useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Grid from '@material-ui/core/Grid';
+
 // core components
 import CardStats from "../../../../components/Cards/CardStats.js";
 import SearchingModeSwitcherThree from "./SearchingModeSwitcherThree"
-// components
+// modules
 import SearchEngine from "../utils/SearchEngine/SearchEngine"
 import ColorEngine from "../utils/ColorEngine/ColorEngine"
+// components
+import ProductsResultsTempSearchingModeThree from "../../sections/modeThree/ProductsResultsTempSearchingModeThree"
 // Redux stuff
 import { connect } from 'react-redux';
 
@@ -22,6 +25,13 @@ const SearchingModeCardModeThree = (props) => {
 	const modeCardMarkupThree = (data) => {
 		return ( 
 			<> 
+			{/* badge counter */}
+			<Box
+				marginLeft=".5rem"
+				marginBottom=".5rem"
+				component="span">
+				<ProductsResultsTempSearchingModeThree/>
+			</Box>
 				<CardStats
 					subtitle={props.title}
 					title={
@@ -33,7 +43,7 @@ const SearchingModeCardModeThree = (props) => {
 								data.top5Products[0].meters.toFixed(2)
 						):(0)
 					} // dstance to the closer
-					icon={props.icon}
+					//icon={props.icon}
 					color={
 						colorClass.colorPicker(data.colorValue)
 					} // color from liveDataSets
@@ -49,6 +59,8 @@ const SearchingModeCardModeThree = (props) => {
 									thingid={props.thingid}
 								/>
 							</Box>
+
+							
 							
 							{/* bussines item closer */}
 							<Box
@@ -82,7 +94,9 @@ const SearchingModeCardModeThree = (props) => {
 								alignItems="center"
 							>
 								{/* search engine */}
-								<SearchEngine searchingmode="modeThree"/>
+								<SearchEngine 
+									searchingmode="modeThree"
+								/>
 							</Box> 
 						</Fragment>
 					}

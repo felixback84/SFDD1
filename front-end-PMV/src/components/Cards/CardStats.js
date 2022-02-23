@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 // core components
 import componentStyles from "assets/theme/components/card-stats.js";
 import boxShadows from "assets/theme/box-shadow.js";
+import ProductsResultsTempSearchingModeThree from "../../views/dashboard/sections/modeThree/ProductsResultsTempSearchingModeThree"
 
 const useStyles = makeStyles(componentStyles);
 
@@ -58,7 +59,7 @@ function CardStats({ subtitle, title, footer, icon, color }) {
                 color={theme.palette.white.main}
                 className={classes[color]}
               >
-                {icon && typeof icon === "object" ? (
+                {/* {icon && typeof icon === "object" ? (
                   <Box
                     component={icon}
                     width="1.5rem!important"
@@ -67,7 +68,8 @@ function CardStats({ subtitle, title, footer, icon, color }) {
                 ) : null}
                 {icon && typeof icon === "string" ? (
                   <Box component="i" fontSize="1.25rem" className={icon} />
-                ) : null}
+                ) : null}  */}
+                {/* <ProductsResultsTempSearchingModeThree/> */}
               </Box>
             </Grid>
           </Grid>
