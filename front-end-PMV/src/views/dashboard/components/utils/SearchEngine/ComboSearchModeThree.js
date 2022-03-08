@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: theme.spacing(1)
 	}
 }));
-
+ 
 // menu props
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -133,6 +133,7 @@ const ComboSearchModeThree = (props) => {
 		event.preventDefault()
 		// obj to pass
 		const dataToSend = {
+			userDeviceId:props.thingLiveDataSets.thingId.split("-").slice(2).toString(),
 			dataProductToSearch:{
 				categories:categorySelected,
 				// send only the keys (arr) with data
@@ -306,9 +307,6 @@ const ComboSearchModeThree = (props) => {
 						</form>
 					</List>
 				</Collapse>
-
-				{/* list of temp products */}
-				{/* {props.selectState} */}
 			</List>                 
         </>
     )
@@ -325,7 +323,7 @@ const mapStateToProps = (state) => ({
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	// top5Products
 	loading:state.top5Products1.loading,
-	top5ProductsUI: state.top5Products1.top5ProductsUI
+	// top5ProductsUI: state.top5Products1.top5ProductsUI
 });
 
 export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoryAndTags})(ComboSearchModeThree)

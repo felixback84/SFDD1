@@ -32,12 +32,12 @@ class GoogleMapModeThree extends Component {
 		if(loading === false){
             
 			// print
-			console.log(`position buyer live in products: ${JSON.stringify(this.props.coords)}`)
-            console.log(`products: ${JSON.stringify(top5Products)}`)
+			// console.log(`position buyer live in products: ${JSON.stringify(this.props.coords)}`)
+            // console.log(`products: ${JSON.stringify(top5Products)}`)
             
 			return(
 				<>
-					<GoogleMap
+					<GoogleMap 
 						id="myMap"
 						onMapLoad={
 							(map)=>{

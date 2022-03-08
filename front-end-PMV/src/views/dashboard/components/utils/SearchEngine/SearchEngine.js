@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // components
 import ComboSearchModeOne from "./ComboSearchModeOne"
 import ComboSearchModeThree from "./ComboSearchModeThree"
-import ProductsResultsTempSearchingModeThree from "../../../../dashboard/sections/modeThree/ProductsResultsTempSearchingModeThree"
+
 // Redux stuff
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
@@ -38,7 +38,7 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
 
 class SearchEngine extends Component {
 
-    // cycle 
+    // cycle  
     componentDidMount(){
         // redux actions to create ux
         switch(this.props.searchingmode){

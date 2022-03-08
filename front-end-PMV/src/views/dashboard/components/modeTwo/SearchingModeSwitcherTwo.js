@@ -28,7 +28,7 @@ const SearchingModeSwitcherOne = (props) => {
 	const [mode, setMode] = useState({
 		checked: false,
 		modeType: props.mode,
-	});
+	})
 
 	// handleChange switch
 	const handleChange = (event) => {
@@ -40,7 +40,7 @@ const SearchingModeSwitcherOne = (props) => {
 		})
 		
 		// print
-		console.log(`event.target.checked: ${event.target.checked}`)
+		// console.log(`event.target.checked: ${event.target.checked}`)
 
 		// var	
 		const thingId = props.thingid

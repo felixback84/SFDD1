@@ -102,7 +102,7 @@ class ProductsResultsSearchingModeThree extends Component {
                                             meters={arrTop5Product.meters} 
                                             companyname={arrTop5Product.companyData.companyName}
                                         />
-                                    </Avatar>
+                                    </Avatar> 
                                 } 
                                 action={
                                     <IconButton aria-label="settings">
@@ -231,7 +231,7 @@ const mapStateToProps = (state) => ({
     loading: state.top5Products1.loading,
     top5Products:state.top5Products1.top5Products,
     top5ProductsListener:state.top5Products1.top5ProductsListener,
-    top5ProductsUI:state.top5Products1.top5ProductsUI
+    // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
 export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSearchingModeThree))

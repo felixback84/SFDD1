@@ -11,7 +11,7 @@ import SearchingModeSwitcherThree from "./SearchingModeSwitcherThree"
 import SearchEngine from "../utils/SearchEngine/SearchEngine"
 import ColorEngine from "../utils/ColorEngine/ColorEngine"
 // components
-import ProductsResultsTempSearchingModeThree from "../../sections/modeThree/ProductsResultsTempSearchingModeThree"
+
 // Redux stuff
 import { connect } from 'react-redux';
 
@@ -25,15 +25,10 @@ const SearchingModeCardModeThree = (props) => {
 	const modeCardMarkupThree = (data) => {
 		return ( 
 			<> 
-			{/* badge counter */}
-			<Box
-				marginLeft=".5rem"
-				marginBottom=".5rem"
-				component="span">
-				<ProductsResultsTempSearchingModeThree/>
-			</Box>
-				<CardStats
+				{/* badge counter */}
+				<CardStats 
 					subtitle={props.title}
+					// distance to the closer
 					title={
 						data.top5Products.length != 0 ? 
 						(
@@ -42,13 +37,14 @@ const SearchingModeCardModeThree = (props) => {
 								data.top5ProductsListener[0].meters.toFixed(2):
 								data.top5Products[0].meters.toFixed(2)
 						):(0)
-					} // dstance to the closer
+					} 
 					//icon={props.icon}
+					// color from liveDataSets
 					color={
 						colorClass.colorPicker(data.colorValue)
-					} // color from liveDataSets
+					} 
 					footer={
-						<Fragment>
+						<>
 							<Box
 								marginLeft=".5rem"
 								marginBottom=".5rem"
@@ -60,8 +56,6 @@ const SearchingModeCardModeThree = (props) => {
 								/>
 							</Box>
 
-							
-							
 							{/* bussines item closer */}
 							<Box
 								component="span"
@@ -98,7 +92,7 @@ const SearchingModeCardModeThree = (props) => {
 									searchingmode="modeThree"
 								/>
 							</Box> 
-						</Fragment>
+						</>
 					}
 				/>		
 			</>

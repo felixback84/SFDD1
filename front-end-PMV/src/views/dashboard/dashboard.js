@@ -122,4 +122,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps,{getUserDevices,heartbeatThingSyncDataStatic,heartbeatThingSyncDataLiveDB})(withStyles(useStyles)(Dashboard));
 
 
-
+ 

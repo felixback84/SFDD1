@@ -40,7 +40,7 @@ const initialState = {
         top5ProductListener:[],
 
     // top5Products UI
-    top5ProductsUI:[]
+    // top5ProductsUI:[]
 };
 
 // function to determine the type of action to set state
@@ -52,7 +52,7 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 // responses: action.payload,
-                top5ProductsUI: action.payload,
+                top5Products: action.payload,
                 //loading: false
             }; 
 

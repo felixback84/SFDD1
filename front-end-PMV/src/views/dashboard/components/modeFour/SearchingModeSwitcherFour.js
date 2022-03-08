@@ -8,76 +8,84 @@ import store from '../../../../redux/store';
 import { connect } from 'react-redux';
 import { 
 	heartbeatPostSearchingMode,
-	userDeviceSpecificTop5ProductSyncData,
-} from '../../../../redux/actions/userDevicesActions';
+} from '../../../../redux/actions/heartbeatUIActions';
+import {
+	userDeviceTop5ProductsSyncDataStatic,
+	userDeviceTop5ProductsSyncDataLiveDB
+} from '../../../../redux/actions/top5ProductsActions';
 // styles
-import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
-const useStyles = makeStyles(SearchingModeCardStyles);
+//import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
+//const useStyles = makeStyles(SearchingModeCardStyles);
 
 // switcher
 const SearchingModeSwitcherFour = (props) => {
 	// styles
-	const classes = useStyles();
+	//const classes = useStyles()
 	// hook state
-	const [mode, setMode] = useState("");
-	// effects
-	useEffect(() => {
-		if(mode === "modeFour"){
+	const [mode, setMode] = useState({
+		checked: false,
+		modeType: props.mode,
+	})
+	// handleChange switch
+	const handleChange = (event) => {
+		// state
+		setMode({ 
+			...mode,
+			[event.target.name]: event.target.checked,
+			modeType: mode.modeType, 
+		})
+		// thingId
+		const thingId = props.thingid	
+		
+		// checker of switcher change
+		if(
+			event.target.checked === true 
+			&& props.loading === false
+			// mode.modeType != ""
+		){	
 			// obj to pass
 			const dataSearchingMode = {
 				objSearchingModeData:{
-					searchingMode:[mode],
-					thingId:props.thingId
+					searchingMode:[mode.modeType],
+					thingId
 				}
 			}
-			store.dispatch(heartbeatPostSearchingMode(dataSearchingMode));
-		}
-	})
-	// redux action to extract data from db acoord with the search mode
-	useEffect(()=>{
-		if(mode === "modeFour"){
-			props.userDeviceSpecificTop5ProductSyncData(
-				props.thingId,
-				props.thingLiveDataSets.idOfSpecificProduct
-			)
-		}
-	})
-	
+			// post searching mode in db
+			props.heartbeatPostSearchingMode(dataSearchingMode)
+			// static data from top5Tags
+			props.userDeviceTop5ProductsSyncDataStatic(thingId)	
+			// live data from top5Tags
+			props.userDeviceTop5ProductsSyncDataLiveDB(thingId)
+		} 
+	}
+
 	return(
 		<FormControlLabel
 			control={
 				<Switch
-					checked={props.thingLiveDataSets.onMode}
-					onChange={() => setMode(props.mode)}
-					value="checkedB"
-					classes={{
-						switchBase: classes.switchBase,
-						checked: classes.switchChecked,
-						thumb: classes.switchIcon,
-						track: classes.switchBar
-					}}
+					name="checked"
+					checked={mode.checked}
+					onChange={handleChange}	
 				/>
-			}
-			classes={{
-				label: classes.label,
-				root: classes.labelRoot
-			}} 
-			label="Toggle is off"
+			}	
 		/>
 	)
 }
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
-	//thingId: state.userDevices1.userDevices[0].thingId,
-	thingId:state.heartbeatThing1.thingLiveDataSets.thingId,
+	// userDevices
+	loading:state.userDevices1.loading,
+	// thing
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
-});
+})
 
+// redux actions
 const mapActionsToProps = {
 	heartbeatPostSearchingMode,
-	userDeviceSpecificTop5ProductSyncData,
-};
+	userDeviceTop5ProductsSyncDataStatic,
+	userDeviceTop5ProductsSyncDataLiveDB
+}
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherFour);
 

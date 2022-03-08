@@ -178,9 +178,8 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
         })   
 }
 
-// declarate a function to get data from a specifics one db for top5Products (modeFour) --> static data
-// --> to check
-// export const userDeviceSpecificTop5ProductSyncData = (thingId, docId, [...arrIds]) => (dispatch) => {
+// to get data from a specifics one db for top5Products (modeFour) --> static data
+// export const userDeviceSpecificTop5ProductSyncData = (thingId, [...arrIds]) => (dispatch) => {
 
 //     // arrIds
 //     const arrListOfTags = [...arrIds]
@@ -211,7 +210,7 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
     
 //     // push data
 //     const observer = data.then(doc => {
-//         const resultDB = doc.data(); 
+//         const resultDB = doc.data()
 //         // dispatch
 //         dispatch({ 
 //             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
@@ -220,10 +219,10 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
 //         dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT });
 //     }, err => {
 //         console.log(`Encountered error: ${err}`);
-//     });
+//     })
 // }
 
-// declarate a function to get data from a specifics one db for top5Products (modeFour) --> dynamic data
+// to get data from a specifics one db for top5Products (modeFour) --> dynamic data
 // export const userDeviceSpecificTop5ProductSyncDataLiveDB = () => (dispatch) => {
 
 //     console.log(`init live top5Product`)

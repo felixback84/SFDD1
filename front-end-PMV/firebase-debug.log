@@ -1,9 +1,0 @@
-[debug] [2021-12-09T21:30:04.392Z] ----------------------------------------------------------------------
-[debug] [2021-12-09T21:30:04.395Z] Command:       /usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js /Users/lmf/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only functions:api
-[debug] [2021-12-09T21:30:04.395Z] CLI Version:   9.8.0
-[debug] [2021-12-09T21:30:04.396Z] Platform:      darwin
-[debug] [2021-12-09T21:30:04.396Z] Node Version:  v12.2.0
-[debug] [2021-12-09T21:30:04.401Z] Time:          Thu Dec 09 2021 16:30:04 GMT-0500 (Colombia Standard Time)
-[debug] [2021-12-09T21:30:04.401Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2021-12-09T21:30:04.404Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]

@@ -99,7 +99,7 @@ const {
         searchStaticDevicesProductsByCategoriesAndTags, // products searcher categories and tags ---> not yet
         // findStaticsProductsInSpecificMtsRange, ------> better search
 
-        postListOfProductsToFindOneByOne,
+        // postListOfProductsToFindOneByOne, 
         //postListOfProductsToFind, // ---> top5Products from ux 
         meassureOfMatchesInProducts, // ----> meassure modeThree
     } = require('./handlers/searchingModes/modeThree');
@@ -263,7 +263,7 @@ app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProdu
 app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 // to post list of products to find his positions and owners
 // app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
-app.post('/userdevice/postlistofproducts', postListOfProductsToFindOneByOne) // before modeThree
+// app.post('/userdevice/postlistofproducts', postListOfProductsToFindOneByOne) // before modeThree
 
     /////*** */ mode four
     // post product to Search by userDevice ---> before modeFour

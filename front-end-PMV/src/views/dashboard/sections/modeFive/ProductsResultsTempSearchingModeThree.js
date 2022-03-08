@@ -23,7 +23,7 @@ import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantity
 // components
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
-import SwitchToSelectProductsModeThree from "../..components/utils/SwitchToSelectProductsModeThree"
+import SwitchToSelectProductsModeThree from "../../components/modeFive/SwitchToSelectProductsModeThree"
 // Redux stuff
 import { connect } from 'react-redux'
 
@@ -96,8 +96,6 @@ class ProductsResultsTempSearchingModeThree extends Component {
             )
         })
     }
-
-    
 
     // create the list of nodes
     arrTop5Products(arrTop5Products){

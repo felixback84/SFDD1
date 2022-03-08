@@ -1,46 +1,46 @@
 // firebase
 const { db } = require('../../utilities/admin');
 
-// search of static devices according to one category and tags it has ---> dont work by now
-// exports.searchStaticDevicesProductsByCategoryAndTag = (req, res) => {
+// search of static devices according to one category and one tag it has ---> dont work by now
+exports.searchStaticDevicesProductsByCategoryAndTag = (req, res) => {
 
-//     // var to hold results
-//     let resultsOfProductsInDB = []
-//     // db part
-//     db
-//     .collection('products')
-//     .where('categories','array-contains',req.params.category)
-//     .where('tags','array-contains',req.params.tag)
-//     .get()
-//     .then((data)=>{
-//         // chack if exists data
-//         if (data.empty) {
-//             return res.status(400).json({ error: 'This product dosen´t exists' });
-//         } else {
-//             data.forEach((doc)=>{
-//                 // push data to an array
-//                 resultsOfProductsInDB.push({
-//                     name:doc.data().name,
-//                     tags:doc.data().tags,
-//                     category:doc.data().category,
-//                     staticDeviceProperty:doc.data().staticDeviceProperty,
-//                     description:doc.data().description,
-//                     familyOfDevices:doc.data().familyOfDevices,
-//                     imgUrl:doc.data().imgUrl,
-//                     price:doc.data().price,
-//                     createdAt:doc.data().createdAt,
-//                     productId:doc.id,
-//                     taxonomy:doc.data().taxonomy
-//                 })
-//             })
-//             // res
-//             return res.json(resultsOfProductsInDB);
-//         }
-//     })
-//     .catch(err => {
-//         res.status(500, err);
-//     })
-// }
+    // var to hold results
+    let resultsOfProductsInDB = []
+    // db part
+    db
+    .collection('products')
+    .where('categories','array-contains',req.params.category)
+    .where('tags','array-contains',req.params.tag)
+    .get()
+    .then((data)=>{
+        // chack if exists data
+        if (data.empty) {
+            return res.status(400).json({ error: 'This product dosen´t exists' });
+        } else {
+            data.forEach((doc)=>{
+                // push data to an array
+                resultsOfProductsInDB.push({
+                    name:doc.data().name,
+                    tags:doc.data().tags,
+                    category:doc.data().category,
+                    staticDeviceProperty:doc.data().staticDeviceProperty,
+                    description:doc.data().description,
+                    familyOfDevices:doc.data().familyOfDevices,
+                    imgUrl:doc.data().imgUrl,
+                    price:doc.data().price,
+                    createdAt:doc.data().createdAt,
+                    productId:doc.id,
+                    taxonomy:doc.data().taxonomy
+                })
+            })
+            // res
+            return res.json(resultsOfProductsInDB);
+        }
+    })
+    .catch(err => {
+        res.status(500, err);
+    })
+}
 
 // search of static devices according to one category and multiple tags it has
 exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
@@ -52,44 +52,146 @@ exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
     console.log({dataProductToSearch})
     // var to hold results
     let resultsOfProductsInDB = []
+    // thingId
+    let userDeviceId = req.body.userDeviceId
     // db part
-    let docs = await db
-    .collection('products')
-    .where('categories','array-contains',dataProductToSearch.categories)
-    .get()
-    .then((data)=>{
-        // chack if exists data
-        if (data.empty) {
-            return res.status(400).json({ error: 'Any product in this category' });
-        } else {
-            data.forEach((doc)=>{   
-                // loop
-                if(_.intersection(doc.data().tags,dataProductToSearch.tags).length != 0){
-                    resultsOfProductsInDB.push({
-                        name:doc.data().name,
-                        tags:doc.data().tags,
-                        categories:doc.data().categories,
-                        staticDeviceProperty:doc.data().staticDeviceProperty,
-                        description:doc.data().description,
-                        familyOfDevices:doc.data().familyOfDevices,
-                        imgUrl:doc.data().imgUrl,
-                        price:doc.data().price,
-                        createdAt:doc.data().createdAt,
-                        productId:doc.id,
-                        taxonomy:doc.data().taxonomy,
-                        companyName:doc.data().companyName
-                    })
+    const toExtractDataOfSelectedProduct = async (dataProductToSearch) => {
+        let docs = await db
+            .collection('products')
+            .where('categories','array-contains',dataProductToSearch.categories)
+            .get()
+            .then((data)=>{
+                // chack if exists data
+                if (data.empty) {
+                    return res.status(400).json({ error: 'Any product in this category' });
                 } else {
-                    console.log("error in filter of tags")
-                } 
+                    data.forEach((doc)=>{   
+                        // loop
+                        if(_.intersection(doc.data().tags,dataProductToSearch.tags).length != 0){
+                            resultsOfProductsInDB.push({
+                                coords:doc.data().coords,
+                                product:{
+                                    name:doc.data().name,
+                                    tags:doc.data().tags,
+                                    categories:doc.data().categories,
+                                    staticDeviceProperty:doc.data().staticDeviceProperty,
+                                    description:doc.data().description,
+                                    familyOfDevices:doc.data().familyOfDevices,
+                                    imgUrl:doc.data().imgUrl,
+                                    price:doc.data().price,
+                                    createdAt:doc.data().createdAt,
+                                    productId:doc.id,
+                                    taxonomy:doc.data().taxonomy,
+                                    companyName:doc.data().companyName,
+                                }
+                            })
+                        } else {
+                            console.log("error in filter of tags")
+                        } 
+                    })
+                    // res
+                    // return res.json(resultsOfProductsInDB)
+                    console.log({resultsOfProductsInDB})
+                    return resultsOfProductsInDB
+                }
             })
-            // res
-            return res.json(resultsOfProductsInDB)
-        }
-    })
-    .catch(err => {
-        res.status(500, err);
-    })
+            .catch(err => {
+                res.status(500, err);
+            })
+    }
+
+    // extract companyData
+    const extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products = async (listOfProducts) => {
+        // vars
+        const outputList = []
+        const promises = []
+        // loop
+        listOfProducts.forEach((productItem)=>{
+            // print item
+            console.log("Current item: " + productItem)
+            // extract userHandle
+            const userHandle = productItem.product.staticDeviceProperty.split("-").slice(0,1).toString()
+            // db connection
+            let promise = db
+                .collection(`/users/${userHandle}/companyData`)
+                .get()
+                .then(snapshot => {
+                    // check if exists
+                    if (snapshot.empty) {
+                        console.log('No matching documents.')
+                    } else {
+                        snapshot.forEach(doc => {
+                            outputList.push({
+                                companyName:doc.data().companyName,
+                                localPicUrl:doc.data().localPicUrl,
+                            })
+                        })
+                        return
+                    }
+                })
+                .catch(err => {
+                    console.log('Error getting documents', err)
+                })
+                // promise push
+                promises.push(promise)
+        })
+        // promise with data
+        Promise
+            .all(promises)
+            .then(() => {
+                return outputList
+            })
+            .then(()=>{
+                // var to hold userHandle
+                let companyName = ""
+                // loop
+                listOfProducts.forEach((productItem)=>{
+                    // userHandle
+                    companyName = productItem.product.companyName
+                    // second obj loop
+                    outputList.forEach((outputItem)=>{
+                        // check to push in the right item
+                        if(companyName === outputItem.companyName){
+                            console.log("hi sun")
+                            // passing the rest of data to the final obj
+                            productItem.companyData = outputItem
+                            productItem.meters = 0
+                            productItem.thingId = productItem.product.staticDeviceProperty
+                        }else{
+                            console.log("hi moon")
+                        }   
+                    })
+                })
+                // print
+                console.log(`resultsOfMatchOfProducts after push company data: ${JSON.stringify(resultsOfProductsInDB)}`)
+                return resultsOfProductsInDB
+            })
+            .then(async (data)=>{
+                // DB save
+                data.forEach(async (item)=>{
+                    // print
+                    console.log(`Pre DB Item: ${JSON.stringify(item)}`)
+                    // db conection
+                    await db
+                        .collection(`/userDevices/${userDeviceId}/top5Products`)
+                        .add({
+                            ...item     
+                        })
+                        .catch(err => {
+                            res.status(500, err)
+                        })
+                }) 
+            })
+            .catch(err => {
+                res.status(500, err)
+            })
+    } 
+
+    // run it
+    const pass = await toExtractDataOfSelectedProduct(dataProductToSearch)
+    // const resp = await pass
+    const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(resultsOfProductsInDB)
+    
 }
 
 // search of static devices according to multiple categories and multiple tags it has
@@ -278,7 +380,6 @@ exports.postListOfProductsToFind = async (req, res) => {
     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
 }
 
-
 // post list of products in top5Products one by one
 exports.postListOfProductsToFindOneByOne = async (req, res) => {
     // receive list of products
@@ -379,22 +480,9 @@ exports.postListOfProductsToFindOneByOne = async (req, res) => {
             })
     }   
     
-    // run it
-    // const pass = await toExtractDataOfSelectedProduct(productId).then(async (resultDataOfSelectedOfProduct)=>{
-
-    //     const resp = resultDataOfSelectedOfProduct
-    //     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
-    // })
-    // .catch(err => {
-    //     console.log('Error getting documents', err)
-    // })
-    
     const pass = await toExtractDataOfSelectedProduct(productId)
-    const resp = pass
     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(resultDataOfSelectedOfProduct != {} && resultDataOfSelectedOfProduct)
-    
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////// meassure modeTypes
 // method to make the meassurment with the list of selected products

@@ -31,7 +31,7 @@ const SearchingModeSwitcherThree = (props) => {
 	// handleChange switch
 	const handleChange = (event) => {
 		setMode({ 
-			modeType:props.mode, 
+			modeType:props.mode,  
 			[event.target.name]: event.target.checked
 		});
 
@@ -43,7 +43,7 @@ const SearchingModeSwitcherThree = (props) => {
 			// live data from top5Tags
 			props.userDeviceTop5ProductsSyncDataLiveDB(thindId)
 		//}
-	};
+	}
  
 	// effects
 	useEffect(() => {

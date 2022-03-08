@@ -1,46 +1,57 @@
-import React from "react";
+import React from "react"
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
+import { makeStyles } from "@material-ui/core/styles"
+import Box from "@material-ui/core/Box"
+import Container from "@material-ui/core/Container"
+import Grid from "@material-ui/core/Grid"
 // components
 import SearchingModeCardModeOne from '../../views/dashboard/components/modeOne/SearchingModeCardModeOne'
 import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
 import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
-// import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
-
+import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
+// slick corrousel
+import Slider from "react-slick"
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 // icons
-import GroupAdd from "@material-ui/icons/GroupAdd";
+import GroupAdd from "@material-ui/icons/GroupAdd"
 // styles
-import componentStyles from "assets/theme/components/header.js";
-const useStyles = makeStyles(componentStyles);
+import componentStyles from "assets/theme/components/header.js"
+const useStyles = makeStyles(componentStyles)
 
 const Header = (props) => {
   // styles
-  const classes = useStyles();
+  const classes = useStyles()
+  // slick carrousel setts
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,  
+  }
   
   return ( 
-    <>
+    
       <div className={classes.header}>
         <Container
           maxWidth={false}
           component={Box}
           classes={{ root: classes.containerRoot }}
         >
-          <div>
-            <Grid container>
-              <Grid item xl={3} lg={3} xs={12}>
+          <Slider {...settings}>
+            <div sx={{
+              margin:"10px",
+            }}>
                 {/* modeOne */}
                 <SearchingModeCardModeOne 
                   title="modeOne"
                   icon={GroupAdd}
                   mode="modeOne" 
-                  thingid={props.thingid}
+                  thingid={props.thingid} 
                 /> 
-              </Grid>
-              <Grid item xl={3} lg={3} xs={12}>
+            </div>
+            <div>
                 {/* modeTwo */}
                 <SearchingModeCardModeTwo
                   title="modeTwo"
@@ -48,31 +59,29 @@ const Header = (props) => {
                   mode="modeTwo"
                   thingid={props.thingid}
                 />
-              </Grid>
-              <Grid item xl={3} lg={3} xs={12}>
+            </div>
+            <div>
                 {/* modeThree */}
                 <SearchingModeCardModeThree
                   title="modeThree"
                   icon={GroupAdd}
                   mode="modeThree"
                 />
-              </Grid>
-              <Grid item xl={3} lg={3} xs={12}>
+            </div>
+            <div>
                 {/* modeFour */}
-                {/* <SearchingModeCardModeFour
+                <SearchingModeCardModeFour
                   title="modeFour"
                   icon={GroupAdd}
                   mode="modeFour"
-                  idofspecificstaticdevice={props.idofspecificstaticdevice}
-					        idofspecificproduct={props.idofspecificproduct}
-                /> */}
-              </Grid>
-            </Grid>
-          </div>
+                  thingid={props.thingid}
+                />
+            </div>
+          </Slider>
         </Container>
       </div>
-    </>
-  );
-};
+    
+  )
+}
 
-export default Header;
+export default Header

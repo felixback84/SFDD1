@@ -6,15 +6,18 @@ import Grid from "@material-ui/core/Grid"
 // components
 import GMapsServicesModeOne from '../../components/modeOne/GMapsServicesModeOne'
 import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
-import GoogleMapModeThree from '../modeThree/GoogleMapModeThree'
+import GMapsServicesModeThree from '../../components/modeThree/GMapsServicesModeThree'
+import GMapsServicesModeFour from '../../components/modeFour/GMapsServicesModeFour'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
-import ChartResultsSearchingModeTwo from "../../sections/modeTwo/ChartResultsSearchingModeTwo"
 import ChartResultsSelectedItemsSearchingModeTwo from "../../sections/modeTwo/ChartResultsSelectedItemsSearchingModeTwo"
+import ChartResultsSearchingModeTwo from "../../sections/modeTwo/ChartResultsSearchingModeTwo"
 // modeThree
 import ProductsResultsSearchingModeThree from "../../sections/modeThree/ProductsResultsSearchingModeThree"
-import ProductsResultsTempSearchingModeThree from "../../sections/modeThree/ProductsResultsSearchingModeThree"
+// modeFour
+import ProductsResultsSelectedItemsSearchingModeFour from "../../sections/modeFour/ProductsResultsSelectedItemsSearchingModeFour"
+import ProductsResultsSearchingModeFour from "../../sections/modeFour/ProductsResultsSearchingModeFour"
 // Redux stuff
 import {connect} from 'react-redux'
 
@@ -27,7 +30,7 @@ const PickerMarkerMix = ({data,props}) => {
     // hook state
     const [mode, setMode] = useState({
         checked: false,
-    })
+    }) 
 
     // handleChange switch
     const handleChange = (event) => {
@@ -119,11 +122,6 @@ const PickerMarkerMix = ({data,props}) => {
         case "modeThree":	
             if(data.loading == false){
                 console.log("modeThree")   
-                const {
-                    top5Products,
-                    top5ProductsUI
-                } = props
-
                 return(
                     <>
                         {/* map */}
@@ -138,13 +136,14 @@ const PickerMarkerMix = ({data,props}) => {
                                         onChange={handleChange}
                                     />
                                     {/* Gmaps */}
-                                    <GoogleMapModeThree
+                                    <GMapsServicesModeThree
+                                        checked={mode.checked}
                                         coords={data.coords}
-                                        colorValue={data.color} 
+                                        colorvalue={data.colorValue}
                                     />
                                 </Card>
                             </Grid>
-                        </Grid>
+                        </Grid> 
                         {/* top5Products result */}
                         <Grid container>
                             <Grid item xs={12}>
@@ -153,7 +152,7 @@ const PickerMarkerMix = ({data,props}) => {
                                     style={{padding:"10px"}}
                                 >
                                     {/* results */}
-                                    <ProductsResultsTempSearchingModeThree/>
+                                    <ProductsResultsSearchingModeThree/>
                                 </Card>
                             </Grid>
                         </Grid>
@@ -161,14 +160,46 @@ const PickerMarkerMix = ({data,props}) => {
                 )
             }
         break;
-        // case "modeFour":	
-        // 	return(
-        // 		<MarkerInfoWindowModeFour 
-        // 			coords={data.coords}
-        // 			top5product={top5Product}
-        // 		/>
-        // 	)
-        // break;
+        case "modeFour":	
+            return(
+                <>
+                    {/* map */}
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Card classes={{ root: data.classes.cardRoot }}>
+                                {/* toogle */}
+                                <Switch 
+                                    size="small" 
+                                    name="checked"
+                                    checked={mode.checked}
+                                    onChange={handleChange}
+                                />
+                                {/* Gmaps */}
+                                <GMapsServicesModeFour
+                                    checked={mode.checked}
+                                    coords={data.coords}
+                                    colorvalue={data.colorValue}
+                                />
+                            </Card>
+                        </Grid>
+                        {/* chart top5Coord specifics filter*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSelectedItemsSearchingModeFour/>
+                            </Grid>
+                        </Grid>
+                        {/* chart all top5Coords*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSearchingModeFour/>
+                            </Grid>
+                        </Grid>
+                    </Grid> 
+                </>
+            )
+        break;
         default:
             return(
                 null
@@ -182,7 +213,6 @@ const mapStateToProps = (state) => ({
     loading: state.top5Products1.loading,
     top5Products:state.top5Products1.top5Products,
     top5ProductsListener:state.top5Products1.top5ProductsListener,
-    top5ProductsUI:state.top5Products1.top5ProductsUI
 })
 
 export default connect(mapStateToProps)(PickerMarkerMix)
