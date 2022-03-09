@@ -52,7 +52,7 @@ class GoogleMapModeThree extends Component {
 											map={map}
 											colorvalue={this.props.colorValue}
 											coordz={this.props.coords}
-										/>
+										/> 
 									</>
 								)
 							}

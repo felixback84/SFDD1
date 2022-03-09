@@ -3,14 +3,13 @@ import React,{Component} from 'react'
 import Switch from '@material-ui/core/Switch';
 // redux
 import { connect } from 'react-redux'
-import { selectStaticDevicesToSearch,unSelectStaticDevicesToSearch } from '../../../../redux/actions/heartbeatUIActions'
-// import { saveTop5TagIdInReducer } from ''
+import { selectProductOfStaticDeviceToSearchByUserDevice } from '../../../../redux/actions/heartbeatUIActions'
 import { 
-    userDeviceSpecificTop5TagSyncDataStatic,
-    userDeviceSpecificTop5TagSyncDataLiveDB,
-} from '../../../../redux/actions/top5TagsActions'
+    userDeviceSpecificTop5ProductSyncData,
+    userDeviceSpecificTop5ProductSyncDataLiveDB,
+} from '../../../../redux/actions/top5ProductsActions'
 
-class SwitchToMarkFromModeOneToModeTwo extends Component {
+class SwitchToMarkFromModeThreeToModeFour extends Component {
 
     // state
     constructor(props) {
@@ -36,15 +35,9 @@ class SwitchToMarkFromModeOneToModeTwo extends Component {
             top5TagDocId
         }
         // check if is an union or a deletion
-        if(
-            // mode.checked === false 
-            // &&
-            ids.length >= 0
-            // event.target.checked === true 
-            // true
-        ){
+        if(ids.length >= 0){
             // to post and update list on liveDataSets
-            this.props.selectStaticDevicesToSearch({objSelectProfileToSearch})
+            this.props.selectProductOfStaticDeviceToSearchByUserDevice({objSelectProfileToSearch})
         } 
         // else if(
         //     // event.target.checked === true && 
@@ -63,14 +56,18 @@ class SwitchToMarkFromModeOneToModeTwo extends Component {
     componentWillReceiveProps(nextProps){
         if(nextProps.idOfSpecificStaticDevices){
             this.setState({
-                ids:this.props.idOfSpecificStaticDevices
+                ids:this.props.idOfSpecificProducts
             })
-            // top5Tag static data
-            this.props.userDeviceSpecificTop5TagSyncDataStatic(this.props.thingLiveDataSets.thingId,this.props.idOfSpecificStaticDevices)
-            // live data from top5Tag
-            this.props.userDeviceSpecificTop5TagSyncDataLiveDB(this.props.thingLiveDataSets.thingId,this.props.idOfSpecificStaticDevices)
-            // live data from top5Tag
-            
+            // top5Product static data
+            this.props.userDeviceSpecificTop5ProductSyncData(
+                this.props.thingLiveDataSets.thingId,
+                this.props.idOfSpecificStaticDevices
+            )
+            // live data from top5Product
+            this.props.userDeviceSpecificTop5ProductSyncDataLiveDB(
+                this.props.thingLiveDataSets.thingId,
+                this.props.idOfSpecificStaticDevices
+            )
             // print
             console.log(`this.props.idOfSpecificStaticDevices: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
         }
@@ -96,12 +93,20 @@ const mapStateToProps = (state) => ({
     //liveDataSets
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
     thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
-    idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices
-});
+    idOfSpecificProducts: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificProducts
+})
 
 export default connect(mapStateToProps,{
-    selectStaticDevicesToSearch,
-    unSelectStaticDevicesToSearch,
-    userDeviceSpecificTop5TagSyncDataStatic,
-    userDeviceSpecificTop5TagSyncDataLiveDB
-})(SwitchToMarkFromModeOneToModeTwo);
+    // thingLiveDataSets
+    selectProductOfStaticDeviceToSearchByUserDevice,
+    // top5Products
+    userDeviceSpecificTop5ProductSyncData,
+    userDeviceSpecificTop5ProductSyncDataLiveDB
+})(SwitchToMarkFromModeThreeToModeFour)
+
+
+
+
+
+
+

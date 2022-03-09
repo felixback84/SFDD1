@@ -138,7 +138,7 @@ const PickerMarkerMix = ({data,props}) => {
                                     {/* Gmaps */}
                                     <GMapsServicesModeThree
                                         checked={mode.checked}
-                                        coords={data.coords}
+                                        // coords={data.coords}
                                         colorvalue={data.colorValue}
                                     />
                                 </Card>
@@ -160,45 +160,48 @@ const PickerMarkerMix = ({data,props}) => {
                 )
             }
         break;
-        case "modeFour":	
-            return(
-                <>
-                    {/* map */}
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Card classes={{ root: data.classes.cardRoot }}>
-                                {/* toogle */}
-                                <Switch 
-                                    size="small" 
-                                    name="checked"
-                                    checked={mode.checked}
-                                    onChange={handleChange}
-                                />
-                                {/* Gmaps */}
-                                <GMapsServicesModeFour
-                                    checked={mode.checked}
-                                    coords={data.coords}
-                                    colorvalue={data.colorValue}
-                                />
-                            </Card>
-                        </Grid>
-                        {/* chart top5Coord specifics filter*/}
+        case "modeFour":
+            if(data.loading == false){
+                console.log("modeFour")	
+                return(
+                    <>
+                        {/* map */}
                         <Grid container>
                             <Grid item xs={12}>
-                                {/* results */}
-                                <ProductsResultsSelectedItemsSearchingModeFour/>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch 
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GMapsServicesModeFour
+                                        checked={mode.checked}
+                                        //coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
                             </Grid>
-                        </Grid>
-                        {/* chart all top5Coords*/}
-                        <Grid container>
-                            <Grid item xs={12}>
-                                {/* results */}
-                                <ProductsResultsSearchingModeFour/>
+                            {/* chart top5Products specific selection from user*/}
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    {/* results */}
+                                    <ProductsResultsSelectedItemsSearchingModeFour/>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid> 
-                </>
-            )
+                            {/* chart all top5Products*/}
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    {/* results */}
+                                    <ProductsResultsSearchingModeFour/>
+                                </Grid>
+                            </Grid>
+                        </Grid> 
+                    </>
+                )
+            }
         break;
         default:
             return(

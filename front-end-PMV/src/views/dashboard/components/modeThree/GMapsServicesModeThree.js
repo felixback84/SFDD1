@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 const GMapsServicesModeThree = (props) => {
 
-    // check
+    // check 
     if(props.checked === true){
         return(
             <StreetViewModeThree

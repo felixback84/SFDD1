@@ -58,7 +58,6 @@ class MarkerStaticsModeTwo extends Component {
 						arrMarkers:data,
 						interval:true
 					})
-					// clear interval
                     // print
                     console.log(
                         `top5Tag data after filter to markers on state: 
@@ -70,7 +69,7 @@ class MarkerStaticsModeTwo extends Component {
 	}
 
     // to create statics markers
-    hi(map,top5Tags){
+    hiStaticMarkers(map,top5Tags){
         // arr of markers
         let markersStaticsDevices = []
         // info window
@@ -150,7 +149,7 @@ class MarkerStaticsModeTwo extends Component {
         return (
             <>
                 {
-                    this.hi(
+                    this.hiStaticMarkers(
                         this.props.map,
                         filterArrOfTop5Tags
                     )

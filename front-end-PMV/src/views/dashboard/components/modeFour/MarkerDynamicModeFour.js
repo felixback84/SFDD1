@@ -9,7 +9,7 @@ import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // _
 let _ = require('underscore')
 
-class MarkerDynamicModeThree extends Component {
+class MarkerDynamicModeFour extends Component {
 
     // state
 	constructor(props) {
@@ -20,7 +20,7 @@ class MarkerDynamicModeThree extends Component {
     }
 
     // marker obj
-    comp(
+    hiMarkerDynamic(
         coordz,
         map,
         credentials,
@@ -114,7 +114,7 @@ class MarkerDynamicModeThree extends Component {
             // pass data to path
             console.log("endUpPosition")
             return marker
-        }  
+        } 
     }   
 
     // to update pos of the buyer    
@@ -128,7 +128,7 @@ class MarkerDynamicModeThree extends Component {
         // check the counter to set or update the marker
         if(this.props.coordz.lat != undefined){
             if(_.isEqual(nextProps.coords,this.props.coordz) === true){
-                const markerInit = this.comp(
+                const markerInit = this.hiMarkerDynamic(
                     this.props.coordz,
                     this.props.map,
                     this.props.credentials,
@@ -142,7 +142,7 @@ class MarkerDynamicModeThree extends Component {
             }
             
             else if(_.isEqual(nextProps.coords,this.props.coordz) === false){
-                const markerSeq = this.comp(
+                const markerSeq = this.hiMarkerDynamic(
                     {},
                     this.props.map,
                     this.props.credentials,
@@ -176,4 +176,4 @@ const mapStateToProps = (state) => ({
     // top5ProductsListener: state.top5Products1.top5ProductsListener
 })
 
-export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(MarkerDynamicModeThree)
+export default connect(mapStateToProps,{heartbeatThingSyncDataLiveDB})(MarkerDynamicModeFour)

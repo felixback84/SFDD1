@@ -26,6 +26,9 @@ import {
     // update (DELETE - unselect) item in list of specifics static devices to search by user devices
     DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
     STOP_DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    // post item in list of specifics products of static devices to search by user devices
+    POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
     
     // ** thing interaction
     // active command
@@ -189,6 +192,26 @@ export const unSelectStaticDevicesToSearch = (data) => (dispatch) => {
         })
         .catch(err => console.log(err));
 }
+
+// to select wich ones products of the initial match the buyer want to track
+export const selectProductOfStaticDeviceToSearchByUserDevice = (data) => (dispatch) =>{
+    axios.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice', data)
+        .then(res => {
+            // dispatchers
+            dispatch({
+                type: POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+                payload: res.data
+            }) 
+            dispatch({
+                type: STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS
+            }) 
+        })
+        .catch(err => console.log(err))
+        return true
+}
+// to unselect wich ones products of the initial match the buyer want to track
+
+
 
 
 // ** interaction with thing

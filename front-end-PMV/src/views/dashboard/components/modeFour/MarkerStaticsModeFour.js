@@ -6,10 +6,70 @@ import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // Redux stuff
 import { connect } from 'react-redux'
 
-class MarkerStaticsModeThree extends Component {
+class MarkerStaticsModeFour extends Component {
+
+    // state
+    constructor(props) {
+        super(props)
+        this.state = {
+			arrMarkers:[],
+			interval:false
+        }
+    }
+
+    // filter of top5Tags
+	componentWillReceiveProps(nextProps){
+		// checker of changes in data
+        if(nextProps.idOfSpecificStaticDevices){
+            // promise
+            const myPromise = new Promise((resolve, reject) => {
+                // var to arr
+                let arrFinal = []
+                // print
+				console.log(
+					`hi filter of selected ones to markers: 
+					${JSON.stringify(this.props.idOfSpecificStaticDevices)}`
+				)
+                // check if none static is selected
+                if(this.props.idOfSpecificStaticDevices.length === 0){
+                    arrFinal.push({...this.props.top5Tags[0],show:false})
+                } else if(this.props.idOfSpecificStaticDevices.length != 0) {
+                    // loop over selection
+                    this.props.idOfSpecificStaticDevices.map((id)=>{
+                        // filter
+                        this.props.top5Tags.filter((arrItem)=>{
+                            // checker
+                            if(arrItem.thingId === id.thingIdToSearch){
+                                    arrFinal.push({...arrItem, show:false})
+                                } 
+                        })	 
+                    })
+                }
+                // print
+                console.log(`arrFinalMarkers: ${JSON.stringify(arrFinal)}`)
+                // promise resolve
+                resolve(arrFinal)
+            })
+            // list of data for table
+            return myPromise
+                .then((data)=>{
+                    // set state
+					this.setState({ 
+						arrMarkers:data,
+						interval:true
+					})
+                    // print
+                    console.log(
+                        `top5Tag data after filter to markers on state: 
+                        ${JSON.stringify(this.state.arrMarkers)}`
+                    )
+                })
+                .catch((err) => console.log('There was an error:' + err)) 
+        }
+	}
 
     // to create static markers
-    hiStaticMarker(map,top5Products){ 
+    hiStaticMarkers(map,top5Products){
         // arr of markers
         let markersStaticsDevicesProducts = []
         // info window
@@ -136,12 +196,15 @@ class MarkerStaticsModeThree extends Component {
     }
 
     render() {
+        // ids from state list of pick ones
+        let filterArrOfTop5Tags = this.state.arrMarkers
+
         return (
             <>
                 {
-                    this.hiStaticMarker(
+                    this.hiStaticMarkers(
                         this.props.map,
-                        this.props.top5Products
+                        filterArrOfTop5Tags
                     )
                 }
             </>
@@ -157,10 +220,11 @@ const mapStateToProps = (state) => ({
     userDevices: state.userDevices1.userDevices,
     // thingLiveDataSets
     coords:state.heartbeatThing1.thingLiveDataSetsListener.coords,
+    idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
     // top5Products
     loading:state.top5Products1.loading,
     top5Products: state.top5Products1.top5Products,
     // top5ProductsListener: state.top5Products1.top5ProductsListener
 })
 
-export default connect(mapStateToProps)(MarkerStaticsModeThree)
+export default connect(mapStateToProps)(MarkerStaticsModeFour)

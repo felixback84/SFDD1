@@ -20,6 +20,9 @@ import {
     // update (erase - unselect) item in list of specifics static devices to search by user devices
     DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
     STOP_DELETE_ITEM_IN_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    // post item in list of specifics products of static devices to search by user devices
+    POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
+    STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS,
     
     // ** thing interaction
     // active command
@@ -40,6 +43,7 @@ const initialState = {
         colorValue:{},
         coords:{},
         idOfSpecificStaticDevices:[{}],
+        idOfSpecificProducts:[{}],
         profileToMatch:[],
         searchingMode:[]
     },
@@ -48,7 +52,8 @@ const initialState = {
             colorValue:{},
             coords:{},
             searchingMode:[],
-            idOfSpecificStaticDevices:[{}]
+            idOfSpecificStaticDevices:[{}],
+            idOfSpecificProducts:[{}]
         },
 }; 
 
@@ -87,9 +92,6 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 responses:action.payload,
-                // thingLiveDataSets:{
-                //     searchingMode:[action.payload]
-                // }, 
                 loading: false
             };     
         case STOP_SET_HEARTBEAT_SEARCHING_MODE:
@@ -136,6 +138,21 @@ export default function(state = initialState, action){
                 ...state,
                 loading: false
             };
+
+        // post item in list of specifics static devices to search by user devices
+        case POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                responses:action.payload,
+                loading: false
+            }; 
+        case STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
+            return {
+                ...state,
+                loading: false
+            }; 
+
+        
 
         // ** thing interaction 
         // active commmand

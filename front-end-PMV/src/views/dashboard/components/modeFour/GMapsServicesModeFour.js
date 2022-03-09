@@ -6,7 +6,7 @@ import GoogleMapModeFour from './GoogleMapModeFour'
 import StreetViewModeFour from './StreetViewModeFour'
 // Redux stuff
 import { connect } from 'react-redux'
-
+ 
 const GMapsServicesModeFour = (props) => {
 
     // check
@@ -20,7 +20,7 @@ const GMapsServicesModeFour = (props) => {
     } else if (props.checked === false){
         return(
             <GoogleMapModeFour 
-                coordz={props.coords}
+                coords={props.coords}
                 colorValue={props.colorvalue}
             />
         )
