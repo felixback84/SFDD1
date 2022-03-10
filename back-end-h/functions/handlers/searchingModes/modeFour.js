@@ -1,11 +1,19 @@
 // firebase
-const { db } = require('../../utilities/admin');
+const { admin, db } = require('../../utilities/admin');
 
 // search and mark a specific static devices to posterior meassure
 exports.selectProductOfStaticDeviceToSearchByUserDevice = (req,res) => {
-    const selectProfileToSearchData = req.body;
+    // to deal with arr
+    const FieldValue = admin.firestore.FieldValue
+    // data from client
+    const selectProfileToSearchData = req.body
     // userDeviceId 
-    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2);
+    const userDeviceId = selectProfileToSearchData.objSelectProfileToSearch.thingId.split("-").slice(2)
+    // obj to update arr
+    const newTop5Product = [{
+        thingIdToSearch:selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch,
+        top5ProductDocId:selectProfileToSearchData.objSelectProfileToSearch.top5ProductDocId
+    }]
     // db part
     let infoInLiveDataSets = db
         .doc(`/userDevices/${userDeviceId}`)
@@ -14,10 +22,10 @@ exports.selectProductOfStaticDeviceToSearchByUserDevice = (req,res) => {
         
     infoInLiveDataSets
         .update({
-            idOfSpecificProduct: selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch
+            idOfSpecificProduct:FieldValue.arrayUnion(...newTop5Product)
         })
         .then(()=>{
-            res.json("staticDevice porduct Mark")
+            res.json("staticDevice product Mark")
         }).catch(err => {
             res.status(500, err);
         })

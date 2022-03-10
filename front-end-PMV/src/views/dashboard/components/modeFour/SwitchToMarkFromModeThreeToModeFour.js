@@ -27,17 +27,17 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
         // var to hold data from reducer
         const thingIdToSearch = this.props.thingid
         const thingId = this.props.thingLiveDataSets.thingId
-        const top5TagDocId = this.props.docId
+        const top5ProductDocId = this.props.docId
         // var
         const objSelectProfileToSearch = {
             thingIdToSearch,
             thingId,
-            top5TagDocId
+            top5ProductDocId
         }
         // check if is an union or a deletion
         if(ids.length >= 0){
             // to post and update list on liveDataSets
-            this.props.selectProductOfStaticDeviceToSearchByUserDevice({objSelectProfileToSearch})
+            this.props.selectProductOfStaticDeviceToSearchByUserDevice(objSelectProfileToSearch)
         } 
         // else if(
         //     // event.target.checked === true && 

@@ -20,8 +20,7 @@ exports.selectStaticDevicesToSearchByUserDevice = (req,res) => {
         .doc(selectProfileToSearchData.objSelectProfileToSearch.thingId)
     // update
     infoInLiveDataSets
-        .update({
-            //idOfSpecificStaticDevices: FieldValue.arrayUnion(selectProfileToSearchData.objSelectProfileToSearch.thingIdToSearch)
+        .update({           
             idOfSpecificStaticDevices: FieldValue.arrayUnion(...newTop5Tag)
         })
         .then(()=>{
