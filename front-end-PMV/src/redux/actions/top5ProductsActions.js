@@ -102,8 +102,8 @@ export const userDeviceTop5ProductsSyncDataStatic = (thingId) => (dispatch) => {
         dispatch({ 
             type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
             payload: listOfTop5Products
-        });
-        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS });
+        })
+        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS })
     }, err => {
         console.log(`Encountered error: ${err}`);
     });
@@ -134,7 +134,7 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
     // length of doc in collection
     const findLength = dataRef.get().then(snap => {
         return collectionLength = snap.size
-    });
+    })  
     console.log(`size:${collectionLength}`)
  
     // snapshot
@@ -165,7 +165,7 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
                         dispatch({ 
                             type: GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
                             payload:arrSort
-                        });
+                        })
                         // events
                         dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE })
                         // reset arr
@@ -209,7 +209,7 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, [...arrIds]) => (
     }
     
     // push data
-    const observer = data.then(doc => {
+    const observer = arrResults.then(doc => {
         const resultDB = doc.data()
         // dispatch
         dispatch({ 
@@ -223,70 +223,70 @@ export const userDeviceSpecificTop5ProductSyncData = (thingId, [...arrIds]) => (
 }
 
 // to get data from a specifics one db for top5Products (modeFour) --> dynamic data
-export const userDeviceSpecificTop5ProductSyncDataLiveDB = () => (dispatch) => {
+// export const userDeviceSpecificTop5ProductSyncDataLiveDB = () => (dispatch) => {
 
-    console.log(`init live top5Product`)
+//     console.log(`init live top5Product`)
 
-    // vars to ask to db do
-    const thingIdVal = thingId
-    const userDeviceId = thingIdVal.split("-").slice(2);
-    // print init
-    console.log(`hi from init of top5Tag listener`)
-    // var to hold the length of doc in collection
-    let collectionLength = 0
-    // arr
-    let arr = []
-    // ref db
-    const dataRef = firebase
-        .firestore()
-        .doc(`/userDevices/${userDeviceId}`) 
-        .collection('top5Products')
-        //.orderBy('meters','asc')
+//     // vars to ask to db do
+//     const thingIdVal = thingId
+//     const userDeviceId = thingIdVal.split("-").slice(2);
+//     // print init
+//     console.log(`hi from init of top5Tag listener`)
+//     // var to hold the length of doc in collection
+//     let collectionLength = 0
+//     // arr
+//     let arr = []
+//     // ref db
+//     const dataRef = firebase
+//         .firestore()
+//         .doc(`/userDevices/${userDeviceId}`) 
+//         .collection('top5Products')
+//         //.orderBy('meters','asc')
 
-    // length of doc in collection
-    const findLength = dataRef.get().then(snap => {
-        return collectionLength = snap.size
-    });
-    console.log(`size:${collectionLength}`)
+//     // length of doc in collection
+//     const findLength = dataRef.get().then(snap => {
+//         return collectionLength = snap.size
+//     });
+//     console.log(`size:${collectionLength}`)
 
-    // snapshot
-    const snap = dataRef
-        .onSnapshot((querySnapshot)=>{
-            // print
-            console.log(`snapshot`)
-            // snap
-            const tagsMeters = querySnapshot
-                .docChanges()
-                .map((change)=>{
-                    if(change.type === 'modified'){
-                        // all data
-                        const data = {...change.doc.data()}
-                        return arr.push(data)
-                    }
-                })
+//     // snapshot
+//     const snap = dataRef
+//         .onSnapshot((querySnapshot)=>{
+//             // print
+//             console.log(`snapshot`)
+//             // snap
+//             const tagsMeters = querySnapshot
+//                 .docChanges()
+//                 .map((change)=>{
+//                     if(change.type === 'modified'){
+//                         // all data
+//                         const data = {...change.doc.data()}
+//                         return arr.push(data)
+//                     }
+//                 })
 
-                // checker if something change
-                if(querySnapshot.docChanges().length != 0){
-                    // check lengths
-                    if(arr.length === collectionLength){
-                        // sort the arr
-                        let arrSort = arr.sort((a, b) => a.meters - b.meters)
-                        // print
-                        console.log(`minVal:${JSON.stringify(arrSort)}`)
-                        // dispatch data
-                        dispatch({ 
-                            type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
-                            payload:arrSort
-                        });
-                        // events
-                        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE })
-                        // reset arr
-                        arr = []
-                        console.log(`arrEmpty:${arr}`)
-                    }
-                }
-        },err => {
-            console.log(`Encountered error: ${err}`);
-        }) 
-}
+//                 // checker if something change
+//                 if(querySnapshot.docChanges().length != 0){
+//                     // check lengths
+//                     if(arr.length === collectionLength){
+//                         // sort the arr
+//                         let arrSort = arr.sort((a, b) => a.meters - b.meters)
+//                         // print
+//                         console.log(`minVal:${JSON.stringify(arrSort)}`)
+//                         // dispatch data
+//                         dispatch({ 
+//                             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+//                             payload:arrSort
+//                         });
+//                         // events
+//                         dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE })
+//                         // reset arr
+//                         arr = []
+//                         console.log(`arrEmpty:${arr}`)
+//                     }
+//                 }
+//         },err => {
+//             console.log(`Encountered error: ${err}`);
+//         }) 
+// }
 

@@ -170,7 +170,7 @@ const PickerMarkerMix = ({data,props}) => {
                             <Grid item xs={12}>
                                 <Card classes={{ root: data.classes.cardRoot }}>
                                     {/* toogle */}
-                                    <Switch 
+                                    <Switch
                                         size="small" 
                                         name="checked"
                                         checked={mode.checked}
@@ -184,21 +184,21 @@ const PickerMarkerMix = ({data,props}) => {
                                     />
                                 </Card>
                             </Grid>
-                            {/* chart top5Products specific selection from user*/}
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    {/* results */}
-                                    <ProductsResultsSelectedItemsSearchingModeFour/>
-                                </Grid>
+                        </Grid>
+                        {/* chart top5Products specific selection from user*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSelectedItemsSearchingModeFour/>
                             </Grid>
-                            {/* chart all top5Products*/}
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    {/* results */}
-                                    <ProductsResultsSearchingModeFour/>
-                                </Grid>
+                        </Grid>
+                        {/* chart all top5Products*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSearchingModeFour/> 
                             </Grid>
-                        </Grid> 
+                        </Grid>
                     </>
                 )
             }

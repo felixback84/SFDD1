@@ -20,7 +20,7 @@ class MarkerStaticsModeFour extends Component {
     // filter of top5Tags
 	componentWillReceiveProps(nextProps){
 		// checker of changes in data
-        if(nextProps.idOfSpecificStaticDevices){
+        if(nextProps.idOfSpecificProducts){
             // promise
             const myPromise = new Promise((resolve, reject) => {
                 // var to arr
@@ -28,22 +28,22 @@ class MarkerStaticsModeFour extends Component {
                 // print
 				console.log(
 					`hi filter of selected ones to markers: 
-					${JSON.stringify(this.props.idOfSpecificStaticDevices)}`
+					${JSON.stringify(this.props.idOfSpecificProducts)}`
 				)
                 // check if none static is selected
-                if(this.props.idOfSpecificStaticDevices.length === 0){
-                    arrFinal.push({...this.props.top5Tags[0],show:false})
-                } else if(this.props.idOfSpecificStaticDevices.length != 0) {
+                if(this.props.idOfSpecificProducts.length === 0){
+                    arrFinal.push({...this.props.top5Products[0],show:false})
+                } else if(this.props.idOfSpecificProducts.length != 0) {
                     // loop over selection
-                    this.props.idOfSpecificStaticDevices.map((id)=>{
+                    this.props.idOfSpecificProducts.map((id)=>{
                         // filter
-                        this.props.top5Tags.filter((arrItem)=>{
+                        this.props.top5Products.filter((arrItem)=>{
                             // checker
                             if(arrItem.thingId === id.thingIdToSearch){
                                     arrFinal.push({...arrItem, show:false})
                                 } 
                         })	 
-                    })
+                    }) 
                 }
                 // print
                 console.log(`arrFinalMarkers: ${JSON.stringify(arrFinal)}`)
@@ -220,7 +220,7 @@ const mapStateToProps = (state) => ({
     userDevices: state.userDevices1.userDevices,
     // thingLiveDataSets
     coords:state.heartbeatThing1.thingLiveDataSetsListener.coords,
-    idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
+    idOfSpecificProducts: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificProducts,
     // top5Products
     loading:state.top5Products1.loading,
     top5Products: state.top5Products1.top5Products,

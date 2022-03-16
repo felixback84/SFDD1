@@ -72,7 +72,7 @@ export default function(state = initialState, action){
 
         case STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND:
             return {
-                ...state,
+                ...state, 
                 loading: false
             };
 

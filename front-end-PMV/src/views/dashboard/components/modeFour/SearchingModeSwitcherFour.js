@@ -55,7 +55,7 @@ const SearchingModeSwitcherFour = (props) => {
 			// static data from top5Tags
 			props.userDeviceTop5ProductsSyncDataStatic(thingId)	
 			// live data from top5Tags
-			props.userDeviceTop5ProductsSyncDataLiveDB(thingId)
+			props.userDeviceTop5ProductsSyncDataLiveDB(thingId) 
 		} 
 	}
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { selectProductOfStaticDeviceToSearchByUserDevice } from '../../../../redux/actions/heartbeatUIActions'
 import { 
     userDeviceSpecificTop5ProductSyncData,
-    userDeviceSpecificTop5ProductSyncDataLiveDB,
+    //userDeviceSpecificTop5ProductSyncDataLiveDB,
 } from '../../../../redux/actions/top5ProductsActions'
 
 class SwitchToMarkFromModeThreeToModeFour extends Component {
@@ -28,7 +28,7 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
         const thingIdToSearch = this.props.thingid
         const thingId = this.props.thingLiveDataSets.thingId
         const top5ProductDocId = this.props.docId
-        // var
+        // var to send
         const objSelectProfileToSearch = {
             thingIdToSearch,
             thingId,
@@ -37,7 +37,7 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
         // check if is an union or a deletion
         if(ids.length >= 0){
             // to post and update list on liveDataSets
-            this.props.selectProductOfStaticDeviceToSearchByUserDevice(objSelectProfileToSearch)
+            this.props.selectProductOfStaticDeviceToSearchByUserDevice({objSelectProfileToSearch})
         } 
         // else if(
         //     // event.target.checked === true && 
@@ -54,22 +54,22 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
 
     // passing changes props
     componentWillReceiveProps(nextProps){
-        if(nextProps.idOfSpecificStaticDevices){
+        if(nextProps.idOfSpecificProducts){
             this.setState({
-                ids:this.props.idOfSpecificProducts
+                ids:nextProps.idOfSpecificProducts
             })
-            // top5Product static data
-            this.props.userDeviceSpecificTop5ProductSyncData(
-                this.props.thingLiveDataSets.thingId,
-                this.props.idOfSpecificStaticDevices
-            )
-            // live data from top5Product
-            this.props.userDeviceSpecificTop5ProductSyncDataLiveDB(
-                this.props.thingLiveDataSets.thingId,
-                this.props.idOfSpecificStaticDevices
-            )
+            // // top5Product static data
+            // this.props.userDeviceSpecificTop5ProductSyncData(
+            //     this.props.thingLiveDataSets.thingId,
+            //     this.props.idOfSpecificStaticDevices
+            // )
+            // // live data from top5Product
+            // this.props.userDeviceSpecificTop5ProductSyncDataLiveDB(
+            //     this.props.thingLiveDataSets.thingId,
+            //     this.props.idOfSpecificStaticDevices
+            // )
             // print
-            console.log(`this.props.idOfSpecificStaticDevices: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
+            console.log(`this.props.idOfSpecificProducts: ${JSON.stringify(nextProps.idOfSpecificProducts)}`)
         }
     }    
 
@@ -101,7 +101,7 @@ export default connect(mapStateToProps,{
     selectProductOfStaticDeviceToSearchByUserDevice,
     // top5Products
     userDeviceSpecificTop5ProductSyncData,
-    userDeviceSpecificTop5ProductSyncDataLiveDB
+    //userDeviceSpecificTop5ProductSyncDataLiveDB
 })(SwitchToMarkFromModeThreeToModeFour)
 
 

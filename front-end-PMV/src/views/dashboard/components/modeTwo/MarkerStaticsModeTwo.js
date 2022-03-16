@@ -10,12 +10,12 @@ class MarkerStaticsModeTwo extends Component {
 
     // state
     constructor(props) {
-        super(props)
+        super(props) 
         this.state = {
 			arrMarkers:[],
 			interval:false
         }
-    }
+    } 
 
     // filter of top5Tags
 	componentWillReceiveProps(nextProps){

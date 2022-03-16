@@ -70,7 +70,7 @@ class ChartResultsSelectedItemsSearchingModeTwo extends Component {
 							variant: "h3",
 						}}
 					>
-					</CardHeader>
+					</CardHeader> 
 
 					{/* table */}
 					<TableContainer>

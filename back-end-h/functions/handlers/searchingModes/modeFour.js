@@ -22,7 +22,7 @@ exports.selectProductOfStaticDeviceToSearchByUserDevice = (req,res) => {
         
     infoInLiveDataSets
         .update({
-            idOfSpecificProduct:FieldValue.arrayUnion(...newTop5Product)
+            idOfSpecificProducts:FieldValue.arrayUnion(...newTop5Product)
         })
         .then(()=>{
             res.json("staticDevice product Mark")
