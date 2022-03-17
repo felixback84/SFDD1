@@ -185,7 +185,7 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
         const dataOfTop5ProductsToPass = top5ProductsListener.length != 0 ? top5ProductsListener : top5Products
 
         return (
-            <>
+            <>  
                 {/* Page content */}
                 <Card classes={{ root: classes.cardRoot }}>
                     {/* Header */}

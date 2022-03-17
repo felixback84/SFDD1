@@ -120,11 +120,11 @@ class DataFrameSelectedProductLive extends Component {
         // loop
         arrTop5Products.map((arrTop5Product,i)=>{
             // print
-            console.log(`arrTop5Product: ${arrTop5Product}`)
+            console.log(`arrTop5ProductLive: ${arrTop5Product}`)
             // arr push
             arr.push(
                 <>
-                    <GridItem sm={4} md={4} key={i} style={{padding:"10px"}}>
+                    <GridItem xs={4} >
                         <Card sx={{ maxWidth: 345 }}>
                             <CardHeader
                                 avatar={
@@ -135,7 +135,7 @@ class DataFrameSelectedProductLive extends Component {
                                             companyname={arrTop5Product.companyData.companyName}
                                         />
                                     </Avatar> 
-                                } 
+                                }  
                                 action={
                                     <IconButton aria-label="settings"> 
                                         <MoreVertIcon/>

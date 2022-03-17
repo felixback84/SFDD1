@@ -16,6 +16,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 // comonents
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
+import TagsMakerForProducts from "../../components/utils/TagsMakerForProducts"
 //import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
 // Redux stuff
 import { connect } from 'react-redux';
@@ -89,7 +90,7 @@ const ContentRow = (props) => {
 				
 				{/* tags */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
-					<TagsMaker data={top5Product.matchDataResults}/>
+					<TagsMaker data={top5Product.product.categories}/>
 				</TableCell>
 				
 				{/* Vendor Details */}
@@ -116,8 +117,6 @@ const ContentRow = (props) => {
 					</Tooltip>
 				</TableCell>
  
-
-
                 {/* switcher marker */}
                 <TableCell classes={{ root: classes.tableCellRoot }}>
                     {/* switcher selector of prducts */}
@@ -127,8 +126,6 @@ const ContentRow = (props) => {
                     />
 				</TableCell>
 
-
-            
 				{/* meters from you */}
 				<TableCell classes={{ root: classes.tableCellRoot }}>
 					<Box display="flex" alignItems="center">
@@ -159,11 +156,12 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
 		// redux state
 		const {
 			classes,
-			top5Tags,
-			top5TagsListener,
+			top5Products,
+			top5ProductsListener,
 			loading,
 			thingLiveDataSets:{
-				profileToMatch
+				profileToMatch,
+				
 			}
 		} = this.props
 
@@ -187,7 +185,7 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
 					<CardHeader
 						className={classes.cardHeader}
 						title={
-							<TagsMaker data={profileToMatch}/>
+							<TagsMakerForProducts data={top5Products}/>
 						}
 						titleTypographyProps={{
 							component: Box,
@@ -231,7 +229,7 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
 											data={
 												// top5TagsListener.length != 0 &&
 												// 	// top5TagsListener:
-													this.props.top5Products
+													top5Products
 											} 
 											classes={classes}
 										/>

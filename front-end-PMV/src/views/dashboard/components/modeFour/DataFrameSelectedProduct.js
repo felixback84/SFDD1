@@ -40,7 +40,7 @@ const ExpandMore = styled((props) => {
     transition: theme.transitions.create('transform', {
         duration: theme.transitions.duration.shortest,
     }),
-}))
+})) 
 
 class DataFrameSelectedProduc extends Component {
 
