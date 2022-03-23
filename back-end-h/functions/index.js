@@ -643,7 +643,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             console.log("say hello to my little friend from thing modeThree")
                         } else if (searchingMode[0] === "modeFour"){
                             // to specific product  
-                            meassureOfMatchToEspecificProduct(
+                            meassureOfMatchToEspecificProduct( 
                                 await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             ) // ---> make capable of meassure in more than one product
                             // print 

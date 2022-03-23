@@ -65,7 +65,7 @@ exports.meassureOfMatchToEspecificProduct = async (inWait) => {
             mtsBetweenDevicesAndHisProducts.push({
                 meters:distanceInMeters,
                 thingId:args.staticDevicesCoords[i].docId
-            })
+            }) 
             // db save mts results part
             const docRef = db
                 .doc(`/userDevices/${userDeviceId}`)
@@ -82,8 +82,8 @@ exports.meassureOfMatchToEspecificProduct = async (inWait) => {
                 });
         }    
         // print
-        console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevices)}`)
-        return mtsBetweenDevices
+        console.log(`Unorder yet mtsBetweenDevices: ${JSON.stringify(mtsBetweenDevicesAndHisProducts)}`)
+        return mtsBetweenDevicesAndHisProducts
     }
     // import    
     const {
@@ -91,7 +91,7 @@ exports.meassureOfMatchToEspecificProduct = async (inWait) => {
     } = require('../utilsForThings');
     // run it
     await checkDistance(dataEnter);
-    await metersRangeMatchColor(mtsBetweenDevices,dataEnter.thingId);
+    await metersRangeMatchColor(mtsBetweenDevicesAndHisProducts,dataEnter.thingId);
 }
 
 

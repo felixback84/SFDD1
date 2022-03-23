@@ -189,7 +189,7 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
             .collection('top5Products')
 
         const snapshot = await tagsRef.get();
- 
+
         snapshot.forEach(doc => {
             // push data in arr
             top5Products.push({
@@ -206,19 +206,67 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
         }
 
     } else if(mode === "modeFour"){
-        // to specific product
-        // db part
-        const tagsRef = db
-            .doc(`/userDevices/${userDeviceId}`)
-            .collection('top5Products')
-            .doc(doc.idOfSpecificStaticDevice)
-            .get('coords')
+        // // to specific product
+        // // db part
+        // const tagsRef = db
+        //     .doc(`/userDevices/${userDeviceId}`)
+        //     .collection('top5Products')
+        //     .doc(doc.idOfSpecificStaticDevice)
+        //     .get('coords')
 
-        return {
-            thingId:doc.thingId,
-            coords:doc.coords,
-            docId:doc.idOfSpecificProduct,
-            staticDeviceCoords:tagsRef,
+        // return {
+        //     thingId:doc.thingId,
+        //     coords:doc.coords,
+        //     docId:doc.idOfSpecificProduct,
+        //     staticDeviceCoords:tagsRef,
+        // }
+
+        // {
+        //     "objSelectProfileToSearch":{
+        //         "thingIdToSearch": "garciala-staticHeartbeat-958MuU7EdvyC4yX8WhLB",
+        //         "thingId": "CarlosTal84-Heartbeat-PT44TQIpPyLJXRBqXZAQ",
+        //         "top5ProductDocId": "0E5h7nHNZ53LxauNc8QU"
+        //     }
+        // }
+
+        // to specifics staticDevice (vendors)
+        // var to count items 
+        let itemsPass = 0
+        // var to hold the list
+        let selectedStaticDevicesToSeek = []
+        // loop 
+        for (let i = 0, len = doc.idOfSpecificProducts.length; i < len; i++) {
+            // print
+            console.log(`idOfSpecificStaticDevices:${doc.idOfSpecificProducts[i].thingIdToSearch}`)
+            // db part
+            const ref = await db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Products')
+                .where('thingId','==', doc.idOfSpecificProducts[i].thingIdToSearch)
+                .get()
+            // loop to extract data    
+            for (const doc of ref.docs) {
+                selectedStaticDevicesToSeek.push({
+                    coords:doc.data().coords,
+                    docId:doc.id
+                })
+                // print
+                console.log(`coords middleware: ${JSON.stringify(selectedStaticDevicesToSeek)}`)
+            }
+            // counter increment
+            itemsPass++
+            // checker
+            if(doc.idOfSpecificProducts.length === itemsPass){
+                return{
+                    // top5Products
+                    docId:doc.idOfSpecificProduct,
+                    // userDevice data
+                    thingId:doc.thingId,
+                    coords:doc.coords,
+                    // statics data
+                    staticDevicesCoords:selectedStaticDevicesToSeek,
+                } 
+            }
         }
 
     } else if(mode === "modeFive"){
