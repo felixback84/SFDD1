@@ -187,7 +187,7 @@ const PickerMarkerMix = ({data,props}) => {
                         </Grid>
                         {/* chart top5Products specific selection from user*/}
                         <Grid container>
-                            <Grid item xs={12}>
+                            <Grid item xs={12}> 
                                 {/* results */}
                                 <ProductsResultsSelectedItemsSearchingModeFour/>
                             </Grid>

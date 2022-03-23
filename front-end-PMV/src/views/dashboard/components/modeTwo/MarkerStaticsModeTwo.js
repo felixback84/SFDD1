@@ -25,7 +25,7 @@ class MarkerStaticsModeTwo extends Component {
             const myPromise = new Promise((resolve, reject) => {
                 // var to arr
                 let arrFinal = []
-                // print
+                // print 
 				console.log(
 					`hi filter of selected ones to markers: 
 					${JSON.stringify(this.props.idOfSpecificStaticDevices)}`

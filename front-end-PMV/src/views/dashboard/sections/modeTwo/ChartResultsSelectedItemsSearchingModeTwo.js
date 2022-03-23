@@ -46,7 +46,7 @@ class ChartResultsSelectedItemsSearchingModeTwo extends Component {
 			// ** top5Tags
 			// top5Tag,
 			top5TagListener,
-			loading,
+			loading, 
 			top5Tags,
 			// top5TagsListener,
 			// ** thing

@@ -33,11 +33,11 @@ class MarkerStaticsModeFour extends Component {
                 // check if none static is selected
                 if(this.props.idOfSpecificProducts.length === 0){
                     arrFinal.push({...this.props.top5Products[0],show:false})
-                } else if(this.props.idOfSpecificProducts.length != 0) {
+                } else if(nextProps.idOfSpecificProducts.length != 0) {
                     // loop over selection
-                    this.props.idOfSpecificProducts.map((id)=>{
+                    nextProps.idOfSpecificProducts.map((id)=>{
                         // filter
-                        this.props.top5Products.filter((arrItem)=>{
+                        nextProps.top5Products.filter((arrItem)=>{
                             // checker
                             if(arrItem.thingId === id.thingIdToSearch){
                                     arrFinal.push({...arrItem, show:false})
@@ -178,33 +178,33 @@ class MarkerStaticsModeFour extends Component {
 
             // ** distance matrix gmaps
             // vars with coords of dynamics and statics
-            const userDevicePos = {
-                lat: this.props.coords.lat, 
-                lng: this.props.coords.lon
-            }
-            const staticDevicePos = {
-                lat: top5Product.coords.lat, 
-                lng: top5Product.coords.lon
-            }
+            // const userDevicePos = {
+            //     lat: this.props.coords.lat, 
+            //     lng: this.props.coords.lon
+            // }
+            // const staticDevicePos = {
+            //     lat: top5Product.coords.lat, 
+            //     lng: top5Product.coords.lon
+            // }
 
             // Draw a line showing the straight distance between the markers
-            let line = new window.google.maps.Polyline({
-                path: [userDevicePos, staticDevicePos], 
-                map: map
-            })  
+            // let line = new window.google.maps.Polyline({
+            //     path: [userDevicePos, staticDevicePos], 
+            //     map: map
+            // })  
         })
     }
 
     render() {
         // ids from state list of pick ones
-        let filterArrOfTop5Tags = this.state.arrMarkers
+        let filterArrOfTop5Products = this.state.arrMarkers
 
         return (
             <>
                 {
                     this.hiStaticMarkers(
                         this.props.map,
-                        filterArrOfTop5Tags
+                        filterArrOfTop5Products
                     )
                 }
             </>

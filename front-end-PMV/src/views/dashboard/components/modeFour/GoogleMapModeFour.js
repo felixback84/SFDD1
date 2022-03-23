@@ -39,7 +39,7 @@ class GoogleMapModeFour extends Component {
 				<>
 					<GoogleMap 
 						id="myMap"
-						onMapLoad={
+						onMapLoad={ 
 							(map)=>{
 								return(
 									<> 
@@ -56,7 +56,7 @@ class GoogleMapModeFour extends Component {
 									</>
 								)
 							}
-						}	
+						}	 
 					>	
 					</GoogleMap>
 				</>

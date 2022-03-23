@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { selectProductOfStaticDeviceToSearchByUserDevice } from '../../../../redux/actions/heartbeatUIActions'
 import { 
     userDeviceSpecificTop5ProductSyncData,
-    //userDeviceSpecificTop5ProductSyncDataLiveDB,
+    userDeviceSpecificTop5ProductSyncDataLiveDB,
 } from '../../../../redux/actions/top5ProductsActions'
 
 class SwitchToMarkFromModeThreeToModeFour extends Component {
@@ -39,18 +39,7 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
             // to post and update list on liveDataSets
             this.props.selectProductOfStaticDeviceToSearchByUserDevice({objSelectProfileToSearch})
         } 
-        // else if(
-        //     // event.target.checked === true && 
-        //     idOfSpecificStaticDevices.length != 0
-        // ){
-        //     // to delete and update list on liveDataSets
-        //     props.unSelectStaticDevicesToSearch({objSelectProfileToSearch})
-        //     // top5Tag static data
-        //     props.userDeviceSpecificTop5TagSyncDataStatic(thingId,idOfSpecificStaticDevices)
-        //     // live data from top5Tag
-        //     props.userDeviceSpecificTop5TagSyncDataLiveDB(thingId,idOfSpecificStaticDevices)
-        // }
-    }
+    } 
 
     // passing changes props
     componentWillReceiveProps(nextProps){
@@ -58,16 +47,16 @@ class SwitchToMarkFromModeThreeToModeFour extends Component {
             this.setState({
                 ids:nextProps.idOfSpecificProducts
             })
-            // // top5Product static data
-            // this.props.userDeviceSpecificTop5ProductSyncData(
-            //     this.props.thingLiveDataSets.thingId,
-            //     this.props.idOfSpecificStaticDevices
-            // )
-            // // live data from top5Product
-            // this.props.userDeviceSpecificTop5ProductSyncDataLiveDB(
-            //     this.props.thingLiveDataSets.thingId,
-            //     this.props.idOfSpecificStaticDevices
-            // )
+            // top5Product static data
+            this.props.userDeviceSpecificTop5ProductSyncData(
+                this.props.thingLiveDataSets.thingId,
+                nextProps.idOfSpecificProducts
+            )
+            // live data from top5Product
+            this.props.userDeviceSpecificTop5ProductSyncDataLiveDB(
+                this.props.thingLiveDataSets.thingId,
+                nextProps.idOfSpecificProducts
+            )
             // print
             console.log(`this.props.idOfSpecificProducts: ${JSON.stringify(nextProps.idOfSpecificProducts)}`)
         }
@@ -94,14 +83,14 @@ const mapStateToProps = (state) => ({
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
     thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
     idOfSpecificProducts: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificProducts
-})
+}) 
 
 export default connect(mapStateToProps,{
     // thingLiveDataSets
     selectProductOfStaticDeviceToSearchByUserDevice,
     // top5Products
     userDeviceSpecificTop5ProductSyncData,
-    //userDeviceSpecificTop5ProductSyncDataLiveDB
+    userDeviceSpecificTop5ProductSyncDataLiveDB
 })(SwitchToMarkFromModeThreeToModeFour)
 
 

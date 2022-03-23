@@ -179,114 +179,130 @@ export const userDeviceTop5ProductsSyncDataLiveDB = (thingId) => (dispatch) => {
 }
 
 // to get data from a specifics one db for top5Products (modeFour) --> static data
-export const userDeviceSpecificTop5ProductSyncData = (thingId, [...arrIds]) => (dispatch) => {
+export const userDeviceSpecificTop5ProductSyncData = (thingId,arrIds) => (dispatch) => {
 
     // arrIds
-    const arrListOfTags = [...arrIds]
+    const arrListOfTags = arrIds
     // arrResults 
     const arrResults = []
     // vars to ask to db do
     const thingIdVal = thingId
     const userDeviceId = thingIdVal.split("-").slice(2);
 
-    // loop
-    for(let arrListOfTag in arrListOfTags){
+    // map select ones
+    let result = arrListOfTags.map((arrListOfTag) => {
+        // print
+        console.log(`arrListOfTag.top5ProductDocId: ${arrListOfTag.top5ProductDocId}`)
         // snapshot
-        const data = firebase.firestore()
-            .doc(`/userDevices/${userDeviceId}`) 
-            .collection('top5Products')
-            .where('thingId','==',arrListOfTag) // ---> id doc
-            .get()
-            .then((doc)=>{
-                arrResults.push([
-                    ...doc.data()
-                ])
-                return arrResults
+        const ref = firebase.firestore()
+        .doc(`/userDevices/${userDeviceId}/top5Products/${arrListOfTag.top5ProductDocId}`) 
+        .get()
+        .then((doc)=>{
+            // push in arr
+            arrResults.push({
+                ...doc.data()
             })
-            .catch((err)=>{
-                console.log(err)
-            })
-    }
-    
-    // push data
-    const observer = arrResults.then(doc => {
-        const resultDB = doc.data()
-        // dispatch
-        dispatch({ 
-            type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
-            payload: resultDB
-        });
-        dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT });
-    }, err => {
-        console.log(`Encountered error: ${err}`);
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
     })
+    // dispatchers
+    dispatch({ 
+        type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT,
+        payload: arrResults
+    })    
+    dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT });
+
+
 }
 
 // to get data from a specifics one db for top5Products (modeFour) --> dynamic data
-// export const userDeviceSpecificTop5ProductSyncDataLiveDB = () => (dispatch) => {
+export const userDeviceSpecificTop5ProductSyncDataLiveDB = (thingId,arrIds) => async (dispatch) => {
 
-//     console.log(`init live top5Product`)
+    console.log(`init live top5Product`)
 
-//     // vars to ask to db do
-//     const thingIdVal = thingId
-//     const userDeviceId = thingIdVal.split("-").slice(2);
-//     // print init
-//     console.log(`hi from init of top5Tag listener`)
-//     // var to hold the length of doc in collection
-//     let collectionLength = 0
-//     // arr
-//     let arr = []
-//     // ref db
-//     const dataRef = firebase
-//         .firestore()
-//         .doc(`/userDevices/${userDeviceId}`) 
-//         .collection('top5Products')
-//         //.orderBy('meters','asc')
+    // vars to ask to db document
+    const thingIdVal = thingId
+    const idsVendors = arrIds
+    const userDeviceId = thingIdVal.split("-").slice(2)
 
-//     // length of doc in collection
-//     const findLength = dataRef.get().then(snap => {
-//         return collectionLength = snap.size
-//     });
-//     console.log(`size:${collectionLength}`)
+    // print init
+    console.log(
+        `hi from init of top5Products listener: idsVendors 
+        - ${JSON.stringify(idsVendors)} -- thingIdVal - ${thingIdVal}`
+    )
 
-//     // snapshot
-//     const snap = dataRef
-//         .onSnapshot((querySnapshot)=>{
-//             // print
-//             console.log(`snapshot`)
-//             // snap
-//             const tagsMeters = querySnapshot
-//                 .docChanges()
-//                 .map((change)=>{
-//                     if(change.type === 'modified'){
-//                         // all data
-//                         const data = {...change.doc.data()}
-//                         return arr.push(data)
-//                     }
-//                 })
+    // arrs
+    let arrToFilter = []
+    let arrResultFilter = [] 
+    
+    // ref db
+    const dataRef = await firebase
+        .firestore()
+        .doc(`/userDevices/${userDeviceId}`) 
+        .collection('top5Products')
+        //.orderBy('meters','asc')
 
-//                 // checker if something change
-//                 if(querySnapshot.docChanges().length != 0){
-//                     // check lengths
-//                     if(arr.length === collectionLength){
-//                         // sort the arr
-//                         let arrSort = arr.sort((a, b) => a.meters - b.meters)
-//                         // print
-//                         console.log(`minVal:${JSON.stringify(arrSort)}`)
-//                         // dispatch data
-//                         dispatch({ 
-//                             type: GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
-//                             payload:arrSort
-//                         });
-//                         // events
-//                         dispatch({ type: STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE })
-//                         // reset arr
-//                         arr = []
-//                         console.log(`arrEmpty:${arr}`)
-//                     }
-//                 }
-//         },err => {
-//             console.log(`Encountered error: ${err}`);
-//         }) 
-// }
-
+    // get the right docs
+    const docToTrack = await dataRef
+        .get() 
+    
+    // create arr to filter    
+    docToTrack
+        .forEach((doc)=>{
+            arrToFilter.push({...doc.data()})
+        })
+    
+    // filter with select ones
+    arrToFilter.filter((doc)=>{
+        idsVendors.forEach((idVendor)=>{
+            if(doc.thingId === idVendor.thingIdToSearch){
+                arrResultFilter.push(doc)
+                // return arrResultFilter 
+            }
+        })
+    })
+    
+    // update just the changes in all the list created for the modeOne
+    const snapOnlyWithChanges = await dataRef
+        .onSnapshot((querySnapshot)=>{
+            // snap
+            querySnapshot
+                .docChanges()
+                .forEach((change)=>{
+                    // check if exists changes
+                    if(change.type === 'modified'){
+                        const customFilter = (arr,searchValue) => {
+                            // loop
+                            arr.forEach((item, index) => {
+                                if(item.thingId === searchValue.doc.data().thingId){
+                                    // data to replace
+                                    const data = {
+                                        ...change.doc.data()
+                                    }
+                                    // replace data in the right index
+                                    arrResultFilter[index] = data
+                                    // print
+                                    console.log(`to reducer: ${JSON.stringify(arrResultFilter)}`)
+                                    // dispatchers
+                                    dispatch({ 
+                                        type:GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE, 
+                                        payload:arrResultFilter
+                                    })
+                                    // events
+                                    dispatch({ type:STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE })
+                                } else {
+                                    return
+                                }
+                            })
+                        }
+                        // run it
+                        customFilter(arrResultFilter,change)   
+                    }
+                }) 
+            },(err)=>{
+                console.log(`Encountered error: ${err}`)
+            }
+        )
+}

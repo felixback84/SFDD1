@@ -46,17 +46,6 @@ class SwitchToMarkFromModeOneToModeTwo extends Component {
             // to post and update list on liveDataSets
             this.props.selectStaticDevicesToSearch({objSelectProfileToSearch})
         } 
-        // else if(
-        //     // event.target.checked === true && 
-        //     idOfSpecificStaticDevices.length != 0
-        // ){
-        //     // to delete and update list on liveDataSets
-        //     props.unSelectStaticDevicesToSearch({objSelectProfileToSearch})
-        //     // top5Tag static data
-        //     props.userDeviceSpecificTop5TagSyncDataStatic(thingId,idOfSpecificStaticDevices)
-        //     // live data from top5Tag
-        //     props.userDeviceSpecificTop5TagSyncDataLiveDB(thingId,idOfSpecificStaticDevices)
-        // }
     }
 
     // passing changes props

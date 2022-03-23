@@ -48,13 +48,14 @@ class DataFrameSelectedProductLive extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            expanded:{},
             arrCellsLive: []
         } 
     }
 
     // to map changes
     componentWillReceiveProps(nextProps){
-        if(nextProps.top5ProductsListener){
+        if(nextProps.top5ProductListener){
             // set state
             // this.setState({ arrCellsLive: this.props.top5TagListener })
             // var to arr
@@ -62,9 +63,9 @@ class DataFrameSelectedProductLive extends Component {
 
             // top5Tag live promise
             const myPromiseLive = new Promise((resolve, reject)=>{
-                console.log(`state comparasion: ${this.props.top5ProductsListener.length === this.props.lengthProductsSelected}`)
-                if(this.props.top5ProductsListener.length === this.props.lengthProductsSelected){
-                    this.props.top5ProductsListener.map((top5Tag)=>{
+                console.log(`state comparasion: ${this.props.top5ProductListener.length === this.props.lengthProductsSelected}`)
+                if(this.props.top5ProductListener.length === this.props.lengthProductsSelected){
+                    this.props.top5ProductListener.map((top5Tag)=>{
                         arrFinalLive.push({...top5Tag})
                     })
                     // print
@@ -231,7 +232,7 @@ class DataFrameSelectedProductLive extends Component {
         return arr
     }
 
-    render() {
+    render() { 
         return(
             <>
                 {this.arrTop5Products(
@@ -242,13 +243,13 @@ class DataFrameSelectedProductLive extends Component {
         )
     }
 }
-
+ 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
     // top5Products 
-    loading: state.top5Products1.loading,
+    loading: state.top5Products1.loading, 
     top5Products:state.top5Products1.top5Products,
-    top5ProductsListener:state.top5Products1.top5ProductsListener,
+    top5ProductListener:state.top5Products1.top5ProductListener,
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 

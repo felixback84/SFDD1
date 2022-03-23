@@ -43,7 +43,7 @@ const ExpandMore = styled((props) => {
 })) 
 
 class DataFrameSelectedProduc extends Component {
-
+ 
     // state
     constructor(props) {
         super(props)
@@ -140,7 +140,7 @@ class DataFrameSelectedProduc extends Component {
             // print
             console.log(`arrTop5Product: ${arrTop5Product}`)
             // arr push
-            arr.push(
+            arr.push( 
                 <GridItem xs={4}>
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader

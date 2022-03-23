@@ -87,7 +87,7 @@ export default function(state = initialState, action){
         case STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS:
             return { 
                 ...state,
-                loading: false
+                loading: false 
             };   
             
             // live
@@ -118,19 +118,19 @@ export default function(state = initialState, action){
                 loading: false
             };  
             
-        // top5Product --> mode four
-        case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
-            return {
-                ...state,
-                top5ProductListener: action.payload,
-                loading: false
-            };     
+            // top5Product --> mode four
+            case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
+                return {
+                    ...state,
+                    top5ProductListener: action.payload,
+                    loading: false
+                };     
 
-        case STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
-            return {
-                ...state,
-                loading: false
-            }; 
+            case STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
+                return {
+                    ...state,
+                    loading: false
+                }; 
 
         default:
             return state; 

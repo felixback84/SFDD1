@@ -108,7 +108,7 @@ class MarkerDynamicModeTwo extends Component {
                 coords.lat, 
                 coords.lon
             )
-            markerInit.setPosition(uplatlng) // Any marker in this point to set the posw   
+            markerInit.setPosition(uplatlng) // Any marker in this point to set the pos  
             // update color marker
             markerInit.setIcon(icon) 
             // pass data to path

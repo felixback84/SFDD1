@@ -58,7 +58,7 @@ const SearchingModeSwitcherOne = (props) => {
 				objSearchingModeData:{
 					searchingMode:[mode.modeType],
 					thingId
-				}
+				} 
 			}
 			// post searching mode in db
 			props.heartbeatPostSearchingMode(dataSearchingMode)

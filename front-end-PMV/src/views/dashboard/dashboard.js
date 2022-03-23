@@ -88,7 +88,7 @@ class Dashboard extends Component {
 								colorValue,
 								loading
 							}
-						}
+						} 
 					/>
 				</Container>
 			</>

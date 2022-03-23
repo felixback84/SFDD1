@@ -178,11 +178,12 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
             // products
             loading,
             top5Products,
-            top5ProductsListener
+            top5Product,
+            top5ProductListener
         } = this.props
 
         // data to pass
-        const dataOfTop5ProductsToPass = top5ProductsListener.length != 0 ? top5ProductsListener : top5Products
+        const dataOfTop5ProductsToPass = top5ProductListener.length != 0 ? top5ProductListener : top5Products
 
         return (
             <>  
@@ -201,10 +202,10 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
                     >
                     </CardHeader> 
                     {
-                        loading === false && this.props.top5ProductsListener.length === 0 ? 
+                        loading === false && this.props.top5ProductListener.length === 0 ? 
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProduct
+                                    <DataFrameSelectedProduct 
                                         data={
                                             dataOfTop5ProductsToPass 
                                         } 
@@ -226,13 +227,16 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
         )
     }
 }
-
+ 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+    // liveDataSets
+    thingLiveDataSetsListener:state.heartbeatThing1.thingLiveDataSetsListener,
     // top5Products 
     loading: state.top5Products1.loading,
     top5Products:state.top5Products1.top5Products,
-    top5ProductsListener:state.top5Products1.top5ProductsListener,
+    top5Product:state.top5Products1.top5Product,
+    top5ProductListener:state.top5Products1.top5ProductListener,
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
