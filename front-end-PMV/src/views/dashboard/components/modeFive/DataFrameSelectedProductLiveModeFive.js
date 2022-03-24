@@ -23,7 +23,7 @@ import ShareIcon from '@mui/icons-material/Share'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 // components
-import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
+import ColorMtsAvatar from "../utils/ColorMtsAvatar"
 // Redux stuff
 import { connect } from 'react-redux'
 // css
@@ -42,7 +42,7 @@ const ExpandMore = styled((props) => {
     }),
 }))
 
-class DataFrameSelectedProductLive extends Component {
+class DataFrameSelectedProductLiveModeFive extends Component {
 
     // state
     constructor(props) {
@@ -253,6 +253,6 @@ const mapStateToProps = (state) => ({
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps)(withStyles(useStyles)(DataFrameSelectedProductLive))
+export default connect(mapStateToProps)(withStyles(useStyles)(DataFrameSelectedProductLiveModeFive))
 
 

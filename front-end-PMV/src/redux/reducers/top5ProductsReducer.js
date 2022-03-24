@@ -5,6 +5,10 @@ import {
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
     STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS, 
 
+    // ---> search products by category and tags
+    GET_PRODUCTS_BY_CATEGORIES_AND_TAGS,
+    STOP_GET_PRODUCTS_BY_CATEGORIES_AND_TAGS, 
+
     // ---> post list of products to find
     POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND, 
     STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
@@ -61,6 +65,21 @@ export default function(state = initialState, action){
                 ...state,
                 loading: false
             }; 
+
+        // search by categories and tags
+        case GET_PRODUCTS_BY_CATEGORIES_AND_TAGS:
+            return {
+                ...state,
+                // responses: action.payload,
+                top5Products: action.payload,
+                //loading: false
+            }; 
+
+        case STOP_GET_PRODUCTS_BY_CATEGORIES_AND_TAGS:
+            return {
+                ...state,
+                loading: false
+            };
 
         // post list
         case POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND:

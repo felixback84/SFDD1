@@ -5,6 +5,10 @@ import {
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
     STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
 
+    // ---> search products by category and tags
+    GET_PRODUCTS_BY_CATEGORIES_AND_TAGS,
+    STOP_GET_PRODUCTS_BY_CATEGORIES_AND_TAGS,
+
     // ---> post list of products to find
     POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
     STOP_POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_FIND,
@@ -53,7 +57,28 @@ export const searchStaticDevicesProductsByCategoryAndTags = (data) => async (dis
     }
 }
 
-// ---> post list of products to find
+// ---> search products by categories and tags
+export const searchStaticDevicesProductsByCategoriesAndTags = (data) => async (dispatch) => {
+    // var
+    let dataIn = await data
+    console.log({dataIn})
+    // run it
+    try {
+        let dataByCategoryAndTags = await axios
+            .post(`/staticdevice/products/categories/tags/`,dataIn)
+        const res = await dataByCategoryAndTags 
+        console.log({res})
+        dispatch({ 
+            type: GET_PRODUCTS_BY_CATEGORIES_AND_TAGS,
+            payload: res.data
+        })
+        dispatch({ type: STOP_GET_PRODUCTS_BY_CATEGORIES_AND_TAGS })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ---> post list of products to find 
 export const postListOfProductsOfStaticDevicesToFind = (data) => async (dispatch) => {
     // var
     let dataToSend = data

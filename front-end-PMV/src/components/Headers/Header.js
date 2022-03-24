@@ -9,6 +9,7 @@ import SearchingModeCardModeOne from '../../views/dashboard/components/modeOne/S
 import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
 import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
 import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
+import SearchingModeCardModeFive from '../../views/dashboard/components/modeFive/SearchingModeCardModeFive'
 // slick corrousel
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";
@@ -74,6 +75,15 @@ const Header = (props) => {
                   title="modeFour"
                   icon={GroupAdd}
                   mode="modeFour"
+                  thingid={props.thingid}
+                />
+            </div>
+            <div>
+                {/* modeFive */}
+                <SearchingModeCardModeFive
+                  title="modeFive"
+                  icon={GroupAdd}
+                  mode="modeFive"
                   thingid={props.thingid}
                 />
             </div>

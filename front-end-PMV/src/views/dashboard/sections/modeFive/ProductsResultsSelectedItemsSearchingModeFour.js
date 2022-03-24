@@ -7,8 +7,8 @@ import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import Grid from '@mui/material/Grid'
 // components
-import DataFrameSelectedProductModeFour from "../../components/modeFour/DataFrameSelectedProductModeFour"
-import DataFrameSelectedProductLiveModeFour from "../../components/modeFour/DataFrameSelectedProductLiveModeFour"
+import DataFrameSelectedProductModeFive from "../../components/modeFour/DataFrameSelectedProductModeFive"
+import DataFrameSelectedProductLiveModeFive from "../../components/modeFour/DataFrameSelectedProductLiveModeFive"
 // Redux stuff
 import { connect } from 'react-redux'
 // css
@@ -16,8 +16,9 @@ import shoppingCartStyle from "../../../../assets/theme/material-kit-pro-react/s
 const useStyles = shoppingCartStyle
 
 
-class ProductsResultsSelectedItemsSearchingModeFour extends Component {
+class ProductsResultsSelectedItemsSearchingModeFive extends Component {
 
+    
     render() {
         // redux state & style
         const {
@@ -52,7 +53,7 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
                         loading === false && this.props.top5ProductListener.length === 0 ? 
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProductModeFour
+                                    <DataFrameSelectedProductModeFive
                                         data={
                                             dataOfTop5ProductsToPass 
                                         } 
@@ -63,7 +64,7 @@ class ProductsResultsSelectedItemsSearchingModeFour extends Component {
                             :
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProductLiveModeFour
+                                    <DataFrameSelectedProductLiveModeFive
                                         lengthProductsSelected={this.props.thingLiveDataSetsListener.idOfSpecificProducts.length}
                                     />
                                 </Grid>
@@ -87,6 +88,6 @@ const mapStateToProps = (state) => ({
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSelectedItemsSearchingModeFour))
+export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSelectedItemsSearchingModeFive))
 
 

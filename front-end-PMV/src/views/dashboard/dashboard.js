@@ -71,7 +71,7 @@ class Dashboard extends Component {
 					thingid={this.props.userDevices[0].thingId}
 				/>
 				{/* Page content */}
-				<Container
+				<Container 
 					maxWidth={false}
 					component={Box}
 					marginTop="-6rem"
