@@ -244,7 +244,11 @@ const ComboSearchModeThree = (props) => {
 					(selected) => (
 						<div className={classes.chips}>
 							{selected.map((value) => (
-								<Chip key={value} label={value} className={classes.chip} />
+								<Chip 
+									key={value} 
+									label={value} 
+									className={classes.chip} 
+								/>
 							))}
 						</div>
 					)
@@ -253,7 +257,6 @@ const ComboSearchModeThree = (props) => {
 			>
 				{/* all tags of selected key to init*/}
 				{selectorTagsList(props.staticDevicesTags[categorySelected])}
-				{/* {filteredData} */}
 			</Select>
 		)
 	}

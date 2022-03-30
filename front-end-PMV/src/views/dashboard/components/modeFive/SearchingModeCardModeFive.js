@@ -123,4 +123,4 @@ const mapStateToProps = (state) => ({
 	top5ProductsListener: state.top5Products1.top5ProductsListener,
 })
 
-export default connect(mapStateToProps)(SearchingModeCardModeFour)
+export default connect(mapStateToProps)(SearchingModeCardModeFive)

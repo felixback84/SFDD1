@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: "100%",
 		marginBottom: theme.spacing(1)
 	}
-}));
- 
+}))
+
 // menu props
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -73,7 +73,7 @@ const MenuProps = {
             width: 250,
         },
     },
-};
+}
 
 // style mixer
 function getStyles(name, statePath, theme) {
@@ -109,7 +109,7 @@ const ComboSearchModeFive = (props) => {
 	}
 
     // state of field & checkboxes
-    const [categorySelected, setCategory] = React.useState("")
+    const [categoriesSelected, setCategories] = React.useState([])
 	const [tagsSelected, setTags] = React.useState({})
 	const [selectState, setSelectState] = React.useState(false)
     // const [filteredData, setFilteredData] = React.useState()
@@ -120,8 +120,12 @@ const ComboSearchModeFive = (props) => {
 			...tagsSelected,
 			[event.target.name]:event.target.value
 		})
+		// setTags([
+		// 	...tagsSelected,
+		// 	event.target.value
+		// ])
 		// print
-		// console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
+		console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
     } 
 
     // send data event
@@ -131,9 +135,10 @@ const ComboSearchModeFive = (props) => {
 		const dataToSend = {
 			userDeviceId:props.thingLiveDataSets.thingId.split("-").slice(2).toString(),
 			dataProductToSearch:{
-				categories:categorySelected,
+				// categories:categoriesSelected,
 				// send only the keys (arr) with data
-				tags:tagsSelected[categorySelected]
+				// tags:tagsSelected
+				taxonomy:tagsSelected
 			}
 		}
 		console.log({dataToSend})
@@ -146,11 +151,12 @@ const ComboSearchModeFive = (props) => {
 		// create empty arrs to hold tags
 		setTags(createKeys(props.staticDevicesTags))
 		// set category
-		setCategory(
-            event.target.value
-		)
+		setCategories([
+			...categoriesSelected,
+			event.target.value
+		])
 		// print
-		// console.log({categorySelected})
+		console.log(`categoriesSelected:${JSON.stringify(categoriesSelected)}`)
 	}
 
 	// categorie checkboxes
@@ -184,8 +190,8 @@ const ComboSearchModeFive = (props) => {
 	// tags from db
 	const selectorTagsList = (data)=>{
 		let tg = data
-		// print
-		// console.log(`data fields tags:${JSON.stringify(tg)}`)
+		//print
+		console.log(`data fields tags:${JSON.stringify(tg)}`)
 		// loop
 		return tg.map((tagCategoryItem)=>{
 			return(
@@ -218,40 +224,55 @@ const ComboSearchModeFive = (props) => {
 
 	// category selected field
 	
-	const field = (categorySelected) => {
-		return categorySelected != "" && 
-		(
-			<Select
-				name={categorySelected}
-				labelId={categorySelected}
-				id={categorySelected}
-				multiple
-				value={tagsSelected[categorySelected]}
-				onChange={handleChangeTags}
-				// active input
-				input={
-					<Input 
-						id={`select-mutiple-chip`} 
-						//onChange={handleFilter}
-						className={classes.field}
-					/>
-				}
-				renderValue={
-					(selected) => (
-						<div className={classes.chips}>
-							{selected.map((value) => (
-								<Chip key={value} label={value} className={classes.chip} />
-							))}
-						</div>
-					)
-				}
-				MenuProps={MenuProps}
-			>
-				{/* all tags of selected key to init*/}
-				{selectorTagsList(props.staticDevicesTags[categorySelected])}
-				{/* {filteredData} */}
-			</Select>
-		)
+	const field = (tags) => {
+		return categoriesSelected.map((categorySelected)=>{
+			// console.log(`categorySelected:${JSON.stringify(categorySelected)}`)
+			// console.log(`tags[categorySelected]:${JSON.stringify(tags[categorySelected])}`)
+			return(
+				<Select
+					name={categorySelected}
+					labelId={categorySelected}
+					id={categorySelected}
+					// multiple
+					value={tags[categorySelected]}
+					onChange={handleChangeTags}
+					// active input
+					input={
+						<Input 
+							id={`select-mutiple-chip`} 
+							//onChange={handleFilter}
+							className={classes.field} 
+						/>
+					}
+					renderValue={
+						// (selected) => (
+						// 	<div className={classes.chips}>
+						// 		{selected.map((value) => (
+						// 			<Chip 
+						// 				key={value} 
+						// 				label={value} 
+						// 				className={classes.chip} 
+						// 			/>
+						// 		))}
+						// 	</div>
+						// )
+						(selected)=>(
+							<div className={classes.chips}>
+								<Chip 
+									key={selected} 
+									label={selected} 
+									className={classes.chip} 
+								/>
+							</div>
+						)
+					}
+					MenuProps={MenuProps}
+				>
+					{/* all tags of selected key to init*/}
+					{selectorTagsList(props.staticDevicesTags[categorySelected])}
+				</Select>
+			)
+		})
 	}
 	
     return(
@@ -273,13 +294,14 @@ const ComboSearchModeFive = (props) => {
 						>
 							<Grid container >
 								<Grid item xs={12}>
-									{/* <Item>xs=8</Item> */}
+									{/* checkboxes */}
 									<FormGroup aria-label="position" row>
 										{keysToCheckBoxes(props.staticDevicesTags)}
 									</FormGroup>
 								</Grid>	
 								<Grid item xs={12}>
-									{field(categorySelected)}
+									{/* fields */}
+									{field(tagsSelected)}
 								</Grid>
 								<Grid item xs={12}>
 									{/* btn */}
@@ -322,5 +344,5 @@ const mapStateToProps = (state) => ({
 	// top5ProductsUI: state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoryAndTags})(ComboSearchModeFive)
+export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoriesAndTags})(ComboSearchModeFive)
     

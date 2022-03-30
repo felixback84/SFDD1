@@ -7,8 +7,8 @@ import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import Grid from '@mui/material/Grid'
 // components
-import DataFrameSelectedProductModeFive from "../../components/modeFour/DataFrameSelectedProductModeFive"
-import DataFrameSelectedProductLiveModeFive from "../../components/modeFour/DataFrameSelectedProductLiveModeFive"
+import DataFrameSelectedProductModeFive from "../../components/modeFive/DataFrameSelectedProductModeFive"
+import DataFrameSelectedProductLiveModeFive from "../../components/modeFive/DataFrameSelectedProductLiveModeFive"
 // Redux stuff
 import { connect } from 'react-redux'
 // css

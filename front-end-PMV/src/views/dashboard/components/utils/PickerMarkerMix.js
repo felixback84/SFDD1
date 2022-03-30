@@ -8,7 +8,7 @@ import GMapsServicesModeOne from '../../components/modeOne/GMapsServicesModeOne'
 import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
 import GMapsServicesModeThree from '../../components/modeThree/GMapsServicesModeThree'
 import GMapsServicesModeFour from '../../components/modeFour/GMapsServicesModeFour'
-import GMapsServicesModeFive from '../../components/modeFour/GMapsServicesModeFive'
+import GMapsServicesModeFive from '../../components/modeFive/GMapsServicesModeFive'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
@@ -20,8 +20,8 @@ import ProductsResultsSearchingModeThree from "../../sections/modeThree/Products
 import ProductsResultsSelectedItemsSearchingModeFour from "../../sections/modeFour/ProductsResultsSelectedItemsSearchingModeFour"
 import ProductsResultsSearchingModeFour from "../../sections/modeFour/ProductsResultsSearchingModeFour"
 // modeFive
-import ProductsResultsSelectedItemsSearchingModeFive from "../../sections/modeFour/ProductsResultsSelectedItemsSearchingModeFive"
-import ProductsResultsSearchingModeFive from "../../sections/modeFour/ProductsResultsSearchingModeFive"
+import ProductsResultsSelectedItemsSearchingModeFive from "../../sections/modeFive/ProductsResultsSelectedItemsSearchingModeFive"
+import ProductsResultsSearchingModeFive from "../../sections/modeFive/ProductsResultsSearchingModeFive"
 // Redux stuff
 import {connect} from 'react-redux'
 

@@ -68,7 +68,7 @@ const styles = (theme) => ({
     
 })
 
-class ProductsResultsTempSearchingModeThree extends Component {
+class ProductsResultsTempSearchingModeFive extends Component {
 
     // state
 	constructor(props) {
@@ -260,5 +260,5 @@ const mapStateToProps = (state) => ({
     top5ProductsUI:state.top5Products1.top5ProductsUI
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(ProductsResultsTempSearchingModeThree))
+export default connect(mapStateToProps)(withStyles(styles)(ProductsResultsTempSearchingModeFive))
 
