@@ -194,53 +194,7 @@ exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
     
 }
 
-// search of static devices according to multiple categories and multiple tags it has
-exports.searchStaticDevicesProductsByCategoriesAndTags = async (req, res) => {
-    // /
-    let _ = require('underscore')
-    // data from client
-    let dataProductToSearch = req.body.dataProductToSearch
-    // print
-    console.log({dataProductToSearch})
-    // var to hold results
-    let resultsOfProductsInDB = []
-    // db part
-    let docs = await db
-    .collection('products')
-    .get()
-    .then((data)=>{
-        // chack if exists data
-        if (data.empty) {
-            return res.status(400).json({ error: 'Any product in this category' });
-        } else {
-            data.forEach((doc)=>{   
-                if(_.isEqual(doc.data().taxonomy,dataProductToSearch.taxonomy)){
-                    resultsOfProductsInDB.push({
-                        name:doc.data().name,
-                        tags:doc.data().tags,
-                        categories:doc.data().categories,
-                        staticDeviceProperty:doc.data().staticDeviceProperty,
-                        description:doc.data().description,
-                        familyOfDevices:doc.data().familyOfDevices,
-                        imgUrl:doc.data().imgUrl,
-                        price:doc.data().price,
-                        createdAt:doc.data().createdAt,
-                        productId:doc.id,
-                        taxonomy:doc.data().taxonomy,
-                        companyName:doc.data().companyName
-                    })
-                } else {
-                    console.log("error in filter of tags")
-                }
-            })
-            // res
-            return res.json(resultsOfProductsInDB)
-        }
-    })
-    .catch(err => {
-        res.status(500, err)
-    })
-}
+
 
 // post list of products in top5Products
 exports.postListOfProductsToFind = async (req, res) => {

@@ -96,9 +96,7 @@ const {
         // es cosa de escoger cual es el buscador
         //searchStaticDevicesProductsByCategoryAndTag, // products searcher to one category and one tag
         searchStaticDevicesProductsByCategoryAndTags, // products searcher category and tags
-        searchStaticDevicesProductsByCategoriesAndTags, // products searcher categories and tags ---> not yet
         // findStaticsProductsInSpecificMtsRange, ------> better search
-
         // postListOfProductsToFindOneByOne, 
         //postListOfProductsToFind, // ---> top5Products from ux 
         meassureOfMatchesInProducts, // ----> meassure modeThree
@@ -109,7 +107,12 @@ const {
             // se debe seleccionar del anterior modo la lista de devices
             selectProductOfStaticDeviceToSearchByUserDevice, // ----> top5Products ux picker
             meassureOfMatchToEspecificProduct, // ----> meassure modeFour ----> to check
-        } = require('./handlers/searchingModes/modeFour');
+        } = require('./handlers/searchingModes/modeFour')
+
+    // searching modeFive
+    const {
+        searchStaticDevicesProductsByCategoriesAndTags, // products searcher categories and tags ---> not yet
+    } = require('./handlers/searchingModes/modeFive')
 
     // searching by meters
     const {
@@ -259,8 +262,7 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
 //app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
 // search of static devices products according to one category and tags it has
 app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProductsByCategoryAndTags)
-// search of static devices products according to multiple categories and tags it has ---> not yet
-app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
+
 // to post list of products to find his positions and owners
 // app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
 // app.post('/userdevice/postlistofproducts', postListOfProductsToFindOneByOne) // before modeThree
@@ -268,7 +270,11 @@ app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesPro
     /////*** */ mode four
     // post product to Search by userDevice ---> before modeFour
     app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
- 
+
+/////*** */ mode five
+// search of static devices products according to multiple categories and tags it has
+app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
+
 /////*** */ bymeters
 // to post and find wich statics are close to me by geohash
 app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)

@@ -89,9 +89,15 @@ const ComboSearchModeFive = (props) => {
     // styles
     const classes = useStyles()
 	const theme = useTheme()
+
+	// state of box, field & checkboxes
+	const [open, setOpen] = React.useState(true)
+    const [categoriesSelected, setCategories] = React.useState([])
+	const [tagsSelected, setTags] = React.useState({})
+	const [selectState, setSelectState] = React.useState(false)
+    // const [filteredData, setFilteredData] = React.useState()
 	
 	// open tab collapser
-	const [open, setOpen] = React.useState(true)
 	const handleClick = () => {
 		setOpen(!open)
 	}
@@ -108,22 +114,12 @@ const ComboSearchModeFive = (props) => {
 		return resultKeys
 	}
 
-    // state of field & checkboxes
-    const [categoriesSelected, setCategories] = React.useState([])
-	const [tagsSelected, setTags] = React.useState({})
-	const [selectState, setSelectState] = React.useState(false)
-    // const [filteredData, setFilteredData] = React.useState()
-	
     // handle change for tags
     const handleChangeTags = (event) => {
         setTags({
 			...tagsSelected,
 			[event.target.name]:event.target.value
 		})
-		// setTags([
-		// 	...tagsSelected,
-		// 	event.target.value
-		// ])
 		// print
 		console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
     } 
@@ -135,13 +131,10 @@ const ComboSearchModeFive = (props) => {
 		const dataToSend = {
 			userDeviceId:props.thingLiveDataSets.thingId.split("-").slice(2).toString(),
 			dataProductToSearch:{
-				// categories:categoriesSelected,
-				// send only the keys (arr) with data
-				// tags:tagsSelected
 				taxonomy:tagsSelected
 			}
 		}
-		console.log({dataToSend})
+		// console.log({dataToSend})
         // redux action to send data to server
 		await props.searchStaticDevicesProductsByCategoriesAndTags(dataToSend)
 	}
@@ -245,17 +238,6 @@ const ComboSearchModeFive = (props) => {
 						/>
 					}
 					renderValue={
-						// (selected) => (
-						// 	<div className={classes.chips}>
-						// 		{selected.map((value) => (
-						// 			<Chip 
-						// 				key={value} 
-						// 				label={value} 
-						// 				className={classes.chip} 
-						// 			/>
-						// 		))}
-						// 	</div>
-						// )
 						(selected)=>(
 							<div className={classes.chips}>
 								<Chip 
