@@ -194,8 +194,6 @@ exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
     
 }
 
-
-
 // post list of products in top5Products
 exports.postListOfProductsToFind = async (req, res) => {
     // receive list of products
