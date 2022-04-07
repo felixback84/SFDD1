@@ -7,8 +7,8 @@ import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import Grid from '@mui/material/Grid'
 // components
-import DataFrameSelectedProductModeFive from "../../components/modeFive/DataFrameSelectedProductModeFive"
-import DataFrameSelectedProductLiveModeFive from "../../components/modeFive/DataFrameSelectedProductLiveModeFive"
+import DataFrameSelectedProductModeSix from "../../components/modeSix/DataFrameSelectedProductModeSix"
+import DataFrameSelectedProductLiveModeSix from "../../components/modeSix/DataFrameSelectedProductLiveModeSix"
 // Redux stuff
 import { connect } from 'react-redux'
 // css
@@ -16,7 +16,7 @@ import shoppingCartStyle from "../../../../assets/theme/material-kit-pro-react/s
 const useStyles = shoppingCartStyle
 
 
-class ProductsResultsSelectedItemsSearchingModeFive extends Component {
+class ProductsResultsSelectedItemsSearchingModeSix extends Component {
 
     
     render() {
@@ -26,7 +26,7 @@ class ProductsResultsSelectedItemsSearchingModeFive extends Component {
             // products
             loading,
             top5Products,
-            top5Product,
+            top5Product, 
             top5ProductListener
         } = this.props
 
@@ -53,7 +53,7 @@ class ProductsResultsSelectedItemsSearchingModeFive extends Component {
                         loading === false && this.props.top5ProductListener.length === 0 ? 
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProductModeFive
+                                    <DataFrameSelectedProductModeSix
                                         data={
                                             dataOfTop5ProductsToPass 
                                         } 
@@ -64,7 +64,7 @@ class ProductsResultsSelectedItemsSearchingModeFive extends Component {
                             :
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProductLiveModeFive
+                                    <DataFrameSelectedProductLiveModeSix
                                         lengthProductsSelected={this.props.thingLiveDataSetsListener.idOfSpecificProducts.length}
                                     />
                                 </Grid>
@@ -75,7 +75,7 @@ class ProductsResultsSelectedItemsSearchingModeFive extends Component {
         )
     }
 }
- 
+
 // connect to global state in redux
 const mapStateToProps = (state) => ({
     // liveDataSets
@@ -88,6 +88,6 @@ const mapStateToProps = (state) => ({
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSelectedItemsSearchingModeFive))
+export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSelectedItemsSearchingModeSix))
 
 

@@ -9,6 +9,7 @@ import GMapsServicesModeTwo from '../../components/modeTwo/GMapsServicesModeTwo'
 import GMapsServicesModeThree from '../../components/modeThree/GMapsServicesModeThree'
 import GMapsServicesModeFour from '../../components/modeFour/GMapsServicesModeFour'
 import GMapsServicesModeFive from '../../components/modeFive/GMapsServicesModeFive'
+import GMapsServicesModeSix from '../../components/modeSix/GMapsServicesModeSix'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
@@ -20,8 +21,10 @@ import ProductsResultsSearchingModeThree from "../../sections/modeThree/Products
 import ProductsResultsSelectedItemsSearchingModeFour from "../../sections/modeFour/ProductsResultsSelectedItemsSearchingModeFour"
 import ProductsResultsSearchingModeFour from "../../sections/modeFour/ProductsResultsSearchingModeFour"
 // modeFive
-import ProductsResultsSelectedItemsSearchingModeFive from "../../sections/modeFive/ProductsResultsSelectedItemsSearchingModeFive"
 import ProductsResultsSearchingModeFive from "../../sections/modeFive/ProductsResultsSearchingModeFive"
+// modeSix
+import ProductsResultsSelectedItemsSearchingModeSix from "../../sections/modeSix/ProductsResultsSelectedItemsSearchingModeSix"
+import ProductsResultsSearchingModeSix from "../../sections/modeSix/ProductsResultsSearchingModeSix"
 // Redux stuff
 import {connect} from 'react-redux'
 
@@ -119,7 +122,7 @@ const PickerMarkerMix = ({data,props}) => {
                                 <ChartResultsSearchingModeTwo/>
                             </Grid>
                         </Grid>
-                    </>	
+                    </>	 
                 )
             }
         break;
@@ -232,18 +235,54 @@ const PickerMarkerMix = ({data,props}) => {
                                 </Card>
                             </Grid>
                         </Grid>
+                        {/* chart all top5Products*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSearchingModeFive/> 
+                            </Grid>
+                        </Grid>
+                    </>
+                )
+            }
+        break;
+        case "modeSix":
+            if(data.loading == false){
+                console.log("modeSix")	
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GMapsServicesModeSix
+                                        checked={mode.checked}
+                                        //coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
                         {/* chart top5Products specific selection from user*/}
                         <Grid container>
                             <Grid item xs={12}> 
                                 {/* results */}
-                                <ProductsResultsSelectedItemsSearchingModeFive/>
+                                <ProductsResultsSelectedItemsSearchingModeSix/>
                             </Grid>
                         </Grid>
                         {/* chart all top5Products*/}
                         <Grid container>
                             <Grid item xs={12}>
                                 {/* results */}
-                                <ProductsResultsSearchingModeFive/> 
+                                <ProductsResultsSearchingModeSix/> 
                             </Grid>
                         </Grid>
                     </>

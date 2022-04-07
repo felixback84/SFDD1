@@ -10,7 +10,7 @@ import {
     userDeviceSpecificTop5ProductSyncDataLiveDB,
 } from '../../../../redux/actions/top5ProductsActions'
 
-class SwitchToMarkFromModeThreeToModeFive extends Component {
+class SwitchToMarkFromModeFiveToModeSix extends Component {
 
     // state
     constructor(props) {
@@ -92,7 +92,7 @@ export default connect(mapStateToProps,{
     // top5Products
     userDeviceSpecificTop5ProductSyncData,
     userDeviceSpecificTop5ProductSyncDataLiveDB
-})(SwitchToMarkFromModeThreeToModeFive)
+})(SwitchToMarkFromModeFiveToModeSix)
 
 
 

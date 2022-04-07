@@ -1,86 +1,70 @@
 import React, { Component } from 'react'
-import withStyles from '@material-ui/core/styles/withStyles';
+import { withStyles } from "@material-ui/core/styles"
 // mui stuff
+import GridContainer from "components/Grid/GridContainer.js"
+import GridItem from "components/Grid/GridItem.js"
 import { styled } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Collapse from '@material-ui/core/Collapse'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
-import Button from '@mui/material/Button';
-import Badge from '@mui/material/Badge';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Grid from '@material-ui/core/Grid';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-// icons
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import { red } from '@material-ui/core/colors'
+import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
+import Box from "@material-ui/core/Box"
+import LinearProgress from "@material-ui/core/LinearProgress"
+// icons MUI
+import IconButton from '@mui/material/IconButton'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import ShareIcon from '@mui/icons-material/Share'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 // components
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
-import TagsMaker from "../../components/utils/TagsMaker"
-import SwitchToSelectProductsModeThree from "../../components/modeFive/SwitchToMarkFromModeThreeToModeFive"
+
 // Redux stuff
 import { connect } from 'react-redux'
+// css
+import shoppingCartStyle from "../../../../assets/theme/material-kit-pro-react/shoppingCartStyle.js"
+const useStyles = shoppingCartStyle
 
-// title bar
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
+// expand component
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props
+    return <IconButton {...other} />
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
 }))
 
-// content
-const BootstrapDialogTitle = (props) => {
-    const { children, onClose, ...other } = props
-    return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-            {children}
-            {   
-                onClose ? (
-                    <IconButton
-                        aria-label="close"
-                        onClick={onClose}
-                        sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ) : null
-            }   
-        </DialogTitle>
-    )
-}
-
-// styles
-const styles = (theme) => ({
-    
-})
-
-class ProductsResultsTempSearchingModeFive extends Component {
+class ProductsResultsSearchingModeFive extends Component {
 
     // state
-	constructor(props) {
-		super(props)
-		this.state = {
-            open:false,
-            listOfIdsSelected:[]
-        }
-        // to open/close
-        this.handleOpen = this.handleOpen.bind(this)
-        this.handleClose = this.handleClose.bind(this)
-	}
+    state = {
+        expanded:{}
+    }
+
+    // event to expand
+    handleExpandClick = (e,key) => {
+        let exp = false
+        this.setState( 
+            // expanded:true
+            // !expanded
+            {expanded:{
+                // [event.target.name]: !exp
+                [key]:!exp
+            }}
+        )
+        // print
+        console.log(`expand products state: ${JSON.stringify(this.state)}`)
+    }
 
     // make of the taxo an ux
     taxoToListOfCategoriesAndTags(taxo){
@@ -98,156 +82,144 @@ class ProductsResultsTempSearchingModeFive extends Component {
     }
 
     // create the list of nodes
-    arrTop5Products(arrTop5Products){
+    arrTop5Products(arrTop5Products,classes){
         // var to hold the list of nodes
         let arr = []
         // loop
         arrTop5Products.map((arrTop5Product,i)=>{
+            // print
+            console.log(`arrTop5Product: ${arrTop5Product}`)
             // arr push
             arr.push(
                 <>
-                    <Card sx={{ display: 'flex' }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-
-                            <CardMedia 
-                                component="img"
-                                sx={{ width: 200 }}
-                                image={arrTop5Product.imgUrl}
-                                alt="Live from space album cover"
+                    <GridItem sm={4} md={4} key={i} style={{padding:"10px"}}>
+                        <Card sx={{ maxWidth: 345 }}>
+                            <CardHeader
+                                avatar={
+                                    // companyName
+                                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                        <ColorMtsAvatar
+                                            meters={arrTop5Product.meters} 
+                                            companyname={arrTop5Product.companyData.companyName}
+                                        />
+                                    </Avatar> 
+                                } 
+                                action={
+                                    <IconButton aria-label="settings">
+                                        <MoreVertIcon/>
+                                    </IconButton>
+                                }
+                                title={arrTop5Product.product.name}
+                                // price
+                                subheader={
+                                    <Chip label={`$${arrTop5Product.product.price}`}/>
+                                }
                             />
-
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                {/* comapany avatar */}
-                                <Avatar aria-label="recipe">
-                                    <ColorMtsAvatar
-                                        companyname={arrTop5Product.companyName}
-                                    />
-                                </Avatar>
-                                {/* marker to track */}
-                                <SwitchToSelectProductsModeThree
-                                    id={arrTop5Product.productId}
-                                    staticdeviceproperty={arrTop5Product.staticDeviceProperty}
-                                />
-                                {/* price */}
-                                <Typography component="div" variant="h2">
-                                    {arrTop5Product.price}
-                                </Typography>
-                                {/* name of product */}
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    {arrTop5Product.name}
-                                </Typography>
-                                {/* name of product */}
-                                <Typography component="div" variant="subtitle2">
-                                    {arrTop5Product.description}
-                                </Typography>
+                            {/* product image */}
+                            <CardMedia
+                                component="img"
+                                height="194"
+                                image={arrTop5Product.product.imgUrl}
+                                alt={arrTop5Product.product.name}
+                            /> 
+                            <CardContent>
+                                {/* meters bar*/}
+                                <Box display="flex" alignItems="center">
+                                    <Box component="span" marginRight=".5rem">
+                                        {arrTop5Product.meters.toFixed(2)} Meters
+                                    </Box>
+                                    <Box width="100%">
+                                        <LinearProgress
+                                            variant="determinate"
+                                            value={arrTop5Product.meters}
+                                            classes={{
+                                                root: classes.linearProgressRoot,
+                                                bar: classes.bgGradientError,
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
                                 {/* tags */}
-                                <Typography component="div" variant="h4">
-                                    <TagsMaker
-                                        data={arrTop5Product.tags}
-                                    />
+                                {
+                                    arrTop5Product.product.tags.map((tag)=>(
+                                        <Chip label={tag} variant="outlined"/>
+                                    ))
+                                }
+                                {/* product description */}
+                                <Typography variant="body2" color="text.secondary">
+                                    {arrTop5Product.product.description}
                                 </Typography>
-                                
                             </CardContent>
-                        </Box>
-                    </Card>
+                            {/* actions */}
+                            <CardActions disableSpacing>
+                                <IconButton aria-label="add to favorites">
+                                    <FavoriteIcon/>
+                                </IconButton>
+                                <IconButton aria-label="share">
+                                    <ShareIcon/>
+                                </IconButton>
+                                <ExpandMore
+                                    name={i}
+                                    expand={this.state.expanded[i]}
+                                    onClick={(e)=>(this.handleExpandClick(e,i))}
+                                    aria-expanded={this.state.expanded[i]}
+                                    aria-label="show more"
+                                >
+                                    <ExpandMoreIcon />
+                                </ExpandMore>
+                            </CardActions>
+                            {/* collapser */}
+                            <Collapse 
+                                in={this.state.expanded[i]} 
+                                timeout="auto" 
+                                unmountOnExit
+                            >
+                                {/* content of collapser */}
+                                <CardContent>
+                                    {/* tags */}
+                                    <Stack direction="row" spacing={1}>
+                                        <Typography paragraph>
+                                            Tags in this product:
+                                        </Typography>
+                                        {this.taxoToListOfCategoriesAndTags(arrTop5Product.product.taxonomy)}
+                                    </Stack>
+                                    {/* description */}
+                                    <Typography paragraph>
+                                        {arrTop5Product.product.description}
+                                    </Typography>
+                                </CardContent>
+                            </Collapse>
+                        </Card>
+                    </GridItem>
                 </>
             )
         })
         return arr
     }
-
-    // to open dialog
-    handleOpen(){
-        this.setState({
-            open:true
-        })
-    }
-
-    // to close dialog
-    handleClose(){
-        this.setState({
-            open:false
-        })
-    }
-
-    // to send final array with the products id
-    arrToSendWithProductsIds(){
-        
-    }
     
     render() {
-        
         // redux state & style
         const {
             classes,
-            // top5Products
+            // products
             loading,
             top5Products,
-            top5ProductsListener,
-            top5ProductsUI
+            top5ProductsListener
         } = this.props
 
         // data to pass
-        // const dataOfTop5ProductsToPass = top5ProductsListener.length != 0 ? top5ProductsListener : top5Products
-        // const dataOfTop5ProductsToPass = top5ProductsUI.length != 0 ? top5ProductsUI : top5Products
-        const dataOfTop5ProductsToPass = top5ProductsUI 
-        // console.log({dataOfTop5ProductsToPass})
-        
+        const dataOfTop5ProductsToPass = top5ProductsListener.length != 0 ? top5ProductsListener : top5Products
+
         return (
             <>
-                {/* arr of products */}
-                <div>
-                    <Grid container >
-                        {/* header */}
-                        <Grid item xs={12}>
-                            {/* button products result */}
-                            <Badge 
-                                badgeContent={4} 
-                                color="primary"
-                            >
-                                <IconButton  
-                                    aria-label="upload picture" 
-                                    component="span" 
-                                    onClick={this.handleOpen}
-                                >
-                                    <ProductionQuantityLimitsIcon 
-                                        fontSize="large"
-                                    />
-                                </IconButton>
-                            </Badge>
-                        </Grid> 
-                        {/* content */}
-                        <Grid item xs={12}>
-                            <BootstrapDialog
-                                onClose={this.handleClose}
-                                aria-labelledby="customized-dialog-title"
-                                open={this.state.open}
-                            >
-                                {/* title */}
-                                <BootstrapDialogTitle 
-                                    id="customized-dialog-title" 
-                                    onClose={this.handleClose}
-                                >
-                                    Products match
-                                </BootstrapDialogTitle>
-                                {/* list of temp results of products */}
-                                <DialogContent dividers>
-                                    {
-                                        loading != true ?
-                                            this.arrTop5Products(top5ProductsUI) :
-                                                <p>...loading products</p>
-                                    }
-                                </DialogContent>
-                                {/* actions */}
-                                <DialogActions>
-                                    <IconButton color="primary" aria-label="upload picture" component="span">
-                                        <PhotoCamera/>
-                                    </IconButton>
-                                </DialogActions>
-                            </BootstrapDialog>
-                        </Grid>   
-                    </Grid> 
-                </div>
+                <GridContainer>
+                    {/* arr of products */}
+                    {
+                        loading != true ?
+                            this.arrTop5Products(dataOfTop5ProductsToPass,classes) :
+                                <p>...loading products</p>
+                    }
+                </GridContainer>
             </>
         )
     }
@@ -257,8 +229,11 @@ class ProductsResultsTempSearchingModeFive extends Component {
 const mapStateToProps = (state) => ({
     // top5Products 
     loading: state.top5Products1.loading,
-    top5ProductsUI:state.top5Products1.top5ProductsUI
-})
+    top5Products:state.top5Products1.top5Products,
+    top5ProductsListener:state.top5Products1.top5ProductsListener,
+    // top5ProductsUI:state.top5Products1.top5ProductsUI
+});
 
-export default connect(mapStateToProps)(withStyles(styles)(ProductsResultsTempSearchingModeFive))
+export default connect(mapStateToProps)(withStyles(useStyles)(ProductsResultsSearchingModeFive))
+
 

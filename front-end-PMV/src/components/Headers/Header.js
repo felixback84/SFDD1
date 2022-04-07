@@ -10,12 +10,13 @@ import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/S
 import SearchingModeCardModeThree from '../../views/dashboard/components/modeThree/SearchingModeCardModeThree'
 import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
 import SearchingModeCardModeFive from '../../views/dashboard/components/modeFive/SearchingModeCardModeFive'
+import SearchingModeCardModeSix from '../../views/dashboard/components/modeSix/SearchingModeCardModeSix'
 // slick corrousel
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 // icons
-import GroupAdd from "@material-ui/icons/GroupAdd"
+import GroupAdd from "@material-ui/icons/GroupAdd" 
 // styles
 import componentStyles from "assets/theme/components/header.js"
 const useStyles = makeStyles(componentStyles)
@@ -86,6 +87,15 @@ const Header = (props) => {
                   mode="modeFive"
                   thingid={props.thingid}
                 />
+            </div>
+            <div>
+              {/* modeSix */}
+              <SearchingModeCardModeSix
+                title="modeSix"
+                icon={GroupAdd}
+                mode="modeSix"
+                thingid={props.thingid}
+              />
             </div>
           </Slider>
         </Container>

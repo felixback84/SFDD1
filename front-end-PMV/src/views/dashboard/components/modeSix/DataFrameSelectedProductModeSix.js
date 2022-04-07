@@ -42,7 +42,7 @@ const ExpandMore = styled((props) => {
     }),
 })) 
 
-class DataFrameSelectedProductModeFive extends Component {
+class DataFrameSelectedProductModeSix extends Component {
  
     // state
     constructor(props) {
@@ -273,6 +273,6 @@ const mapStateToProps = (state) => ({
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps)(withStyles(useStyles)(DataFrameSelectedProductModeFive))
+export default connect(mapStateToProps)(withStyles(useStyles)(DataFrameSelectedProductModeSix))
 
 

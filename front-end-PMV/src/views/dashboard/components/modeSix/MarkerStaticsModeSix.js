@@ -6,10 +6,70 @@ import ColorEngine from '../utils/ColorEngine/ColorEngine'
 // Redux stuff
 import { connect } from 'react-redux'
 
-class MarkerStaticsModeFive extends Component {
+class MarkerStaticsModeSix extends Component {
+
+    // state 
+    constructor(props) {
+        super(props)
+        this.state = {
+			arrMarkers:[],
+			interval:false
+        }
+    }
+
+    // filter of top5Tags
+	componentWillReceiveProps(nextProps){
+		// checker of changes in data
+        if(nextProps.idOfSpecificProducts){
+            // promise
+            const myPromise = new Promise((resolve, reject) => {
+                // var to arr
+                let arrFinal = []
+                // print
+				console.log(
+					`hi filter of selected ones to markers: 
+					${JSON.stringify(this.props.idOfSpecificProducts)}`
+				)
+                // check if none static is selected
+                if(this.props.idOfSpecificProducts.length === 0){
+                    arrFinal.push({...this.props.top5Products[0],show:false})
+                } else if(nextProps.idOfSpecificProducts.length != 0) {
+                    // loop over selection
+                    nextProps.idOfSpecificProducts.map((id)=>{
+                        // filter
+                        nextProps.top5Products.filter((arrItem)=>{
+                            // checker
+                            if(arrItem.thingId === id.thingIdToSearch){
+                                    arrFinal.push({...arrItem, show:false})
+                                } 
+                        })	 
+                    }) 
+                }
+                // print
+                console.log(`arrFinalMarkers: ${JSON.stringify(arrFinal)}`)
+                // promise resolve
+                resolve(arrFinal)
+            })
+            // list of data for table
+            return myPromise
+                .then((data)=>{
+                    // set state
+					this.setState({ 
+						arrMarkers:data,
+						interval:true
+					})
+                    // print
+                    console.log(
+                        `top5Tag data after filter to markers on state: 
+                        ${JSON.stringify(this.state.arrMarkers)}`
+                    )
+                })
+                .catch((err) => console.log('There was an error:' + err)) 
+        }
+	}
 
     // to create static markers
-    hiStaticMarker(map,top5Products){ 
+    hiStaticMarkers(map,top5Products){
         // arr of markers
         let markersStaticsDevicesProducts = []
         // info window
@@ -83,7 +143,7 @@ class MarkerStaticsModeFive extends Component {
                 // set data and get response    
                 directionsService
                     .route({
-                        origin:{ 
+                        origin:{
                             lat:this.props.coords.lat,
                             lng:this.props.coords.lon
                         },
@@ -118,30 +178,33 @@ class MarkerStaticsModeFive extends Component {
 
             // ** distance matrix gmaps
             // vars with coords of dynamics and statics
-            const userDevicePos = {
-                lat: this.props.coords.lat, 
-                lng: this.props.coords.lon
-            }
-            const staticDevicePos = {
-                lat: top5Product.coords.lat, 
-                lng: top5Product.coords.lon
-            }
+            // const userDevicePos = {
+            //     lat: this.props.coords.lat, 
+            //     lng: this.props.coords.lon
+            // }
+            // const staticDevicePos = {
+            //     lat: top5Product.coords.lat, 
+            //     lng: top5Product.coords.lon
+            // }
 
             // Draw a line showing the straight distance between the markers
-            let line = new window.google.maps.Polyline({
-                path: [userDevicePos, staticDevicePos], 
-                map: map
-            })  
+            // let line = new window.google.maps.Polyline({
+            //     path: [userDevicePos, staticDevicePos], 
+            //     map: map
+            // })  
         })
     }
 
     render() {
+        // ids from state list of pick ones
+        let filterArrOfTop5Products = this.state.arrMarkers
+
         return (
             <>
                 {
-                    this.hiStaticMarker(
+                    this.hiStaticMarkers(
                         this.props.map,
-                        this.props.top5Products
+                        filterArrOfTop5Products
                     )
                 }
             </>
@@ -157,10 +220,11 @@ const mapStateToProps = (state) => ({
     userDevices: state.userDevices1.userDevices,
     // thingLiveDataSets
     coords:state.heartbeatThing1.thingLiveDataSetsListener.coords,
+    idOfSpecificProducts: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificProducts,
     // top5Products
     loading:state.top5Products1.loading,
     top5Products: state.top5Products1.top5Products,
     // top5ProductsListener: state.top5Products1.top5ProductsListener
 })
 
-export default connect(mapStateToProps)(MarkerStaticsModeFive)
+export default connect(mapStateToProps)(MarkerStaticsModeSix)
