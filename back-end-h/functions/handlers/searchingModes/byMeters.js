@@ -1,34 +1,26 @@
+/*
+    modeSeven and modeEight
+*/
+
 // firebase
 const { db } = require('../../utilities/admin');
 const {
     deleteAllDocsInTop5TagsCollectionOfUserDeviceId
 } = require('../utilsForThings')
 
+
 // top post staticDevices list results of top5tags search
 exports.postTop5TagsInUserDeviceId = async (req,res) => {
-    // deletion of any old record in top5Tags
-    deleteAllDocsInTop5TagsCollectionOfUserDeviceId(db,'top5Tags')
-    // vars with ids
-    const thingId = req.body.resultListSearch.thingId
-    const staticDevicesIdsArr = req.body.resultListSearch.staticDevicesId
-    // userDeviceId 
-    const userDeviceId = thingId.thingId.split("-").slice(2)
-    // userHandle
-    const userHandle = thingId.split("-").slice(0,1).toString()
-    // counter of records
-    let counter = 0
-    // db part
-    const docRef = db
-        .doc(`/liveDataSets/${userDeviceId}`)
-        .collection('top5Tags')
 
-    // loop over vendors selected
-    for(staticDeviceId in staticDevicesIds){
-        let selectData = undefined
+    // to save data in db
+    let rec = async (staticDevicesId,docRef) => {
+        // empty obj to fill
+        let selectData = {}
+        // print
+        console.log("part db save")
         // db part to extract statics
-        const docsStaticDevices = db
-            .collection(`liveDataSets`)
-            .doc(staticDeviceId)
+        const docsStaticDevices = await db
+            .doc(`/staticDevices/${staticDevicesId.split("-").slice(2)}/liveDataSets/${staticDevicesId}`)
             .get()
             .then((doc)=>{
                 selectData = {
@@ -38,48 +30,110 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                     thingId,
                 }
             })
-            .then(()=>{
-                const userData = db
+            .then(async()=>{
+                const userData = await db
                     .collection('users')
-                    .doc(userHandle)
+                    .doc(staticDevicesId.split("-").slice(0,1).toString()) // static users
                     .get()
                     .then((doc)=>{
-                        selecData.userCredentials = {
+                        selectData.userCredentials = {
                             email:doc.data().email,
                             companyName: doc.data().companyName,
-                            bio: doc.sta().bio,
-                            imgUrl: doc.sta().imgUrl,
-                            lastname: doc.sta().lastname,
-                            names: doc.sta().names,
-                            type: doc.sta().type,
-                            userHandle: doc.sta().userHandle
+                            bio: doc.data().bio,
+                            imgUrl: doc.data().imgUrl,
+                            lastname: doc.data().lastname,
+                            names: doc.data().names,
+                            type: doc.data().type,
+                            userHandle: doc.data().userHandle
                         } 
                     })
+                    console.log("part 5 - extract userCredentials")
             })
-            .then(()=>{
-                return docRef.add({
+            .then(async()=>{
+                console.log("part 6 - add data to db")
+                docRef
+                    .add({
                         ...selectData
                     })
                     .then(() => {
-                        counter ++
                         // print
-                        console.log(`final data in top5Tags for the userDevice: ${JSON.stringify(selectData)}`);
+                        console.log(`final data in top5Tags for the userDevice: ${JSON.stringify(selectData)}`)
+                        // res
+                        res.json("selection is now in db")
                     })            
                     .catch((err) => {
-                        console.error(err);
-                    }); 
+                        console.error(err)
+                    })
             })
             .catch((err) => {
-                console.error(err);
-            }); 
+                console.error(err)
+            })   
+    }
 
-            // res
-            if(staticDevicesIdsArr.length === counter){
-                res.json("selection is now in db")
-            }
+    // fill the date of the first req to know if is necessary erase the last
+    let espCounter = req.body.espCounter
+    console.log({espCounter})
+    // to hold the date of the first record
+    // date and counter
+    let initialDate = req.body.initialDate
+    console.log({initialDate})
+    // only to the first req
+    console.log("part 1")
+    // vars with ids
+    let thingId = req.body.resultListSearch.thingId,
+        staticDevicesId = req.body.resultListSearch.staticDevicesId,
+        // userDeviceId 
+        userDeviceId = thingId.split("-").slice(2),
+        // userHandle
+        userHandle = thingId.split("-").slice(0,1).toString();
+    // print 
+    console.log(`${thingId} - ${staticDevicesId} - ${userDeviceId} - ${userHandle}`)
+    // db part
+    let docRef = await db
+        .doc(`/userDevices/${userDeviceId}`)
+        .collection('top5Tags')
+
+    // check if is the first record to make
+    if(espCounter === 0){
+        return docRef
+            //.collection('top5Tags')
+            .get()
+            .then(async (data)=>{
+                // check if already exists a top5Tags docs list
+                if(data.empty){
+                    // print 
+                    console.log(`part 1a - ${initialDate} - ${espCounter}`)
+                    // run it 
+                    rec(staticDevicesId,docRef)
+                    // print
+                    console.log("part 2")
+                } else {
+                    // check before erase the date. Less than time range
+                    await deleteAllDocsInTop5TagsCollectionOfUserDeviceId(
+                        db,`/userDevices/${userDeviceId}/top5Tags`
+                    )
+                    // run it 
+                    rec(staticDevicesId,docRef)   
+                }
+                // deletion of any old record in top5Tags that expire
+                console.log(espCounter != 0 && req.body.newDate > initialDate + 20000)
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+    } 
+    // continue with the process to erase all docs in top5Tags
+    else if(espCounter > 0 && req.body.newDate > initialDate + 20000){
+        deleteAllDocsInTop5TagsCollectionOfUserDeviceId(db,`/userDevices/${userDeviceId}/top5Tags`)
+        console.log("part 3")
+    } 
+    // continue with the process to add new docs in the list of top5Tags
+    else if(espCounter > 0 && req.body.newDate < initialDate + 20000) {
+        // run it 
+        rec(staticDevicesId,docRef)
+        console.log("part 3a")
     }
 }
-
 
 // to find wich statics are close to me (dynamic,userDevice) by geohash only for app
 exports.findStaticsInSpecificMtsRange = (req,res) => {
@@ -93,7 +147,7 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
     const bounds = geofire.geohashQueryBounds(center, radiusInM);
     const promises = [];
     // pass the limits
-    for (const bound of bounds) {
+    for (const bound of bounds) { 
         const query = db.collectionGroup('liveDataSets')
             .where('nameOfDevice','==','staticHeartbeat')
             .orderBy('coords.hash')
@@ -123,7 +177,13 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
                 const distanceInM = distanceInKm * 1000;
                 // checker distances in range
                 if (distanceInM <= radiusInM) {
-                    matchingDocs.push(doc);
+                    matchingDocs.push(
+                        {
+                            profileToSearch:doc.data().profileToSearch,
+                            meters:distanceInM,
+                            coords:doc.data().coords,
+                        }
+                    );
                 }
             }
         }

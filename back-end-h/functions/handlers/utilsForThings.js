@@ -302,43 +302,46 @@ exports.objFromDBToMeassureProcess = async (mode,doc,userDeviceId) => {
 // to delete collections to start in a blank collection 
 exports.deleteAllDocsInTop5TagsCollectionOfUserDeviceId = async (db,pathToCollection) => {
 
+    console.log('init erase in top5Tags')
     // data to pass
     let dbConnect = db
     let path = pathToCollection
+    console.log({path})
     
     // to set the process of docs deletion
     async function deleteCollection(db, collectionPath) {
         // collection path
-        const collectionRef = db.collection(collectionPath);
+        const collectionRef = db.collection(collectionPath)
         // query ref
         const query = collectionRef
         
         // promise of deletion process
         return new Promise((resolve, reject) => {
-            deleteQueryBatch(db, query, resolve).catch(reject);
-        });
+            deleteQueryBatch(db, query, resolve)
+                .catch(reject)
+        })
     }
     
     // to erase doc of the collection
     async function deleteQueryBatch(db, query, resolve) {
         // extract data
-        const snapshot = await query.get();
+        const snapshot = await query.get()
         // length data
-        const batchSize = snapshot.size;
+        const batchSize = snapshot.size
         // check if is empty
-        if (batchSize === 0) {
+        if(batchSize === 0) {
             // When there are no documents left, we are done
-            resolve();
-            return;
+            resolve()
+            return
         }
         // Delete documents in a batch
-        const batch = db.batch();
+        const batch = db.batch()
         // one by one delete
         snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref);
-        });
+            batch.delete(doc.ref)
+        })
         // finish
-        await batch.commit();
+        await batch.commit()
         // Recurse on the next process tick, to avoid
         // exploding the stack.
         process.nextTick(() => {
