@@ -10,6 +10,7 @@ import GMapsServicesModeThree from '../../components/modeThree/GMapsServicesMode
 import GMapsServicesModeFour from '../../components/modeFour/GMapsServicesModeFour'
 import GMapsServicesModeFive from '../../components/modeFive/GMapsServicesModeFive'
 import GMapsServicesModeSix from '../../components/modeSix/GMapsServicesModeSix'
+import GMapsServicesModeSeven from '../../components/modeSeven/GMapsServicesModeSeven'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
@@ -25,6 +26,9 @@ import ProductsResultsSearchingModeFive from "../../sections/modeFive/ProductsRe
 // modeSix
 import ProductsResultsSelectedItemsSearchingModeSix from "../../sections/modeSix/ProductsResultsSelectedItemsSearchingModeSix"
 import ProductsResultsSearchingModeSix from "../../sections/modeSix/ProductsResultsSearchingModeSix"
+// modeSeven
+import ChartResultsSearchingModeSeven from "../../sections/modeSeven/ChartResultsSearchingModeSeven"
+
 // Redux stuff
 import {connect} from 'react-redux'
 
@@ -283,6 +287,42 @@ const PickerMarkerMix = ({data,props}) => {
                             <Grid item xs={12}>
                                 {/* results */}
                                 <ProductsResultsSearchingModeSix/> 
+                            </Grid>
+                        </Grid>
+                    </>
+                )
+            }
+        break;
+        case "modeSeven":
+            if(data.loading == false){
+                console.log("modeSeven")	
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GMapsServicesModeSeven
+                                        checked={mode.checked}
+                                        //coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        {/* chart top5Products specific selection from user*/}
+                        <Grid container>
+                            <Grid item xs={12}> 
+                                {/* results */}
+                                <ChartResultsSearchingModeSeven/>
                             </Grid>
                         </Grid>
                     </>

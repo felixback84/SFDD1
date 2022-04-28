@@ -133,7 +133,8 @@ export default function(state = initialState, action){
     // search geoHashes & meters
     case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:
         return{
-            top5Tags: action.payload,
+            ...state,
+            responses: action.payload,
             loadings: false
         }
 
@@ -144,6 +145,7 @@ export default function(state = initialState, action){
         }
 
     // post top5tags -- creation
+    // to find all matches - pre user selection
     case POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:
         return{
             responses: action.payload,

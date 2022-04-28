@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import ComboSearchModeOne from "./ComboSearchModeOne"
 import ComboSearchModeThree from "./ComboSearchModeThree"
 import ComboSearchModeFive from "./ComboSearchModeFive"
+import ComboSearchModeSeven from "./ComboSearchModeSeven"
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -26,7 +27,6 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
                     <ComboSearchModeThree
                         staticDevicesTags={tagsList}
                     />
-                    
                 </>
             )   
         break;
@@ -37,9 +37,18 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
                     <ComboSearchModeFive
                         staticDevicesTags={tagsList}
                     />
-                    
                 </>
             )   
+        break;
+        case "modeSeven": 
+            return( 
+                <>
+                    {/* fileds */}
+                    <ComboSearchModeSeven
+                        staticDevicesTags={tagsList}
+                    />
+                </>
+            )       
         break;
         default:
 			return(

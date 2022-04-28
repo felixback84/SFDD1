@@ -18,12 +18,12 @@ import Collapse from '@material-ui/core/Collapse';
 // icons
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { faKeyboard } from '@fortawesome/free-solid-svg-icons';
 
 // Redux stuff
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
 import {postTagsProfileToMatch} from "../../../../../redux/actions/heartbeatUIActions"
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons';
 
 // add styles
 const useStyles = makeStyles((theme) => ({

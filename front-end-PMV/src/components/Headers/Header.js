@@ -3,7 +3,6 @@ import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
 import Container from "@material-ui/core/Container"
-import Grid from "@material-ui/core/Grid"
 // components
 import SearchingModeCardModeOne from '../../views/dashboard/components/modeOne/SearchingModeCardModeOne'
 import SearchingModeCardModeTwo from '../../views/dashboard/components/modeTwo/SearchingModeCardModeTwo'
@@ -11,6 +10,8 @@ import SearchingModeCardModeThree from '../../views/dashboard/components/modeThr
 import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour/SearchingModeCardModeFour'
 import SearchingModeCardModeFive from '../../views/dashboard/components/modeFive/SearchingModeCardModeFive'
 import SearchingModeCardModeSix from '../../views/dashboard/components/modeSix/SearchingModeCardModeSix'
+import SearchingModeCardModeSeven from '../../views/dashboard/components/modeSeven/SearchingModeCardModeSeven'
+// import SearchingModeCardModeEight from '../../views/dashboard/components/modeEight/SearchingModeCardModeEight'
 // slick corrousel
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";
@@ -96,6 +97,24 @@ const Header = (props) => {
                 mode="modeSix"
                 thingid={props.thingid}
               />
+            </div>
+            <div>
+              {/* modeSeven - by meters of staticDevices */}
+              <SearchingModeCardModeSeven
+                title="modeSeven"
+                icon={GroupAdd}
+                mode="modeSeven"
+                thingid={props.thingid}
+              /> 
+            </div>
+            <div>
+              {/* modeEight - by meters of staticDevices products */}
+              {/* <SearchingModeCardModeEight
+                title="modeEight"
+                icon={GroupAdd}
+                mode="modeEight"
+                thingid={props.thingid}
+              /> */}
             </div>
           </Slider>
         </Container>

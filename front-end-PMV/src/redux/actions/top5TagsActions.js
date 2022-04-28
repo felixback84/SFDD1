@@ -281,11 +281,12 @@ export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => asyn
 }
 
 // search by meters & geoHashes
-export const searchByGeohashesAndMetersStaticDevicesProducts = ({coords,meters}) => async (dispatch) => {
+// export const searchByGeohashesAndMetersStaticDevicesProducts = ({coords,meters}) => async (dispatch) => {
+export const searchByGeohashesAndMetersStaticDevicesProducts = (coords,meters) => async (dispatch) => {
     try {
         const dataTag = await 
         axios
-            .get(`/staticdevices/findstatics/lat/${coords.lat}/lng/${coords.lng}/mts/${meters}`)
+            .get(`/staticdevices/findstatics/lat/${coords.lat}/lng/${coords.lon}/mts/${meters}`)
             const res = await dataTag
             console.log({res})
             dispatch({ 
