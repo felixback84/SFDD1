@@ -16,7 +16,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 // comonents
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
-import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
+// import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
+import SwitchToMarkTop5TagsTempsResultsModeSeven from "../../components/modeSeven/SwitchToMarkTop5TagsTempsResultsModeSeven"
 // color engine
 import ColorEngine from "../../components/utils/ColorEngine/ColorEngine"
 // Redux stuff
@@ -83,6 +84,15 @@ const ContentRow = (props) => {
 							/>
 						</Box>
 					</Box>
+				</TableCell>
+				
+				{/* switcher */}
+				<TableCell classes={{ root: classes.tableCellRoot }}>
+					<SwitchToMarkTop5TagsTempsResultsModeSeven 
+						//thingIdUserDevice={}
+						thingIdStaticDevice={staticDevice.thingId}
+						meters={staticDevice.meters}
+					/>
 				</TableCell>
 			</TableRow>
 		)

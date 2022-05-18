@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 class MarkerStaticsModeSeven extends Component {
 
     // to create static markers
-    hi(map,top5Tags){
+    hiStaticMarkers(map,top5Tags){
         // arr of markers
         let markersStaticsDevices = []
         // info window
@@ -85,7 +85,7 @@ class MarkerStaticsModeSeven extends Component {
         return (
             <>
                 {
-                    this.hi(
+                    this.hiStaticMarkers(
                         this.props.map,
                         this.props.top5Tags
                     )

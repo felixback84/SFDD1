@@ -135,7 +135,7 @@ export default function(state = initialState, action){
         return{
             ...state,
             responses: action.payload,
-            loadings: false
+            //loadings: false
         }
 
     case STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:     
@@ -145,11 +145,15 @@ export default function(state = initialState, action){
         }
 
     // post top5tags -- creation
-    // to find all matches - pre user selection
+    // to select matches - in user selection
     case POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:
         return{
-            responses: action.payload,
-            loadings: false
+            ...state,
+            top5Tags: [
+                action.payload,
+                ...state.top5Tags
+            ]
+            //loading: false
     }
     case STOP_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:     
         return{

@@ -302,28 +302,20 @@ export const searchByGeohashesAndMetersStaticDevicesProducts = (coords,meters) =
 // post top5Tags selected 
 export const postListOfTop5TagsInUserDeviceDoc = (dataz) => async (dispatch) => {
     try {
-        const data = {
-            resultListSearch:{
-                thingId: dataz.thingId,
-                staticDevicesIdsArr: dataz.staticDevicesIdsArr
-            }
-        }
-
-        const dataTag = await 
-            axios
-                .post(`/userdevice/create/top5tags`,data)
-                const res = await dataTag
-                console.log({res})
-                dispatch({ 
-                    type: POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
-                    payload: res.data
-                })
-                dispatch({ type: STOP_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION })
+        const dataTag = await axios
+            .post(`/userdevice/create/top5tags`,dataz)
+            const res = await dataTag
+            console.log({res})
+            dispatch({ 
+                type: POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
+                payload: res.data
+            })
+            dispatch({ type: STOP_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION })
     } catch (error) {
         console.log(error)
     }
 }
- 
+
 // get specific top5Tags - ux
 export const findSpecificTop5Tag = (userDeviceId,top5TagId) => async (dispatch) => {
     
