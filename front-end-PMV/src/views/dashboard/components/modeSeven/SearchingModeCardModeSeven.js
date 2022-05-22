@@ -156,15 +156,6 @@ const SearchingModeCardModeSeven = (props) => {
 	}
 
 	return(
-		/*
-			segun distancia especificada por el usuario
-			se obtienen todos los match en el rango de mts
-			de esa respuesta en ui el usuario escoje
-			--cada seleccion se almacena en el state de este componente
-			--para luego filtarlo por la distancia más corta
-			esto siempre que haya un nuevo registro como respuesta a una seleccion de usuario
-			este se pasa interfaz para llenar la caja con un registro unico muy acertado
-		*/
 		<Fragment>
 			{
 				props.top5Tags.length === 0 ? pickerDataToCard() : usedData()

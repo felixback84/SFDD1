@@ -28,6 +28,8 @@ import ProductsResultsSelectedItemsSearchingModeSix from "../../sections/modeSix
 import ProductsResultsSearchingModeSix from "../../sections/modeSix/ProductsResultsSearchingModeSix"
 // modeSeven
 import ChartResultsSearchingModeSeven from "../../sections/modeSeven/ChartResultsSearchingModeSeven"
+import ChartResultsSelectedItemsSearchingModeSeven from "../../sections/modeSeven/ChartResultsSelectedItemsSearchingModeSeven"
+
 
 // Redux stuff
 import {connect} from 'react-redux'
@@ -318,11 +320,18 @@ const PickerMarkerMix = ({data,props}) => {
                                 </Card>
                             </Grid>
                         </Grid>
+                        {/* chart top5Coord specifics filter*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ChartResultsSelectedItemsSearchingModeSeven/>
+                            </Grid>
+                        </Grid>
                         {/* chart top5Products specific selection from user*/}
                         <Grid container>
                             <Grid item xs={12}> 
                                 {/* results */}
-                                <ChartResultsSearchingModeSeven/>
+                                <ChartResultsSearchingModeSeven/> 
                             </Grid>
                         </Grid>
                     </>

@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 // import { saveTop5TagIdInReducer } from ''
 import { 
     // userDeviceSpecificTop5TagSyncDataStatic,
-    // userDeviceSpecificTop5TagSyncDataLiveDB,
+    userDeviceSpecificTop5TagSyncDataLiveDB,
     postListOfTop5TagsInUserDeviceDoc
 } from '../../../../redux/actions/top5TagsActions'
 
@@ -19,7 +19,8 @@ class SwitchToMarkTop5TagsTempsResultsModeSeven extends Component {
         this.state = {
             checked:false,
             firstDataPackage:true,
-            espCounter:0
+            espCounter:0,
+            ids:[]
         }   
     }
 
@@ -46,7 +47,7 @@ class SwitchToMarkTop5TagsTempsResultsModeSeven extends Component {
             // var to pas in setState
             const hiNewSelection = (prevState)=>({
                 espCounter:prevState.espCounter + 1,
-                checked:true, 
+                checked:true,  
                 firstDataPackage:false,
             })
             // change state
@@ -65,6 +66,23 @@ class SwitchToMarkTop5TagsTempsResultsModeSeven extends Component {
             this.props.postListOfTop5TagsInUserDeviceDoc(data)
         }
     }  
+
+    // passing changes props
+    // componentWillReceiveProps(nextProps){
+    //     if(nextProps.idOfSpecificStaticDevices){ 
+    //         this.setState({
+    //             ids:this.props.idOfSpecificStaticDevices
+    //         })
+    //         // live data from top5Tag
+    //         this.props.userDeviceSpecificTop5TagSyncDataLiveDB(
+    //             this.props.thingLiveDataSets.thingId
+    //             ,this.props.idOfSpecificStaticDevices
+    //         )
+            
+    //         // print
+    //         console.log(`this.props.idOfSpecificStaticDevices: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
+    //     }
+    // }  
 
     render() {
         
@@ -87,10 +105,10 @@ const mapStateToProps = (state) => ({
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
     thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
     idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
-    // top5Tags
-    // responses: state.top5Tags1.responses,
 });
 
 export default connect(mapStateToProps,{
-    postListOfTop5TagsInUserDeviceDoc
+    postListOfTop5TagsInUserDeviceDoc,
+    //userDeviceSpecificTop5TagSyncDataStatic,
+    userDeviceSpecificTop5TagSyncDataLiveDB,
 })(SwitchToMarkTop5TagsTempsResultsModeSeven);

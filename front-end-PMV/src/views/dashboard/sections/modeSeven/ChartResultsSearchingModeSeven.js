@@ -158,7 +158,8 @@ class ChartResultsSearchingModeSeven extends Component {
 											classes,
 											[
 												'Tags offer',
-												'Meters from you'
+												'Meters from you',
+												'selection'
 											]
 										)
 									}

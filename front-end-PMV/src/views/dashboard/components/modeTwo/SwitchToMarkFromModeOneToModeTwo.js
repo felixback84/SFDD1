@@ -36,13 +36,7 @@ class SwitchToMarkFromModeOneToModeTwo extends Component {
             top5TagDocId
         }
         // check if is an union or a deletion
-        if(
-            // mode.checked === false 
-            // &&
-            ids.length >= 0
-            // event.target.checked === true 
-            // true
-        ){
+        if(ids.length >= 0){
             // to post and update list on liveDataSets
             this.props.selectStaticDevicesToSearch({objSelectProfileToSearch})
         } 
@@ -50,15 +44,20 @@ class SwitchToMarkFromModeOneToModeTwo extends Component {
 
     // passing changes props
     componentWillReceiveProps(nextProps){
-        if(nextProps.idOfSpecificStaticDevices){
+        if(nextProps.idOfSpecificStaticDevices){ 
             this.setState({
                 ids:this.props.idOfSpecificStaticDevices
             })
             // top5Tag static data
-            this.props.userDeviceSpecificTop5TagSyncDataStatic(this.props.thingLiveDataSets.thingId,this.props.idOfSpecificStaticDevices)
+            this.props.userDeviceSpecificTop5TagSyncDataStatic(
+                this.props.thingLiveDataSets.thingId,
+                this.props.idOfSpecificStaticDevices
+            )
             // live data from top5Tag
-            this.props.userDeviceSpecificTop5TagSyncDataLiveDB(this.props.thingLiveDataSets.thingId,this.props.idOfSpecificStaticDevices)
-            // live data from top5Tag
+            this.props.userDeviceSpecificTop5TagSyncDataLiveDB(
+                this.props.thingLiveDataSets.thingId,
+                this.props.idOfSpecificStaticDevices
+            )
             
             // print
             console.log(`this.props.idOfSpecificStaticDevices: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
