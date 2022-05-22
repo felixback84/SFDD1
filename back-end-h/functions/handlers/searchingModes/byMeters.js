@@ -3,7 +3,7 @@
 */
 
 // firebase
-const { db } = require('../../utilities/admin');
+const { admin, db } = require('../../utilities/admin');
 const {
     deleteAllDocsInTop5TagsCollectionOfUserDeviceId
 } = require('../utilsForThings')
@@ -82,7 +82,9 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
 exports.postTop5TagsInUserDeviceId = async (req,res) => {
 
     // to save data in db
-    let rec = async (mts,staticDevicesId,docRef) => {
+    let recSelection = async (mts,thingId,staticDevicesId,docRef) => {
+        // to deal with arr 
+        const FieldValue = admin.firestore.FieldValue
         // empty obj to fill
         let selectData = {}
         // print
@@ -96,7 +98,7 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                     coords: doc.data().coords,
                     profileToSearch: doc.data().profileToSearch,
                     meters: mts,
-                    thingId,
+                    thingId:staticDevicesId, // erro
                 }
             })
             .then(async()=>{
@@ -124,10 +126,30 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                     .add({
                         ...selectData
                     })
-                    .then(() => {
+                    .then((doc) => {
+                        
+                        // obj to update arr
+                        const newTop5Tag = [{
+                            thingIdToSearch:staticDevicesId,
+                            top5TagDocId:doc.id
+                        }]
                         // print
                         console.log(`final data in top5Tags for the userDevice: ${JSON.stringify(selectData)}`)
-                        // res
+                        // liveDataSets update 
+                        let infoInLiveDataSets = db
+                            .doc(`/userDevices/${thingId.split("-").slice(2)}/liveDataSets/${thingId}`)
+                        // update
+                        infoInLiveDataSets
+                            .update({           
+                                idOfSpecificStaticDevices: FieldValue.arrayUnion(...newTop5Tag)
+                            })
+                            .then(()=>{
+                                res.json("staticDevice marked")
+                            })
+                            .catch(err => {
+                                res.status(500, err)
+                            })
+                        // res to client
                         res.json(selectData)
                     })            
                     .catch((err) => {
@@ -141,11 +163,8 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
 
     // fill the date of the first req to know if is necessary erase the last
     let espCounter = req.body.espCounter
+    // print
     console.log({espCounter})
-    // to hold the date of the first record
-    // date and counter
-    // let initialDate = req.body.initialDate
-    // console.log({initialDate})
     // only to the first req
     console.log("part 1")
     // vars with ids
@@ -166,7 +185,6 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
     // check if is the first record to make
     if(espCounter === 0){
         return docRef
-            //.collection('top5Tags')
             .get()
             .then(async (data)=>{
                 // check if already exists a top5Tags docs list
@@ -174,7 +192,7 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                     // print 
                     console.log(`part 1a - ${espCounter}`)
                     // run it 
-                    rec(meters,staticDevicesId,docRef)
+                    recSelection(meters,thingId,staticDevicesId,docRef)
                     // print
                     console.log("part 2")
                 } else {
@@ -183,7 +201,7 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                         db,`/userDevices/${userDeviceId}/top5Tags`
                     )
                     // run it 
-                    rec(meters,staticDevicesId,docRef)   
+                    recSelection(meters,thingId,staticDevicesId,docRef)   
                 }
                 // deletion of any old record in top5Tags that expire
                 console.log(espCounter != 0 && req.body.newDate > initialDate + 20000)
@@ -191,17 +209,9 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
             .catch((err) => {
                 console.error(err)
             })
-    } 
-    // continue with the process to erase all docs in top5Tags
-    // else if(espCounter > 0 && req.body.newDate > initialDate + 20000){
-    //     deleteAllDocsInTop5TagsCollectionOfUserDeviceId(db,`/userDevices/${userDeviceId}/top5Tags`)
-    //     console.log("part 3")
-    // } 
-    // continue with the process to add new docs in the list of top5Tags
-    // else if(espCounter > 0 && req.body.newDate < initialDate + 20000) {
-    else if(espCounter > 0){
+    } else if(espCounter > 0){
         // run it 
-        rec(meters,staticDevicesId,docRef)
+        recSelection(meters,thingId,staticDevicesId,docRef)
         console.log("part 3a")
     }
 }

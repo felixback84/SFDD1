@@ -7,10 +7,10 @@ const { forEach } = require('underscore');
 // pass data of statics users means profileToMatch
 exports.postProfileToMatchUserDevices = (req,res) => {
     // profile of dynamic
-    let profileToSearchOfDynamicData = req.body;
+    let profileToSearchOfDynamicData = req.body
     // db part
     // userDeviceId 
-    const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2);
+    const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2)
     db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
@@ -26,7 +26,7 @@ exports.postProfileToMatchUserDevices = (req,res) => {
         .catch((err) => {
             console.error(err);
             res.status(500).json({ error: err.code });
-        });  
+        })
 }
 
 // to make the match between userDevices and staticDevices
