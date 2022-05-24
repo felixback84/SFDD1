@@ -99,7 +99,7 @@ class ChartResultsSelectedItemsSearchingModeSeven extends Component {
 							
 							{/* table content */}
 							<TableBody>
-								{/* {
+								{
 									top5Tags.length != 0 &&
 										loading === false && top5TagListener.length === 0 ? 
 												<>
@@ -113,11 +113,13 @@ class ChartResultsSelectedItemsSearchingModeSeven extends Component {
 											:
 												<>
 													<ContentRowChartResultsSelectedItemsLive
-														lengthVendorsSelected={this.props.thingLiveDataSetsListener.idOfSpecificStaticDevices.length}
+														lengthVendorsSelected={
+															this.props.thingLiveDataSetsListener.idOfSpecificStaticDevices.length
+														}
 													/>
 												</>
-								} */}
-								{
+								}
+								{/* {
 									top5Tags.length != 0 &&
 										loading === false  &&
 											<>
@@ -129,7 +131,7 @@ class ChartResultsSelectedItemsSearchingModeSeven extends Component {
 												/>
 											</> 
 											
-								}
+								} */}
 							</TableBody>		
 						</Box>	
 					</TableContainer>

@@ -100,7 +100,7 @@ class ContentRowChartResultsSelectedItems extends Component {
                                 }}
                                 component="th"
                                 variant="head"
-                                scope="row"
+                                scope="row" 
                             >
                                 <Box alignItems="center" display="flex">
                                     <Box

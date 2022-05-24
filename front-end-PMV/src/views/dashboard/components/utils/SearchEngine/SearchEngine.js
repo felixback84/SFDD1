@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // components
 import ComboSearchModeOne from "./ComboSearchModeOne"
-import ComboSearchModeThree from "./ComboSearchModeThree"
+import ComboSearchModeThree from "./ComboSearchModeThree" 
 import ComboSearchModeFive from "./ComboSearchModeFive"
 import ComboSearchModeSeven from "./ComboSearchModeSeven"
 

@@ -83,7 +83,7 @@ const ContentRow = (props) => {
 								}}
 							/>
 						</Box>
-					</Box>
+					</Box> 
 				</TableCell>
 				
 				{/* switcher */}

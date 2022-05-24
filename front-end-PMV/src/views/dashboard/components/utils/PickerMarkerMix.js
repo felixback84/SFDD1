@@ -336,7 +336,7 @@ const PickerMarkerMix = ({data,props}) => {
                         </Grid>
                     </>
                 )
-            }
+            } 
         break;
         default:
             return(

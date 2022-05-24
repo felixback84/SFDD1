@@ -82,7 +82,7 @@ class ContentRowChartResultsSelectedItemsLive extends Component {
                                 component="th"
                                 variant="head"
                                 scope="row"
-                            >
+                            > 
                                 <Box alignItems="center" display="flex">
                                     <Box
                                         component={()=>{
