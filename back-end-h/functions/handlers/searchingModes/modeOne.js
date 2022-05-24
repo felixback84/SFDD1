@@ -10,16 +10,16 @@ exports.postProfileToMatchUserDevices = (req,res) => {
     let profileToSearchOfDynamicData = req.body
     // db part
     // userDeviceId 
-    const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2)
+    const userDeviceId = profileToSearchOfDynamicData.objData.thingId.split("-").slice(2)
     db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
-        .doc(profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId)
+        .doc(profileToSearchOfDynamicData.objData.thingId)
         .update({ 
-            profileToMatch: profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.profileToMatch,
+            profileToMatch: profileToSearchOfDynamicData.objData.profileToMatch,
         })
         .then(() => {
-            console.log(`objWithProfileToSearchOfDynamic: ${profileToSearchOfDynamicData}`)
+            console.log(`objData: ${profileToSearchOfDynamicData}`)
             // res
             return res.json(profileToSearchOfDynamicData);
         })            
@@ -32,7 +32,7 @@ exports.postProfileToMatchUserDevices = (req,res) => {
 // to make the match between userDevices and staticDevices
 exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     // profile of dynamic
-    let objProfileDataOfDynamic = req.body.objProfileDataOfDynamic
+    let objData = req.body.objData
     // var to hold coors object in an array of the rest
     let profilesInLiveDataSets = []
     // hold var
@@ -132,7 +132,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     // from db
                     statics: profilesInLiveDataSets[i].profileToSearch,
                     // from ux input in user session
-                    dynamics: objProfileDataOfDynamic.profileToMatch,
+                    dynamics: objData.profileToMatch,
                 };
                 // check it, run it & push it
                 let matchDataResults = await checkProfilesStaicsVsDynamics(argz)
@@ -284,7 +284,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 // func to save data of top5Coords in liveDataSets of dynamics
                 const savaDataOfDynamicDeviceOnLiveDataSetsDoc = (dataToSave) => {
                     // userDeviceId 
-                    const userDeviceId = objProfileDataOfDynamic.thingId.split("-").slice(2)
+                    const userDeviceId = objData.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
                         .collection('top5Tags') // test collection
@@ -377,7 +377,6 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
     // run it
     await metersRangeMatchColor(mtsAndSomeDataBetweenDevices, dataEnter.thingId);
 }
-
 
 exports.test = async (req,res) => {
     let idUserHandle= req.params.id

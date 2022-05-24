@@ -659,7 +659,7 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
                                 await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
                             );
-                            // print 
+                            // print  
                             console.log("say hello to my little friend from thing modeFive")
                         } else if (searchingMode[0] === "modeSix"){
                             // to specific product  
@@ -668,6 +668,13 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             ) 
                             // print 
                             console.log("say hello to my little friend from thing modeSix")
+                        } else if (searchingMode[0] === "modeSeven"){
+                            // run it meassure GPS coords for the userDevice and all the matches statics
+                            await detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices(
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            )  
+                            // print 
+                            console.log("say hello to my little friend from thing modeSeven")
                         }
                     })
                     .catch((err) => {
