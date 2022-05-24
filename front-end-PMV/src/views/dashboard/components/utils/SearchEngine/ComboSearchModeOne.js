@@ -24,6 +24,7 @@ import { faKeyboard } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
 import {postTagsProfileToMatch} from "../../../../../redux/actions/heartbeatUIActions"
+import {setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics} from "../../../../../redux/actions/top5TagsActions"
 
 // add styles
 const useStyles = makeStyles((theme) => ({
@@ -87,6 +88,7 @@ class ComboSearchModeOne extends Component {
 		// handle input changes
 		this.handleChange = this.handleChange.bind(this)
 		this.handleClick = this.handleClick.bind(this)
+		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
 	// FORM
@@ -99,15 +101,25 @@ class ComboSearchModeOne extends Component {
 	// submit
 	handleSubmit(event){
 		event.preventDefault()
-		// final data to the server
-		const finish = {
-			objProfileDataOfDynamic:{
-				thingId:this.props.userDevices.thingId,
-				profileToMatch:this.state.tagsSelected
+		// check if the data is already
+		if(this.props.loading != true){
+			// final data to the server
+			const finish = {
+				objData:{
+					thingId:this.props.userDevices[0].thingId,
+					profileToMatch:this.state.tagsSelected
+				}
 			}
+			// redux action to send data with user selections to server 
+			this.props.postTagsProfileToMatch(finish)
+			// check if already exists entries in the obj
+			if(Object.entries(this.props.profileToMatch).length === 0){
+				// redux action to create docs in db with top5Tags match
+				this.props.setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics(finish)
+			}
+		} else {
+			console.log('pick ones dont send')
 		}
-        // redux action to send data to server
-        this.props.postTagsProfileToMatch(finish.objProfileDataOfDynamic)
 	}
 
 	// change of inputs
@@ -291,12 +303,18 @@ class ComboSearchModeOne extends Component {
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	// ui
-	ui: state.ui,
-	staticDevicesTags: state.ui.staticDevicesTags,
+	ui:state.ui,
+	staticDevicesTags:state.ui.staticDevicesTags,
 	// userDevices
-	userDevices: state.userDevices1.userDevices,
+	loading:state.userDevices1.loading,
+	userDevices:state.userDevices1.userDevices,
 	// liveDataSets
-    thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
+	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
+	profileToMatch:state.heartbeatThing1.thingLiveDataSets.profileToMatch
 });
 
-export default connect(mapStateToProps,{getTagsFromDeviceConfig,postTagsProfileToMatch})(ComboSearchModeOne)
+export default connect(mapStateToProps,{
+	getTagsFromDeviceConfig,
+	postTagsProfileToMatch,
+	setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics
+})(ComboSearchModeOne)

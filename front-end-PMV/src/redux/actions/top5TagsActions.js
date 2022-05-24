@@ -1,6 +1,9 @@
 // user actions
 import {
     // ** db interaction
+    SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+    STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+    
     // top5Tags --> mode one
     GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
@@ -34,9 +37,26 @@ import {
 import firebase from '../../fb/utilities/firebase'
 // axios 
 import axios from 'axios'
-import { forEach } from 'underscore';
 
 ///////////////////////////////////// searching modes ////////////////////////////////////
+// to init modeOne
+export const setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics = (data) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .post(`/userdevices/match/staticsdevices`,data)
+            const res = await dataTag
+            console.log({res})
+            dispatch({ 
+                type: SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+                payload: res.data
+            })
+            dispatch({ type: STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 // to get data from db for top5Tags (modeOne) --> static data
 export const userDeviceTop5TagsSyncDataStatic = (thingId) => (dispatch) => {
 
@@ -281,7 +301,6 @@ export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => asyn
 }
 
 // search by meters & geoHashes
-// export const searchByGeohashesAndMetersStaticDevicesProducts = ({coords,meters}) => async (dispatch) => {
 export const searchByGeohashesAndMetersStaticDevicesProducts = (coords,meters) => async (dispatch) => {
     try {
         const dataTag = await 

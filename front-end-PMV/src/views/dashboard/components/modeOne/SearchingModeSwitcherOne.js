@@ -9,7 +9,10 @@ import Switch from '@material-ui/core/Switch';
 // Redux stuff
 import { connect } from 'react-redux';
 import { heartbeatPostSearchingMode } from '../../../../redux/actions/heartbeatUIActions';
-import { userDeviceTop5TagsSyncDataStatic,userDeviceTop5TagsSyncDataLiveDB } from '../../../../redux/actions/top5TagsActions';
+import { 
+	userDeviceTop5TagsSyncDataStatic,
+	userDeviceTop5TagsSyncDataLiveDB 
+} from '../../../../redux/actions/top5TagsActions';
 // styles
 import searchingModeCardStyles from "assets/theme/views/admin/searchingModeCard"
 const useStyles = makeStyles(searchingModeCardStyles);
@@ -56,7 +59,6 @@ const SearchingModeSwitcherOne = (props) => {
 			}
 			// run static query data
 			props.heartbeatPostSearchingMode(dataSearchingMode)
-			
 		}
 	})
 	

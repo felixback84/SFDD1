@@ -1,5 +1,9 @@
 import {
     // ** db interaction
+    // to init modeOne
+    SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+    STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+
     // top5Tags --> mode one
     GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
     STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS,
@@ -63,6 +67,17 @@ const initialState = {
 // function to determine the type of action to set state
 export default function(state = initialState, action){
     switch(action.type){
+    // before modeOne
+    case SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS:
+        return{
+            ...state,
+            responses:action.payload,
+        };
+    case STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS:
+        return{
+            ...state, 
+            loading: false
+        };    
     // top5Tags ---> mode one
     // static data 
     case GET_DATA_FROM_USER_DEVICE_TOP_5_TAGS:
