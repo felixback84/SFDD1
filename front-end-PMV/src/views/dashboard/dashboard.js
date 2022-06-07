@@ -8,7 +8,7 @@ import Container from "@material-ui/core/Container"
 // components
 import Header from "../../components/Headers/Header.js"
 import PickerMarkerMix from "./components/utils/PickerMarkerMix"
-import SkeletonDashboard from "./components/SkeletonDashboard.js"
+import SkeletonDashboard from "./components/SkeletonDashboard"
 // Redux stuff
 import { connect } from 'react-redux'
 import { getUserDevices } from '../../redux/actions/userDevicesActions'

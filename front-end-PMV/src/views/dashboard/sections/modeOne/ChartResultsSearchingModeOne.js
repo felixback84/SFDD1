@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // @material-ui/core components
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, responsiveFontSizes } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
@@ -17,6 +17,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
 import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
+import SkeletonChartResultsSearchingModeOne from "./SkeletonChartResultsSearchingModeOne"
 // color engine
 import ColorEngine from "../../components/utils/ColorEngine/ColorEngine"
 // Redux stuff
@@ -91,7 +92,7 @@ const ContentRow = (props) => {
 								{top5Tag.userCredentials.companyName}
 							</Box>
 						</Box>
-					</Box>
+					</Box> 
 				</TableCell>
 				
 				{/* tags */}
@@ -153,9 +154,12 @@ class ChartResultsSearchingModeOne extends Component {
 		// redux state
 		const {
 			classes,
+			// top5Tags
+			loading,
+			responsesToUI,
 			top5Tags,
 			top5TagsListener,
-			loading,
+			// thingLiveDataSets
 			thingLiveDataSets:{
 				profileToMatch
 			}
@@ -174,7 +178,7 @@ class ChartResultsSearchingModeOne extends Component {
 							component: Box,
 							marginBottom: "0!important",
 							variant: "h3",
-						}}
+						}} 
 					>
 					</CardHeader>
 					{/* tags user table header  */}
@@ -219,15 +223,19 @@ class ChartResultsSearchingModeOne extends Component {
 							{/* table content */}
 							<TableBody>
 								{
-									loading == false && 
-										<ContentRow 
-											data={
-												top5TagsListener.length != 0 ?
-													top5TagsListener:
-													top5Tags
-											} 
-											classes={classes}
-										/>
+									top5Tags.length != 0 ? 
+										( 
+											<ContentRow 
+												data={
+													top5TagsListener.length != 0 ?
+														top5TagsListener:
+														top5Tags
+												} 
+												classes={classes}
+											/>
+										) : (
+											<SkeletonChartResultsSearchingModeOne/>
+										)	
 								}
 							</TableBody>		
 						</Box>	
@@ -241,8 +249,10 @@ class ChartResultsSearchingModeOne extends Component {
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	// userDevice
-	loading:state.userDevices1.loading,
+	// loading:state.userDevices1.loading,
 	// top5Tags
+	loading:state.top5Tags1.loading,
+	responsesToUI:state.top5Tags1.responsesToUI,
 	top5Tags:state.top5Tags1.top5Tags,
 	top5TagsListener:state.top5Tags1.top5TagsListener,
 	// liveDataSets

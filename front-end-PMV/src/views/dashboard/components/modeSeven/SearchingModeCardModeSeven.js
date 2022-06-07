@@ -27,13 +27,17 @@ const SearchingModeCardModeSeven = (props) => {
 			<>
 				<CardStats
 					subtitle={props.title}
-					title={
-						data[0].meters.toFixed(2)
+					title={ 
+						(data.length != 0) ? 
+							(data[0].meters.toFixed(2)):
+							(0) 
+						(props.searchingMode === "modeSeven" && props.top5Tags.length === 0) ?
+							(data[0].meters.toFixed(2)):
+							(props.top5Tags[0].meters.toFixed(2))
 					} 
-					// icon={data.icon}
-					// color={
-					// 	colorClass.colorPicker(data[0].meters)
-					// } 
+					color={
+						props.searchingMode === "modeSeven" && colorClass.colorPicker(data.color)
+					} 
 					footer={ 
 						<Fragment>
 							<Box
@@ -56,7 +60,7 @@ const SearchingModeCardModeSeven = (props) => {
 								alignItems="center"
 							>
 								The closer bussines to you is: {
-									data[0].meters.toFixed(2)
+									props.searchingMode === "modeSeven" && data[0].meters.toFixed(2)
 								}
 							</Box>
 							{/* # of bussines searching */}
@@ -68,7 +72,7 @@ const SearchingModeCardModeSeven = (props) => {
 								alignItems="center"
 							> 
 								{/* number of items */}
-								You are listed {data.length} differents bussines 
+								You are listed {props.searchingMode === "modeSeven" && data.length} differents bussines 
 							</Box>
 							<Box
 								component="div"
@@ -95,6 +99,7 @@ const SearchingModeCardModeSeven = (props) => {
 		console.log(`props.top5Tags in modeSeven card:${JSON.stringify(...props.top5Tags)}`)
 		// data markup
 		return modeCardMarkupSeven([
+			// find the closer distance
 			props.top5Tags.reduce((
 					previousValue, 
 					currentValue, 
@@ -104,14 +109,14 @@ const SearchingModeCardModeSeven = (props) => {
 					return(currentValue.meters < previousValue.meters ? 
 						currentValue : previousValue)
 				}
-			) // find the closer distance
+			) 
 		])
 	}
 	
 	// to pass the right data to the card
 	const pickerDataToCard = () => {
 		// check to find the right data
-		if(props.responses === undefined){
+		if(props.responsesWithData === undefined){
 			// print
 			console.log("data markup 1")
 			// data markup
@@ -126,28 +131,24 @@ const SearchingModeCardModeSeven = (props) => {
 			}])
 		} 
 		
-		else if (props.responses != undefined){
+		else if (props.responsesWithData != undefined){
 			// print
 			console.log("data markup 2")
 			// data markup
-			return modeCardMarkupSeven([	
-				props.responses.reduce((
+			return modeCardMarkupSeven([	// if modeSeven
+				// find the closer distance
+				props.responsesWithData.reduce((
 						previousValue, 
 						currentValue, 
-						index, 
-						array
+						// index, 
+						// array
 					) => {
 						return(currentValue.meters < previousValue.meters ? 
 							currentValue : previousValue)
 					}
-				) // find the closer distance
+				) 
 			])
 		} 
-		
-		// else if (this.top5Tags.length > 0){
-		// 	console.log("data markup 3")
-		// 	useData()
-		// } 
 		
 		else {
 			console.log("data markup empty")
@@ -166,8 +167,11 @@ const SearchingModeCardModeSeven = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// liveDataSets
+	searchingMode:state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
+	// top5Tags
 	loading: state.top5Tags1.loading,
-	responses: state.top5Tags1.responses,
+	responsesWithData: state.top5Tags1.responsesWithData,
 	top5Tags: state.top5Tags1.top5Tags
 });
 

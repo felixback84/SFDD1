@@ -29,7 +29,7 @@ const SearchingModeCardModeFive = (props) => {
 						data.top5Products.length != 0 ? 
 						(
 							//with array in reducer
-							data.top5ProductsListener.length != 0 ?
+							data.top5ProductsListener.length != 0 && props.searchingMode === "modeFive" ?
 								data.top5ProductsListener[0].meters.toFixed(2):
 								data.top5Products[0].meters.toFixed(2)
 						):(0)
@@ -37,7 +37,7 @@ const SearchingModeCardModeFive = (props) => {
 					//icon={props.icon}
 					// color from liveDataSets
 					color={
-						colorClass.colorPicker(data.color)
+						props.searchingMode === "modeFour" && colorClass.colorPicker(data.color)
 					} 
 					footer={
 						<>
@@ -61,7 +61,7 @@ const SearchingModeCardModeFive = (props) => {
 								alignItems="center"
 							>
 								The closer product to you is: {
-									data.top5Products.length !== 0 ? 
+									data.top5Products.length !== 0 && props.searchingMode === "modeFive" ? 
 									(data.top5Products[0].meters.toFixed(2)):("")
 								}
 							</Box>
@@ -74,7 +74,7 @@ const SearchingModeCardModeFive = (props) => {
 								alignItems="center"
 							>
 								{/* number of items */}
-								You match with {data.top5Products.length} products
+								You match with {props.searchingMode === "modeFive" && data.top5Products.length} products
 							</Box>
 
                             <Box
@@ -118,6 +118,7 @@ const mapStateToProps = (state) => ({
 	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	searchingMode:state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
 	// top5Products
 	top5Products: state.top5Products1.top5Products,
 	top5ProductsListener: state.top5Products1.top5ProductsListener,

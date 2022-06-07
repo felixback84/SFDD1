@@ -27,14 +27,14 @@ const SearchingModeCardModeTwo = (props) => {
 						data.top5Tag.length != 0 ? 
 						(
 							//with array in reducer
-							data.top5TagListener.length != 0 ?
+							data.top5TagListener.length != 0 && props.searchingMode === "modeTwo" ?
 								data.top5TagListener[0].meters.toFixed(2):
 								data.top5Tag[0].meters.toFixed(2)
 						):(0)
 					} 
 					icon={data.icon}
 					color={
-						colorClass.colorPicker(data.colorValue)
+						props.searchingMode === "modeTwo" && colorClass.colorPicker(data.colorValue)
 					} 
 					footer={
 						<Fragment>
@@ -46,11 +46,6 @@ const SearchingModeCardModeTwo = (props) => {
 								<SearchingModeSwitcherTwo
 									mode={props.mode} 
 									thingid={props.thingid}
-									// idofspecificstaticdevices={
-									// 	// data.thingLiveDataSetsListener.idOfSpecificStaticDevices.length == 0 ?
-									// 	// 	data.thingLiveDataSets.idOfSpecificStaticDevices :
-									// 			data.thingLiveDataSetsListener.idOfSpecificStaticDevices 
-									// }
 								/>
 							</Box>
 							{/* bussines item closer */}
@@ -62,7 +57,7 @@ const SearchingModeCardModeTwo = (props) => {
 								alignItems="center"
 							>
 								The closer bussines to you is: {
-									data.top5Tag.length !== 0 ? 
+									data.top5Tag.length !== 0 && props.searchingMode === "modeTwo"? 
 									(data.top5Tag[0].userCredentials.companyName):("")
 								}
 							</Box>
@@ -75,7 +70,7 @@ const SearchingModeCardModeTwo = (props) => {
 								alignItems="center"
 							>
 								{/* number of items */}
-								You match with {data.top5Tag.length} bussines
+								You match with {props.searchingMode === "modeTwo" && data.top5Tag.length} bussines
 							</Box>
 						</Fragment>
 					}
@@ -110,6 +105,7 @@ const mapStateToProps = (state) => ({
 	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	searchingMode:state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
 	// top5Tags
 	top5Tag: state.top5Tags1.top5Tag,
 	top5TagListener: state.top5Tags1.top5TagListener,
