@@ -27,29 +27,28 @@ exports.heartbeatPostSearchingMode = (req,res) => {
 
 ///////////////////////////////////////////// SETTINGS TO THING FROM UX //////////////////////////////////////////////////
 // pass data of statics users means profileToMatch
-exports.postProfileToSearchUserDevices = (req,res) => {
-    // profile of dynamic
-    let profileToSearchOfDynamicData = req.body;
-    // db part
-    // userDeviceId 
-    const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2);
-    db
-        .doc(`/userDevices/${userDeviceId}`)
-        .collection('liveDataSets')
-        .doc(profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId)
-        .update({ 
-            profileToMatch: profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.profileToMatch,
-        })
-        .then(() => {
-            console.log(`objWithProfileToSearchOfDynamic: ${profileToSearchOfDynamicData}`)
-            // res
-            return res.json(profileToSearchOfDynamicData);
-        })            
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
-        });  
-}
-
+// exports.postProfileToSearchUserDevices = (req,res) => {
+//     // profile of dynamic
+//     let profileToSearchOfDynamicData = req.body;
+//     // db part
+//     // userDeviceId 
+//     const userDeviceId = profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId.split("-").slice(2);
+//     db
+//         .doc(`/userDevices/${userDeviceId}`)
+//         .collection('liveDataSets')
+//         .doc(profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.thingId)
+//         .update({ 
+//             profileToMatch: profileToSearchOfDynamicData.objWithProfileToSearchOfDynamic.profileToMatch,
+//         })
+//         .then(() => {
+//             console.log(`objWithProfileToSearchOfDynamic: ${profileToSearchOfDynamicData}`)
+//             // res
+//             return res.json("tag record");
+//         })            
+//         .catch((err) => {
+//             console.error(err);
+//             res.status(500).json({ error: err.code });
+//         });  
+// }
 
 

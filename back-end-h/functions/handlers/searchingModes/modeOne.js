@@ -7,21 +7,22 @@ const { forEach } = require('underscore');
 // pass data of statics users means profileToMatch
 exports.postProfileToMatchUserDevices = (req,res) => {
     // profile of dynamic
-    let profileToSearchOfDynamicData = req.body
+    let profileToMacthOfDynamicData = req.body
     // db part
     // userDeviceId 
-    const userDeviceId = profileToSearchOfDynamicData.objData.thingId.split("-").slice(2)
+    const userDeviceId = profileToMacthOfDynamicData.objData.thingId.split("-").slice(2)
     db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
-        .doc(profileToSearchOfDynamicData.objData.thingId)
+        .doc(profileToMacthOfDynamicData.objData.thingId)
         .update({ 
-            profileToMatch: profileToSearchOfDynamicData.objData.profileToMatch,
+            profileToMatch: profileToMacthOfDynamicData.objData.profileToMatch,
         })
         .then(() => {
-            console.log(`objData: ${profileToSearchOfDynamicData}`)
+            console.log(`objData: ${profileToMacthOfDynamicData}`)
             // res
-            return res.json(profileToSearchOfDynamicData);
+            return res.json("profileToMatch is set");
+            // return res.json(profileToMacthOfDynamicData.objData.profileToMatch);
         })            
         .catch((err) => {
             console.error(err);
@@ -40,6 +41,10 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
     // var to hold data
     let outputListOne = []
     let outputListTwo = []
+
+    // print
+    console.log(`data from card modeOne: ${JSON.stringify(req.body.objData)}`)
+    
     // db part
     db  
         .collectionGroup('liveDataSets')
@@ -56,8 +61,8 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                 })
             })
             // print
-            console.log(`Number of statics with data in db (profilesInLiveDataSets): ${profilesInLiveDataSets.length} & 
-                Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`)
+            // console.log(`Number of statics with data in db (profilesInLiveDataSets): ${profilesInLiveDataSets.length} & 
+            //     Data result on the statics connected: ${JSON.stringify(profilesInLiveDataSets)}`)
                 // quantity of objects & [{...},{...}
         })
         .then(async()=>{
@@ -80,9 +85,9 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                         // checker
                         if(keyNames.hasOwnProperty(key)) {
                             // print
-                            console.log(`to compare --> statics: ${args.statics[key]} 
-                                & dynamic: ${args.dynamics[key]}`
-                            )
+                            // console.log(`to compare --> statics: ${args.statics[key]} 
+                            //     & dynamic: ${args.dynamics[key]}`
+                            // )
                             // passing the keys
                             let statics = args.statics[key]
                             let dynamics = args.dynamics[key]
@@ -90,7 +95,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                             countPerProp += dynamics.length
                             counterFinalTagsDynamics += countPerProp
                             // print
-                            console.log({counterFinalTagsDynamics})
+                            // console.log({counterFinalTagsDynamics})
                             // isntersector
                             let intersection = _.intersection(statics, dynamics)
                             // check if is empty
@@ -98,7 +103,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                                 // pass data to var obj
                                 coincidences[key] = intersection
                                 // print
-                                console.log(`coincidences: ${JSON.stringify(coincidences)}`)
+                                // console.log(`coincidences: ${JSON.stringify(coincidences)}`)
                             }
                         }
                     }
@@ -120,11 +125,11 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                             // count all props lengths
                             countFinal += countPerProp
                             // print
-                            console.log({countPerProp})
+                            // console.log({countPerProp})
                         }
                     }
                     // print
-                    console.log({countFinal})
+                    // console.log({countFinal})
                     return countFinal
                 }
                 // data to pass 
@@ -165,7 +170,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             // loop
             arraysToCheck.forEach((arrayToCheck)=>{
                 // print item
-                console.log("Current item: " + arrayToCheck)
+                // console.log("Current item: " + arrayToCheck)
                 // extract userHandle
                 const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
                 // db connection
@@ -173,7 +178,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     .collection("users")
                     .where('userHandle','==',userHandle)
                     .get()
-                    .then(snapshot => {
+                    .then((snapshot) => {
                         // check if exists
                         if (snapshot.empty) {
                             console.log('No matching documents.')
@@ -203,7 +208,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             })
             .then(()=>{
                 // var to hold userHandle
-                let userHandle = "";
+                let userHandle = ""
                 arraysToCheck.forEach((arrayToCheck)=>{
                     // userHandle
                     userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
@@ -215,7 +220,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     })
                 })
                 // print
-                console.log(`arraysToCheck after push user credentials: ${JSON.stringify(arraysToCheck)}`)
+                // console.log(`arraysToCheck after push user credentials: ${JSON.stringify(arraysToCheck)}`)
                 return arraysToCheck
             })
             .catch(err => {
@@ -228,7 +233,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
             // loop
             arraysToCheck.forEach((arrayToCheck)=>{
                 // print item
-                console.log("Current item: " + arrayToCheck)
+                console.log(`current item before companyData: ${JSON.stringify(arrayToCheck)}`)
                 // extract userHandle
                 const userHandle = arrayToCheck.thingId.split("-").slice(0,1).toString()
                 // db connection
@@ -268,7 +273,7 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     outputListTwo.forEach((outputItem)=>{
                         // check to push in the right item
                         if(companyName == outputItem.companyName){
-                            console.log("hi sun")
+                            // console.log("hi sun")
                             arrayToCheck.companyData = outputItem
                         }else{
                             console.log("hi moon")
@@ -276,41 +281,46 @@ exports.detectProfileMatchBetweenUserDevicesAndStaticDevices = (req,res) => {
                     })
                 })
                 // print
-                console.log(`arraysToCheck after push company data: ${JSON.stringify(arraysToCheck)}`)
+                // console.log(`arraysToCheck after push company data: ${JSON.stringify(arraysToCheck)}`)
                 return arraysToCheck
             })
             // save data
             .then(()=>{
+                // to count docs recs in db at final part
+                let counterOfDocsInDB = 0
                 // func to save data of top5Coords in liveDataSets of dynamics
                 const savaDataOfDynamicDeviceOnLiveDataSetsDoc = (dataToSave) => {
                     // userDeviceId 
                     const userDeviceId = objData.thingId.split("-").slice(2)
                     db
                         .doc(`/userDevices/${userDeviceId}`)
-                        .collection('top5Tags') // test collection
+                        .collection('top5Tags')     
                         .add({ ...dataToSave })
-                        .then(() => {
+                        .then(()=>{
+                            // increment counter
+                            counterOfDocsInDB++
+                            // console.log({counterOfDocsInDB})
                             // print
-                            console.log(`final response to the user: ${dataToSave}`)
-                            // res
-                            // res.json("matches now in db");
-                        })            
-                        .catch((err) => {
-                            console.error(err)
-                        })          
+                            console.log(`length vs to correct res send: ${arraysToCheck.length} - ${counterOfDocsInDB}`)
+                            //res
+                            if(arraysToCheck.length === counterOfDocsInDB){
+                                res.json("matches now in db")
+                            } else {
+                                console.log("docs not available yet on collection")
+                            }
+                        })
+                        .catch(err => {
+                            res.status(500, err)
+                        })
                 }
                 // run it
                 arraysToCheck.forEach((arrayToCheck)=>{
                     savaDataOfDynamicDeviceOnLiveDataSetsDoc(arrayToCheck)
                 })
             })
-            .catch(err => {
-                res.status(500, err)
-            })
-        })
-        .then(()=>{
-            //res
-            res.json("matches now in db")
+            .catch((err) => {
+                console.error(err)
+            }) 
         })
         .catch(err => {
             res.status(500, err)
@@ -356,7 +366,7 @@ exports.detectGPSCoordsProximityRangeForUserDeviceVsStaticDevices = async (inWai
                 .collection('top5Tags')
                 .doc(inWaitAfter.top5Coords[i].docId)
             // update meters
-            await docRef
+             docRef
                 .update({
                     meters:distanceInMeters,
                 })

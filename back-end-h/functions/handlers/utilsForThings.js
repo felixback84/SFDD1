@@ -361,11 +361,11 @@ exports.findMatchValueQuality = async (a,b) => {
     let resultRounded = Math.round(resultRaw)
     
     // print
-    console.log(`raw:${resultRaw} - rounded:${resultRounded}`)
+    // console.log(`raw:${resultRaw} - rounded:${resultRounded}`)
     
     // the match could be the number closer to zero
     if(resultRounded === 1 | resultRounded === 2){
-        console.log(`one or two  - green:${resultRounded}`)
+        // console.log(`one or two  - green:${resultRounded}`)
         return(
             {
                 r:76,
@@ -375,7 +375,7 @@ exports.findMatchValueQuality = async (a,b) => {
             }
         )
     }else if(resultRounded === 3 | resultRounded === 4){
-        console.log(`three or four - yellow:${resultRounded}`)
+        // console.log(`three or four - yellow:${resultRounded}`)
         return(
             {
                 r:255,
@@ -385,7 +385,7 @@ exports.findMatchValueQuality = async (a,b) => {
             }
         )
     }else if(resultRounded === 5 | resultRounded === 6){
-        console.log(`five or six - red:${resultRounded}`)
+        // console.log(`five or six - red:${resultRounded}`)
         return(
             {
                 r:244,
@@ -395,7 +395,7 @@ exports.findMatchValueQuality = async (a,b) => {
             }
         )
     }else if(resultRounded === 7 | resultRounded === 8){
-        console.log(`seven or eight - fucsia:${resultRounded}`)
+        // console.log(`seven or eight - fucsia:${resultRounded}`)
         return(
             {
                 r:233,
@@ -405,7 +405,7 @@ exports.findMatchValueQuality = async (a,b) => {
             }
         )
     }else if(resultRounded === 9){
-        console.log(`nine - blue:${resultRounded}`)
+        // console.log(`nine - blue:${resultRounded}`)
         return(
             {
                 r:33,
@@ -415,7 +415,7 @@ exports.findMatchValueQuality = async (a,b) => {
             }
         )
     }else if(resultRounded > 9){
-        console.log("grather than nine")  
+        // console.log("grather than nine")  
         return(
             {
                 r:0,
