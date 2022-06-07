@@ -34,7 +34,7 @@ const Header = (props) => {
     slidesToScroll: 1,  
   }
   
-  return ( 
+  return (  
     
       <div className={classes.header}>
         <Container

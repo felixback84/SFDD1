@@ -108,7 +108,8 @@ export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
                 motorSpeed: docSnapshot.data().motorSpeed,
                 searchingMode: docSnapshot.data().searchingMode,
                 idOfSpecificStaticDevices: docSnapshot.data().idOfSpecificStaticDevices,
-                idOfSpecificProducts: docSnapshot.data().idOfSpecificProducts
+                idOfSpecificProducts: docSnapshot.data().idOfSpecificProducts,
+                profileToMatch: docSnapshot.data().profileToMatch
             }
             // print
             console.log(`liveDataSetsDoc: ${JSON.stringify(resultDB)}`)
@@ -151,7 +152,7 @@ export const postTagsProfileToMatch = (objTagsData) => (dispatch) => {
         .then(res => {
             // dispatchers
             dispatch({
-                type: POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS,
+                type: POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS, 
                 payload: res.data
             }) 
             dispatch({

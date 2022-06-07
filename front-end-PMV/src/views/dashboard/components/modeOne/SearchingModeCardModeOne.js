@@ -19,22 +19,22 @@ const SearchingModeCardModeOne = (props) => {
 	const colorClass = new ColorEngine()
 	// card markup 
 	const modeCardMarkupOne = (data) => {
-		return (
+		return ( 
 			<>
 				<CardStats
 					subtitle={props.title}
-					title={
-						data.top5Tags.length != 0 ? 
+					title={ 
+						data.top5Tags.length != 0 && props.searchingMode === "modeOne" ? 
 						(
 							//with array in reducer
-							data.top5TagsListener.length != 0 ?
+							data.top5TagsListener.length != 0 && props.searchingMode === "modeOne" ?
 								data.top5TagsListener[0].meters.toFixed(2):
 								data.top5Tags[0].meters.toFixed(2)
 						):(0)
 					} 
 					icon={data.icon}
 					color={
-						colorClass.colorPicker(data.colorValue)
+						props.searchingMode === "modeOne" && colorClass.colorPicker(data.colorValue)
 					} 
 					footer={ 
 						<Fragment> 
@@ -58,7 +58,7 @@ const SearchingModeCardModeOne = (props) => {
 								alignItems="center"
 							>
 								The closer bussines to you is: {
-									data.top5Tags.length !== 0 ? 
+									data.top5Tags.length !== 0 && props.searchingMode === "modeOne" ? 
 									(data.top5Tags[0].userCredentials.companyName):("")
 								}
 							</Box>
@@ -71,7 +71,7 @@ const SearchingModeCardModeOne = (props) => {
 								alignItems="center"
 							> 
 								{/* number of items */}
-								You match with {data.top5Tags.length} bussines
+								You match with {props.searchingMode === "modeOne" && data.top5Tags.length} bussines
 							</Box>
 							<Box
 								component="div"
@@ -112,9 +112,12 @@ const SearchingModeCardModeOne = (props) => {
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
+	// ui
+	ui: state.ui,
 	// liveDataSets
 	thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 	thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
+	searchingMode:state.heartbeatThing1.thingLiveDataSetsListener.searchingMode,
 	// top5Tags
 	top5Tags: state.top5Tags1.top5Tags,
 	top5TagsListener: state.top5Tags1.top5TagsListener,

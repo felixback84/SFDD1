@@ -42,16 +42,17 @@ import axios from 'axios'
 // to init modeOne
 export const setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics = (data) => async (dispatch) => {
     try {
+        console.log("profileToMatch is set")
         const dataTag = await 
         axios
             .post(`/userdevices/match/staticsdevices`,data)
-            const res = await dataTag
-            console.log({res})
-            dispatch({ 
-                type: SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
-                payload: res.data
-            })
-            dispatch({ type: STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS })
+        const res = await dataTag
+        console.log({res})
+        dispatch({ 
+            type: SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+            payload: res.data
+        })
+        dispatch({ type: STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS })
     } catch (error) {
         console.log(error)
     }
@@ -177,7 +178,7 @@ export const userDeviceTop5TagsSyncDataLiveDB = (thingId) => (dispatch) => {
         })   
 }
 
-// declarate a function to get data from a specific db for top5Tags (modeTwo) ---- now more than one vendor
+// to get data from a specific db for top5Tags (modeTwo) ---- now more than one vendor
 /// ----> to check
 export const userDeviceSpecificTop5TagSyncDataStatic = (thingId, arrIds) => (dispatch) => {
     // arrIds

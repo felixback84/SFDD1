@@ -38,7 +38,8 @@ const initialState = {
     loading: undefined,
 
     // res
-    responses: undefined, 
+    responsesToUI: undefined, 
+    responsesWithData: undefined,
     
     // mode one
     top5Tags:[],
@@ -60,8 +61,6 @@ const initialState = {
         companyData:{}
     },
 
-    // ux flow data
-    // top5TagArr:[]
 }
 
 // function to determine the type of action to set state
@@ -71,7 +70,7 @@ export default function(state = initialState, action){
     case SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS:
         return{
             ...state,
-            responses:action.payload,
+            responsesToUI:action.payload,
         };
     case STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS:
         return{
@@ -104,19 +103,8 @@ export default function(state = initialState, action){
                 ...state,
                 loading: false
             };
-
-    // top5Tag  ---> mode two
-    // make list of top5Tags
-    // case SET_IN_REDUCER_TOP_5_TAG_ID:
-    //     // collect pass ones
-    //     let top5TagArr = state.top5TagArr
-    //     state.top5TagArr = push.top5TagArr(action.payload)
-
-    //     return{ 
-    //         ...state,
-    //         top5TagArr
-    //     }
-
+    
+    // modeTwo
     // static
     case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG:
         return {
@@ -144,12 +132,13 @@ export default function(state = initialState, action){
                 ...state,
                 loading: false
             };
-
-    // search geoHashes & meters
+    
+    // modeSeven --> search geoHashes & meters
+    // before modeSeven 
     case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:
         return{
             ...state,
-            responses: action.payload,
+            responsesWithData: action.payload,
             //loadings: false
         }
 
@@ -159,7 +148,7 @@ export default function(state = initialState, action){
             loading: false        
         }
 
-    // post top5tags -- creation
+    // post top5tags means creation in db --> modeSeven
     // to select matches - in user selection
     case POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION:
         return{

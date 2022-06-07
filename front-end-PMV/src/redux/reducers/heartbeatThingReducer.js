@@ -39,21 +39,21 @@ const initialState = {
     responses:undefined,
     // static data
     thingLiveDataSets:{
-        searchingMode:[], 
         colorValue:{},
         coords:{},
         idOfSpecificStaticDevices:[{}],
         idOfSpecificProducts:[{}],
-        profileToMatch:[],
-        searchingMode:[]
+        searchingMode:[],
+        profileToMatch:{},
     },
         // live data
         thingLiveDataSetsListener:{
             colorValue:{},
             coords:{},
-            searchingMode:[],
             idOfSpecificStaticDevices:[{}],
-            idOfSpecificProducts:[{}]
+            idOfSpecificProducts:[{}],
+            searchingMode:[],
+            profileToMatch:{},
         },
 }; 
 
@@ -91,7 +91,7 @@ export default function(state = initialState, action){
         case SET_HEARTBEAT_SEARCHING_MODE:
             return {
                 ...state,
-                responses:action.payload,
+                responses:action.payload, 
                 loading: false
             };     
         case STOP_SET_HEARTBEAT_SEARCHING_MODE:
@@ -105,7 +105,6 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 responses:action.payload,
-                loading: false
             };     
         case STOP_POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
             return {

@@ -112,11 +112,7 @@ class ComboSearchModeOne extends Component {
 			}
 			// redux action to send data with user selections to server 
 			this.props.postTagsProfileToMatch(finish)
-			// check if already exists entries in the obj
-			if(Object.entries(this.props.profileToMatch).length === 0){
-				// redux action to create docs in db with top5Tags match
-				this.props.setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics(finish)
-			}
+			
 		} else {
 			console.log('pick ones dont send')
 		}
@@ -253,10 +249,14 @@ class ComboSearchModeOne extends Component {
 	}
 
 	render(){
+		let classes = useStyles
 		// styles
-		let classes = this.props
+		const {
+			//classes,
+			profileToMatch,
+			responses
+		} = this.props
 		// var with data of state
-		// const data = this.state.objProfileDataOfDynamic.profileToMatch
 		const data = this.state.allTagsToAllCategories
 		return(
 			<>
@@ -275,7 +275,20 @@ class ComboSearchModeOne extends Component {
 						unmountOnExit
 					>
 						<List component="div" disablePadding>
-							<form noValidate onSubmit={this.handleSubmit}>
+							<form 
+								noValidate 
+								// onSubmit={(event)=>(
+								// 		this.handleSubmit(event,responses != undefined ? 
+								// 			(responses) : (responses = "not response yet"))
+								// 	)
+								// }
+								// onSubmit={(event)=>(
+								// 	this.handleSubmit(event,profileToMatch)
+								// )
+								onSubmit={
+									this.handleSubmit
+								}
+							>
 								{/* tags selectors */}
 								{this.createFields(data,classes)}
 								{/* btn */}
@@ -306,11 +319,12 @@ const mapStateToProps = (state) => ({
 	ui:state.ui,
 	staticDevicesTags:state.ui.staticDevicesTags,
 	// userDevices
-	loading:state.userDevices1.loading,
 	userDevices:state.userDevices1.userDevices,
 	// liveDataSets
+	loading:state.heartbeatThing1.loading,
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
-	profileToMatch:state.heartbeatThing1.thingLiveDataSets.profileToMatch
+	// profileToMatch:state.heartbeatThing1.thingLiveDataSetsListener.profileToMatch,
+	// responses:state.heartbeatThing1.responses
 });
 
 export default connect(mapStateToProps,{
@@ -318,3 +332,5 @@ export default connect(mapStateToProps,{
 	postTagsProfileToMatch,
 	setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics
 })(ComboSearchModeOne)
+
+
