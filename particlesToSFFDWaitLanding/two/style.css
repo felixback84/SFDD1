@@ -1,0 +1,12 @@
+.canvas {
+    position: fixed;
+    top: 0;
+}
+
+#wrapper-canvas {
+    width: 100px;
+    height: 100%;
+    display: block;
+    background-color: #fff;
+    
+}
