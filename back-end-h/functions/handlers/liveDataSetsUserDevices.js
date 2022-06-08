@@ -5,10 +5,10 @@ const { forEach } = require('underscore');
 
 // specific the mode of search
 exports.heartbeatPostSearchingMode = (req,res) => {
-    const searchingModeData = req.body;
+    const searchingModeData = req.body
     // db part
     // userDeviceId 
-    const userDeviceId = searchingModeData.objSearchingModeData.thingId.split("-").slice(2);
+    const userDeviceId = searchingModeData.objSearchingModeData.thingId.split("-").slice(2)
     db
         .doc(`/userDevices/${userDeviceId}`)
         .collection('liveDataSets')
@@ -17,11 +17,12 @@ exports.heartbeatPostSearchingMode = (req,res) => {
         .then(() => {
             console.log(`objWithProfileToSearchOfDynamic: ${searchingModeData}`)
             // res
-            return res.json(searchingModeData);
+            // return res.json(searchingModeData)
+            return res.json("searching mode just set")
         })            
         .catch((err) => {
-            console.error(err);
-            res.status(500).json({ error: err.code });
+            console.error(err)
+            res.status(500).json({ error: err.code })
         });  
 }
 
