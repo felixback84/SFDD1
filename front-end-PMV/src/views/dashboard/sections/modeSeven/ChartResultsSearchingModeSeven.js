@@ -106,7 +106,7 @@ class ChartResultsSearchingModeSeven extends Component {
 		// redux state
 		const {
 			classes,
-			responses,
+			responsesWithData,
 			loading,
 			thingLiveDataSets:{
 				profileToMatch
@@ -172,8 +172,8 @@ class ChartResultsSearchingModeSeven extends Component {
 									loading == false && 
 										<ContentRow 
 											data={
-												responses.length != 0 ?
-													responses:
+												responsesWithData.length != 0 ?
+												responsesWithData:
 													alert("don´t exist match for this criteria")
 											} 
 											classes={classes}
@@ -186,14 +186,14 @@ class ChartResultsSearchingModeSeven extends Component {
 			</div>
 		)
 	}
-}
+} 
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
 	// userDevice
 	loading:state.userDevices1.loading,
 	// staticDevices
-	responses:state.top5Tags1.responses,
+	responsesWithData:state.top5Tags1.responsesWithData,
 	// liveDataSets
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
