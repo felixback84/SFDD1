@@ -30,7 +30,7 @@ const SearchingModeSwitcherOne = (props) => {
 	})
  
 	// handleChange switch
-	const handleChange = (event) => {
+	const handleChange = async (event) => {
 		// state
 		setMode({ 
 			...mode,
@@ -50,12 +50,11 @@ const SearchingModeSwitcherOne = (props) => {
 					thingId:props.thingid
 				}
 			}
-			// run static query data
 			props.heartbeatPostSearchingMode(dataSearchingMode)
-			
+			// post searchingMode
+			console.log("hi enter responsesToUILDS")
 			// check if already exists entries in the obj
 			if(
-				props.responses === "profileToMatch is set" &&
 				Object.entries(props.profileToMatch).length != 0 
 			){
 				// final data to the server
@@ -66,24 +65,40 @@ const SearchingModeSwitcherOne = (props) => {
 					}
 				}
 				// print
-				console.log(`profile:${JSON.stringify(props.profileToMatch)}`)
+				console.log(`profile:${JSON.stringify(finish)}`)
 				// redux action to create docs in db with top5Tags match
 				props.setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics(finish)
-				// trigger	
-				if(props.responsesToUI === "matches now in db"){
-					props.userDeviceTop5TagsSyncDataStatic(props.thingid)
-					props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
-				} else {
-					console.log("it´s not modeOne checked")
-				}
 			} 
 			else if(Object.entries(props.profileToMatch).length === 0){
 				console.log(`profile: nothing yet`)
 			}
 		} else {
-			console.log("it´s not modeOne")
+			console.log("it´s not ready to switch")
 		}
 	}
+
+	// trigger to watch top5Tags recs in db
+	const getTop5TagsDocs = () => {
+		// print
+		console.log(`mode:${JSON.stringify(mode)}`)
+		// timer to wait the db records
+		setTimeout(()=>{
+			// check response
+			if(
+				props.responsesToUI === "all matches now in db"
+			){
+				props.userDeviceTop5TagsSyncDataStatic(props.thingid)
+				props.userDeviceTop5TagsSyncDataLiveDB(props.thingid)
+			} else {
+				console.log("it´s not modeOne checked")
+			}
+		},3000)
+	}
+
+	// to trigger the top5Tags watch
+	useEffect(() => {
+		getTop5TagsDocs()
+	}, [props.responsesToUI])
 
 	return(
 		<FormControlLabel
@@ -91,7 +106,7 @@ const SearchingModeSwitcherOne = (props) => {
 				<Switch
 					name="checked"
 					checked={mode.checked}
-					onChange={handleChange}		
+					onChange={handleChange}				
 				/> 
 			}
 		/>
@@ -105,11 +120,12 @@ const mapStateToProps = (state) => ({
 	// userDevices
 	loading:state.userDevices1.loading,
 	userDevices:state.userDevices1.userDevices,
-	responsesToUI:state.heartbeatThing1.responsesToUI,
+	// top5Tags
+	responsesToUI:state.top5Tags1.responsesToUI,
 	// liveDataSets
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 	profileToMatch:state.heartbeatThing1.thingLiveDataSetsListener.profileToMatch,
-	responses:state.heartbeatThing1.responses
+	responsesToUILDS:state.heartbeatThing1.responsesToUILDS,
 });
 
 const mapActionsToProps = {

@@ -44,15 +44,15 @@ export const setTop5TagsCollectionWithMatchBetweenStaticsAndDynamics = (data) =>
     try {
         console.log("profileToMatch is set")
         const dataTag = await 
-        axios
-            .post(`/userdevices/match/staticsdevices`,data)
-        const res = await dataTag
-        console.log({res})
-        dispatch({ 
-            type: SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
-            payload: res.data
-        })
-        dispatch({ type: STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS })
+            axios
+                .post(`/userdevices/match/staticsdevices`,data)
+            const res = await dataTag
+            console.log(`res:${await res}`)
+            dispatch({ 
+                type: SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS,
+                payload: await res.data
+            })
+            dispatch({ type: STOP_SET_MATCHES_BETWEEN_USER_DEVICES_SEARCH_AND_STATIC_DEVICES_ON_TOP_5_TAGS })
     } catch (error) {
         console.log(error)
     }

@@ -277,14 +277,6 @@ class ComboSearchModeOne extends Component {
 						<List component="div" disablePadding>
 							<form 
 								noValidate 
-								// onSubmit={(event)=>(
-								// 		this.handleSubmit(event,responses != undefined ? 
-								// 			(responses) : (responses = "not response yet"))
-								// 	)
-								// }
-								// onSubmit={(event)=>(
-								// 	this.handleSubmit(event,profileToMatch)
-								// )
 								onSubmit={
 									this.handleSubmit
 								}

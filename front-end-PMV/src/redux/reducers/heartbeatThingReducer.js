@@ -36,7 +36,10 @@ const initialState = {
     // state of data
     loading:undefined,
     // server response
-    responses:undefined,
+    responses: undefined, // to erase soon
+    responsesToUILDS: undefined, 
+    responsesWithDataLDS: undefined,
+
     // static data
     thingLiveDataSets:{
         colorValue:{},
@@ -91,8 +94,8 @@ export default function(state = initialState, action){
         case SET_HEARTBEAT_SEARCHING_MODE:
             return {
                 ...state,
-                responses:action.payload, 
-                loading: false
+                responsesToUILDS:action.payload, 
+                // loading: false
             };     
         case STOP_SET_HEARTBEAT_SEARCHING_MODE:
             return {
@@ -104,7 +107,7 @@ export default function(state = initialState, action){
         case POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
             return {
                 ...state,
-                responses:action.payload,
+                responsesToUILDS:action.payload,
             };     
         case STOP_POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
             return {
