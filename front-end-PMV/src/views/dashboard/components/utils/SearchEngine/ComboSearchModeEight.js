@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles, responsiveFontSizes } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -15,47 +15,47 @@ import {searchByGeohashesAndMetersStaticDevicesProducts} from "../../../../../re
 
 
 // add styles
-const useStyles = makeStyles((theme) => ({
-    root: {
-		minWidth: '100%',
-		maxWidth: 600,
-		//backgroundColor: theme.palette.background.paper,
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-        },
-	},
-	collapse: {
-		minWidth: '100%',
-		maxWidth: '100%',
-	},	
-    formControl: {
-        margin: theme.spacing(0.25),
-        minWidth: "100%",
-        maxWidth: 600,
-	},
-	button: {
-        margin: theme.spacing(0.25),
-        minWidth: "100%",
-        borderRadius: 0
-    },
-    chips: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    chip: {
-        margin: 2,
-    },
-    noLabel: {
-        marginTop: theme.spacing(3),
-	},
-	field: {
-		minWidth: "100%",
-		marginBottom: theme.spacing(1)
-	}
-}));
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+// 		minWidth: '100%',
+// 		maxWidth: 600,
+// 		//backgroundColor: theme.palette.background.paper,
+//         '& > *': {
+//             margin: theme.spacing(1),
+//             width: '25ch',
+//         },
+// 	},
+// 	collapse: {
+// 		minWidth: '100%',
+// 		maxWidth: '100%',
+// 	},	
+//     formControl: {
+//         margin: theme.spacing(0.25),
+//         minWidth: "100%",
+//         maxWidth: 600,
+// 	},
+// 	button: {
+//         margin: theme.spacing(0.25),
+//         minWidth: "100%",
+//         borderRadius: 0
+//     },
+//     chips: {
+//         display: 'flex',
+//         flexWrap: 'wrap',
+//     },
+//     chip: {
+//         margin: 2,
+//     },
+//     noLabel: {
+//         marginTop: theme.spacing(3),
+// 	},
+// 	field: {
+// 		minWidth: "100%",
+// 		marginBottom: theme.spacing(1)
+// 	}
+// }));
 
-class ComboSearchModeSeven extends Component {
+class ComboSearchModeEight extends Component {
 
     // state
 	constructor(props) {
@@ -108,8 +108,9 @@ class ComboSearchModeSeven extends Component {
     }
     
     render() {
-		let classes = this.props
-		
+        // classes
+        let classes = this.props
+        
         return (
 			<>
 				<form 
@@ -136,7 +137,7 @@ class ComboSearchModeSeven extends Component {
 							{/* btn */}
 							<Button 
 								size="large"
-								className={classes.button}
+								//className={classes.button}
 								type="submit" 
 								variant="contained" 
 								color="primary" 
@@ -169,4 +170,4 @@ const mapStateToProps = (state) => ({
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 });
 
-export default connect(mapStateToProps,{searchByGeohashesAndMetersStaticDevicesProducts})(withStyles(componentStyles)(ComboSearchModeSeven))
+export default connect(mapStateToProps,{searchByGeohashesAndMetersStaticDevicesProducts})(withStyles(componentStyles)(ComboSearchModeEight))

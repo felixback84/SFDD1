@@ -9,6 +9,7 @@ const {
 } = require('../utilsForThings')
 
 
+// ** modeSeven
 // to find wich statics are close to me (dynamic,userDevice) by geohash only for app
 exports.findStaticsInSpecificMtsRange = (req,res) => {
     // geofire
@@ -78,7 +79,7 @@ exports.findStaticsInSpecificMtsRange = (req,res) => {
     })
 }
 
-// top post staticDevices list results of top5tags search
+// top post staticDevices list results (selection) of after top5tags search ---> after above
 exports.postTop5TagsInUserDeviceId = async (req,res) => {
 
     // to save data in db
@@ -216,33 +217,34 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
     }
 }
 
+// ** modeEight
 // get products with geohash & filters
 exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
     // geofire
-    const geofire = require('geofire-common');
+    const geofire = require('geofire-common')
     // var to hold arr with coords
     const center = [parseFloat(req.params.lat),parseFloat(req.params.lng)]
     // var to hold mts range
     const radiusInM = req.params.mts
     // list of statics
-    const bounds = geofire.geohashQueryBounds(center, radiusInM);
-    const promises = [];
+    const bounds = geofire.geohashQueryBounds(center, radiusInM)
+    const promises = []
     // pass the limits
     for (const bound of bounds) {
         const query = db
             .collection('products')
-            .where('category','==',req.params.category)
+            .where('categories','array-contains',req.params.category)
             .orderBy('geoHash')
             .startAt(bound[0])
-            .endAt(bound[1]);
+            .endAt(bound[1])
         // push data in promises list
         promises.push(query.get().catch(err => {
             console.log(err)
-        }));
+        }))
     }
 
     // vars to hold matchings docs
-    const matchingDocs = [];
+    const matchingDocs = []
     const listOfItems = []
     
     // Collect all the query results together into a single list
@@ -271,7 +273,7 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
                         console.log(`data with coords:${JSON.stringify(data)}`)
                         const distanceInKm = geofire.distanceBetween([parseFloat(data.lat),parseFloat(data.lon)], center);
                         console.log(`distanceInKm:${JSON.stringify(distanceInKm)}`)
-                        const distanceInM = distanceInKm * 1000;
+                        const distanceInM = distanceInKm * 1000
                         // checker distances in range
                         if(distanceInM <= radiusInM){
                             // push data in arr
@@ -281,7 +283,7 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
                             return
                         } else {
                             console.log(`hi there not item after distance filter`)
-                        }    
+                        }     
                     })
                     .catch(err => {
                         console.log(err)
@@ -311,3 +313,5 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
                 }) 
         })  
 }
+
+// top post staticDevices Products list results (selection) of after top5tags search ---> after above

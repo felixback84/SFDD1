@@ -90,7 +90,7 @@ const SearchingModeCardModeSeven = (props) => {
 					}
 				/>
 			</>
-		)
+		) 
 	}
 
 	// top5Tags markup

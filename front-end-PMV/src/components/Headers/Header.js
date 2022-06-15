@@ -11,7 +11,7 @@ import SearchingModeCardModeFour from '../../views/dashboard/components/modeFour
 import SearchingModeCardModeFive from '../../views/dashboard/components/modeFive/SearchingModeCardModeFive'
 import SearchingModeCardModeSix from '../../views/dashboard/components/modeSix/SearchingModeCardModeSix'
 import SearchingModeCardModeSeven from '../../views/dashboard/components/modeSeven/SearchingModeCardModeSeven'
-// import SearchingModeCardModeEight from '../../views/dashboard/components/modeEight/SearchingModeCardModeEight'
+import SearchingModeCardModeEight from '../../views/dashboard/components/modeEight/SearchingModeCardModeEight'
 // slick corrousel
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";
@@ -109,12 +109,12 @@ const Header = (props) => {
             </div>
             <div>
               {/* modeEight - by meters of staticDevices products */}
-              {/* <SearchingModeCardModeEight
+              <SearchingModeCardModeEight
                 title="modeEight"
                 icon={GroupAdd}
                 mode="modeEight"
                 thingid={props.thingid}
-              /> */}
+              />
             </div>
           </Slider>
         </Container>

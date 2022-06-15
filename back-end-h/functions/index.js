@@ -275,11 +275,11 @@ app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProdu
 // search of static devices products according to multiple categories and tags it has
 app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
 
-/////*** */ bymeters
+/////*** */ bymeters 
 // to post and find wich statics are close to me by geohash
 app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)
-// top post staticDevices list results of search
-app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId)
+// top post staticDevices list results of search 
+app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId) 
 
 // to post and find wich statics products are closer to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
