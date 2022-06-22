@@ -94,11 +94,11 @@ const {
     // searching modeThree
     const {
         // es cosa de escoger cual es el buscador
+        // postListOfProductsToFindOneByOne, 
+        //postListOfProductsToFind, // ---> top5Products from ux 
         //searchStaticDevicesProductsByCategoryAndTag, // products searcher to one category and one tag
         searchStaticDevicesProductsByCategoryAndTags, // products searcher category and tags
         // findStaticsProductsInSpecificMtsRange, ------> better search
-        // postListOfProductsToFindOneByOne, 
-        //postListOfProductsToFind, // ---> top5Products from ux 
         meassureOfMatchesInProducts, // ----> meassure modeThree
     } = require('./handlers/searchingModes/modeThree');
     
@@ -122,7 +122,7 @@ const {
 
         // products
         findStaticsProductsInSpecificMtsRange, // ----> modeMtsTwo
-        // postListOfProductsToFind, // ---> already exists in modeThree
+        postTop5ProductsInUserDeviceId, // ---> already exists in modeThree
     } = require('./handlers/searchingModes/byMeters');
 
     // searching by price
@@ -232,6 +232,10 @@ app.get('/userdevices/:userDeviceId/inactive', FBAuth, getInactiveUserDevices);
 
     /////////////////////////////////////////// top5Products /////////////////////////////////////////////////////////
     
+    
+    /////////////////////////////////////////// top5Events /////////////////////////////////////////////////////////
+
+
     ////////////////////////////////////////////////// DATASETS/////////////////////////////////////////////////////////
     // post dataSets in user device 
     app.post('/user/device/:userDeviceId/dataset', FBAuth, postInDataSetsUserDevice);
@@ -259,21 +263,24 @@ app.post('/userdevices/match/staticsdevices', detectProfileMatchBetweenUserDevic
 
 /////*** */ mode three 
 // search of static devices products according to one category and one tag it has
-//app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
-// search of static devices products according to one category and tags it has
-app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProductsByCategoryAndTags)
-
+// app.get('/staticdevice/products/category/:category/tag/:tag',FBAuth, searchStaticDevicesProductsByCategoryAndTag)
 // to post list of products to find his positions and owners
 // app.post('/userdevice/postlistofproducts', postListOfProductsToFind) // before modeThree
 // app.post('/userdevice/postlistofproducts', postListOfProductsToFindOneByOne) // before modeThree
+// search of static devices products according to one category and tags it has
+app.post('/staticdevice/products/category/tags',FBAuth, searchStaticDevicesProductsByCategoryAndTags)
 
     /////*** */ mode four
     // post product to Search by userDevice ---> before modeFour
     app.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice',FBAuth,selectProductOfStaticDeviceToSearchByUserDevice);
-
+    
 /////*** */ mode five
-// search of static devices products according to multiple categories and tags it has
+// search of static devices products according to multiple categories and tags it has by taxo
 app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesProductsByCategoriesAndTags)
+
+/////*** */ mode six
+
+/////*** */ mode seven
 
 /////*** */ bymeters 
 // to post and find wich statics are close to me by geohash
@@ -283,6 +290,7 @@ app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId)
 
 // to post and find wich statics products are closer to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
+app.post('/userdevice/postTop5Products/',postTop5ProductsInUserDeviceId)
 
 /////**** */ byPrice
 // get products in one categoy with a specific price range
@@ -291,6 +299,9 @@ app.get('/userdevice/:userDeviceId/products/category/:category/startPrice/:start
 app.get('/userdevice/:userDeviceId/products/tag/:tag/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithTagInSpecificPriceRange)
 // to post list of products to find his positions and owners
 app.post('/userdevice/postProductsByPriceRange/',FBAuth,postListOfProductsToFindByPriceRange)
+
+/////**** */ byEvents
+
 
 /////////////////////////////////////////////// STATIC DEVICES ///////////////////////////////////////////////////
 // *************************** just to test an easily create an staticDevice property
@@ -676,6 +687,18 @@ exports.detectTelemetryEventsForAllDevices = functions.pubsub.topic('events').on
                             // print 
                             console.log("say hello to my little friend from thing modeSeven")
                         }
+
+
+                        else if (searchingMode[0] === "modeEight"){
+                            // run it meassure GPS coords for the userDevice and all the matches statics
+                            await meassureOfMatchesInProducts(
+                                await objFromDBToMeassureProcess(searchingMode[0],data,userDeviceIdOrStaticDeviceId)
+                            )  
+                            // print 
+                            console.log("say hello to my little friend from thing modeEight")
+                        }
+
+
                     })
                     .catch((err) => {
                         console.error(err);

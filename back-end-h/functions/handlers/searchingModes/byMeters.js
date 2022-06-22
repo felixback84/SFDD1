@@ -1,13 +1,8 @@
-/*
-    modeSeven and modeEight
-*/
-
 // firebase
 const { admin, db } = require('../../utilities/admin');
 const {
     deleteAllDocsInTop5TagsCollectionOfUserDeviceId
 } = require('../utilsForThings')
-
 
 // ** modeSeven
 // to find wich statics are close to me (dynamic,userDevice) by geohash only for app
@@ -231,87 +226,217 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
     const promises = []
     // pass the limits
     for (const bound of bounds) {
-        const query = db
-            .collection('products')
+        const query = await db
+            .collection('products')         
             .where('categories','array-contains',req.params.category)
-            .orderBy('geoHash')
+            .orderBy('coords.hash')
             .startAt(bound[0])
-            .endAt(bound[1])
+            .endAt(bound[1]);
         // push data in promises list
         promises.push(query.get().catch(err => {
             console.log(err)
         }))
     }
 
-    // vars to hold matchings docs
+    // vars to hold all data of the matchings docs
     const matchingDocs = []
-    const listOfItems = []
-    
+    let counter = 0
     // Collect all the query results together into a single list
     Promise.all(promises)
         .then(async(snapshots) => {
-            // func
-            async function dbFunc(document){
-                // run it
-                let staticDeviceProperty = document.data().staticDeviceProperty
+            // just meassure coords of product and user position
+            const hiMeassure = async (document) => {
+                // coords from doc
+                let coords = document.data().coords
                 // print
-                console.log(`staticDeviceProperty:${staticDeviceProperty}`)
-                // db part to get coords of products
-                let item = db
-                    .doc(`/staticDevices/${staticDeviceProperty.split("-").slice(2).toString()}`)
-                    .collection('liveDataSets')
-                    .where('thingId','==',staticDeviceProperty)
-                    .get()
-                    .then((data)=>{
-                        data.forEach((doc)=>{
-                            coords = doc.data().coords
-                        })
-                        console.log(`coords in db process:${JSON.stringify(coords)}`)
-                        return coords
+                console.log(`data with coords:${JSON.stringify(coords)}`)
+                // distance meassure
+                const distanceInKm = await geofire.distanceBetween(
+                    [parseFloat(coords.lat),
+                    parseFloat(coords.lon)],
+                    center
+                )
+                // km to mts
+                const distanceInM = distanceInKm * 1000
+                // print
+                console.log(`distanceInKm:${JSON.stringify(distanceInM)}`)
+                // checker distances in range
+                if(distanceInM <= radiusInM){
+                    // push data in arr
+                    matchingDocs.push({
+                        product:{
+                            ...document.data(),
+                            productId:document.id
+                        },
+                        meters:distanceInM,
+                        
                     })
-                    .then((data)=>{
-                        console.log(`data with coords:${JSON.stringify(data)}`)
-                        const distanceInKm = geofire.distanceBetween([parseFloat(data.lat),parseFloat(data.lon)], center);
-                        console.log(`distanceInKm:${JSON.stringify(distanceInKm)}`)
-                        const distanceInM = distanceInKm * 1000
-                        // checker distances in range
-                        if(distanceInM <= radiusInM){
-                            // push data in arr
-                            matchingDocs.push(document.data())
-                            // print
-                            console.log(`hi there is item after distance filter`)
-                            return
-                        } else {
-                            console.log(`hi there not item after distance filter`)
-                        }     
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    // push item in list
-                    listOfItems.push(item)
+                } else {
+                    console.log(`hi there not item after distance filter`)
+                }  
             }
-
-            // loops
+            // looping loop
             for(const snap of snapshots){
                 for(const doc of snap.docs){
                     // run it
-                    await dbFunc(doc)
+                    await hiMeassure(doc)
                 }
             } 
-            // final process with promise
-            Promise.all(listOfItems)
-                .then(()=>{
-                    return matchingDocs
+            return matchingDocs
+        })  
+        .then(async(matchingDocs)=>{
+            // extract companyData
+            const extractCompanyDataAndPassExtraData = async (matchingDocs) => {
+                // loop over result of matching docs
+                for(let doc of matchingDocs){
+                    // vars
+                    let outputObjFromCompanyData = {}
+                    // extract userHandle
+                    const userHandle = doc.product.staticDeviceProperty.split("-").slice(0,1).toString()
+                    // db connection
+                    db
+                        .collection(`/users/${userHandle}/companyData`)
+                        .get()
+                        .then(snapshot => {
+                            // check if exists
+                            if (snapshot.empty) {
+                                console.log('No matching documents.')
+                            } else {
+                                snapshot.forEach(doc => {
+                                    outputObjFromCompanyData = {
+                                        companyName:doc.data().companyName,
+                                        localPicUrl:doc.data().localPicUrl,
+                                    }
+                                })
+                            }
+                        })
+                        .then(()=>{
+                            // userHandle
+                            let companyName = doc.product.companyName
+                            // check to push in the right item
+                            if(companyName === outputObjFromCompanyData.companyName){
+                                counter++
+                                console.log("hi sun")
+                                // pass data
+                                doc.companyData = outputObjFromCompanyData 
+                                // check the res to send
+                                if(matchingDocs.length === counter){
+                                    res.json(matchingDocs)
+                                }
+                            }else{
+                                console.log("hi moon")
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        }) 
+                }
+            }
+            // run it
+            await extractCompanyDataAndPassExtraData(matchingDocs)
+        })
+        .catch(err => {
+            console.log(err)
+        }) 
+}
+
+// top post staticDevices products list results (selection) of after top5Products search ---> after above
+exports.postTop5ProductsInUserDeviceId = async (req,res) => {
+    // data from client
+    const dataFromClient = req.body.resultListSearch
+    // thingId
+    const thingId = req.body.thingId
+    // counter
+    let espCounter = req.body.espCounter
+    // update fields in liveDataSets userDeviceId
+    const liveDataSetsUpdate = async (dataFromClient,thingId) => {
+        // obj to update arr
+        const newTop5Product = [{
+            thingIdToSearch:dataFromClient.product.staticDeviceProperty,
+            top5ProductDocId:dataFromClient.product.productId
+        }]
+        // to deal with arr 
+        const FieldValue = admin.firestore.FieldValue
+        // db part
+        let liveDataSetsForUserDeviceId = await db.
+            doc(`/userDevices/${thingId.split("-").slice(2).toString()}/liveDataSets/${thingId}`)
+                .update({           
+                    idOfSpecificProducts: FieldValue.arrayUnion(...newTop5Product)
                 })
-                .then((matchingDocs)=>{
-                    console.log(`data:${matchingDocs} - ${matchingDocs.length}`)     
-                    res.json(matchingDocs)
+                .then(()=>{
+                    console.log("staticDevice product marked")
+                })
+                .catch((err) => {
+                    console.error(err)
+                }) 
+    }
+    // loop
+    for(let doc of dataFromClient){
+        // run it 
+        await liveDataSetsUpdate(doc,thingId)
+    }
+    // create docs with top5Products
+    const top5ProductsCreationList = (dataFromClient,thingId) => {
+        let counter = 0
+        // db part
+        for(let doc of dataFromClient){
+            const dbData = db
+                .doc(`/userDevices/${thingId.split("-").slice(2).toString()}`)
+                .collection('top5Products')
+                .add({...doc})
+                .then(()=>{
+                    console.log("product saved in db")
+                    counter++
+                    // check to send res
+                    if(dataFromClient.length === counter){
+                        res.json("products now in db")
+                    }
                 })
                 .catch(err => {
                     console.log(err)
-                }) 
-        })  
+                })
+        }
+    }
+    // to run top5ProductsCreationList
+    const checker = async (thingId) => {
+        // userDeviceId
+        const userDeviceId = thingId.split("-").slice(2)
+        // check if is the first record to make
+        if(espCounter === 0){
+            // db part top5Products
+            let docRef = await db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Products')
+                .get()
+                .then(async(data)=>{
+                    // check if already exists a top5Tags docs list
+                    if(data.empty){
+                        // print 
+                        console.log(`part 1a - ${espCounter}`)
+                        // run it
+                        top5ProductsCreationList(dataFromClient,thingId)
+                        // print
+                        console.log("part 2")
+                    } else {
+                        // check before erase the date. Less than time range
+                        await deleteAllDocsInTop5TagsCollectionOfUserDeviceId(
+                            db,`/userDevices/${userDeviceId}/top5Tags`
+                        )
+                        // run it
+                        top5ProductsCreationList(dataFromClient,thingId)  
+                    }
+                    // deletion of any old record in top5Tags that expire
+                    console.log(espCounter != 0 && req.body.newDate > initialDate + 20000)
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        } else if(espCounter > 0){
+            console.log("part 3a")
+            // run it
+            top5ProductsCreationList(dataFromClient,thingId)
+        }
+    }
+    // run it
+    await checker(thingId)
 }
-
-// top post staticDevices Products list results (selection) of after top5tags search ---> after above

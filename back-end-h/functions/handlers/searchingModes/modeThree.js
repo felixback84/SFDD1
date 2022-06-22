@@ -42,7 +42,7 @@ exports.searchStaticDevicesProductsByCategoryAndTag = (req, res) => {
     })
 }
 
-// search of static devices according to one category and multiple tags it has
+// search of static devices products according to one category and multiple tags it has
 exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
     // /
     let _ = require('underscore')
@@ -194,7 +194,7 @@ exports.searchStaticDevicesProductsByCategoryAndTags = async (req, res) => {
     
 }
 
-// post list of products in top5Products
+// post list of products in top5Products --> without use
 exports.postListOfProductsToFind = async (req, res) => {
     // receive list of products
     let listOfProducts = req.body.listOfProducts
@@ -305,7 +305,7 @@ exports.postListOfProductsToFind = async (req, res) => {
                 console.log(`resultsOfMatchOfProducts after push company data: ${JSON.stringify(resultsOfMatchOfProducts)}`)
                 return resultsOfMatchOfProducts
             })
-            .then(async (data)=>{
+            .then(async (data)=>{ 
                 // DB save
                 data.forEach(async (item)=>{
                     // print
@@ -332,7 +332,7 @@ exports.postListOfProductsToFind = async (req, res) => {
     const pass1 = await extractCompanyDataAndPassExtraDataAndSaveInDbInTop5Products(await resp)
 }
 
-// post list of products in top5Products one by one
+// post list of products in top5Products one by one --> without use
 exports.postListOfProductsToFindOneByOne = async (req, res) => {
     // receive list of products
     let productId = req.body.listOfProducts[0].productsId
