@@ -66,7 +66,8 @@ class DataFrameSelectedProductModeFour extends Component {
 
                 // check if none static is selected
                 if(nextProps.idOfSpecificProducts.length === 0){
-                    arrFinal.push({...this.props.data[0]})
+                    // arrFinal.push({...this.props.data[0]})
+                    return      
                 } else if(nextProps.idOfSpecificProducts.length != 0) {
                     // loop over selection
                     nextProps.idOfSpecificProducts.map((id)=>{
@@ -75,8 +76,8 @@ class DataFrameSelectedProductModeFour extends Component {
                         // filter
                         tagz.filter((arrItem)=>{
                             // checker
-                            if(arrItem.thingId === id.thingIdToSearch
-                                // && ids.length != 0
+                            if(arrItem.product.staticDeviceProperty === id.thingIdToSearch &&
+                                arrItem.product.productId === id.top5ProductDocId
                             ){
                                 arrFinal.push({ ...arrItem,})
                             } 
