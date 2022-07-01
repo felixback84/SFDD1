@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles, responsiveFontSizes } from "@material-ui/core/styles";
+import { withStyles, makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -11,8 +11,7 @@ import componentStyles from "assets/theme/views/admin/tables.js";
 
 // Redux stuff
 import { connect } from 'react-redux';
-import {searchByGeohashesAndMetersStaticDevicesProducts} from "../../../../../redux/actions/top5TagsActions"
-
+import {searchByGeohashesAndMetersStaticDevices} from "../../../../../redux/actions/top5TagsActions"
 
 // add styles
 const useStyles = makeStyles((theme) => ({
@@ -92,7 +91,7 @@ class ComboSearchModeSeven extends Component {
             coords:this.props.thingLiveDataSets.coords
         }
         // redux action to send data to server
-		this.props.searchByGeohashesAndMetersStaticDevicesProducts(finish.coords,finish.meters)
+		this.props.searchByGeohashesAndMetersStaticDevices(finish.coords,finish.meters)
 		// print
 		console.log(`mts sended:${JSON.stringify(finish)}`)
 	}
@@ -123,13 +122,11 @@ class ComboSearchModeSeven extends Component {
 								name="meters"
 								aria-label="Distance in meters"
 								defaultValue={100}
-								//getAriaValueText={this.state.meters}
 								step={50}
 								marks
 								min={0}
 								max={500}
 								valueLabelDisplay="auto"
-								//value={this.state.meters}
 							/>
 						</Grid> 
 						<Grid item xs={12}>
@@ -169,4 +166,4 @@ const mapStateToProps = (state) => ({
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
 });
 
-export default connect(mapStateToProps,{searchByGeohashesAndMetersStaticDevicesProducts})(withStyles(componentStyles)(ComboSearchModeSeven))
+export default connect(mapStateToProps,{searchByGeohashesAndMetersStaticDevices})(withStyles(componentStyles)(ComboSearchModeSeven))

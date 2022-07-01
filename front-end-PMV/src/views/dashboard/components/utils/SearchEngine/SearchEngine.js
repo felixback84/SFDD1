@@ -71,7 +71,7 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
 class SearchEngine extends Component {
 
     // cycle  
-    componentDidMount(){
+    componentDidMount(){ 
         // redux actions to create ux
         switch(this.props.searchingmode){
             case "modeOne":

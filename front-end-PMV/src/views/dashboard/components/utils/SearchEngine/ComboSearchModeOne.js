@@ -289,7 +289,6 @@ class ComboSearchModeOne extends Component {
 									type="submit" 
 									variant="contained" 
 									color="primary" 
-									variant="outlined"
 									disabled={this.props.loading}>
 										Buscar
 										{this.props.loading && (

@@ -23,7 +23,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 // Redux stuff
 import {connect} from 'react-redux';
-import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
+// import {getTagsFromDeviceConfig} from "../../../../../redux/actions/uiActions"
 import {searchStaticDevicesProductsByCategoryAndTags} from "../../../../../redux/actions/top5ProductsActions"
 
 // add styles
@@ -100,6 +100,12 @@ const ComboSearchModeThree = (props) => {
 		setOpen(!open)
 	}
 
+    // state of field & checkboxes
+    const [categorySelected, setCategory] = React.useState("")
+	const [tagsSelected, setTags] = React.useState({})
+	const [selectState, setSelectState] = React.useState(false)
+    // const [filteredData, setFilteredData] = React.useState()
+
 	// to create dynamic keys from the model data of the device in use
 	const createKeys = (obj) => {
 		let resultKeys = {}
@@ -111,12 +117,6 @@ const ComboSearchModeThree = (props) => {
 		// console.log(`result:${JSON.stringify(resultKeys)}`)
 		return resultKeys
 	}
-
-    // state of field & checkboxes
-    const [categorySelected, setCategory] = React.useState("")
-	const [tagsSelected, setTags] = React.useState({})
-	const [selectState, setSelectState] = React.useState(false)
-    // const [filteredData, setFilteredData] = React.useState()
 	
     // handle change for tags
     const handleChangeTags = (event) => {
@@ -157,7 +157,7 @@ const ComboSearchModeThree = (props) => {
 		// console.log({categorySelected})
 	}
 
-	// categorie checkboxes
+	// categories checkboxes
 	const keysToCheckBoxes = (keyNames) => {
 		// arr to categories
 		let arrCheckBoxesToCategories = []
@@ -221,7 +221,6 @@ const ComboSearchModeThree = (props) => {
 	// }
 
 	// category selected field
-	
 	const field = (categorySelected) => {
 		return categorySelected != "" && 
 		(
@@ -271,7 +270,6 @@ const ComboSearchModeThree = (props) => {
                     <ListItemText/>
                         {open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
-
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
 						<form 
@@ -280,7 +278,6 @@ const ComboSearchModeThree = (props) => {
 						>
 							<Grid container >
 								<Grid item xs={12}>
-									{/* <Item>xs=8</Item> */}
 									<FormGroup aria-label="position" row>
 										{keysToCheckBoxes(props.staticDevicesTags)}
 									</FormGroup>
@@ -329,5 +326,5 @@ const mapStateToProps = (state) => ({
 	// top5ProductsUI: state.top5Products1.top5ProductsUI
 });
 
-export default connect(mapStateToProps,{getTagsFromDeviceConfig,searchStaticDevicesProductsByCategoryAndTags})(ComboSearchModeThree)
+export default connect(mapStateToProps,{searchStaticDevicesProductsByCategoryAndTags})(ComboSearchModeThree)
     

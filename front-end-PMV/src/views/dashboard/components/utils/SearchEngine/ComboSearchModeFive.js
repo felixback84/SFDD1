@@ -124,7 +124,7 @@ const ComboSearchModeFive = (props) => {
 		console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
     } 
 
-    // send data event
+    // send data event 
     const handleSubmit = async (event) => {
 		event.preventDefault()
 		// obj to pass
@@ -152,7 +152,7 @@ const ComboSearchModeFive = (props) => {
 		console.log(`categoriesSelected:${JSON.stringify(categoriesSelected)}`)
 	}
 
-	// categorie checkboxes
+	// categories checkboxes
 	const keysToCheckBoxes = (keyNames) => {
 		// arr to categories
 		let arrCheckBoxesToCategories = []
