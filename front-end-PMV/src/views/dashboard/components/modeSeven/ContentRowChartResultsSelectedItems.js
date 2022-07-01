@@ -10,8 +10,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 // components
 import ColorMtsAvatar from "../../components/utils/ColorMtsAvatar"
 import TagsMaker from "../../components/utils/TagsMaker"
-import SwitchToMarkFromModeOneToModeTwo from '../../components/modeTwo/SwitchToMarkFromModeOneToModeTwo';
-//import StaticDevicePropertyDetails from "./StaticDevicePropertyDetails"
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -151,14 +149,6 @@ class ContentRowChartResultsSelectedItems extends Component {
                                     />
                                 </Tooltip>                  
                             </TableCell>
-
-                            {/* switcher marker */}
-                            {/* <TableCell classes={{ root: classes.tableCellRoot }}>
-                                <SwitchToMarkFromModeOneToModeTwo
-                                    thingid={top5Tag.thingId}
-                                    docId={top5Tag.top5TagId}
-                                />
-                            </TableCell> */}
 
                             {/* meters from you */}
                             <TableCell classes={{ root: classes.tableCellRoot }}>

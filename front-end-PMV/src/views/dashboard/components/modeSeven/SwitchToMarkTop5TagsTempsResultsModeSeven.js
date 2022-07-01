@@ -3,8 +3,6 @@ import React,{Component} from 'react'
 import Switch from '@material-ui/core/Switch';
 // redux
 import { connect } from 'react-redux'
-//import { selectStaticDevicesToSearch,unSelectStaticDevicesToSearch } from '../../../../redux/actions/heartbeatUIActions'
-// import { saveTop5TagIdInReducer } from ''
 import { 
     // userDeviceSpecificTop5TagSyncDataStatic,
     userDeviceSpecificTop5TagSyncDataLiveDB,
