@@ -82,7 +82,7 @@ export const heartbeatThingSyncDataStatic = (thingId) => (dispatch) => {
         
 }
 
-// declarate a function to get data from db
+// to get data from db
 export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
 
     console.log(`init live heartbeat`)
@@ -125,7 +125,7 @@ export const heartbeatThingSyncDataLiveDB = (thingId) => (dispatch) => {
         })
 }
 
-// post searching mode
+// post searching mode - util
 export const heartbeatPostSearchingMode = (objSearchingModeData) => (dispatch) => {
     // print
     console.log(`objSearchingModeData:${JSON.stringify(objSearchingModeData)}`)
@@ -146,7 +146,7 @@ export const heartbeatPostSearchingMode = (objSearchingModeData) => (dispatch) =
         .catch(err => console.log(err)); 
 }
 
-// post tags selected by user
+// post tags selected by user - modeOne
 export const postTagsProfileToMatch = (objTagsData) => (dispatch) => {
     axios.post(`/userdevice/profileToSearch`,objTagsData)
         .then(res => {
@@ -162,7 +162,7 @@ export const postTagsProfileToMatch = (objTagsData) => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-// to post an item in liveDataSets in the list of staticDevices - vendors - statics to find
+// to post an item in liveDataSets in the list of staticDevices - vendors - statics to find - modeTwo
 export const selectStaticDevicesToSearch = (data) => (dispatch) => {
     axios.post('/userdevice/selectStaticDevicesToSearch', data)
         .then(res => {
@@ -195,7 +195,7 @@ export const unSelectStaticDevicesToSearch = (data) => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-// to select wich ones products of the initial match the buyer want to track
+// to select wich ones products of the initial match the buyer want to track --> modeFour
 export const selectProductOfStaticDeviceToSearchByUserDevice = (data) => (dispatch) =>{
     axios.post('/userdevice/selectProductOfStaticDeviceToSearchByUserDevice', data)
         .then(res => {

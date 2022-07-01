@@ -20,14 +20,14 @@ import {
 
     // ** mts
     // geoHashes & meters
-    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,  
-    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS, 
+    GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS,  
+    STOP_GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS, 
 
     // post top5tags -- creation
     POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
     STOP_POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
 
-    // ** ux
+    // ** ux 
     GET_TOP5TAG_UX,
     STOP_GET_TOP5TAG_UX,
 } from '../types'; 
@@ -133,16 +133,16 @@ export default function(state = initialState, action){
                 loading: false
             };
     
-    // modeSeven --> search geoHashes & meters
+    // modeSeven --> search geoHashes & meters 
     // before modeSeven 
-    case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:
+    case GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS:
         return{
             ...state,
             responsesWithData: action.payload,
             //loadings: false
         }
 
-    case STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:     
+    case STOP_GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS:     
         return{
             ...state,
             loading: false        

@@ -3,9 +3,9 @@ import {
  
     // ---> search products by category and tags
     GET_PRODUCTS_BY_CATEGORY_AND_TAGS,
-    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS, 
+    STOP_GET_PRODUCTS_BY_CATEGORY_AND_TAGS,  
 
-    // ---> search products by category and tags
+    // ---> search products by categories and tags
     GET_PRODUCTS_BY_CATEGORIES_AND_TAGS,
     STOP_GET_PRODUCTS_BY_CATEGORIES_AND_TAGS, 
 
@@ -29,17 +29,30 @@ import {
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
         STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
 
+    // MTS - modeEight
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+    
+    POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
+
 } from '../types'
 
 // initial state
 const initialState = {
+    // events
     loading: undefined,
 
+    // res
     responses:{},
+    responsesToUI: undefined, 
+    responsesWithData: undefined,
 
+    // modeThree
     top5Products:[],
         top5ProductsListener:[],
 
+    // modeFour
     top5Product:{},
         top5ProductListener:[],
 
@@ -55,7 +68,6 @@ export default function(state = initialState, action){
         case GET_PRODUCTS_BY_CATEGORY_AND_TAGS:
             return {
                 ...state,
-                // responses: action.payload,
                 top5Products: action.payload,
                 //loading: false
             }; 
@@ -70,7 +82,6 @@ export default function(state = initialState, action){
         case GET_PRODUCTS_BY_CATEGORIES_AND_TAGS:
             return {
                 ...state,
-                // responses: action.payload,
                 top5Products: action.payload,
                 //loading: false
             }; 
@@ -137,7 +148,7 @@ export default function(state = initialState, action){
                 loading: false
             };  
             
-            // top5Product --> mode four
+            // live
             case GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
                 return {
                     ...state,
@@ -148,9 +159,36 @@ export default function(state = initialState, action){
             case STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE:
                 return {
                     ...state,
-                    loading: false
-                }; 
-
+                    loading: false  
+                };
+        
+        // by neters
+        // modeEight --> search geoHashes & meters
+        // before mode eight
+        case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:
+            return {
+                ...state,
+                responsesWithData: action.payload,
+            };
+        
+        case STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS:    
+            return {
+                ...state,
+                loading: false
+            };
+        
+        case POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS:
+            return {
+                ...state,
+                responsesToUI: action.payload,
+            };
+        
+        case STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS:    
+            return {
+                ...state,
+                loading: false
+            };
+        
         default:
             return state; 
     }    

@@ -15,7 +15,7 @@ import {
     
     // top5Products --> mode three
     GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
-    STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS,
+    STOP_GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS, 
 
         // live
         GET_DATA_FROM_USER_DEVICE_TOP_5_PRODUCTS_LIVE,
@@ -28,6 +28,13 @@ import {
         // live
         GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
         STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_PRODUCT_LIVE,
+    
+    // MTS --> modeEight
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+
+    POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
     
 } from '../types'
 
@@ -330,4 +337,40 @@ export const userDeviceSpecificTop5ProductSyncDataLiveDB = (thingId,arrIds) => a
                 console.log(`Encountered error: ${err}`)
             }
         )
+}
+
+// search by meters & geoHashes staticDevices products --> before modeEight
+export const searchByGeohashesAndMetersStaticDevicesProducts = ({category,coords,meters}) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .get(`/userdevice/findstaticsProducts/category/${category}/lat/${coords.lat}/lng/${coords.lon}/mts/${meters}`)
+            const res = await dataTag
+            console.log(`res from top5Products search in mts range: ${res}`)
+            dispatch({ 
+                type: GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+                payload: res.data
+            })
+            dispatch({ type: STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// post in liveDataSets selected products ids after mts range search and on top5Products
+export const postListOfTop5ProductsInUserDeviceDoc = (data) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .post(`/userdevice/postTop5Products/`,data)
+            const res = await dataTag
+            console.log(`res from top5Products creation after search in mts range: ${res}`)
+            dispatch({ 
+                type: POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+                payload: res.data
+            })
+            dispatch({ type: STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS })
+    } catch (error) {
+        console.log(error)
+    }
 }

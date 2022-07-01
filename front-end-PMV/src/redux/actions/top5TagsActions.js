@@ -15,13 +15,13 @@ import {
     GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,
     STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG,   
         // live
-        GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
+        GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE, 
         STOP_GET_DATA_FROM_USER_DEVICE_FROM_SPECIFIC_TOP_5_TAG_LIVE,
 
     // ** MTS    
     // seacrh geoHashes & meters
-    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,  
-    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS, 
+    GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS,  
+    STOP_GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS, 
     
     // post top5tags -- creation
     POST_TOP_5_TAGS_IN_USER_DEVICES_COLLECTION,
@@ -301,8 +301,8 @@ export const userDeviceSpecificTop5TagSyncDataLiveDB = (thingId, arrIds) => asyn
         )
 }
 
-// search by meters & geoHashes
-export const searchByGeohashesAndMetersStaticDevicesProducts = (coords,meters) => async (dispatch) => {
+// search by meters & geoHashes - modeSeven
+export const searchByGeohashesAndMetersStaticDevices = (coords,meters) => async (dispatch) => {
     try {
         const dataTag = await 
         axios
@@ -310,16 +310,16 @@ export const searchByGeohashesAndMetersStaticDevicesProducts = (coords,meters) =
             const res = await dataTag
             console.log({res})
             dispatch({ 
-                type: GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
+                type: GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS,
                 payload: res.data
             })
-            dispatch({ type: STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS })
+            dispatch({ type: STOP_GET_DATA_FROM_USER_STATICS_CLOSER_TO_USER_DEVICE_BY_METERS })
     } catch (error) {
         console.log(error)
     }
 }
 
-// post top5Tags selected 
+// post top5Tags selected - modeSeven
 export const postListOfTop5TagsInUserDeviceDoc = (dataz) => async (dispatch) => {
     try {
         const dataTag = await axios

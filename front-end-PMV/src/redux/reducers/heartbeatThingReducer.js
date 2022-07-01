@@ -90,7 +90,7 @@ export default function(state = initialState, action){
                     loading: false 
                 };    
 
-        // searching mode ---> without response from server yet
+        // searching mode ---> without response from server yet - util
         case SET_HEARTBEAT_SEARCHING_MODE:
             return {
                 ...state,
@@ -103,7 +103,7 @@ export default function(state = initialState, action){
                 loading: false
             };     
         
-        // post tags by user 
+        // post tags by user - modeOne
         case POST_TAGS_OF_PROFILE_TO_MATCH_BY_USER_IN_LIVEDATASETS:
             return {
                 ...state,
@@ -115,7 +115,7 @@ export default function(state = initialState, action){
                 loading: false
             };   
 
-        // post item in list of specifics static devices to search by user devices
+        // post item in list of specifics static devices to search by user devices - modeTwo
         case POST_LIST_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
             return {
                 ...state,
@@ -141,7 +141,7 @@ export default function(state = initialState, action){
                 loading: false
             };
 
-        // post item in list of specifics static devices to search by user devices
+        // post item in list of specifics static devices products to search by user devices - modeFour
         case POST_LIST_OF_PRODUCTS_OF_STATIC_DEVICES_TO_SEARCH_IN_LIVEDATASETS:
             return {
                 ...state,
