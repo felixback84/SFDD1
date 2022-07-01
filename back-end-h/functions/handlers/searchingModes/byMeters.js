@@ -94,7 +94,7 @@ exports.postTop5TagsInUserDeviceId = async (req,res) => {
                     coords: doc.data().coords,
                     profileToSearch: doc.data().profileToSearch,
                     meters: mts,
-                    thingId:staticDevicesId, // erro
+                    thingId:staticDevicesId,
                 }
             })
             .then(async()=>{
@@ -266,10 +266,9 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
                     matchingDocs.push({
                         product:{
                             ...document.data(),
-                            productId:document.id
+                            productId:document.id,
                         },
                         meters:distanceInM,
-                        
                     })
                 } else {
                     console.log(`hi there not item after distance filter`)
@@ -324,7 +323,7 @@ exports.findStaticsProductsInSpecificMtsRange = async (req,res) => {
                                     res.json(matchingDocs)
                                 }
                             }else{
-                                console.log("hi moon")
+                                console.log("hi moon") 
                             }
                         })
                         .catch(err => {

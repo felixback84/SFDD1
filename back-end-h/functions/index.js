@@ -280,14 +280,13 @@ app.post('/staticdevice/products/categories/tags',FBAuth, searchStaticDevicesPro
 
 /////*** */ mode six
 
-/////*** */ mode seven
-
 /////*** */ bymeters 
+/////*** */ mode seven
 // to post and find wich statics are close to me by geohash
 app.get('/staticdevices/findstatics/lat/:lat/lng/:lng/mts/:mts', findStaticsInSpecificMtsRange)
 // top post staticDevices list results of search 
 app.post('/userdevice/create/top5tags',FBAuth, postTop5TagsInUserDeviceId) 
-
+/////*** */ mode eight
 // to post and find wich statics products are closer to me with several filters
 app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mts/:mts',findStaticsProductsInSpecificMtsRange)
 app.post('/userdevice/postTop5Products/',postTop5ProductsInUserDeviceId)
@@ -328,7 +327,7 @@ app.get('/staticdevices/:staticDeviceId/inactive', FBAuth, getInactiveStaticDevi
     app.post('/staticdevice/profileToSearch',FBAuth, postProfileToSearchStaticDevices);
 
     ///////////////////////////////////////// products ////////////////////////////////////////////
-    // find porducts wich offer the vendors
+    // find porducts wich offer the vendors --> searcher
     app.get('/staticdevice/products/:thingId',FBAuth, findProductsOfStaticDevices)
     // post products in statics
     app.post('/staticdevice/thingId/:thingId/postproducts',FBAuth,CoordsOfStatics,postProductsToStaticDevices)
