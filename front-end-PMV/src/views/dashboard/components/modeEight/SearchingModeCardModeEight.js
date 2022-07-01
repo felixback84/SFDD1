@@ -85,7 +85,7 @@ const SearchingModeCardModeEight = (props) => {
 							>
 								{/* search engine */}
                                 <SearchEngine 
-                                    searchingmode="modeSeven"
+                                    searchingmode="modeEight"
                                 />
 							</Box>
 						</>
@@ -95,7 +95,7 @@ const SearchingModeCardModeEight = (props) => {
 		)
 	}
 
-	// data
+	// data 
 	const data = {
 		icon:props.icon, 
 		// liveDataSets

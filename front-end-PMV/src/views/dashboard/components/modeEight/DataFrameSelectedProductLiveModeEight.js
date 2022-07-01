@@ -83,7 +83,7 @@ class DataFrameSelectedProductLiveModeEight extends Component {
                 .catch((err) => console.log('There was an error:' + err))
         }
     }
-
+ 
     // event to expand
     handleExpandClick = (e,key) => {
         let exp = false
@@ -243,7 +243,7 @@ class DataFrameSelectedProductLiveModeEight extends Component {
         )
     }
 }
- 
+    
 // connect to global state in redux
 const mapStateToProps = (state) => ({
     // top5Products 

@@ -9,12 +9,6 @@ import { connect } from 'react-redux';
 import { 
 	heartbeatPostSearchingMode,
 } from '../../../../redux/actions/heartbeatUIActions';
-import {
-	userDeviceTop5ProductsSyncDataStatic,
-	userDeviceTop5ProductsSyncDataLiveDB,
-	// userDeviceSpecificTop5ProductSyncData,
-	// userDeviceSpecificTop5ProductSyncDataLiveDB
-} from '../../../../redux/actions/top5ProductsActions';
 // styles
 //import SearchingModeCardStyles from "assets/theme/components/SearchingModeCard"
 //const useStyles = makeStyles(SearchingModeCardStyles);
@@ -54,13 +48,6 @@ const SearchingModeSwitcherEight = (props) => {
 			}
 			// post searching mode in db
 			props.heartbeatPostSearchingMode(dataSearchingMode) 
-			
-			// static data from top5Tags
-			props.userDeviceTop5ProductsSyncDataStatic(thingId)
-			// props.userDeviceSpecificTop5ProductSyncData(thingId,arrIds)	
-			// live data from top5Tags
-			props.userDeviceTop5ProductsSyncDataLiveDB(thingId)
-			// props.userDeviceSpecificTop5ProductSyncDataLiveDB(thingId,arrIds) 
 		} 
 	}
 
@@ -89,11 +76,6 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
 	// thingId
 	heartbeatPostSearchingMode,
-	// top5Porducts
-	userDeviceTop5ProductsSyncDataStatic,
-	userDeviceTop5ProductsSyncDataLiveDB,
-	// userDeviceSpecificTop5ProductSyncData,
-	// userDeviceSpecificTop5ProductSyncDataLiveDB
 }
 
 export default connect(mapStateToProps,mapActionsToProps)(SearchingModeSwitcherEight);

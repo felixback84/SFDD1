@@ -105,12 +105,12 @@ class MarkerStaticsModeEight extends Component {
 			// colors
 			let colorBgIcon = colorClass.metersToColorHex(top5Product.meters)
 			// print
-			console.log(`top5tagsCoords:${JSON.stringify(top5Product.coords)}`)
+			// console.log(`top5tagsCoords:${JSON.stringify(top5Product.product.coords)}`)
 			// ** marker
 			markersStaticsDevicesProducts.push(new window.google.maps.Marker({
 				position: {
-					lat: top5Product.coords.lat,
-					lng: top5Product.coords.lon,
+					lat: top5Product.product.coords.lat,
+					lng: top5Product.product.coords.lon,
 				},
 				icon: {
 					path: faDotCircle.icon[4],
@@ -204,13 +204,15 @@ class MarkerStaticsModeEight extends Component {
                 {
                     this.hiStaticMarkers(
                         this.props.map,
-                        filterArrOfTop5Products
+                        // this.props.loading === false && filterArrOfTop5Products.length === 0 
+                        //     ? this.props.responsesWithData : filterArrOfTop5Products
+                            this.props.responsesWithData
                     )
                 }
             </>
         )
     }
-}
+}   
 
 // connect to global state in redux
 const mapStateToProps = (state) => ({
@@ -225,6 +227,7 @@ const mapStateToProps = (state) => ({
     loading:state.top5Products1.loading,
     top5Products: state.top5Products1.top5Products,
     // top5ProductsListener: state.top5Products1.top5ProductsListener
+    responsesWithData: state.top5Products1.responsesWithData
 })
-
+ 
 export default connect(mapStateToProps)(MarkerStaticsModeEight)

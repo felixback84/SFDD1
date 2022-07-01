@@ -75,11 +75,14 @@ class DataFrameSelectedProductModeEight extends Component {
                         // filter
                         tagz.filter((arrItem)=>{
                             // checker
-                            if(arrItem.thingId === id.thingIdToSearch
-                                // && ids.length != 0
+                            if(
+                                arrItem.product.staticDeviceProperty === id.thingIdToSearch &&
+                                arrItem.product.productId === id.top5ProductDocId
                             ){
                                 arrFinal.push({ ...arrItem,})
-                            } 
+                            } else {
+                                console.log("any match yet")
+                            }
                         })	
                     })
                 }
@@ -133,7 +136,7 @@ class DataFrameSelectedProductModeEight extends Component {
 
     // create the list of nodes
     arrTop5Products(arrTop5Products,classes){
-        // var to hold the list of nodes
+        // var to hold the list of nodes 
         let arr = []
         // loop
         arrTop5Products.map((arrTop5Product,i)=>{
@@ -252,7 +255,8 @@ class DataFrameSelectedProductModeEight extends Component {
             <>
                 {
                     this.arrTop5Products(
-                        //this.props.data.top5Products,
+                        // this.props.data.top5Products,
+                        // this.props.data,
                         this.state.arrCells,
                         this.props.classes
                     )

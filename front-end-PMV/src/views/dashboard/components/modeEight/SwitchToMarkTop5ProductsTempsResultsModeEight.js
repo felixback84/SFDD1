@@ -3,13 +3,11 @@ import React,{Component} from 'react'
 import Switch from '@material-ui/core/Switch';
 // redux
 import { connect } from 'react-redux'
-//import { selectStaticDevicesToSearch,unSelectStaticDevicesToSearch } from '../../../../redux/actions/heartbeatUIActions'
-// import { saveTop5TagIdInReducer } from ''
 import { 
-    // userDeviceSpecificTop5TagSyncDataStatic,
-    userDeviceSpecificTop5TagSyncDataLiveDB,
-    postListOfTop5TagsInUserDeviceDoc
-} from '../../../../redux/actions/top5TagsActions'
+    postListOfTop5ProductsInUserDeviceDoc,
+    userDeviceTop5ProductsSyncDataStatic,
+    userDeviceTop5ProductsSyncDataLiveDB,
+} from '../../../../redux/actions/top5ProductsActions'
 
 class SwitchToMarkTop5ProductsTempsResultsModeEight extends Component {
 
@@ -25,25 +23,25 @@ class SwitchToMarkTop5ProductsTempsResultsModeEight extends Component {
     }
 
     // method switcher
-    handleChange = () => {
-        // var to hold data from reducer
-        const thingIdStaticDevice = this.props.thingIdStaticDevice
-        const thingIdUserDevice = this.props.thingLiveDataSets.thingId
+    handleChange = () => { 
         // data to send to api route
         let data = {}
         // check if is the first record send
         if(this.state.firstDataPackage === true){
             // data 
             data = {
-                espCounter:0,
-                resultListSearch:{
-                    thingId:thingIdUserDevice,
-                    staticDevicesId:thingIdStaticDevice,
-                    meters:this.props.meters
-                }
+                thingId:this.props.thingLiveDataSets.thingId,
+                espCounter:this.state.espCounter,
+                resultListSearch:[{
+                    product:this.props.dataIdProducts.product,
+                    meters:this.props.dataIdProducts.meters,
+                    companyData:this.props.dataIdProducts.companyData
+                }]
             }
+            // print
+            console.log({data})
             // redux action
-            this.props.postListOfTop5TagsInUserDeviceDoc(data)
+            this.props.postListOfTop5ProductsInUserDeviceDoc(data)
             // var to pas in setState
             const hiNewSelection = (prevState)=>({
                 espCounter:prevState.espCounter + 1,
@@ -63,29 +61,28 @@ class SwitchToMarkTop5ProductsTempsResultsModeEight extends Component {
             // print
             console.log(`data two:${JSON.stringify(data)}`)
             // redux action
-            this.props.postListOfTop5TagsInUserDeviceDoc(data)
+            this.props.postListOfTop5ProductsInUserDeviceDoc(data)
         }
     }  
 
     // passing changes props
-    // componentWillReceiveProps(nextProps){
-    //     if(nextProps.idOfSpecificStaticDevices){ 
-    //         this.setState({
-    //             ids:this.props.idOfSpecificStaticDevices
-    //         })
-    //         // live data from top5Tag
-    //         this.props.userDeviceSpecificTop5TagSyncDataLiveDB(
-    //             this.props.thingLiveDataSets.thingId
-    //             ,this.props.idOfSpecificStaticDevices
-    //         )
-            
-    //         // print
-    //         console.log(`this.props.idOfSpecificStaticDevices: ${JSON.stringify(this.props.idOfSpecificStaticDevices)}`)
-    //     }
-    // }  
+    componentWillReceiveProps(nextProps){
+        // check if exists any changes in this arr
+        if(nextProps.idOfSpecificProducts){ 
+            // static data from top5Tags
+			this.props.userDeviceTop5ProductsSyncDataStatic(this.props.thingLiveDataSets.thingId)
+			// props.userDeviceSpecificTop5ProductSyncData(thingId,arrIds)	
+			// live data from top5Tags
+			this.props.userDeviceTop5ProductsSyncDataLiveDB(this.props.thingLiveDataSets.thingId)
+			// props.userDeviceSpecificTop5ProductSyncDataLiveDB(thingId,arrIds) 
+            // print
+            console.log(`this.state.ids: ${JSON.stringify(this.state.ids)}`)
+        } else {
+            console.log("no changes yet in idOfSpecificProducts")
+        }
+    }  
 
     render() {
-        
         return (
             <Switch
                 checked={this.state.checked}
@@ -104,11 +101,13 @@ const mapStateToProps = (state) => ({
     //liveDataSets
     thingLiveDataSets: state.heartbeatThing1.thingLiveDataSets,
     thingLiveDataSetsListener: state.heartbeatThing1.thingLiveDataSetsListener,
-    idOfSpecificStaticDevices: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificStaticDevices,
+    idOfSpecificProducts: state.heartbeatThing1.thingLiveDataSetsListener.idOfSpecificProducts,
+    // top5Products
+    responsesWithData:state.top5Products1.responsesWithData,
 });
 
 export default connect(mapStateToProps,{
-    postListOfTop5TagsInUserDeviceDoc,
-    //userDeviceSpecificTop5TagSyncDataStatic,
-    userDeviceSpecificTop5TagSyncDataLiveDB,
+    postListOfTop5ProductsInUserDeviceDoc,
+    userDeviceTop5ProductsSyncDataStatic,
+    userDeviceTop5ProductsSyncDataLiveDB,
 })(SwitchToMarkTop5ProductsTempsResultsModeEight);

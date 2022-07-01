@@ -7,8 +7,8 @@ import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import Grid from '@mui/material/Grid'
 // components
-import DataFrameSelectedProductModeFour from "../../components/modeFour/DataFrameSelectedProductModeFour"
-import DataFrameSelectedProductLiveModeFour from "../../components/modeFour/DataFrameSelectedProductLiveModeFour"
+import DataFrameSelectedProductModeEight from "../../components/modeEight/DataFrameSelectedProductModeEight"
+import DataFrameSelectedProductLiveModeEight from "../../components/modeEight/DataFrameSelectedProductLiveModeEight"
 // Redux stuff
 import { connect } from 'react-redux'
 // css
@@ -26,11 +26,13 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
             loading,
             top5Products,
             top5Product,
-            top5ProductListener
+            top5ProductListener,
+            responsesWithData
         } = this.props
 
         // data to pass
-        const dataOfTop5ProductsToPass = top5ProductListener.length != 0 ? top5ProductListener : top5Products
+        // const dataOfTop5ProductsToPass = top5ProductListener.length != 0 ? top5ProductListener : top5Products
+        const dataOfTop5ProductsToPass = responsesWithData
 
         return (
             <>  
@@ -47,25 +49,25 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
                             variant: "h3",
                         }}
                     >
-                    </CardHeader> 
+                    </CardHeader>  
                     {
                         loading === false && this.props.top5ProductListener.length === 0 ? 
                             <>
                                 <Grid container>
-                                    <DataFrameSelectedProductModeFour
+                                    <DataFrameSelectedProductModeEight
                                         data={
-                                            dataOfTop5ProductsToPass 
-                                        } 
+                                            dataOfTop5ProductsToPass
+                                        }
                                         classes={classes}
-                                    />
+                                    /> 
                                 </Grid>
                             </> 
                             :
-                            <>
+                            <> 
                                 <Grid container>
-                                    <DataFrameSelectedProductLiveModeFour
+                                    {/* <DataFrameSelectedProductLiveModeEight
                                         lengthProductsSelected={this.props.thingLiveDataSetsListener.idOfSpecificProducts.length}
-                                    />
+                                    /> */}
                                 </Grid>
                             </>
                     }
@@ -74,7 +76,7 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
         )
     }
 }
- 
+
 // connect to global state in redux
 const mapStateToProps = (state) => ({
     // liveDataSets
@@ -84,6 +86,7 @@ const mapStateToProps = (state) => ({
     top5Products:state.top5Products1.top5Products,
     top5Product:state.top5Products1.top5Product,
     top5ProductListener:state.top5Products1.top5ProductListener,
+    responsesWithData:state.top5Products1.responsesWithData,
     // top5ProductsUI:state.top5Products1.top5ProductsUI
 });
 

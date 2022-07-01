@@ -22,7 +22,7 @@ import TagsMakerForProducts from "../../components/utils/TagsMakerForProducts"
 import { connect } from 'react-redux';
 // styles
 import componentStyles from "assets/theme/views/admin/tables.js";
-import SwitchToMarkFromModeThreeToModeFour from '../../components/modeFour/SwitchToMarkFromModeThreeToModeFour';
+import SwitchToMarkTop5ProductsTempsResultsModeEight from '../../components/modeEight/SwitchToMarkTop5ProductsTempsResultsModeEight';
 
 const arrToppersColumns = (classes,data) => {
 	return data.map((item)=>{
@@ -40,6 +40,7 @@ const arrToppersColumns = (classes,data) => {
 	})
 }
 
+// content table results
 const ContentRow = (props) => {
 
 	// data from father
@@ -116,13 +117,14 @@ const ContentRow = (props) => {
 						/>
 					</Tooltip>
 				</TableCell>
- 
+
                 {/* switcher marker */}
                 <TableCell classes={{ root: classes.tableCellRoot }}>
                     {/* switcher selector of prducts */}
-                    <SwitchToMarkFromModeThreeToModeFour
+                    <SwitchToMarkTop5ProductsTempsResultsModeEight
                         thingid={top5Product.thingId}
                         docId={top5Product.product.productId}
+						dataIdProducts={top5Product}
                     />
 				</TableCell>
 
@@ -146,8 +148,8 @@ const ContentRow = (props) => {
 				</TableCell>
 			</TableRow>
 		)
-	});
-	return arrayCells
+	})
+	return arrayCells 
 }
 
 class ProductsResultsSelectedItemsSearchingModeEight extends Component {
@@ -156,12 +158,11 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
 		// redux state
 		const {
 			classes,
-			top5Products,
-			top5ProductsListener,
+			// top5Products,
+			responsesWithData,
 			loading,
 			thingLiveDataSets:{
 				profileToMatch,
-				
 			}
 		} = this.props
 
@@ -185,7 +186,7 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
 					<CardHeader
 						className={classes.cardHeader}
 						title={
-							<TagsMakerForProducts data={top5Products}/>
+							<TagsMakerForProducts data={responsesWithData}/>
 						}
 						titleTypographyProps={{
 							component: Box,
@@ -217,7 +218,7 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
 												'Meters from you'
 											]
 										)
-									}
+									} 
 								</TableRow>
 							</TableHead>
 							
@@ -227,9 +228,7 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
 									loading == false && 
 										<ContentRow 
 											data={
-												// top5TagsListener.length != 0 &&
-												// 	// top5TagsListener:
-													top5Products
+												responsesWithData
 											} 
 											classes={classes}
 										/>
@@ -247,9 +246,10 @@ class ProductsResultsSelectedItemsSearchingModeEight extends Component {
 const mapStateToProps = (state) => ({
 	// userDevice
 	loading:state.userDevices1.loading,
-	// top5Tags
-	top5Products:state.top5Products1.top5Products,
-    top5ProductsListener:state.top5Products1.top5ProductsListener,
+	// top5Products
+	responsesWithData:state.top5Products1.responsesWithData,
+	// top5Products:state.top5Products1.top5Products,
+    // top5ProductsListener:state.top5Products1.top5ProductsListener,
 	// liveDataSets
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
