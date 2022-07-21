@@ -34,7 +34,14 @@ import {
     STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
     
     POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
-    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+
+    // price --> modeNine
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE,
+    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE,
+
+    POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
 
 } from '../types'
 
@@ -57,7 +64,7 @@ const initialState = {
         top5ProductListener:[],
 
     // top5Products UI
-    // top5ProductsUI:[]
+    // top5ProductsUI:[] 
 };
 
 // function to determine the type of action to set state
@@ -189,6 +196,32 @@ export default function(state = initialState, action){
                 loading: false
             };
         
+        // by price 
+        // modeNine --> search by price and category
+        case GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE:
+            return { 
+                ...state,
+                responsesWithData: action.payload,
+            };
+        
+        case STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE:
+            return {
+                ...state,
+                loading: false
+            };
+        
+        case POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS:
+            return {
+                ...state,
+                responsesToUI: action.payload,
+            };
+        
+        case STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS:
+            return {
+                ...state,
+                loading: false
+            };
+            
         default:
             return state; 
     }    

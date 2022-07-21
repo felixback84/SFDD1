@@ -34,7 +34,15 @@ import {
     STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_METERS,
 
     POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
-    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_MTS_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+
+    // price --> modeNine
+    GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE,
+    STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE,
+
+    POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+    STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS
+
     
 } from '../types'
 
@@ -339,7 +347,7 @@ export const userDeviceSpecificTop5ProductSyncDataLiveDB = (thingId,arrIds) => a
         )
 }
 
-// search by meters & geoHashes staticDevices products --> before modeEight
+// search by meters & geoHashes staticDevices products --> before (modeEight)
 export const searchByGeohashesAndMetersStaticDevicesProducts = ({category,coords,meters}) => async (dispatch) => {
     try {
         const dataTag = await 
@@ -357,7 +365,7 @@ export const searchByGeohashesAndMetersStaticDevicesProducts = ({category,coords
     }
 }
 
-// post in liveDataSets selected products ids after mts range search and on top5Products
+// post in liveDataSets selected products ids after mts range search and on top5Products 
 export const postListOfTop5ProductsInUserDeviceDoc = (data) => async (dispatch) => {
     try {
         const dataTag = await 
@@ -374,3 +382,40 @@ export const postListOfTop5ProductsInUserDeviceDoc = (data) => async (dispatch) 
         console.log(error)
     }
 }
+
+// modeNine
+// search by price range and specific category staticDevices products
+export const searchByPriceRangeAndSpecificCategoryStaticDevicesProducts = ({userDeviceId,category,priceRange}) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .get(`/userdevice/${userDeviceId}/products/category/${category}/startPrice/${priceRange.startPrice}/endPrice/${priceRange.endPrice}/`)
+            const res = await dataTag
+            console.log(`res from top5Products results after search in mts range: ${JSON.stringify(res.data)}`)
+            dispatch({ 
+                type: GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE,
+                payload: res.data
+            })
+            dispatch({ type: STOP_GET_DATA_FROM_USER_STATICS_PRODUCTS_CLOSER_TO_USER_DEVICE_BY_PRICE_RANGE })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const postListOfTop5ProductsInUserDeviceDocAfterPriceRangeAndCategoryMatch = (data) => async (dispatch) => {
+    try {
+        const dataTag = await 
+        axios
+            .post(`/userdevice/postProductsByPriceRange/`,data)
+            const res = await dataTag
+            console.log(`res from top5Products creation after search in mts range: ${JSON.stringify(res.data)}`)
+            dispatch({ 
+                type: POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS,
+                payload: res.data
+            })
+            dispatch({ type: STOP_POST_USER_STATIC_PRODUCTS_SELECTED_BY_USERS_AFTER_PRICE_RANGE_MATCH_IN_LIVEDATASETS_AND_TOP_5_PRODUCTS })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
