@@ -347,6 +347,7 @@ exports.postTop5ProductsInUserDeviceId = async (req,res) => {
     const thingId = req.body.thingId
     // counter
     let espCounter = req.body.espCounter
+    
     // update fields in liveDataSets userDeviceId
     const liveDataSetsUpdate = async (dataFromClient,thingId) => {
         // obj to update arr

@@ -1,13 +1,14 @@
 // firebase
-const { db } = require('../../utilities/admin')
+const { db, admin } = require('../../utilities/admin')
 
+// modeNine
 // get products in one categoy with a specific price range
 exports.findStaticsProductsWithCategoryInSpecificPriceRange = async (req,res) => {
-    
-    // params
+
+    // params 
     const category = req.params.category
     const startPrice = req.params.startPrice
-    const endPrice = req.params.endPrice
+    const endPrice = req.params.endPrice 
     const userDeviceId = req.params.userDeviceId
     
     // results
@@ -28,20 +29,9 @@ exports.findStaticsProductsWithCategoryInSpecificPriceRange = async (req,res) =>
                 console.log(`data pre price range match: ${doc.data().price}`)
                 // arr push
                 arrCategory.push({
-                    coords:doc.data().coords,
                     product:{
-                        name:doc.data().name,
-                        tags:doc.data().tags,
-                        categories:doc.data().categories,
-                        staticDeviceProperty:doc.data().staticDeviceProperty,
-                        description:doc.data().description,
-                        familyOfDevices:doc.data().familyOfDevices,
-                        imgUrl:doc.data().imgUrl,
-                        price:doc.data().price,
-                        createdAt:doc.data().createdAt,
+                        ...doc.data(),
                         productId:doc.id,
-                        taxonomy:doc.data().taxonomy,
-                        companyName:doc.data().companyName,
                     }
                 })
             })
@@ -56,7 +46,7 @@ exports.findStaticsProductsWithCategoryInSpecificPriceRange = async (req,res) =>
                 const productPriceSet = item.product.price
                 // range
                 const inRange = (x, min, max) => {
-                    return ((x-min)*(x-max) <= 0);
+                    return ((x-min)*(x-max) <= 0)
                 }
                 // check the price range base
                 if(inRange(productPriceSet,startPrice,endPrice)){
@@ -151,6 +141,109 @@ exports.findStaticsProductsWithCategoryInSpecificPriceRange = async (req,res) =>
         })
 }
 
+// save in db all data from response of search in price range
+exports.postListOfProductsToFindByPriceRange = async (req,res) => {
+    // data from client
+    const dataFromClient = req.body.resultListSearch
+    // thingId
+    const thingId = req.body.thingId
+    // counter
+    let espCounter = req.body.espCounter
+    
+    // update fields in liveDataSets userDeviceId
+    const liveDataSetsUpdate = async (dataFromClient,thingId) => {
+        // obj to update arr
+        const newTop5Product = [{
+            thingIdToSearch:dataFromClient.product.staticDeviceProperty,
+            top5ProductDocId:dataFromClient.product.productId
+        }]
+        // to deal with arr 
+        const FieldValue = admin.firestore.FieldValue
+        // db part
+        let liveDataSetsForUserDeviceId = await db.
+            doc(`/userDevices/${thingId.split("-").slice(2).toString()}/liveDataSets/${thingId}`)
+                .update({           
+                    idOfSpecificProducts: FieldValue.arrayUnion(...newTop5Product)
+                })
+                .then(()=>{
+                    console.log("staticDevice product marked")
+                })
+                .catch((err) => {
+                    console.error(err)
+                }) 
+    }
+    // loop
+    for(let doc of dataFromClient){
+        // run it 
+        await liveDataSetsUpdate(doc,thingId)
+    }
+    // create docs with top5Products
+    const top5ProductsCreationList = (dataFromClient,thingId) => {
+        let counter = 0
+        // db part
+        for(let doc of dataFromClient){
+            const dbData = db
+                .doc(`/userDevices/${thingId.split("-").slice(2).toString()}`)
+                .collection('top5Products')
+                .add({...doc})
+                .then(()=>{
+                    console.log("product saved in db")
+                    counter++
+                    // check to send res
+                    if(dataFromClient.length === counter){
+                        res.json("products now in db")
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+    // to run top5ProductsCreationList
+    const checker = async (thingId) => {
+        // userDeviceId
+        const userDeviceId = thingId.split("-").slice(2)
+        // check if is the first record to make
+        if(espCounter === 0){
+            // db part top5Products
+            let docRef = await db
+                .doc(`/userDevices/${userDeviceId}`)
+                .collection('top5Products')
+                .get()
+                .then(async(data)=>{
+                    // check if already exists a top5Tags docs list
+                    if(data.empty){
+                        // print 
+                        console.log(`part 1a - ${espCounter}`)
+                        // run it
+                        top5ProductsCreationList(dataFromClient,thingId)
+                        // print
+                        console.log("part 2")
+                    } else {
+                        // check before erase the date. Less than time range
+                        await deleteAllDocsInTop5TagsCollectionOfUserDeviceId(
+                            db,`/userDevices/${userDeviceId}/top5Tags`
+                        )
+                        // run it
+                        top5ProductsCreationList(dataFromClient,thingId)  
+                    }
+                    // deletion of any old record in top5Tags that expire
+                    console.log(espCounter != 0 && req.body.newDate > initialDate + 20000)
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        } else if(espCounter > 0){
+            console.log("part 3a")
+            // run it
+            top5ProductsCreationList(dataFromClient,thingId)
+        }
+    }
+    // run it
+    await checker(thingId)
+}
+
+// modeTen
 // get products in one tag with a specific price range
 exports.findStaticsProductsWithTagInSpecificPriceRange = async (req,res) =>{
 
@@ -178,20 +271,9 @@ exports.findStaticsProductsWithTagInSpecificPriceRange = async (req,res) =>{
                 console.log(`data pre price range match: ${doc.data().price}`)
                 // arr push
                 arrTag.push({
-                    coords:doc.data().coords,
                     product:{
-                        name:doc.data().name,
-                        tags:doc.data().tags,
-                        categories:doc.data().categories,
-                        staticDeviceProperty:doc.data().staticDeviceProperty,
-                        description:doc.data().description,
-                        familyOfDevices:doc.data().familyOfDevices,
-                        imgUrl:doc.data().imgUrl,
-                        price:doc.data().price,
-                        createdAt:doc.data().createdAt,
-                        productId:doc.id,
-                        taxonomy:doc.data().taxonomy,
-                        companyName:doc.data().companyName,
+                        ...doc.data(),
+                        productId:document.id,
                     }
                 })
             })
@@ -300,30 +382,5 @@ exports.findStaticsProductsWithTagInSpecificPriceRange = async (req,res) =>{
         .catch(err => {
             res.status(500, err)
         })
-}
-
-// save in db all data from response of search in price range
-exports.postListOfProductsToFindByPriceRange = (req,res) => {
-    // receive list of products
-    let listOfProducts = req.body.listOfProducts
-    // userDeviceId
-    let userDeviceId = req.body.userDeviceId
-    // DB save
-    listOfProducts.forEach(async (item)=>{
-        // print
-        console.log(`Pre DB Item: ${JSON.stringify(item)}`)
-        // db conection
-        await db
-            .collection(`/userDevices/${userDeviceId}/top5Products`)
-            .add({
-                ...item     
-            })
-            .then(()=>{
-                res.json("data in db")
-            })
-            .catch(err => {
-                res.status(500, err)
-            })
-    }) 
 }
 

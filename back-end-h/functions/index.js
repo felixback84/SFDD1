@@ -292,12 +292,15 @@ app.get('/userdevice/findstaticsProducts/category/:category/lat/:lat/lng/:lng/mt
 app.post('/userdevice/postTop5Products/',postTop5ProductsInUserDeviceId)
 
 /////**** */ byPrice
+/////*** */ mode nine
 // get products in one categoy with a specific price range
 app.get('/userdevice/:userDeviceId/products/category/:category/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithCategoryInSpecificPriceRange)
-// get products in one tag with a specific price range
-app.get('/userdevice/:userDeviceId/products/tag/:tag/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithTagInSpecificPriceRange)
 // to post list of products to find his positions and owners
 app.post('/userdevice/postProductsByPriceRange/',FBAuth,postListOfProductsToFindByPriceRange)
+
+/////*** */ mode ten
+// get products in one tag with a specific price range
+app.get('/userdevice/:userDeviceId/products/tag/:tag/startPrice/:startPrice/endPrice/:endPrice/',FBAuth,findStaticsProductsWithTagInSpecificPriceRange)
 
 /////**** */ byEvents
 
