@@ -150,7 +150,7 @@ const ContentRow = (props) => {
 	return arrayCells
 }
 
-class ProductsResultsSelectedItemsSearchingModeFour extends Component {
+class ProductsResultsSearchingModeFour extends Component {
 
 	render() {
 		// redux state
@@ -254,6 +254,6 @@ const mapStateToProps = (state) => ({
 	thingLiveDataSets:state.heartbeatThing1.thingLiveDataSets,
 });
 
-export default connect(mapStateToProps)(withStyles(componentStyles)(ProductsResultsSelectedItemsSearchingModeFour));
+export default connect(mapStateToProps)(withStyles(componentStyles)(ProductsResultsSearchingModeFour));
 
 
