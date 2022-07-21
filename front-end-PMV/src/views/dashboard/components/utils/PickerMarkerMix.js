@@ -12,6 +12,8 @@ import GMapsServicesModeFive from '../../components/modeFive/GMapsServicesModeFi
 import GMapsServicesModeSix from '../../components/modeSix/GMapsServicesModeSix'
 import GMapsServicesModeSeven from '../../components/modeSeven/GMapsServicesModeSeven'
 import GMapsServicesModeEight from '../../components/modeEight/GMapsServicesModeEight'
+import GMapsServicesModeNine from '../../components/modeNine/GMapsServicesModeNine'
+import GMapsServicesModeTen from '../../components/modeTen/GMapsServicesModeTen'
 // modeOne
 import ChartResultsSearchingModeOne from "../../sections/modeOne/ChartResultsSearchingModeOne"
 // modeTwo
@@ -33,6 +35,12 @@ import ChartResultsSelectedItemsSearchingModeSeven from "../../sections/modeSeve
 // modeEight
 import ProductsResultsSelectedItemsSearchingModeEight from "../../sections/modeEight/ProductsResultsSelectedItemsSearchingModeEight"
 import ProductsResultsSearchingModeEight from "../../sections/modeEight/ProductsResultsSearchingModeEight"
+// modeNine
+import ProductsResultsSelectedItemsSearchingModeNine from "../../sections/modeNine/ProductsResultsSelectedItemsSearchingModeNine"
+import ProductsResultsSearchingModeNine from "../../sections/modeNine/ProductsResultsSearchingModeNine"
+// modeTen
+import ProductsResultsSelectedItemsSearchingModeTen from "../../sections/modeTen/ProductsResultsSelectedItemsSearchingModeTen"
+import ProductsResultsSearchingModeTen from "../../sections/modeTen/ProductsResultsSearchingModeTen"
 
 // Redux stuff
 import {connect} from 'react-redux'
@@ -383,7 +391,93 @@ const PickerMarkerMix = ({data,props}) => {
                     </>
                 )
             } 
-        break;
+            break;
+        case "modeNine":
+            if(data.loading == false){
+                console.log("modeNine")	
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GMapsServicesModeNine
+                                        checked={mode.checked}
+                                        //coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        {/* chart top5Products specific selection from user*/}
+                        <Grid container>
+                            <Grid item xs={12}> 
+                                {/* results */}
+                                <ProductsResultsSelectedItemsSearchingModeNine/>
+                            </Grid>
+                        </Grid>
+                        {/* chart all top5Products*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSearchingModeNine/>
+                            </Grid>
+                        </Grid>
+                    </>
+                )
+            } 
+            break;
+        case "modeTen":
+            if(data.loading == false){
+                console.log("modeTen")	
+                return(
+                    <>
+                        {/* map */}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Card classes={{ root: data.classes.cardRoot }}>
+                                    {/* toogle */}
+                                    <Switch
+                                        size="small" 
+                                        name="checked"
+                                        checked={mode.checked}
+                                        onChange={handleChange}
+                                    />
+                                    {/* Gmaps */}
+                                    <GMapsServicesModeTen
+                                        checked={mode.checked}
+                                        //coords={data.coords}
+                                        colorvalue={data.colorValue}
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        {/* chart top5Products specific selection from user*/}
+                        <Grid container>
+                            <Grid item xs={12}> 
+                                {/* results */}
+                                <ProductsResultsSelectedItemsSearchingModeTen/>
+                            </Grid>
+                        </Grid>
+                        {/* chart all top5Products*/}
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {/* results */}
+                                <ProductsResultsSearchingModeTen/>
+                            </Grid>
+                        </Grid>
+                    </>
+                )
+            } 
+            break;
         default:
             return(
                 null
