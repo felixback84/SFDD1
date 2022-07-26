@@ -6,6 +6,7 @@ import ComboSearchModeFive from "./ComboSearchModeFive"
 import ComboSearchModeSeven from "./ComboSearchModeSeven"
 import ComboSearchModeEight from "./ComboSearchModeEight"
 import ComboSearchModeNine from "./ComboSearchModeNine"
+import ComboSearchModeTen from "./ComboSearchModeTen"
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -67,6 +68,16 @@ const comboSearchingModeSwitcher = (searchingMode,tagsList) => {
                 <>
                     {/* fileds */}
                     <ComboSearchModeNine
+                        staticDevicesTags={tagsList}
+                    />
+                </>
+            )       
+        break;
+        case "modeTen": 
+            return( 
+                <>
+                    {/* fileds */}
+                    <ComboSearchModeTen
                         staticDevicesTags={tagsList}
                     />
                 </>

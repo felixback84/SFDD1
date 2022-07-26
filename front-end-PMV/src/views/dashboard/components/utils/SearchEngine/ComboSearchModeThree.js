@@ -128,23 +128,6 @@ const ComboSearchModeThree = (props) => {
 		// console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
     } 
 
-    // send data event
-    const handleSubmit = async (event) => {
-		event.preventDefault()
-		// obj to pass
-		const dataToSend = {
-			userDeviceId:props.thingLiveDataSets.thingId.split("-").slice(2).toString(),
-			dataProductToSearch:{
-				categories:categorySelected,
-				// send only the keys (arr) with data
-				tags:tagsSelected[categorySelected]
-			}
-		}
-		console.log({dataToSend})
-        // redux action to send data to server
-		await props.searchStaticDevicesProductsByCategoryAndTags(dataToSend)
-	}
-
 	// handle change for categories
 	const handleChangeCheckbox = (event) => {
 		// create empty arrs to hold tags
@@ -155,7 +138,7 @@ const ComboSearchModeThree = (props) => {
 		)
 		// print
 		// console.log({categorySelected})
-	}
+	} 
 
 	// categories checkboxes
 	const keysToCheckBoxes = (keyNames) => {
@@ -222,8 +205,9 @@ const ComboSearchModeThree = (props) => {
 
 	// category selected field
 	const field = (categorySelected) => {
-		return categorySelected != "" && 
-		(
+		console.log(`categorySelected:${categorySelected}`)
+		// return categorySelected != "" && 
+		return (
 			<Select
 				name={categorySelected}
 				labelId={categorySelected}
@@ -259,6 +243,23 @@ const ComboSearchModeThree = (props) => {
 			</Select>
 		)
 	}
+
+	// send data event
+    const handleSubmit = async (event) => {
+		event.preventDefault()
+		// obj to pass
+		const dataToSend = {
+			userDeviceId:props.thingLiveDataSets.thingId.split("-").slice(2).toString(),
+			dataProductToSearch:{
+				categories:categorySelected,
+				// send only the keys (arr) with data
+				tags:tagsSelected[categorySelected]
+			}
+		}
+		console.log({dataToSend})
+        // redux action to send data to server
+		await props.searchStaticDevicesProductsByCategoryAndTags(dataToSend)
+	}
 	
     return(
         <>
@@ -283,7 +284,7 @@ const ComboSearchModeThree = (props) => {
 									</FormGroup>
 								</Grid>	
 								<Grid item xs={12}>
-									{field(categorySelected)}
+									{categorySelected != "" && field(categorySelected)}
 								</Grid>
 								<Grid item xs={12}>
 									{/* btn */}

@@ -13,7 +13,7 @@ import SearchingModeCardModeSix from '../../views/dashboard/components/modeSix/S
 import SearchingModeCardModeSeven from '../../views/dashboard/components/modeSeven/SearchingModeCardModeSeven'
 import SearchingModeCardModeEight from '../../views/dashboard/components/modeEight/SearchingModeCardModeEight'
 import SearchingModeCardModeNine from '../../views/dashboard/components/modeNine/SearchingModeCardModeNine'
-import SearchingModeCardModeNine from '../../views/dashboard/components/modeTen/SearchingModeCardModeTen'
+import SearchingModeCardModeTen from '../../views/dashboard/components/modeTen/SearchingModeCardModeTen'
 // slick corrousel
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css";

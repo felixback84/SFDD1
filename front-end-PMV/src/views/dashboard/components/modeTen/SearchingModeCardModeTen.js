@@ -85,7 +85,7 @@ const SearchingModeCardModeTen = (props) => {
 							>
 								{/* search engine */}
                                 <SearchEngine 
-                                    searchingmode="modeNine"
+                                    searchingmode="modeTen"
                                 />
 							</Box>
 						</>

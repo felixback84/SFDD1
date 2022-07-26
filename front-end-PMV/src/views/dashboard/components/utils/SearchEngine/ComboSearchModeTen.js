@@ -93,34 +93,30 @@ const ComboSearchModeTen = (props) => {
 
 	// state of box, field & checkboxes
 	const [open, setOpen] = React.useState(true)
+	// category with tag
+	const [tagsSelected, setTags] = React.useState({})
+	// const tagsRef = useRef({})
+	const categoryRef = useRef("")
+	// const tagSelectedRef = useRef("")
+	// price range
 	const startPrice = useRef(0)
 	const endPrice = useRef(0)
-	const categoryRef = useRef("")
-
+	
 	// open tab collapser
 	const handleClick = () => {
 		setOpen(!open)
 	}
 
-	// change of slider price inputs
-	const handleChangeStartPrice = (event) => {
-		startPrice.current = event.target.value
-		// print
-		console.log({startPrice})
-    }
-
-    const handleChangeEndPrice = (event) => {
-		endPrice.current = event.target.value
-		// print
-		console.log({endPrice})
-    }
-
-    // handle change for categories
-	const handleChangeCheckbox = (event) => {
-		// set category
-		categoryRef.current = event.target.value
-		// print
-		console.log(`categoryRef:${JSON.stringify(categoryRef)}`)
+	// to create dynamic keys from the model data of the device in use
+	const createKeys = (obj) => {
+		let resultKeys = {}
+		for(let item in obj){
+			if(obj.hasOwnProperty(item)){
+				resultKeys[item] = []
+			}
+		}
+		// console.log(`result:${JSON.stringify(resultKeys)}`)
+		return resultKeys
 	}
 
 	// categories checkboxes
@@ -151,7 +147,105 @@ const ComboSearchModeTen = (props) => {
 		})
 	}
 
-    // submit
+	// handle change for categories
+	const handleChangeCheckbox = (event) => {
+		// create empty arrs to hold tags
+		setTags(createKeys(props.staticDevicesTags))
+		// set category
+		categoryRef.current = event.target.value
+		// print
+		console.log(`:${JSON.stringify(categoryRef.current)}`)
+	}
+
+	// handle change for tags
+    const handleChangeTags = (event) => {
+        setTags({
+			...tagsSelected,
+			[event.target.name]:event.target.value
+		})
+		// print
+		// console.log(`tagsSelected_:${JSON.stringify(tagsSelected)}`)
+    }
+
+	// tags from db
+	const selectorTagsList = (data)=>{
+		let tg = data
+		// print
+		// console.log(`data fields tags:${JSON.stringify(tg)}`)
+		// loop
+		return tg.map((tagCategoryItem)=>{
+			return(
+				<MenuItem 
+					key={tagCategoryItem} 
+					value={tagCategoryItem} 
+					// style={getStyles(tagCategoryItem,statePath,theme)}
+				>
+					{tagCategoryItem}
+				</MenuItem>
+			)
+		})
+	}
+
+	// category selected field
+	const field = (categorySelected) => {
+		console.log(`categorySelected:${JSON.stringify(categorySelected)}`)
+		return (
+			<Select
+				name={categorySelected}
+				labelId={categorySelected}
+				id={categorySelected}
+				// multiple
+				value={tagsSelected[categorySelected]}
+				onChange={handleChangeTags}
+				// active input
+				input={
+					<Input 
+						id={`select-mutiple-chip`} 
+						//onChange={handleFilter}
+						className={classes.field}
+					/>
+				}
+				renderValue={
+					(selected) => (
+						<div className={classes.chips}>
+							{/* {selected.map((value) => (
+								<Chip 
+									key={value} 
+									label={value} 
+									className={classes.chip} 
+								/>
+							))} */}
+							<Chip 
+									key={selected} 
+									label={selected} 
+									className={classes.chip} 
+								/>
+						</div>
+					)
+
+				}
+				MenuProps={MenuProps}
+			>
+				{/* all tags of selected key to init*/}
+				{selectorTagsList(props.staticDevicesTags[categoryRef.current])}
+			</Select>
+		)
+	}
+
+	// change of slider price inputs
+	const handleChangeStartPrice = (event) => {
+		startPrice.current = event.target.value
+		// print
+		console.log({startPrice})
+    }
+
+    const handleChangeEndPrice = (event) => {
+		endPrice.current = event.target.value
+		// print
+		console.log({endPrice})
+    }
+
+    // end submit
 	const handleSubmit = (event) => { 
         // default init
 		event.preventDefault()
@@ -193,10 +287,17 @@ const ComboSearchModeTen = (props) => {
 							<Grid container >
 								<Grid item xs={12}>
 									{/* checkboxes */}
-									<FormGroup aria-label="position" row>
+									<FormGroup 
+										aria-label="position" 
+										row
+									>
 										{keysToCheckBoxes(props.staticDevicesTags)}
 									</FormGroup>
 								</Grid>	
+								<Grid item xs={12}>
+									{/* field for tags */}
+									{categoryRef.current != "" && field(categoryRef.current)}
+								</Grid>
 								<Grid item xs={12}>
 									{/* slider price start */}
 									<Slider
