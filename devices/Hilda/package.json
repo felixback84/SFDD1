@@ -11,7 +11,7 @@
     "dependencies": {
         "fs": "0.0.1-security",
         "iohook": "^0.6.6",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "^9.0.0",
         "mqtt": "^3.0.0",
         "node-fetch": "^2.6.0"
     }
