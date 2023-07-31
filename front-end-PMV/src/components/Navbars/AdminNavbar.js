@@ -40,7 +40,6 @@ export default function AdminNavbar({ brandText }) {
             component={Link} 
             to={prop.layout + prop.path}
             key={key}
-            color="inherit"
           >
             <Box
               width="1.5rem!important"

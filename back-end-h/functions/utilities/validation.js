@@ -29,7 +29,7 @@ exports.validateSignupData = (data) => {
         errors,
         valid: Object.keys(errors).lenght === 0 ? true : false // errors in function validation Object.keys(errors) don`t work
     }
-} 
+}  
 
 exports.validateLoginData = (data) => {
     
@@ -40,9 +40,9 @@ exports.validateLoginData = (data) => {
 
         // check errors object for any problem and if so, stop the logic
         return {
-        errors,
-        valid: Object.keys(errors).lenght === 0 ? true : false // errors in function validation Object.keys(errors) don`t work
-    }
+            errors,
+            valid: Object.keys(errors).lenght === 0 ? true : false // errors in function validation Object.keys(errors) don`t work
+        }
 }
 
 exports.reduceUserDetails = (data) => {

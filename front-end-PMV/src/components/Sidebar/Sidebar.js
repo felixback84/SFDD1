@@ -18,7 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 // @material-ui/icons components
 import Clear from "@material-ui/icons/Clear";
-import MenuIcon from "@material-ui/icons/Menu";
+import MenuIcon from "@material-ui/icons/Menu"; 
 // styles
 import componentStyles from "assets/theme/components/sidebar.js";
 const useStyles = makeStyles(componentStyles);
@@ -163,7 +163,7 @@ export default function Sidebar(props) {
 
       {/* menu in middle */}
       <Hidden mdUp implementation="css">
-        <AppBar position="relative" color="default" elevation={0}>
+        <AppBar position="relative"  elevation={0}>
           <Toolbar>
             <Container
               display="flex!important"

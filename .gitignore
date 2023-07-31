@@ -41,6 +41,9 @@ devices/Heartbeat/H4/rsa_private.pem
 devices/Heartbeat/H5/rsa_cert.pem
 devices/Heartbeat/H5/rsa_private.pem
 
+devices-h/Mobile/mobileTestOne/node_modules
+devices-h/Mobile/mobileTestOne/rsa_cert.pem
+devices-h/Mobile/mobileTestOne/rsa_private.pem
 
 devices-h/Esp-32/venv
 devices-h/Esp-32/utils/rsa_public.pem

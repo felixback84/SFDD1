@@ -38,8 +38,8 @@ const SearchingModeCardModeSeven = (props) => {
 					color={
 						props.searchingMode === "modeSeven" && colorClass.colorPicker(data.color)
 					} 
-					footer={ 
-						<Fragment>
+					footer={  
+						<>
 							<Box
 								marginLeft=".5rem"
 								marginBottom=".5rem"
@@ -83,10 +83,10 @@ const SearchingModeCardModeSeven = (props) => {
 							>
 								{/* search engine */}
                                 <SearchEngine 
-                                    searchingmode="modeSeven"
+                                    searchingmode="modeSeven" 
                                 />
 							</Box>
-						</Fragment>
+						</>
 					}
 				/>
 			</>
@@ -157,11 +157,11 @@ const SearchingModeCardModeSeven = (props) => {
 	}
 
 	return(
-		<Fragment>
+		<>
 			{
 				props.top5Tags.length === 0 ? pickerDataToCard() : usedData()
 			}	
-		</Fragment>
+		</>
 	)
 } 
 

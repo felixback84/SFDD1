@@ -32,6 +32,16 @@ exports.postInStaticDevice = (req,res) => {
                     .doc(`/statics/${req.params.staticId}`)
                     .get()
                     .then((doc) => {
+                        // clean values to create empty dataSets stuctures on the staticDevices properties
+                        const dataSets = doc.data().dataSets
+                        const dataSetsCleanOfValues = {}
+                        Object.keys(dataSets.profileToSearch).forEach((key)=>{
+                            dataSetsCleanOfValues[key] = []
+                        })
+                        let total = {
+                            ...dataSets,
+                        }
+                        total.profileToSearch = dataSetsCleanOfValues
                         // now save the select info of .doc (device) of the collection
                         let selectInfoStatic = {
                             nameOfDevice: doc.data().nameOfDevice,
@@ -40,7 +50,7 @@ exports.postInStaticDevice = (req,res) => {
                             videoUrl: doc.data().videoUrl,
                             badgeUrl: doc.data().badgeUrl,
                             createdAt: doc.data().createdAt,
-                            dataSets: doc.data().dataSets
+                            dataSets: total
                         };
                         allStaticDeviceData.device = selectInfoStatic;
                         // write in global object

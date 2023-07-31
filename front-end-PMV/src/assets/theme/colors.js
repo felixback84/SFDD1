@@ -62,7 +62,14 @@ const themeColors = {
     badge: "#03acca",
   },
   background: {
-    default: "#f8f9fe",
+    // default: "#f8f9fe",
+
+
+    default: '#212121',
+    paper: '#424242',
+    
+
+
   },
   text: {
     primary: "#525f7f",

@@ -8,7 +8,7 @@ const componentStyles = (theme) => ({
     [theme.breakpoints.up("md")]: {
       paddingTop: "8rem",
     },
-  },
+  }, 
   containerRoot: {
     [theme.breakpoints.up("md")]: {
       paddingLeft: "39px",

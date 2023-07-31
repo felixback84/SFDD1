@@ -17,11 +17,16 @@ import boxShadows from "assets/theme/box-shadow.js";
 const useStyles = makeStyles(componentStyles);
 
 function CardStats({ subtitle, title, footer, icon, color }) {
-  const classes = useStyles();
-  const theme = useTheme();
+  // styles 
+  const classes = useStyles()
+  const theme = useTheme()
+
   return (
     <>
-      <Card style={{backgroundColor:color}} elevation={0}>
+      <Card 
+        style={{backgroundColor:color, marginLeft: "1rem"}} 
+        elevation={0}
+      >
         <CardContent classes={{ root: classes.cardContentRoot }}>
           <Grid container component={Box} justifyContent="space-between">
             <Grid item xs="auto">
@@ -43,7 +48,7 @@ function CardStats({ subtitle, title, footer, icon, color }) {
                 marginTop="0!important"
               >
                 {title}
-              </Box>
+              </Box> 
             </Grid>
             <Grid item xs={"auto"}>
               <Box
@@ -83,6 +88,7 @@ function CardStats({ subtitle, title, footer, icon, color }) {
               alignItems="center"
               flexWrap="wrap"
             >
+              {/* dynamic data section of card */}
               {footer}
             </Box>
           ) : null}

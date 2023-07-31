@@ -2,7 +2,7 @@ const componentStyles = (theme) => ({
   cardRoot: {
     marginBottom: "1.5rem",
     [theme.breakpoints.up("xl")]: {
-      marginBottom: 0,
+      marginLeft: "1.5rem",
     },
   },
   cardContentRoot: {
